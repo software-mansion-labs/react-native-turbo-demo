@@ -13,6 +13,8 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2947EB0B28632DA00030C7D1 /* RNTTurboWebviewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2947EB0A28632DA00030C7D1 /* RNTTurboWebviewManager.m */; };
+		299E5F2F2865E60500E5B077 /* RNTTurboWebviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299E5F2E2865E60500E5B077 /* RNTTurboWebviewManager.swift */; };
+		299E5F312865F22600E5B077 /* RNTTurboWebview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299E5F302865F22600E5B077 /* RNTTurboWebview.swift */; };
 		7699B88040F8A987B510C191 /* libPods-HotwireRNDemo-HotwireRNDemoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-HotwireRNDemo-HotwireRNDemoTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -39,6 +41,9 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = HotwireRNDemo/main.m; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-HotwireRNDemo-HotwireRNDemoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HotwireRNDemo-HotwireRNDemoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2947EB0A28632DA00030C7D1 /* RNTTurboWebviewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = RNTTurboWebviewManager.m; path = HotwireRNDemo/RNTTurboWebviewManager.m; sourceTree = "<group>"; };
+		299E5F2A2865C12C00E5B077 /* HotwireRNDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HotwireRNDemo-Bridging-Header.h"; sourceTree = "<group>"; };
+		299E5F2E2865E60500E5B077 /* RNTTurboWebviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNTTurboWebviewManager.swift; sourceTree = "<group>"; };
+		299E5F302865F22600E5B077 /* RNTTurboWebview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNTTurboWebview.swift; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-HotwireRNDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HotwireRNDemo.debug.xcconfig"; path = "Target Support Files/Pods-HotwireRNDemo/Pods-HotwireRNDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-HotwireRNDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HotwireRNDemo.release.xcconfig"; path = "Target Support Files/Pods-HotwireRNDemo/Pods-HotwireRNDemo.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-HotwireRNDemo-HotwireRNDemoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HotwireRNDemo-HotwireRNDemoTests.debug.xcconfig"; path = "Target Support Files/Pods-HotwireRNDemo-HotwireRNDemoTests/Pods-HotwireRNDemo-HotwireRNDemoTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -103,6 +108,9 @@
 			isa = PBXGroup;
 			children = (
 				2947EB0A28632DA00030C7D1 /* RNTTurboWebviewManager.m */,
+				299E5F302865F22600E5B077 /* RNTTurboWebview.swift */,
+				299E5F2E2865E60500E5B077 /* RNTTurboWebviewManager.swift */,
+				299E5F2A2865C12C00E5B077 /* HotwireRNDemo-Bridging-Header.h */,
 			);
 			name = TurboWebview;
 			sourceTree = "<group>";
@@ -218,7 +226,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1330;
 					};
 				};
 			};
@@ -424,6 +432,8 @@
 				2947EB0B28632DA00030C7D1 /* RNTTurboWebviewManager.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				299E5F312865F22600E5B077 /* RNTTurboWebview.swift in Sources */,
+				299E5F2F2865E60500E5B077 /* RNTTurboWebviewManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -442,6 +452,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-HotwireRNDemo-HotwireRNDemoTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -469,6 +480,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-HotwireRNDemo-HotwireRNDemoTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = HotwireRNDemoTests/Info.plist;
@@ -498,6 +510,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = HotwireRNDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -509,6 +522,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = HotwireRNDemo;
+				SWIFT_OBJC_BRIDGING_HEADER = "HotwireRNDemo-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -523,6 +537,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = HotwireRNDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -534,6 +549,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = HotwireRNDemo;
+				SWIFT_OBJC_BRIDGING_HEADER = "HotwireRNDemo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

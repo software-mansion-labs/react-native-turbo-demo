@@ -348,6 +348,7 @@ PODS:
     - React-logger (= 0.68.2)
     - React-perflogger (= 0.68.2)
   - SocketRocket (0.6.0)
+  - Turbo (7.0.0-beta.1)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -407,6 +408,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - Turbo (from `https://github.com/hotwired/turbo-ios.git`, tag `7.0.0-rc.6`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -488,8 +490,16 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  Turbo:
+    :git: https://github.com/hotwired/turbo-ios.git
+    :tag: 7.0.0-rc.6
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
+
+CHECKOUT OPTIONS:
+  Turbo:
+    :git: https://github.com/hotwired/turbo-ios.git
+    :tag: 7.0.0-rc.6
 
 SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
@@ -536,9 +546,10 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: b960b687d2dfef0d3761fbb187e01812ebab8b23
   ReactCommon: 095366164a276d91ea704ce53cb03825c487a3f2
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
+  Turbo: 817a6d5d9e9d4c93dd0154742d31d2cda67e65a1
   Yoga: 99652481fcd320aefa4a7ef90095b95acd181952
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 37a7f49c5039475c51bb449b9b3d2471445e85fa
+PODFILE CHECKSUM: 60baae8ff24413534ad3fe226644d3f0d965ec71
 
 COCOAPODS: 1.11.2

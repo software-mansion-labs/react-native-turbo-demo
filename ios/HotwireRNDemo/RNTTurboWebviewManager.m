@@ -6,27 +6,10 @@
 //
 
 #import <React/RCTViewManager.h>
+#import <React/RCTBridgeModule.h>
 
-@interface RNTTurboWebviewManager : RCTViewManager
-@end
+@interface RCT_EXTERN_MODULE(RNTTurboWebviewManager, NSObject)
 
-@implementation RNTTurboWebviewManager
-
-  RCT_EXPORT_MODULE(RNTTurboWebview)
-
-  - (UIView *) view {
-    return [[WKWebView alloc] init];
-    
-  }
-
-RCT_CUSTOM_VIEW_PROPERTY(url, NSString, WKWebView) {
-  NSString *passedUrl = [RCTConvert NSString:json];
-  
-//    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:[RCTConvert NSString:json]]];
-
-    NSLog(@"Requested new url: %@", passedUrl);
-
-    [view loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:passedUrl]]];
-  }
+  RCT_EXPORT_VIEW_PROPERTY(url, NSString)
 
 @end
