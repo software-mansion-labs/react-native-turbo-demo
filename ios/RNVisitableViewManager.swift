@@ -8,12 +8,8 @@
 import Foundation
 import Turbo
 
-//class MyObject: SessionDelegate {
-//
-//}
-
-@objc(RNTTurboWebviewManager)
-class RNTTurboWebviewManager: RCTViewManager, SessionDelegate {
+@objc(RNVisitableViewManager)
+class RNVisitableViewManager: RCTViewManager, SessionDelegate {
   
   private static var session: Session = {
       let session = Session()
@@ -41,8 +37,8 @@ class RNTTurboWebviewManager: RCTViewManager, SessionDelegate {
   private var controller = VisitableViewController(url: URL(string:"https://turbo-native-demo.glitch.me")!)
   
   override func view() -> UIView! {
-    RNTTurboWebviewManager.session.delegate = self
-    RNTTurboWebviewManager.session.visit(controller)
+    RNVisitableViewManager.session.delegate = self
+    RNVisitableViewManager.session.visit(controller)
 //    controller.viewWillAppear(true)
 //    controller.viewDidAppear(true)
     return controller.view

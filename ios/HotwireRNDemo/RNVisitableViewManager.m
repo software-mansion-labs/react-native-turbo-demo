@@ -8,7 +8,7 @@
 #import <React/RCTViewManager.h>
 #import <React/RCTBridgeModule.h>
 
-@interface RCT_EXTERN_MODULE(RNTTurboWebviewManager, NSObject)
+@interface RCT_EXTERN_MODULE(RNVisitableViewManager, NSObject)
 
   RCT_EXPORT_VIEW_PROPERTY(url, NSString)
 

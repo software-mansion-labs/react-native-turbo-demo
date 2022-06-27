@@ -7,7 +7,7 @@
 
 import Turbo
 
-class RNTTurboWebview: VisitableView {
+class RNVisitableView: VisitableView {
   
   @objc var url: NSString = "" {
     didSet {
