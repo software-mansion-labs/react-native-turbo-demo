@@ -1,13 +1,19 @@
 import React from 'react';
-import {StyleSheet, SafeAreaView} from 'react-native';
+import {StyleSheet, SafeAreaView, Button} from 'react-native';
 import VisitableView from './VisitableView';
 
-interface Props {}
+interface Props {
+  navigation: any;
+}
 
-const TurboScreen: React.FC<Props> = () => {
+const TurboScreen: React.FC<Props> = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <VisitableView />
+      <Button
+        onPress={() => navigation.push('TurboScreen')}
+        title="Open new screen"
+      />
     </SafeAreaView>
   );
 };

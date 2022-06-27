@@ -39,8 +39,6 @@ class RNVisitableViewManager: RCTViewManager, SessionDelegate {
   override func view() -> UIView! {
     RNVisitableViewManager.session.delegate = self
     RNVisitableViewManager.session.visit(controller)
-//    controller.viewWillAppear(true)
-//    controller.viewDidAppear(true)
     return controller.view
   }
   
