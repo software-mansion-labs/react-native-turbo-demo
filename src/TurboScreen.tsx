@@ -4,14 +4,21 @@ import VisitableView from './VisitableView';
 
 interface Props {
   navigation: any;
+  route;
 }
 
-const TurboScreen: React.FC<Props> = ({navigation}) => {
+const TurboScreen: React.FC<Props> = ({navigation, route}) => {
+  const url = route?.params?.url;
+
   return (
     <SafeAreaView style={styles.container}>
-      <VisitableView />
+      <VisitableView url={url || 'https://turbo-native-demo.glitch.me'} />
       <Button
-        onPress={() => navigation.push('TurboScreen')}
+        onPress={() =>
+          navigation.push('TurboScreen', {
+            url: 'https://turbo-native-demo.glitch.me/one',
+          })
+        }
         title="Open new screen"
       />
     </SafeAreaView>
