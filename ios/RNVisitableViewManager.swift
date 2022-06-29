@@ -9,7 +9,7 @@ import Foundation
 import Turbo
 
 @objc(RNVisitableViewManager)
-class RNVisitableViewManager: RCTViewManager, SessionDelegate {
+class RNVisitableViewManager: RCTViewManager {
   
   public static var session: Session = {
       let session = Session()

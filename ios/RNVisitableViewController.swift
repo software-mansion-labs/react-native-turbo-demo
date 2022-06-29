@@ -10,23 +10,26 @@ import Turbo
 
 class RNVisitableViewController: VisitableViewController, SessionDelegate {
   
-  override func viewDidAppear(_ animated: Bool) {
+  override func viewWillAppear(_ animated: Bool) {
+    print("View will appear for URL", self.visitableURL.absoluteURL)
     RNVisitableViewManager.session.delegate = self
+    RNVisitableViewManager.session.visit(self)
   }
 
 //  override func viewDidLoad() {
+//    print("View did appear for URL", self.visitableURL.absoluteURL)
 //    RNVisitableViewManager.session.delegate = self
 //    super.viewDidLoad()
 //  }
-//
+
 
   // Session delegate
 
   func sessionWebViewProcessDidTerminate(_ session: Session) {
-
+    
   }
 
-  func session(session session: Session, didProposeVisit proposal: VisitProposal) {
+  func session(_ session: Session, didProposeVisit proposal: VisitProposal) {
       // Handle a visit proposal
   }
 
