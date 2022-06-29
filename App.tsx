@@ -1,16 +1,19 @@
-import React, {useState} from 'react';
-import {Button, SafeAreaView} from 'react-native';
-import TurboWebview from './TurboWebview/TurboWebview';
+import React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import TurboScreen from './src/TurboScreen';
 
 interface Props {}
 
+const Stack = createNativeStackNavigator<any>();
+
 const App: React.FC<Props> = () => {
-  const [shown, setShown] = useState(true);
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <Button title="show/hide webview" onPress={() => setShown(false)} />
-      {shown && <TurboWebview />}
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="TurboScreen" component={TurboScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
