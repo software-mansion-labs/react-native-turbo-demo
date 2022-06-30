@@ -1,3 +1,3 @@
 import {requireNativeComponent} from 'react-native';
 
-export default requireNativeComponent('RNVisitableView');
+export default requireNativeComponent<any>('RNVisitableView');

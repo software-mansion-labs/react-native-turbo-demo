@@ -17,7 +17,7 @@ class RNVisitableViewManager: RCTViewManager {
   }()
   
   override func view() -> UIView! {
-    return RNVisitableView(frame: CGRect.zero)
+    return RNVisitableView()
   }
   
   override static func requiresMainQueueSetup() -> Bool {

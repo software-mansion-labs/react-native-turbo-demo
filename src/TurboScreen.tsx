@@ -1,25 +1,30 @@
 import React from 'react';
-import {StyleSheet, SafeAreaView, Button} from 'react-native';
+import {StyleSheet, SafeAreaView} from 'react-native';
 import VisitableView from './VisitableView';
+
+const INITIAL_URL = 'https://turbo-native-demo.glitch.me';
 
 interface Props {
   navigation: any;
-  route;
+  route: any;
 }
 
 const TurboScreen: React.FC<Props> = ({navigation, route}) => {
-  const url = route?.params?.url;
+  const currentUrl = route?.params?.url || INITIAL_URL;
+
+  const openNewPage = (url: string) => {
+    navigation.push('TurboScreen', {
+      url,
+    });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <VisitableView url={url || 'https://turbo-native-demo.glitch.me'} />
-      <Button
-        onPress={() =>
-          navigation.push('TurboScreen', {
-            url: 'https://turbo-native-demo.glitch.me/one',
-          })
-        }
-        title="Open new screen"
+      <VisitableView
+        url={currentUrl}
+        onVisitProposal={({nativeEvent: {url}}) => {
+          openNewPage(url);
+        }}
       />
     </SafeAreaView>
   );
