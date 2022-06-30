@@ -1,14 +1,18 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {NativeSyntheticEvent, StyleSheet} from 'react-native';
 import VisitableViewNativeComponent from './VisitableViewNativeComponent';
+
+interface VisitProposal {
+  url: string;
+}
 
 interface Props {
   url: string;
-  onProposeVisit: (url: string) => {};
+  onVisitProposal: (proposal: NativeSyntheticEvent<VisitProposal>) => void;
 }
 
 const VisitableView: React.FC<Props> = props => {
-  return <VisitableViewNativeComponent style={styles.container} {...props} />;
+  return <VisitableViewNativeComponent {...props} style={styles.container} />;
 };
 
 const styles = StyleSheet.create({

@@ -8,11 +8,13 @@
 import Foundation
 import Turbo
 
-class RNVisitableViewController: VisitableViewController, SessionDelegate {
+class RNVisitableViewController: VisitableViewController {
+  
+  public var delegate: SessionDelegate?
   
   override func viewWillAppear(_ animated: Bool) {
     print("View will appear for URL", self.visitableURL.absoluteURL)
-    RNVisitableViewManager.session.delegate = self
+    RNVisitableViewManager.session.delegate = delegate
     RNVisitableViewManager.session.visit(self)
   }
 
@@ -21,25 +23,5 @@ class RNVisitableViewController: VisitableViewController, SessionDelegate {
 //    RNVisitableViewManager.session.delegate = self
 //    super.viewDidLoad()
 //  }
-
-
-  // Session delegate
-
-  func sessionWebViewProcessDidTerminate(_ session: Session) {
-    
-  }
-
-  func session(_ session: Session, didProposeVisit proposal: VisitProposal) {
-      // Handle a visit proposal
-  }
-
-  func session(_ session: Session, didFailRequestForVisitable visitable: Visitable, error: Error) {
-      // Handle a visit error
-  }
-
-  func webView(_ webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> ()) {
-      decisionHandler(WKNavigationActionPolicy.cancel)
-      // Handle non-Turbo links
-  }
   
 }
