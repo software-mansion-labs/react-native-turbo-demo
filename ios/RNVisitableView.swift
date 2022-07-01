@@ -11,8 +11,8 @@ import UIKit
 class RNVisitableView: UIView {
   
   @objc var url: NSString = ""
-  
   @objc var onVisitProposal: RCTDirectEventBlock?
+  @objc var onLoad: RCTDirectEventBlock?
   
   private var controller: RNVisitableViewController?
   
@@ -30,9 +30,9 @@ class RNVisitableView: UIView {
   
   func setupViewController(url: URL) {
     self.controller = RNVisitableViewController(url: url)
+    self.controller?.delegate = self
     self.reactViewController().addChild(self.controller!)
     self.controller?.didMove(toParent: self.reactViewController())
-    self.controller?.delegate = self
   }
   
   @objc func callVisitPropsosalCallback(url: String, action: String) {
@@ -44,6 +44,22 @@ class RNVisitableView: UIView {
     print("Handle a visit callback called:", event)
 
     onVisitProposal!(event)
+  }
+  
+}
+
+extension RNVisitableView: RNVisitableViewControllerDelegate {
+  
+  func visitableWillAppear(visitable: Visitable) {
+    print("View will appear for URL", visitable.visitableURL.absoluteString)
+    RNVisitableViewManager.session.delegate = self
+    RNVisitableViewManager.session.visit(visitable)
+  }
+  
+  
+  func visitableDidRender(session: Session, visitable: Visitable) {
+    print("Visitable did render")
+    onLoad?(["title": session.webView.title])
   }
   
 }
@@ -70,4 +86,3 @@ extension RNVisitableView: SessionDelegate {
   }
   
 }
-

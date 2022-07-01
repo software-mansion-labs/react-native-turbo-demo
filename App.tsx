@@ -11,7 +11,11 @@ const App: React.FC<Props> = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="TurboScreen" component={TurboScreen} />
+        <Stack.Screen
+          name="TurboScreen"
+          component={TurboScreen}
+          options={{title: '', headerBackTitle: 'Back'}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

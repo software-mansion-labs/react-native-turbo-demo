@@ -8,20 +8,24 @@
 import Foundation
 import Turbo
 
+public protocol RNVisitableViewControllerDelegate {
+  
+  func visitableWillAppear(visitable: Visitable)
+  
+  func visitableDidRender(session: Session, visitable: Visitable)
+  
+}
+
 class RNVisitableViewController: VisitableViewController {
   
-  public var delegate: SessionDelegate?
+  public var delegate: RNVisitableViewControllerDelegate?
   
   override func viewWillAppear(_ animated: Bool) {
-    print("View will appear for URL", self.visitableURL.absoluteURL)
-    RNVisitableViewManager.session.delegate = delegate
-    RNVisitableViewManager.session.visit(self)
+    self.delegate?.visitableWillAppear(visitable: self)
   }
-
-//  override func viewDidLoad() {
-//    print("View did appear for URL", self.visitableURL.absoluteURL)
-//    RNVisitableViewManager.session.delegate = self
-//    super.viewDidLoad()
-//  }
+  
+  override func visitableDidRender() {
+    self.delegate?.visitableDidRender(session: RNVisitableViewManager.session, visitable: self)
+  }
   
 }

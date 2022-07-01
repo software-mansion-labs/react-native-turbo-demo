@@ -7,9 +7,14 @@ export interface VisitProposal {
   action: 'advance' | 'replace' | 'restore';
 }
 
+export interface OnLoadEvent {
+  title: string;
+}
+
 interface Props {
   url: string;
   onVisitProposal: (proposal: NativeSyntheticEvent<VisitProposal>) => void;
+  onLoad: (proposal: NativeSyntheticEvent<OnLoadEvent>) => void;
 }
 
 const VisitableView: React.FC<Props> = props => {

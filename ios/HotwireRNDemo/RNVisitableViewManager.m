@@ -13,6 +13,7 @@
 
   RCT_EXPORT_VIEW_PROPERTY(url, NSString)
   RCT_EXPORT_VIEW_PROPERTY(onVisitProposal, RCTDirectEventBlock)
+  RCT_EXPORT_VIEW_PROPERTY(onLoad, RCTDirectEventBlock)
 
 @end
 

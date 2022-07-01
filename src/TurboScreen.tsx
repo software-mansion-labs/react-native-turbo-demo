@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Alert, NativeSyntheticEvent} from 'react-native';
-import VisitableView, {VisitProposal} from './VisitableView';
+import VisitableView, {OnLoadEvent, VisitProposal} from './VisitableView';
 
 const INITIAL_URL = 'https://turbo-native-demo.glitch.me';
 
@@ -34,9 +34,19 @@ const TurboScreen: React.FC<Props> = ({navigation, route}) => {
     }
   };
 
+  const onLoad = ({
+    nativeEvent: {title},
+  }: NativeSyntheticEvent<OnLoadEvent>) => {
+    navigation.setOptions({title});
+  };
+
   return (
     <View style={styles.container}>
-      <VisitableView url={currentUrl} onVisitProposal={onVisitProposal} />
+      <VisitableView
+        url={currentUrl}
+        onVisitProposal={onVisitProposal}
+        onLoad={onLoad}
+      />
     </View>
   );
 };
