@@ -2,8 +2,9 @@ import React from 'react';
 import {NativeSyntheticEvent, StyleSheet} from 'react-native';
 import VisitableViewNativeComponent from './VisitableViewNativeComponent';
 
-interface VisitProposal {
+export interface VisitProposal {
   url: string;
+  action: 'advance' | 'replace' | 'restore';
 }
 
 interface Props {

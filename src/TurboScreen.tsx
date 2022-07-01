@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, SafeAreaView} from 'react-native';
-import VisitableView from './VisitableView';
+import {StyleSheet, View, Alert, NativeSyntheticEvent} from 'react-native';
+import VisitableView, {VisitProposal} from './VisitableView';
 
 const INITIAL_URL = 'https://turbo-native-demo.glitch.me';
 
@@ -12,21 +12,32 @@ interface Props {
 const TurboScreen: React.FC<Props> = ({navigation, route}) => {
   const currentUrl = route?.params?.url || INITIAL_URL;
 
-  const openNewPage = (url: string) => {
-    navigation.push('TurboScreen', {
-      url,
-    });
+  const onVisitProposal = ({
+    nativeEvent: {action, url},
+  }: NativeSyntheticEvent<VisitProposal>) => {
+    switch (action) {
+      case 'advance': {
+        navigation.push('TurboScreen', {
+          url: url,
+        });
+        break;
+      }
+      case 'replace': {
+        navigation.replace('TurboScreen', {
+          url: url,
+        });
+        break;
+      }
+      default: {
+        Alert.alert('Unsupported action type', action);
+      }
+    }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <VisitableView
-        url={currentUrl}
-        onVisitProposal={({nativeEvent: {url}}) => {
-          openNewPage(url);
-        }}
-      />
-    </SafeAreaView>
+    <View style={styles.container}>
+      <VisitableView url={currentUrl} onVisitProposal={onVisitProposal} />
+    </View>
   );
 };
 

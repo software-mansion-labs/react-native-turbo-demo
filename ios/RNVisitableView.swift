@@ -35,8 +35,11 @@ class RNVisitableView: UIView {
     self.controller?.delegate = self
   }
   
-  @objc func callVisitPropsosalCallback(proposal: String) {
-    let event = ["url": proposal]
+  @objc func callVisitPropsosalCallback(url: String, action: String) {
+    let event: [AnyHashable: Any] = [
+      "url": url,
+      "action": action,
+    ]
     
     print("Handle a visit callback called:", event)
 
@@ -54,7 +57,7 @@ extension RNVisitableView: SessionDelegate {
   func session(_ session: Session, didProposeVisit proposal: VisitProposal) {
       // Handle a visit proposal
       print("Handle a visit proposal proposal:", proposal)
-      callVisitPropsosalCallback(proposal: proposal.url.absoluteString)
+      callVisitPropsosalCallback(url: proposal.url.absoluteString, action: proposal.options.action.rawValue)
   }
 
   func session(_ session: Session, didFailRequestForVisitable visitable: Visitable, error: Error) {
