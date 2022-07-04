@@ -8,7 +8,7 @@ interface Props {
   route: any;
 }
 
-const TurboScreen: React.FC<Props> = ({navigation, route}) => {
+const WebviewScreen: React.FC<Props> = ({navigation, route}) => {
   const currentUrl = route?.params?.url || BASE_URL;
 
   const onVisitProposal = ({
@@ -17,13 +17,13 @@ const TurboScreen: React.FC<Props> = ({navigation, route}) => {
     console.warn('action', action);
     switch (action) {
       case 'advance': {
-        navigation.push('TurboScreen', {
+        navigation.push('WebviewScreen', {
           url: url,
         });
         break;
       }
       case 'replace': {
-        navigation.replace('TurboScreen', {
+        navigation.replace('WebviewScreen', {
           url: url,
         });
         break;
@@ -57,4 +57,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TurboScreen;
+export default WebviewScreen;

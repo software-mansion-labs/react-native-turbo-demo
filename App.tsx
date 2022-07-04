@@ -1,6 +1,6 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import TurboScreen from './src/TurboScreen';
+import WebviewScreen from './src/WebviewScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {BASE_URL, Routes} from './src/config';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -35,7 +35,7 @@ const TabBar = () => {
       />
       <Stack.Screen
         name={Routes.WebviewScreen2}
-        component={TurboScreen}
+        component={WebviewScreen}
         options={{title: 'Webview 2', headerBackTitle: 'Back'}}
       />
     </Tab.Navigator>
@@ -47,7 +47,7 @@ const App: React.FC<Props> = () => {
     prefixes: [BASE_URL],
     config: {
       screens: {
-        TurboScreen: 'one',
+        WebviewScreen: 'one',
       },
     },
   };
@@ -66,7 +66,7 @@ const App: React.FC<Props> = () => {
         />
         <Stack.Screen
           name={Routes.WebviewScreen}
-          component={TurboScreen}
+          component={WebviewScreen}
           options={{title: ''}}
         />
         <Stack.Screen
