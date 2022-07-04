@@ -1,8 +1,7 @@
 import React from 'react';
-import {StyleSheet, View, Alert, NativeSyntheticEvent} from 'react-native';
+import {StyleSheet, View, NativeSyntheticEvent, Alert} from 'react-native';
+import {BASE_URL} from './config';
 import VisitableView, {OnLoadEvent, VisitProposal} from './VisitableView';
-
-const INITIAL_URL = 'https://turbo-native-demo.glitch.me';
 
 interface Props {
   navigation: any;
@@ -10,11 +9,12 @@ interface Props {
 }
 
 const TurboScreen: React.FC<Props> = ({navigation, route}) => {
-  const currentUrl = route?.params?.url || INITIAL_URL;
+  const currentUrl = route?.params?.url || BASE_URL;
 
   const onVisitProposal = ({
     nativeEvent: {action, url},
   }: NativeSyntheticEvent<VisitProposal>) => {
+    console.warn('action', action);
     switch (action) {
       case 'advance': {
         navigation.push('TurboScreen', {

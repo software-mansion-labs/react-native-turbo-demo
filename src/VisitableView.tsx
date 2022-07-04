@@ -9,6 +9,7 @@ export interface VisitProposal {
 
 export interface OnLoadEvent {
   title: string;
+  url: string;
 }
 
 interface Props {

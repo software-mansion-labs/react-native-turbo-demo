@@ -34,18 +34,6 @@ class RNVisitableView: UIView {
     self.reactViewController().addChild(self.controller!)
     self.controller?.didMove(toParent: self.reactViewController())
   }
-  
-  @objc func callVisitPropsosalCallback(url: String, action: String) {
-    let event: [AnyHashable: Any] = [
-      "url": url,
-      "action": action,
-    ]
-    
-    print("Handle a visit callback called:", event)
-
-    onVisitProposal!(event)
-  }
-  
 }
 
 extension RNVisitableView: RNVisitableViewControllerDelegate {
@@ -58,8 +46,11 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
   
   
   func visitableDidRender(session: Session, visitable: Visitable) {
-    print("Visitable did render")
-    onLoad?(["title": session.webView.title])
+    let event: [AnyHashable: Any] = [
+      "title": session.webView.title!,
+      "url": session.webView.url!
+    ]
+    onLoad?(event)
   }
   
 }
@@ -71,9 +62,12 @@ extension RNVisitableView: SessionDelegate {
   }
 
   func session(_ session: Session, didProposeVisit proposal: VisitProposal) {
-      // Handle a visit proposal
-      print("Handle a visit proposal proposal:", proposal)
-      callVisitPropsosalCallback(url: proposal.url.absoluteString, action: proposal.options.action.rawValue)
+    // Handle a visit proposal
+    let event: [AnyHashable: Any] = [
+      "url": proposal.url.absoluteString,
+      "action": proposal.options.action.rawValue,
+    ]
+    onVisitProposal!(event)
   }
 
   func session(_ session: Session, didFailRequestForVisitable visitable: Visitable, error: Error) {
