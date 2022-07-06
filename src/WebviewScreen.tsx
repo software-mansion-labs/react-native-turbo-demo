@@ -1,37 +1,59 @@
+import {NavigationAction} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React from 'react';
 import {StyleSheet, View, NativeSyntheticEvent, Alert} from 'react-native';
-import {BASE_URL} from './config';
+import {BASE_URL, Routes} from './config';
 import VisitableView, {OnLoadEvent, VisitProposal} from './VisitableView';
+import {useLinkTo} from '@react-navigation/native';
+import {replace} from 'lodash';
 
 interface Props {
-  navigation: any;
+  navigation: NativeStackNavigationProp<any>;
   route: any;
 }
 
 const WebviewScreen: React.FC<Props> = ({navigation, route}) => {
-  const currentUrl = route?.params?.url || BASE_URL;
+  const linkTo = useLinkTo();
+
+  const currentUrl = route?.path ? `${BASE_URL}/${route?.path}` : BASE_URL;
+
+  console.warn({currentUrl, route});
 
   const onVisitProposal = ({
-    nativeEvent: {action, url},
+    nativeEvent: {action: actionType, url},
   }: NativeSyntheticEvent<VisitProposal>) => {
-    console.warn('action', action);
-    switch (action) {
-      case 'advance': {
-        navigation.push('WebviewScreen', {
-          url: url,
-        });
-        break;
-      }
-      case 'replace': {
-        navigation.replace('WebviewScreen', {
-          url: url,
-        });
-        break;
-      }
-      default: {
-        Alert.alert('Unsupported action type', action);
-      }
-    }
+    // TODO implement
+    const path = replace(url, BASE_URL, '');
+    console.warn('path', {url, path});
+
+    // const action: NavigationAction = {
+    //   type: WebviewNavActions.openWebview,
+    //   payload: {
+    //     actionType,
+    //     url,
+    //   },
+    // };
+    // navigation.dispatch(action);
+
+    linkTo(path);
+
+    // switch (action) {
+    //   case 'advance': {
+    //     navigation.push(Routes.Webview, {
+    //       url: url,
+    //     });
+    //     break;
+    //   }
+    //   case 'replace': {
+    //     navigation.replace(Routes.Webview, {
+    //       url: url,
+    //     });
+    //     break;
+    //   }
+    //   default: {
+    //     Alert.alert('Unsupported action type', action);
+    //   }
+    // }
   };
 
   const onLoad = ({
