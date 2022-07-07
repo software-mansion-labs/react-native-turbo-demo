@@ -7,6 +7,7 @@ import PlaceholderScreen from './src/PlaceholderScreen';
 import {Text} from 'react-native';
 import WebviewScreen from './src/WebviewScreen';
 import NumbersScreen from './src/NumbersScreen';
+import ErrorScreen from './src/ErrorScreen';
 
 interface Props {}
 
@@ -31,9 +32,9 @@ const TabBar = () => {
         }}
       />
       <Tab.Screen
-        name={Routes.WebviewScreen2}
+        name={Routes.WebviewInitial}
         component={WebviewScreen}
-        options={{title: 'Webview Screen 2'}}
+        options={{title: 'Webview Screen'}}
       />
     </Tab.Navigator>
   );
@@ -44,17 +45,18 @@ const App: React.FC<Props> = () => {
     prefixes: [BASE_URL],
     config: {
       screens: {
-        [Routes.WebviewScreen]: '*',
-        [Routes.WebviewModal]: 'new',
+        [Routes.New]: 'new',
+        [Routes.Two]: 'two',
+        [Routes.One]: 'one',
+        [Routes.Slow]: 'slow',
         [Routes.NumbersScreen]: 'numbers',
+        [Routes.NotFound]: '*',
       },
     },
   };
 
   return (
-    <NavigationContainer
-      linking={linking}
-      fallback={() => <Text>fallback component</Text>}>
+    <NavigationContainer linking={linking}>
       <Stack.Navigator
         screenOptions={{
           headerBackTitle: 'Back',
@@ -65,9 +67,19 @@ const App: React.FC<Props> = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name={Routes.WebviewScreen}
+          name={Routes.One}
           component={WebviewScreen}
-          options={{title: 'Webview Screen'}}
+          options={{title: 'One'}}
+        />
+        <Stack.Screen
+          name={Routes.Two}
+          component={WebviewScreen}
+          options={{title: 'Push or Replace?'}}
+        />
+        <Stack.Screen
+          name={Routes.Slow}
+          component={WebviewScreen}
+          options={{title: 'Slow-loading Page?'}}
         />
         <Stack.Screen
           name={Routes.NumbersScreen}
@@ -75,9 +87,14 @@ const App: React.FC<Props> = () => {
           options={{title: 'A List of Numbers'}}
         />
         <Stack.Screen
-          name={Routes.WebviewModal}
+          name={Routes.New}
           component={WebviewScreen}
-          options={{title: '', presentation: 'modal'}}
+          options={{title: 'A Modal Webpage', presentation: 'modal'}}
+        />
+        <Stack.Screen
+          name={Routes.NotFound}
+          component={ErrorScreen}
+          options={{title: 'Not Found'}}
         />
       </Stack.Navigator>
     </NavigationContainer>

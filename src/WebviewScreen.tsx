@@ -1,8 +1,7 @@
-import {NavigationAction} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React from 'react';
-import {StyleSheet, View, NativeSyntheticEvent, Alert} from 'react-native';
-import {BASE_URL, Routes} from './config';
+import {StyleSheet, View, NativeSyntheticEvent} from 'react-native';
+import {BASE_URL} from './config';
 import VisitableView, {OnLoadEvent, VisitProposal} from './VisitableView';
 import {useLinkTo} from '@react-navigation/native';
 import {replace} from 'lodash';
@@ -17,14 +16,14 @@ const WebviewScreen: React.FC<Props> = ({navigation, route}) => {
 
   const currentUrl = route?.path ? `${BASE_URL}/${route?.path}` : BASE_URL;
 
-  console.warn({currentUrl, route});
+  console.log({currentUrl, route});
 
   const onVisitProposal = ({
     nativeEvent: {action: actionType, url},
   }: NativeSyntheticEvent<VisitProposal>) => {
     // TODO implement
     const path = replace(url, BASE_URL, '');
-    console.warn('path', {url, path});
+    console.log('path', {url, path});
 
     // const action: NavigationAction = {
     //   type: WebviewNavActions.openWebview,
