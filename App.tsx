@@ -77,10 +77,6 @@ const App: React.FC<Props> = () => {
         />
         <Stack.Screen
           name={Routes.One}
-          getId={params => {
-            console.warn(params);
-            return undefined;
-          }}
           component={WebviewScreen}
           options={{title: "How'd You Get Here"}}
         />

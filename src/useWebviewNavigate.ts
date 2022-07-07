@@ -22,6 +22,9 @@ export type To<
           params: ParamList[RouteName];
         });
 
+/*
+ * Its like useLinkTo with some custom tweaks
+ */
 export default function useWebviewNavigate<
   ParamList extends ReactNavigation.RootParamList,
 >() {
@@ -48,7 +51,7 @@ export default function useWebviewNavigate<
         ? options.getStateFromPath(to, options.config)
         : getStateFromPath(to, options?.config);
 
-      console.warn('state', state);
+      console.log('state', state);
 
       if (state) {
         const action = getActionFromState(state, options?.config);
@@ -56,16 +59,11 @@ export default function useWebviewNavigate<
         if (action === undefined) {
           navigation.reset(state);
         } else {
-          switch (actionType) {
-            case 'advance': {
-              navigation.dispatch(action);
-              break;
-            }
-            case 'replace': {
-              navigation.dispatch({...action, type: 'REPLACE'});
-              break;
-            }
+          console.log('action', action);
+          if (actionType === 'replace') {
+            navigation.goBack();
           }
+          navigation.dispatch(action);
         }
       } else {
         throw new Error('Failed to parse the path to a navigation state.');

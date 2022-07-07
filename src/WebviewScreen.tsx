@@ -14,6 +14,8 @@ interface Props {
 const WebviewScreen: React.FC<Props> = ({navigation, route}) => {
   const navigateTo = useWebviewNavigate();
 
+  console.log('route', route);
+
   const currentUrl = route?.path || BASE_URL;
 
   const onVisitProposal = ({
