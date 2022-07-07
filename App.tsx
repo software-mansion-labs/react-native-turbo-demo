@@ -4,7 +4,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {BASE_URL, Routes} from './src/config';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import PlaceholderScreen from './src/PlaceholderScreen';
-import {Text} from 'react-native';
 import WebviewScreen from './src/WebviewScreen';
 import NumbersScreen from './src/NumbersScreen';
 import ErrorScreen from './src/ErrorScreen';
@@ -16,7 +15,7 @@ const Tab = createBottomTabNavigator<any>();
 
 const TabBar = () => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator initialRouteName={Routes.WebviewInitial}>
       <Tab.Screen
         name={Routes.PlaceholderScreen2}
         component={PlaceholderScreen}
@@ -50,6 +49,7 @@ const App: React.FC<Props> = () => {
         [Routes.One]: 'one',
         [Routes.Slow]: 'slow',
         [Routes.NumbersScreen]: 'numbers',
+        [Routes.LongScreen]: 'long',
         [Routes.NotFound]: '*',
       },
     },
@@ -69,7 +69,7 @@ const App: React.FC<Props> = () => {
         <Stack.Screen
           name={Routes.One}
           component={WebviewScreen}
-          options={{title: 'One'}}
+          options={{title: "How'd You Get Here"}}
         />
         <Stack.Screen
           name={Routes.Two}
@@ -79,12 +79,17 @@ const App: React.FC<Props> = () => {
         <Stack.Screen
           name={Routes.Slow}
           component={WebviewScreen}
-          options={{title: 'Slow-loading Page?'}}
+          options={{title: 'Slow-loading Page'}}
         />
         <Stack.Screen
           name={Routes.NumbersScreen}
           component={NumbersScreen}
           options={{title: 'A List of Numbers'}}
+        />
+        <Stack.Screen
+          name={Routes.LongScreen}
+          component={WebviewScreen}
+          options={{title: 'A Really Long Page'}}
         />
         <Stack.Screen
           name={Routes.New}

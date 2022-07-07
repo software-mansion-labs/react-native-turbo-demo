@@ -11,4 +11,5 @@ export enum Routes {
   One = 'One',
   Two = 'Two',
   Slow = 'Slow',
+  LongScreen = 'LongScreen',
 }
