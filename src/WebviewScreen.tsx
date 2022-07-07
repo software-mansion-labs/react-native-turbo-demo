@@ -3,56 +3,23 @@ import React from 'react';
 import {StyleSheet, View, NativeSyntheticEvent} from 'react-native';
 import {BASE_URL} from './config';
 import VisitableView, {OnLoadEvent, VisitProposal} from './VisitableView';
-import {useLinkTo} from '@react-navigation/native';
-import {replace} from 'lodash';
+import useWebviewNavigate from './useWebviewNavigate';
+import {RouteProp} from '@react-navigation/native';
 
 interface Props {
   navigation: NativeStackNavigationProp<any>;
-  route: any;
+  route: RouteProp<any>;
 }
 
 const WebviewScreen: React.FC<Props> = ({navigation, route}) => {
-  const linkTo = useLinkTo();
+  const navigateTo = useWebviewNavigate();
 
-  const currentUrl = route?.path ? `${BASE_URL}/${route?.path}` : BASE_URL;
-
-  console.log({currentUrl, route});
+  const currentUrl = route?.path || BASE_URL;
 
   const onVisitProposal = ({
     nativeEvent: {action: actionType, url},
   }: NativeSyntheticEvent<VisitProposal>) => {
-    // TODO implement
-    const path = replace(url, BASE_URL, '');
-    console.log('path', {url, path});
-
-    // const action: NavigationAction = {
-    //   type: WebviewNavActions.openWebview,
-    //   payload: {
-    //     actionType,
-    //     url,
-    //   },
-    // };
-    // navigation.dispatch(action);
-
-    linkTo(path);
-
-    // switch (action) {
-    //   case 'advance': {
-    //     navigation.push(Routes.Webview, {
-    //       url: url,
-    //     });
-    //     break;
-    //   }
-    //   case 'replace': {
-    //     navigation.replace(Routes.Webview, {
-    //       url: url,
-    //     });
-    //     break;
-    //   }
-    //   default: {
-    //     Alert.alert('Unsupported action type', action);
-    //   }
-    // }
+    navigateTo(url, actionType);
   };
 
   const onLoad = ({

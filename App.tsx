@@ -1,5 +1,9 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {
+  LinkingOptions,
+  NavigationContainer,
+  PathConfigMap,
+} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {BASE_URL, Routes} from './src/config';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -7,11 +11,6 @@ import PlaceholderScreen from './src/PlaceholderScreen';
 import WebviewScreen from './src/WebviewScreen';
 import NumbersScreen from './src/NumbersScreen';
 import ErrorScreen from './src/ErrorScreen';
-
-interface Props {}
-
-const Stack = createNativeStackNavigator<any>();
-const Tab = createBottomTabNavigator<any>();
 
 const TabBar = () => {
   return (
@@ -39,18 +38,28 @@ const TabBar = () => {
   );
 };
 
+interface Props {}
+const Stack = createNativeStackNavigator<any>();
+const Tab = createBottomTabNavigator<any>();
+
+const webviewScreensConfig: PathConfigMap<any> = {
+  [Routes.New]: `${BASE_URL}/new`,
+  [Routes.Two]: `${BASE_URL}/two`,
+  [Routes.One]: `${BASE_URL}/one`,
+  [Routes.Slow]: `${BASE_URL}/slow`,
+  [Routes.NumbersScreen]: `${BASE_URL}/numbers`,
+  [Routes.LongScreen]: `${BASE_URL}/long`,
+  [Routes.NotFound]: {
+    path: `${BASE_URL}/*`,
+  },
+};
+
 const App: React.FC<Props> = () => {
-  const linking = {
+  const linking: LinkingOptions<any> = {
     prefixes: [BASE_URL],
     config: {
       screens: {
-        [Routes.New]: 'new',
-        [Routes.Two]: 'two',
-        [Routes.One]: 'one',
-        [Routes.Slow]: 'slow',
-        [Routes.NumbersScreen]: 'numbers',
-        [Routes.LongScreen]: 'long',
-        [Routes.NotFound]: '*',
+        ...webviewScreensConfig,
       },
     },
   };
@@ -68,6 +77,10 @@ const App: React.FC<Props> = () => {
         />
         <Stack.Screen
           name={Routes.One}
+          getId={params => {
+            console.warn(params);
+            return undefined;
+          }}
           component={WebviewScreen}
           options={{title: "How'd You Get Here"}}
         />
