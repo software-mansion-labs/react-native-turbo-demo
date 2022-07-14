@@ -23,7 +23,7 @@ export interface VisitProposalError {
 interface Props {
   url: string;
   onVisitProposal: (proposal: NativeSyntheticEvent<VisitProposal>) => void;
-  onLoad: (proposal: NativeSyntheticEvent<OnLoadEvent>) => void;
+  onLoad?: (proposal: NativeSyntheticEvent<OnLoadEvent>) => void;
   onVisitError?: (proposal: NativeSyntheticEvent<VisitProposalError>) => void;
 }
 
