@@ -51,15 +51,12 @@ export default function useWebviewNavigate<
         ? options.getStateFromPath(to, options.config)
         : getStateFromPath(to, options?.config);
 
-      console.log('state', state);
-
       if (state) {
         const action = getActionFromState(state, options?.config);
 
         if (action === undefined) {
           navigation.reset(state);
         } else {
-          console.log('action', action);
           if (actionType === 'replace') {
             navigation.goBack();
           }

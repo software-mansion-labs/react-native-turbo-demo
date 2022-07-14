@@ -2,7 +2,11 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React from 'react';
 import {StyleSheet, View, NativeSyntheticEvent} from 'react-native';
 import {BASE_URL} from './config';
-import VisitableView, {OnLoadEvent, VisitProposal} from './VisitableView';
+import VisitableView, {
+  OnLoadEvent,
+  VisitProposal,
+  VisitProposalError,
+} from './VisitableView';
 import useWebviewNavigate from './useWebviewNavigate';
 import {RouteProp} from '@react-navigation/native';
 
@@ -14,14 +18,18 @@ interface Props {
 const WebviewScreen: React.FC<Props> = ({navigation, route}) => {
   const navigateTo = useWebviewNavigate();
 
-  console.log('route', route);
-
   const currentUrl = route?.path || BASE_URL;
 
   const onVisitProposal = ({
     nativeEvent: {action: actionType, url},
   }: NativeSyntheticEvent<VisitProposal>) => {
     navigateTo(url, actionType);
+  };
+
+  const onVisitError = ({
+    nativeEvent,
+  }: NativeSyntheticEvent<VisitProposalError>) => {
+    console.log('visit error nativeEvent', nativeEvent);
   };
 
   const onLoad = ({
@@ -35,6 +43,7 @@ const WebviewScreen: React.FC<Props> = ({navigation, route}) => {
       <VisitableView
         url={currentUrl}
         onVisitProposal={onVisitProposal}
+        onVisitError={onVisitError}
         onLoad={onLoad}
       />
     </View>

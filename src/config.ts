@@ -12,4 +12,6 @@ export enum Routes {
   Two = 'Two',
   Slow = 'Slow',
   LongScreen = 'LongScreen',
+  SuccessScreen = 'SuccessScreen',
+  NonExistentScreen = 'NonExistentScreen',
 }

@@ -13,6 +13,7 @@ class RNVisitableView: UIView {
   @objc var url: NSString = ""
   @objc var onVisitProposal: RCTDirectEventBlock?
   @objc var onLoad: RCTDirectEventBlock?
+  @objc var onVisitError: RCTDirectEventBlock?
   
   private var controller: RNVisitableViewController?
   
@@ -71,6 +72,13 @@ extension RNVisitableView: SessionDelegate {
   }
 
   func session(_ session: Session, didFailRequestForVisitable visitable: Visitable, error: Error) {
+    print("session error", error)
+    // Handle a visit error
+    let event: [AnyHashable: Any] = [
+      "url": visitable.visitableURL.absoluteString,
+      "error:": error.localizedDescription,
+    ]
+    onVisitError?(event)
       // Handle a visit error
   }
 

@@ -14,10 +14,16 @@ export interface OnLoadEvent {
   url: string;
 }
 
+export interface VisitProposalError {
+  url: string;
+  error: string;
+}
+
 interface Props {
   url: string;
   onVisitProposal: (proposal: NativeSyntheticEvent<VisitProposal>) => void;
   onLoad: (proposal: NativeSyntheticEvent<OnLoadEvent>) => void;
+  onVisitError?: (proposal: NativeSyntheticEvent<VisitProposalError>) => void;
 }
 
 const VisitableView: React.FC<Props> = props => {
