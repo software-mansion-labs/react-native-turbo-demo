@@ -64,11 +64,16 @@ extension RNVisitableView: SessionDelegate {
 
   func session(_ session: Session, didProposeVisit proposal: VisitProposal) {
     // Handle a visit proposal
-    let event: [AnyHashable: Any] = [
-      "url": proposal.url.absoluteString,
-      "action": proposal.options.action.rawValue,
-    ]
-    onVisitProposal!(event)
+    if (session.webView.url == proposal.url) {
+      // When reopening same URL we want to reload webview
+      RNVisitableViewManager.session.reload()
+    } else {
+      let event: [AnyHashable: Any] = [
+        "url": proposal.url.absoluteString,
+        "action": proposal.options.action.rawValue,
+      ]
+      onVisitProposal!(event)
+    }
   }
 
   func session(_ session: Session, didFailRequestForVisitable visitable: Visitable, error: Error) {
