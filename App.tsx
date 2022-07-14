@@ -25,6 +25,8 @@ const webviewScreensConfig: PathConfigMap<any> = {
   [Routes.NonExistentScreen]: `${BASE_URL}/nonexistent`,
   [Routes.SignIn]: `${BASE_URL}/signin`,
   [Routes.Protected]: `${BASE_URL}/protected`,
+  [Routes.NotFound]: `${BASE_URL}/notfound`,
+  [Routes.Files]: `${BASE_URL}/files`,
   [Routes.NotFound]: {
     path: `${BASE_URL}/*`,
   },
@@ -99,7 +101,12 @@ const App: React.FC<Props> = () => {
         <Stack.Screen
           name={Routes.Protected}
           component={WebviewScreen}
-          options={{title: 'Protected'}}
+          options={{title: 'Protected Webpage'}}
+        />
+        <Stack.Screen
+          name={Routes.Files}
+          component={WebviewScreen}
+          options={{title: 'Handling Files'}}
         />
         <Stack.Screen
           name={Routes.NotFound}

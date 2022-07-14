@@ -21,7 +21,7 @@ const ErrorScreen: React.FC<Props> = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Error loading page</Text>
-      <Text style={styles.subtitle}>There was an error</Text>
+      <Text style={styles.subtitle}>Page not found 😿</Text>
     </View>
   );
 };

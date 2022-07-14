@@ -32,6 +32,10 @@ const WebviewScreen: React.FC<Props> = ({navigation, route}) => {
     switch (statusCode) {
       case 401: {
         navigateTo(`${BASE_URL}/signin`);
+        break;
+      }
+      default: {
+        navigateTo(`${BASE_URL}/notfound`, 'replace');
       }
     }
   };

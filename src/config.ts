@@ -16,4 +16,5 @@ export enum Routes {
   NonExistentScreen = 'NonExistentScreen',
   SignIn = 'SignIn',
   Protected = 'Protected',
+  Files = 'Files',
 }
