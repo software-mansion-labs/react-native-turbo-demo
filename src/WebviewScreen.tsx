@@ -27,9 +27,13 @@ const WebviewScreen: React.FC<Props> = ({navigation, route}) => {
   };
 
   const onVisitError = ({
-    nativeEvent,
+    nativeEvent: {statusCode},
   }: NativeSyntheticEvent<VisitProposalError>) => {
-    console.log('visit error nativeEvent', nativeEvent);
+    switch (statusCode) {
+      case 401: {
+        navigateTo(`${BASE_URL}/signin`);
+      }
+    }
   };
 
   const onLoad = ({

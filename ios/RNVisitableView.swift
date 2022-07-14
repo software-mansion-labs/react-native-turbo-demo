@@ -72,14 +72,17 @@ extension RNVisitableView: SessionDelegate {
   }
 
   func session(_ session: Session, didFailRequestForVisitable visitable: Visitable, error: Error) {
-    print("session error", error)
     // Handle a visit error
-    let event: [AnyHashable: Any] = [
+    var event: [AnyHashable: Any] = [
       "url": visitable.visitableURL.absoluteString,
-      "error:": error.localizedDescription,
+      "error": error.localizedDescription,
     ]
+    
+    if let turboError = error as? TurboError, case let .http(statusCode) = turboError {
+      event["statusCode"] = statusCode
+    }
+
     onVisitError?(event)
-      // Handle a visit error
   }
 
   func webView(_ webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> ()) {

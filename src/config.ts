@@ -14,4 +14,6 @@ export enum Routes {
   LongScreen = 'LongScreen',
   SuccessScreen = 'SuccessScreen',
   NonExistentScreen = 'NonExistentScreen',
+  SignIn = 'SignIn',
+  Protected = 'Protected',
 }

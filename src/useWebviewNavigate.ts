@@ -32,7 +32,7 @@ export default function useWebviewNavigate<
   const linking = React.useContext(LinkingContext);
 
   const linkTo = React.useCallback(
-    (to: To<ParamList>, actionType: Action) => {
+    (to: To<ParamList>, actionType?: Action) => {
       if (navigation === undefined) {
         throw new Error(
           "Couldn't find a navigation object. Is your component inside NavigationContainer?",

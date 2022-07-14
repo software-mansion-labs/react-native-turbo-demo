@@ -14,6 +14,7 @@ interface Props {}
 const Stack = createNativeStackNavigator<any>();
 
 const webviewScreensConfig: PathConfigMap<any> = {
+  [Routes.WebviewInitial]: `${BASE_URL}`,
   [Routes.New]: `${BASE_URL}/new`,
   [Routes.Two]: `${BASE_URL}/two`,
   [Routes.One]: `${BASE_URL}/one`,
@@ -22,6 +23,8 @@ const webviewScreensConfig: PathConfigMap<any> = {
   [Routes.LongScreen]: `${BASE_URL}/long`,
   [Routes.SuccessScreen]: `${BASE_URL}/success`,
   [Routes.NonExistentScreen]: `${BASE_URL}/nonexistent`,
+  [Routes.SignIn]: `${BASE_URL}/signin`,
+  [Routes.Protected]: `${BASE_URL}/protected`,
   [Routes.NotFound]: {
     path: `${BASE_URL}/*`,
   },
@@ -87,6 +90,16 @@ const App: React.FC<Props> = () => {
           name={Routes.NonExistentScreen}
           component={WebviewScreen}
           options={{title: 'Not Found'}}
+        />
+        <Stack.Screen
+          name={Routes.SignIn}
+          component={WebviewScreen}
+          options={{title: 'Sign In', presentation: 'modal'}}
+        />
+        <Stack.Screen
+          name={Routes.Protected}
+          component={WebviewScreen}
+          options={{title: 'Protected'}}
         />
         <Stack.Screen
           name={Routes.NotFound}
