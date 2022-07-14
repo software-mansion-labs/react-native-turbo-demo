@@ -27,6 +27,8 @@ const webviewScreensConfig: PathConfigMap<any> = {
   [Routes.Protected]: `${BASE_URL}/protected`,
   [Routes.NotFound]: `${BASE_URL}/notfound`,
   [Routes.Files]: `${BASE_URL}/files`,
+  [Routes.Follow]: `${BASE_URL}/follow`,
+  [Routes.Redirected]: `${BASE_URL}/redirected`,
   [Routes.NotFound]: {
     path: `${BASE_URL}/*`,
   },
@@ -107,6 +109,16 @@ const App: React.FC<Props> = () => {
           name={Routes.Files}
           component={WebviewScreen}
           options={{title: 'Handling Files'}}
+        />
+        <Stack.Screen
+          name={Routes.Follow}
+          component={WebviewScreen}
+          options={{title: 'Redirected Page'}}
+        />
+        <Stack.Screen
+          name={Routes.Redirected}
+          component={WebviewScreen}
+          options={{title: 'Redirected Page'}}
         />
         <Stack.Screen
           name={Routes.NotFound}

@@ -17,4 +17,6 @@ export enum Routes {
   SignIn = 'SignIn',
   Protected = 'Protected',
   Files = 'Files',
+  Follow = 'Follow',
+  Redirected = 'Redirected',
 }
