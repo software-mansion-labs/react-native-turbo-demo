@@ -38,7 +38,7 @@ class RNVisitableView: UIView {
 }
 
 extension RNVisitableView: RNVisitableViewControllerDelegate {
-  
+
   func visitableWillAppear(visitable: Visitable) {
     print("View will appear for URL", visitable.visitableURL.absoluteString)
     RNVisitableViewManager.session.delegate = self

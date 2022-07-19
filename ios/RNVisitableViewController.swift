@@ -20,12 +20,11 @@ class RNVisitableViewController: VisitableViewController {
   
   public var delegate: RNVisitableViewControllerDelegate?
   
+  // For native stack this function is called on every screen change
+  // as the view is replacedin the view hierarchy every time we navigate to a screen
   override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
     self.delegate?.visitableWillAppear(visitable: self)
-  }
-  
-  func presentationControllerDidDismiss(_: UIPresentationController) {
-    print("presentationControllerDidDismiss")
   }
   
   override func visitableDidRender() {
