@@ -1,5 +1,6 @@
 import React from 'react';
 import {NativeSyntheticEvent, StyleSheet} from 'react-native';
+import {SessionContext} from './SessionContext';
 import VisitableViewNativeComponent from './VisitableViewNativeComponent';
 
 export type Action = 'advance' | 'replace' | 'restore';
@@ -28,7 +29,17 @@ interface Props {
 }
 
 const VisitableView: React.FC<Props> = props => {
-  return <VisitableViewNativeComponent {...props} style={styles.container} />;
+  return (
+    <SessionContext.Consumer>
+      {({sessionId}) => (
+        <VisitableViewNativeComponent
+          {...props}
+          sessionId={sessionId}
+          style={styles.container}
+        />
+      )}
+    </SessionContext.Consumer>
+  );
 };
 
 const styles = StyleSheet.create({

@@ -6,8 +6,8 @@ import VisitableView, {
   OnLoadEvent,
   VisitProposal,
   VisitProposalError,
-} from './VisitableView';
-import useWebviewNavigate from './useWebviewNavigate';
+} from './lib/VisitableView';
+import useWebviewNavigate from './lib/useWebviewNavigate';
 import {RouteProp} from '@react-navigation/native';
 
 interface Props {

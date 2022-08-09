@@ -14,6 +14,7 @@ class RNVisitableView: UIView {
   @objc var onVisitProposal: RCTDirectEventBlock?
   @objc var onLoad: RCTDirectEventBlock?
   @objc var onVisitError: RCTDirectEventBlock?
+  @objc var sessionId: NSString = ""
   
   private var controller: RNVisitableViewController?
   
@@ -41,6 +42,7 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
 
   func visitableWillAppear(visitable: Visitable) {
     print("View will appear for URL", visitable.visitableURL.absoluteString)
+    print("sessionId", sessionId)
     RNVisitableViewManager.session.delegate = self
     RNVisitableViewManager.session.visit(visitable)
   }

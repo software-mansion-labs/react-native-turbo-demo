@@ -9,6 +9,7 @@ import {BASE_URL, Routes} from './src/config';
 import WebviewScreen from './src/WebviewScreen';
 import NumbersScreen from './src/NumbersScreen';
 import ErrorScreen from './src/ErrorScreen';
+import Session from './src/lib/Session';
 
 interface Props {}
 const Stack = createNativeStackNavigator<any>();
@@ -46,86 +47,88 @@ const App: React.FC<Props> = () => {
 
   return (
     <NavigationContainer linking={linking}>
-      <Stack.Navigator
-        screenOptions={{
-          headerBackTitle: 'Back',
-        }}>
-        <Stack.Screen
-          name={Routes.WebviewInitial}
-          component={WebviewScreen}
-          options={{title: 'Turbo Native Demo'}}
-        />
-        <Stack.Screen
-          name={Routes.One}
-          component={WebviewScreen}
-          options={{title: "How'd You Get Here?"}}
-        />
-        <Stack.Screen
-          name={Routes.Two}
-          component={WebviewScreen}
-          options={{title: 'Push or Replace?'}}
-        />
-        <Stack.Screen
-          name={Routes.Slow}
-          component={WebviewScreen}
-          options={{title: 'Slow-loading Page'}}
-        />
-        <Stack.Screen
-          name={Routes.NumbersScreen}
-          component={NumbersScreen}
-          options={{title: 'A List of Numbers'}}
-        />
-        <Stack.Screen
-          name={Routes.LongScreen}
-          component={WebviewScreen}
-          options={{title: 'A Really Long Page'}}
-        />
-        <Stack.Screen
-          name={Routes.New}
-          component={WebviewScreen}
-          options={{title: 'A Modal Webpage', presentation: 'modal'}}
-        />
-        <Stack.Screen
-          name={Routes.SuccessScreen}
-          component={WebviewScreen}
-          options={{title: 'It Worked!', presentation: 'modal'}}
-        />
-        <Stack.Screen
-          name={Routes.NonExistentScreen}
-          component={WebviewScreen}
-          options={{title: 'Not Found'}}
-        />
-        <Stack.Screen
-          name={Routes.SignIn}
-          component={WebviewScreen}
-          options={{title: 'Sign In', presentation: 'modal'}}
-        />
-        <Stack.Screen
-          name={Routes.Protected}
-          component={WebviewScreen}
-          options={{title: 'Protected Webpage'}}
-        />
-        <Stack.Screen
-          name={Routes.Files}
-          component={WebviewScreen}
-          options={{title: 'Handling Files'}}
-        />
-        <Stack.Screen
-          name={Routes.Follow}
-          component={WebviewScreen}
-          options={{title: 'Redirected Page'}}
-        />
-        <Stack.Screen
-          name={Routes.Redirected}
-          component={WebviewScreen}
-          options={{title: 'Redirected Page'}}
-        />
-        <Stack.Screen
-          name={Routes.NotFound}
-          component={ErrorScreen}
-          options={{title: 'Not Found'}}
-        />
-      </Stack.Navigator>
+      <Session>
+        <Stack.Navigator
+          screenOptions={{
+            headerBackTitle: 'Back',
+          }}>
+          <Stack.Screen
+            name={Routes.WebviewInitial}
+            component={WebviewScreen}
+            options={{title: 'Turbo Native Demo'}}
+          />
+          <Stack.Screen
+            name={Routes.One}
+            component={WebviewScreen}
+            options={{title: "How'd You Get Here?"}}
+          />
+          <Stack.Screen
+            name={Routes.Two}
+            component={WebviewScreen}
+            options={{title: 'Push or Replace?'}}
+          />
+          <Stack.Screen
+            name={Routes.Slow}
+            component={WebviewScreen}
+            options={{title: 'Slow-loading Page'}}
+          />
+          <Stack.Screen
+            name={Routes.NumbersScreen}
+            component={NumbersScreen}
+            options={{title: 'A List of Numbers'}}
+          />
+          <Stack.Screen
+            name={Routes.LongScreen}
+            component={WebviewScreen}
+            options={{title: 'A Really Long Page'}}
+          />
+          <Stack.Screen
+            name={Routes.New}
+            component={WebviewScreen}
+            options={{title: 'A Modal Webpage', presentation: 'modal'}}
+          />
+          <Stack.Screen
+            name={Routes.SuccessScreen}
+            component={WebviewScreen}
+            options={{title: 'It Worked!', presentation: 'modal'}}
+          />
+          <Stack.Screen
+            name={Routes.NonExistentScreen}
+            component={WebviewScreen}
+            options={{title: 'Not Found'}}
+          />
+          <Stack.Screen
+            name={Routes.SignIn}
+            component={WebviewScreen}
+            options={{title: 'Sign In', presentation: 'modal'}}
+          />
+          <Stack.Screen
+            name={Routes.Protected}
+            component={WebviewScreen}
+            options={{title: 'Protected Webpage'}}
+          />
+          <Stack.Screen
+            name={Routes.Files}
+            component={WebviewScreen}
+            options={{title: 'Handling Files'}}
+          />
+          <Stack.Screen
+            name={Routes.Follow}
+            component={WebviewScreen}
+            options={{title: 'Redirected Page'}}
+          />
+          <Stack.Screen
+            name={Routes.Redirected}
+            component={WebviewScreen}
+            options={{title: 'Redirected Page'}}
+          />
+          <Stack.Screen
+            name={Routes.NotFound}
+            component={ErrorScreen}
+            options={{title: 'Not Found'}}
+          />
+        </Stack.Navigator>
+      </Session>
     </NavigationContainer>
   );
 };
