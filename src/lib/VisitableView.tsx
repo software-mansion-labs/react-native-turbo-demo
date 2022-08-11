@@ -31,13 +31,16 @@ interface Props {
 const VisitableView: React.FC<Props> = props => {
   return (
     <SessionContext.Consumer>
-      {({sessionId}) => (
-        <VisitableViewNativeComponent
-          {...props}
-          sessionId={sessionId}
-          style={styles.container}
-        />
-      )}
+      {({sessionHandle}) => {
+        console.log('sessionId', sessionHandle);
+        return (
+          <VisitableViewNativeComponent
+            {...props}
+            sessionId={sessionHandle}
+            style={styles.container}
+          />
+        );
+      }}
     </SessionContext.Consumer>
   );
 };

@@ -1,9 +1,9 @@
 import React from 'react';
 
 interface SessionContextValue {
-  sessionId: string | undefined;
+  sessionHandle: number | undefined;
 }
 
 export const SessionContext = React.createContext<SessionContextValue>({
-  sessionId: undefined,
+  sessionHandle: undefined,
 });

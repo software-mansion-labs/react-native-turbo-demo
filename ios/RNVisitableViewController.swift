@@ -12,7 +12,7 @@ public protocol RNVisitableViewControllerDelegate: UIAdaptivePresentationControl
   
   func visitableWillAppear(visitable: Visitable)
   
-  func visitableDidRender(session: Session, visitable: Visitable)
+  func visitableDidRender(visitable: Visitable)
   
 }
 
@@ -20,7 +20,7 @@ class RNVisitableViewController: VisitableViewController {
   
   public var delegate: RNVisitableViewControllerDelegate?
   
-  // For native stack this function is called on every screen change
+  // For native stack this function is called fon every screen change
   // as the view is replacedin the view hierarchy every time we navigate to a screen
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
@@ -28,7 +28,7 @@ class RNVisitableViewController: VisitableViewController {
   }
   
   override func visitableDidRender() {
-    self.delegate?.visitableDidRender(session: RNVisitableViewManager.session, visitable: self)
+    self.delegate?.visitableDidRender(visitable: self)
   }
   
 }

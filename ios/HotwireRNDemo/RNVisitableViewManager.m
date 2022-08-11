@@ -12,7 +12,7 @@
 @interface RCT_EXTERN_MODULE(RNVisitableViewManager, NSObject)
 
   RCT_EXPORT_VIEW_PROPERTY(url, NSString)
-  RCT_EXPORT_VIEW_PROPERTY(sessionId, NSString)
+  RCT_EXPORT_VIEW_PROPERTY(sessionHandle, NSNumber)
   RCT_EXPORT_VIEW_PROPERTY(onVisitProposal, RCTDirectEventBlock)
   RCT_EXPORT_VIEW_PROPERTY(onLoad, RCTDirectEventBlock)
   RCT_EXPORT_VIEW_PROPERTY(onVisitError, RCTDirectEventBlock)

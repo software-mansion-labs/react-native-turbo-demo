@@ -16,8 +16,9 @@
 		294DB74B286A162C0048567D /* RNVisitableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294DB74A286A162C0048567D /* RNVisitableViewController.swift */; };
 		299E5F2F2865E60500E5B077 /* RNVisitableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299E5F2E2865E60500E5B077 /* RNVisitableViewManager.swift */; };
 		299E5F312865F22600E5B077 /* RNVisitableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299E5F302865F22600E5B077 /* RNVisitableView.swift */; };
-		29E4FC9F28A25BAD00CA4720 /* SessionNativeModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29E4FC9E28A25BAD00CA4720 /* SessionNativeModule.swift */; };
-		29E4FCA128A25C3800CA4720 /* SessionNativeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 29E4FCA028A25C3800CA4720 /* SessionNativeModule.m */; };
+		29E4FC9F28A25BAD00CA4720 /* RNSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29E4FC9E28A25BAD00CA4720 /* RNSessionManager.swift */; };
+		29E4FCA128A25C3800CA4720 /* RNSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 29E4FCA028A25C3800CA4720 /* RNSessionManager.m */; };
+		29E4FCA328A3B7F100CA4720 /* RNSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29E4FCA228A3B7F100CA4720 /* RNSession.swift */; };
 		7699B88040F8A987B510C191 /* libPods-HotwireRNDemo-HotwireRNDemoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-HotwireRNDemo-HotwireRNDemoTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -48,8 +49,9 @@
 		299E5F2A2865C12C00E5B077 /* HotwireRNDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HotwireRNDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		299E5F2E2865E60500E5B077 /* RNVisitableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNVisitableViewManager.swift; sourceTree = "<group>"; };
 		299E5F302865F22600E5B077 /* RNVisitableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNVisitableView.swift; sourceTree = "<group>"; };
-		29E4FC9E28A25BAD00CA4720 /* SessionNativeModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionNativeModule.swift; sourceTree = "<group>"; };
-		29E4FCA028A25C3800CA4720 /* SessionNativeModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SessionNativeModule.m; sourceTree = "<group>"; };
+		29E4FC9E28A25BAD00CA4720 /* RNSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNSessionManager.swift; sourceTree = "<group>"; };
+		29E4FCA028A25C3800CA4720 /* RNSessionManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNSessionManager.m; sourceTree = "<group>"; };
+		29E4FCA228A3B7F100CA4720 /* RNSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNSession.swift; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-HotwireRNDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HotwireRNDemo.debug.xcconfig"; path = "Target Support Files/Pods-HotwireRNDemo/Pods-HotwireRNDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-HotwireRNDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HotwireRNDemo.release.xcconfig"; path = "Target Support Files/Pods-HotwireRNDemo/Pods-HotwireRNDemo.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-HotwireRNDemo-HotwireRNDemoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HotwireRNDemo-HotwireRNDemoTests.debug.xcconfig"; path = "Target Support Files/Pods-HotwireRNDemo-HotwireRNDemoTests/Pods-HotwireRNDemo-HotwireRNDemoTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -113,13 +115,14 @@
 		2947EB0928632D350030C7D1 /* TurboWebview */ = {
 			isa = PBXGroup;
 			children = (
-				2947EB0A28632DA00030C7D1 /* RNVisitableViewManager.m */,
-				29E4FC9E28A25BAD00CA4720 /* SessionNativeModule.swift */,
-				29E4FCA028A25C3800CA4720 /* SessionNativeModule.m */,
+				299E5F2A2865C12C00E5B077 /* HotwireRNDemo-Bridging-Header.h */,
+				29E4FCA228A3B7F100CA4720 /* RNSession.swift */,
+				29E4FC9E28A25BAD00CA4720 /* RNSessionManager.swift */,
 				299E5F302865F22600E5B077 /* RNVisitableView.swift */,
 				299E5F2E2865E60500E5B077 /* RNVisitableViewManager.swift */,
 				294DB74A286A162C0048567D /* RNVisitableViewController.swift */,
-				299E5F2A2865C12C00E5B077 /* HotwireRNDemo-Bridging-Header.h */,
+				2947EB0A28632DA00030C7D1 /* RNVisitableViewManager.m */,
+				29E4FCA028A25C3800CA4720 /* RNSessionManager.m */,
 			);
 			name = TurboWebview;
 			sourceTree = "<group>";
@@ -442,10 +445,11 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				299E5F312865F22600E5B077 /* RNVisitableView.swift in Sources */,
-				29E4FCA128A25C3800CA4720 /* SessionNativeModule.m in Sources */,
+				29E4FCA128A25C3800CA4720 /* RNSessionManager.m in Sources */,
 				294DB74B286A162C0048567D /* RNVisitableViewController.swift in Sources */,
+				29E4FCA328A3B7F100CA4720 /* RNSession.swift in Sources */,
 				299E5F2F2865E60500E5B077 /* RNVisitableViewManager.swift in Sources */,
-				29E4FC9F28A25BAD00CA4720 /* SessionNativeModule.swift in Sources */,
+				29E4FC9F28A25BAD00CA4720 /* RNSessionManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
