@@ -9,7 +9,7 @@ import {BASE_URL, Routes} from './src/config';
 import WebviewScreen from './src/WebviewScreen';
 import NumbersScreen from './src/NumbersScreen';
 import ErrorScreen from './src/ErrorScreen';
-import Session from './src/lib/Session';
+import Session, {withSession} from './src/lib/Session';
 
 interface Props {}
 const Stack = createNativeStackNavigator<any>();
@@ -84,16 +84,12 @@ const App: React.FC<Props> = () => {
           />
           <Stack.Screen
             name={Routes.New}
-            component={props => (
-              <Session>
-                <WebviewScreen {...props} />
-              </Session>
-            )}
+            component={withSession(WebviewScreen)}
             options={{title: 'A Modal Webpage', presentation: 'modal'}}
           />
           <Stack.Screen
             name={Routes.SuccessScreen}
-            component={WebviewScreen}
+            component={withSession(WebviewScreen)}
             options={{title: 'It Worked!', presentation: 'modal'}}
           />
           <Stack.Screen
@@ -103,7 +99,7 @@ const App: React.FC<Props> = () => {
           />
           <Stack.Screen
             name={Routes.SignIn}
-            component={WebviewScreen}
+            component={withSession(WebviewScreen)}
             options={{title: 'Sign In', presentation: 'modal'}}
           />
           <Stack.Screen

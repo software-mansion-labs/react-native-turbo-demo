@@ -39,8 +39,6 @@ class Session extends React.Component<Props, State> {
   render() {
     const {sessionHandle} = this.state;
 
-    console.warn('sessionHandle', !!sessionHandle, sessionHandle);
-
     return (
       <>
         <RNSession ref={this.nativeComponentRef} />
@@ -50,6 +48,14 @@ class Session extends React.Component<Props, State> {
       </>
     );
   }
+}
+
+export function withSession<T>(Component: React.ComponentType<T>) {
+  return (props: T) => (
+    <Session>
+      <Component {...props} />
+    </Session>
+  );
 }
 
 export default Session;

@@ -1,5 +1,5 @@
 import React from 'react';
-import {NativeSyntheticEvent, StyleSheet, View} from 'react-native';
+import {NativeSyntheticEvent, StyleSheet} from 'react-native';
 import {SessionContext} from './SessionContext';
 import VisitableViewNativeComponent from './VisitableViewNativeComponent';
 
@@ -32,7 +32,6 @@ const VisitableView: React.FC<Props> = props => {
   return (
     <SessionContext.Consumer>
       {({sessionHandle}) => {
-        console.log('sessionId', sessionHandle);
         return (
           <VisitableViewNativeComponent
             {...props}
