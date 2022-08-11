@@ -84,7 +84,11 @@ const App: React.FC<Props> = () => {
           />
           <Stack.Screen
             name={Routes.New}
-            component={WebviewScreen}
+            component={props => (
+              <Session>
+                <WebviewScreen {...props} />
+              </Session>
+            )}
             options={{title: 'A Modal Webpage', presentation: 'modal'}}
           />
           <Stack.Screen

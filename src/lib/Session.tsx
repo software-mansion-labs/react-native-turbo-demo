@@ -26,7 +26,7 @@ class Session extends React.Component<Props, State> {
 
   getNativeComponentHandleId = () => {
     const sessionHandle = findNodeHandle(this.nativeComponentRef.current);
-    console.log('native coponent id', sessionHandle);
+    console.log('native component id', sessionHandle);
     this.setState({
       sessionHandle: sessionHandle || undefined,
     });
@@ -39,12 +39,15 @@ class Session extends React.Component<Props, State> {
   render() {
     const {sessionHandle} = this.state;
 
+    console.warn('sessionHandle', !!sessionHandle, sessionHandle);
+
     return (
-      <RNSession ref={this.nativeComponentRef}>
+      <>
+        <RNSession ref={this.nativeComponentRef} />
         <SessionContext.Provider value={{sessionHandle}}>
           {this.props.children}
         </SessionContext.Provider>
-      </RNSession>
+      </>
     );
   }
 }

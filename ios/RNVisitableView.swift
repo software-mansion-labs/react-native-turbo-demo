@@ -21,7 +21,7 @@ class RNVisitableView: UIView {
   
   init(bridge: RCTBridge) {
     self.bridge = bridge
-    super.init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+    super.init(frame: CGRect.zero)
   }
 
   required init?(coder aDecoder: NSCoder) {
@@ -29,15 +29,11 @@ class RNVisitableView: UIView {
   }
   
   public func getSession() -> Session? {
-    print("getting session for", sessionHandle)
-    
-    if (sessionHandle != nil) {
-      let view = self.bridge?.uiManager?.view(forReactTag: sessionHandle!) as? RNSession
-      return view?.session
+    guard let view = self.bridge?.uiManager?.view(forReactTag: sessionHandle!) as? RNSession else {
+      print("Couldn't find session for sessionHandle:", sessionHandle!)
+      return nil
     }
-//    let session = RNSessionManager.sessions[sessionId as String]
-//    return session
-    return nil
+    return view.session
   }
   
   override func didMoveToWindow() {
@@ -45,9 +41,7 @@ class RNVisitableView: UIView {
     
     if (self.controller == nil) {
       print("Open new VistableView with URL passed from JS: ", url)
-      
       setupViewController(url: url)
-      
       self.addSubview((controller?.view)!)
     }
   }
@@ -71,10 +65,12 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
   
   
   func visitableDidRender(visitable: Visitable) {
-    let session = getSession()
+    guard let session = getSession() else {
+      return
+    }
     let event: [AnyHashable: Any] = [
-      "title": session?.webView.title,
-      "url": session?.webView.url
+      "title": session.webView.title!,
+      "url": session.webView.url!
     ]
     onLoad?(event)
   }
