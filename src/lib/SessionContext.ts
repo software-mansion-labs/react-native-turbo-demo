@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface SessionContextValue {
-  sessionHandle: number | undefined;
+  sessionHandle?: number | null;
 }
 
 export const SessionContext = React.createContext<SessionContextValue>({

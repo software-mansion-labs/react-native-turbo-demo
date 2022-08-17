@@ -6,7 +6,7 @@ import RNSession from './SessionNativeComponent';
 interface Props {}
 
 interface State {
-  sessionHandle?: number;
+  sessionHandle?: number | null;
 }
 
 class Session extends React.Component<Props, State> {
@@ -19,16 +19,15 @@ class Session extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      sessionHandle: undefined,
+      sessionHandle: null,
     };
     this.nativeComponentRef = React.createRef();
   }
 
   getNativeComponentHandleId = () => {
     const sessionHandle = findNodeHandle(this.nativeComponentRef.current);
-    console.log('native component id', sessionHandle);
     this.setState({
-      sessionHandle: sessionHandle || undefined,
+      sessionHandle: sessionHandle || null,
     });
   };
 

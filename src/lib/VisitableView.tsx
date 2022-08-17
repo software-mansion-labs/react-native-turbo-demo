@@ -32,13 +32,22 @@ const VisitableView: React.FC<Props> = props => {
   return (
     <SessionContext.Consumer>
       {({sessionHandle}) => {
-        return (
-          <VisitableViewNativeComponent
-            {...props}
-            sessionHandle={sessionHandle}
-            style={styles.container}
-          />
-        );
+        if (sessionHandle === undefined) {
+          console.warn(
+            "[Webview] Couldn't find Session, make sure that the your webview is wrapped with Session component.",
+          );
+          return null;
+        }
+        if (sessionHandle) {
+          return (
+            <VisitableViewNativeComponent
+              {...props}
+              sessionHandle={sessionHandle}
+              style={styles.container}
+            />
+          );
+        }
+        return null;
       }}
     </SessionContext.Consumer>
   );

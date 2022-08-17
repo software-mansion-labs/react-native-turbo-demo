@@ -29,8 +29,13 @@ class RNVisitableView: UIView {
   }
   
   public func getSession() -> Session? {
-    guard let view = self.bridge?.uiManager?.view(forReactTag: sessionHandle!) as? RNSession else {
-      print("Couldn't find session for sessionHandle:", sessionHandle!)
+    guard let sessionHandle = sessionHandle else {
+      print("Couldn't find session for nil")
+      return nil
+    }
+    
+    guard let view = self.bridge?.uiManager?.view(forReactTag: sessionHandle) as? RNSession else {
+      print("Couldn't find session for sessionHandle:", sessionHandle)
       return nil
     }
     return view.session

@@ -10,9 +10,6 @@ import UIKit
 
 class RNSession: UIView {
   
-  public var session: Session = {
-      let session = Session()
-      return session
-  }()
+  public var session: Session = Session()
   
 }
