@@ -11,13 +11,8 @@ import Turbo
 @objc(RNVisitableViewManager)
 class RNVisitableViewManager: RCTViewManager {
   
-  public static var session: Session = {
-      let session = Session()
-      return session
-  }()
-  
   override func view() -> UIView! {
-    return RNVisitableView()
+    return RNVisitableView(bridge: self.bridge)
   }
   
   override static func requiresMainQueueSetup() -> Bool {

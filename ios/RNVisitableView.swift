@@ -14,17 +14,44 @@ class RNVisitableView: UIView {
   @objc var onVisitProposal: RCTDirectEventBlock?
   @objc var onLoad: RCTDirectEventBlock?
   @objc var onVisitError: RCTDirectEventBlock?
+  @objc var sessionHandle: NSNumber?
+  var bridge: RCTBridge?
   
   private var controller: RNVisitableViewController?
+  
+  init(bridge: RCTBridge) {
+    self.bridge = bridge
+    super.init(frame: CGRect.zero)
+  }
+
+  required init?(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
+  }
+  
+  public func getSession() -> Session? {
+    if (!Thread.isMainThread) {
+      print("getSession accessed from incorrect thread")
+      return nil
+    }
+    
+    guard let sessionHandle = sessionHandle else {
+      print("Couldn't find session for nil")
+      return nil
+    }
+    
+    guard let view = self.bridge?.uiManager?.view(forReactTag: sessionHandle) as? RNSession else {
+      print("Couldn't find session for sessionHandle:", sessionHandle)
+      return nil
+    }
+    return view.session
+  }
   
   override func didMoveToWindow() {
     let url = URL(string: String(url))!
     
     if (self.controller == nil) {
       print("Open new VistableView with URL passed from JS: ", url)
-      
       setupViewController(url: url)
-      
       self.addSubview((controller?.view)!)
     }
   }
@@ -38,15 +65,19 @@ class RNVisitableView: UIView {
 }
 
 extension RNVisitableView: RNVisitableViewControllerDelegate {
-  
+
   func visitableWillAppear(visitable: Visitable) {
     print("View will appear for URL", visitable.visitableURL.absoluteString)
-    RNVisitableViewManager.session.delegate = self
-    RNVisitableViewManager.session.visit(visitable)
+    let session = getSession()
+    session?.delegate = self
+    session?.visit(visitable)
   }
   
   
-  func visitableDidRender(session: Session, visitable: Visitable) {
+  func visitableDidRender(visitable: Visitable) {
+    guard let session = getSession() else {
+      return
+    }
     let event: [AnyHashable: Any] = [
       "title": session.webView.title!,
       "url": session.webView.url!
@@ -66,7 +97,7 @@ extension RNVisitableView: SessionDelegate {
     // Handle a visit proposal
     if (session.webView.url == proposal.url) {
       // When reopening same URL we want to reload webview
-      RNVisitableViewManager.session.reload()
+      getSession()?.reload()
     } else {
       let event: [AnyHashable: Any] = [
         "url": proposal.url.absoluteString,
