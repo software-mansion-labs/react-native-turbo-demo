@@ -29,6 +29,11 @@ class RNVisitableView: UIView {
   }
   
   public func getSession() -> Session? {
+    if (!Thread.isMainThread) {
+      print("getSession accessed from incorrect thread")
+      return nil
+    }
+    
     guard let sessionHandle = sessionHandle else {
       print("Couldn't find session for nil")
       return nil
