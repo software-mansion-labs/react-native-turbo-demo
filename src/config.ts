@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://turbo-native-demo.glitch.me';
+export const BASE_URL = 'http://localhost:45678';
 
 export enum Routes {
   TabBar = 'TabBar',
