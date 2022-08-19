@@ -30,6 +30,7 @@ const webviewScreensConfig: PathConfigMap<any> = {
   [Routes.Files]: `${BASE_URL}/files`,
   [Routes.Follow]: `${BASE_URL}/follow`,
   [Routes.Redirected]: `${BASE_URL}/redirected`,
+  [Routes.Share]: `${BASE_URL}/share`,
   [Routes.NotFound]: {
     path: `${BASE_URL}/*`,
   },
@@ -126,6 +127,11 @@ const App: React.FC<Props> = () => {
             name={Routes.NotFound}
             component={ErrorScreen}
             options={{title: 'Not Found'}}
+          />
+          <Stack.Screen
+            name={Routes.Share}
+            component={WebviewScreen}
+            options={{title: 'Try Sharing'}}
           />
         </Stack.Navigator>
       </Session>
