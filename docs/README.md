@@ -10,7 +10,15 @@ Turbo manages a single webview instance, shared between multiple view controller
 
 ### Session
 
-Each [Session](https://github.com/hotwired/turbo-ios/blob/main/Docs/Overview.md#session) manages a single WKWebView instance. Currently the session is stored in the `RNVisitableViewManager`. For now the example doesn't support multiple session setup, but single session should be enough for majority of cases (multiple session is recommended for e.g tab bar support).
+Each [Session](https://github.com/hotwired/turbo-ios/blob/main/Docs/Overview.md#session) manages a single WKWebView instance. We've added support for multiple sessions, now each session instance is managed by `<RNSession>` native component. Every `Session` is used by all its React children `RNVisitable` components. The session is shared using React.Context API.
+
+```tsx
+<Session>
+  <VisitableView />
+</Session>
+```
+
+You are also able to use `withSession(...)` React HOC instead of composition.
 
 ### Visitable component
 
