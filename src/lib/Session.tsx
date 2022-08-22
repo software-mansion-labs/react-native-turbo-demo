@@ -27,7 +27,7 @@ class Session extends React.Component<Props, State> {
     this.state = {
       sessionHandle: null,
     };
-    this.nativeComponentRef = React.createRef();
+    this.nativeComponentRef = React.createRef(null);
   }
 
   getNativeComponentHandleId = () => {
@@ -35,6 +35,13 @@ class Session extends React.Component<Props, State> {
     this.setState({
       sessionHandle: sessionHandle || null,
     });
+  };
+
+  /**
+   * Evaluates Javascript code on the webview runtime
+   */
+  injectJavaScript = (javaScriptString: string) => {
+    console.warn('javaScriptString', javaScriptString);
   };
 
   componentDidMount() {
