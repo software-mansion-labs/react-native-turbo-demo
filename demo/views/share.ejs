@@ -1,3 +1,23 @@
+<script>
+  let shared = false;
+  let btn = document.getElementById('shareButton');
+
+  function setShared(e) {
+    e.preventDefault();
+    btn.innerHTML = 'shared';
+  }
+
+  function share(e) {
+    e.preventDefault();
+    webkit.messageHandlers.nativeApp.postMessage({
+      method: 'share',
+      shareText: 'Hello from the webview 👋',
+    });
+  }
+
+  btn.addEventListener('click', share);
+</script>
+
 <h1 class="page-title">Try sharing using native modal</h1>
 <p>
   Turbo iOS and Turbo Android supports communication between native app and
@@ -9,7 +29,7 @@
   Try button <em>Open native share modal</em> to see how it works in action 🚀
 </p>
 <p>
-  <a href="/two" class="button@native space --bottom-flush"
+  <a id="shareButton" class="button@native space --bottom-flush"
     >Open native share modal</a
   >
 </p>

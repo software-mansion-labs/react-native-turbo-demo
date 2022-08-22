@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {
   LinkingOptions,
   NavigationContainer,
@@ -10,6 +10,7 @@ import WebviewScreen from './src/WebviewScreen';
 import NumbersScreen from './src/NumbersScreen';
 import ErrorScreen from './src/ErrorScreen';
 import Session, {withSession} from './src/lib/Session';
+import {Share} from 'react-native';
 
 interface Props {}
 const Stack = createNativeStackNavigator<any>();
@@ -46,9 +47,18 @@ const App: React.FC<Props> = () => {
     },
   };
 
+  const handleMessage = useCallback(message => {
+    switch (message.method) {
+      case 'share': {
+        Share.share({message: message.shareText});
+        break;
+      }
+    }
+  }, []);
+
   return (
     <NavigationContainer linking={linking}>
-      <Session>
+      <Session onMessage={handleMessage}>
         <Stack.Navigator
           screenOptions={{
             headerBackTitle: 'Back',

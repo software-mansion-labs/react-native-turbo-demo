@@ -1,9 +1,15 @@
 import React, {RefObject} from 'react';
-import {findNodeHandle} from 'react-native';
+import {findNodeHandle, NativeSyntheticEvent} from 'react-native';
 import {SessionContext} from './SessionContext';
 import RNSession from './SessionNativeComponent';
 
-interface Props {}
+interface Message {
+  message: object;
+}
+
+interface Props {
+  onMessage?: (message: object) => void;
+}
 
 interface State {
   sessionHandle?: number | null;
@@ -35,12 +41,18 @@ class Session extends React.Component<Props, State> {
     this.getNativeComponentHandleId();
   }
 
+  onMessage = ({nativeEvent: {message}}: NativeSyntheticEvent<Message>) => {
+    if (this.props.onMessage) {
+      this.props.onMessage(message);
+    }
+  };
+
   render() {
     const {sessionHandle} = this.state;
 
     return (
       <>
-        <RNSession ref={this.nativeComponentRef} />
+        <RNSession ref={this.nativeComponentRef} onMessage={this.onMessage} />
         <SessionContext.Provider value={{sessionHandle}}>
           {this.props.children}
         </SessionContext.Provider>
