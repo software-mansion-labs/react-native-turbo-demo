@@ -9,8 +9,9 @@ import Foundation
 
 @objc(RNSessionModule) class RNSessionModule: NSObject {
   
-  @objc public func injectJavaScript() {
-    print("Triggering injectJavaScript func")
+  @objc public func injectJavaScript(_ sessionHandle: NSNumber, code: NSString, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+    print("Triggering injectJavaScript func \(sessionHandle) \(code)")
+    resolve("test response")
   }
   
 }

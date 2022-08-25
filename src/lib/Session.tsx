@@ -46,9 +46,15 @@ class Session extends React.Component<Props, State> {
   /**
    * Evaluates Javascript code on the webview runtime
    */
-  injectJavaScript = (javaScriptString: string) => {
-    console.warn('javaScriptString', javaScriptString);
-    RNSessionModule.injectJavaScript();
+  injectJavaScript = async (javaScriptString: string) => {
+    const {sessionHandle} = this.state;
+
+    const res = await RNSessionModule.injectJavaScript(
+      sessionHandle,
+      javaScriptString,
+    );
+
+    console.warn({res});
   };
 
   componentDidMount() {
