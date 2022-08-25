@@ -62,7 +62,7 @@ const App: React.FC<Props> = () => {
     <NavigationContainer linking={linking}>
       <Pressable
         onPress={() => {
-          sessionRef.current?.injectJavaScript('test js');
+          sessionRef.current?.injectJavaScript('1;2;3');
         }}
         style={{height: 100, margin: 40, backgroundColor: 'red'}}
       />
