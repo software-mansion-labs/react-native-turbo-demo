@@ -14,6 +14,8 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2947EB0B28632DA00030C7D1 /* RNVisitableViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2947EB0A28632DA00030C7D1 /* RNVisitableViewManager.m */; };
 		294DB74B286A162C0048567D /* RNVisitableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294DB74A286A162C0048567D /* RNVisitableViewController.swift */; };
+		2988B99D28B792D70071E43B /* RNSessionModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2988B99C28B792D70071E43B /* RNSessionModule.swift */; };
+		2988B99F28B794690071E43B /* RNSessionModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2988B99E28B794690071E43B /* RNSessionModule.m */; };
 		299E5F2F2865E60500E5B077 /* RNVisitableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299E5F2E2865E60500E5B077 /* RNVisitableViewManager.swift */; };
 		299E5F312865F22600E5B077 /* RNVisitableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299E5F302865F22600E5B077 /* RNVisitableView.swift */; };
 		29E4FC9F28A25BAD00CA4720 /* RNSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29E4FC9E28A25BAD00CA4720 /* RNSessionManager.swift */; };
@@ -46,6 +48,8 @@
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-HotwireRNDemo-HotwireRNDemoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HotwireRNDemo-HotwireRNDemoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2947EB0A28632DA00030C7D1 /* RNVisitableViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = RNVisitableViewManager.m; path = HotwireRNDemo/RNVisitableViewManager.m; sourceTree = "<group>"; };
 		294DB74A286A162C0048567D /* RNVisitableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNVisitableViewController.swift; sourceTree = "<group>"; };
+		2988B99C28B792D70071E43B /* RNSessionModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNSessionModule.swift; sourceTree = "<group>"; };
+		2988B99E28B794690071E43B /* RNSessionModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNSessionModule.m; sourceTree = "<group>"; };
 		299E5F2A2865C12C00E5B077 /* HotwireRNDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HotwireRNDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		299E5F2E2865E60500E5B077 /* RNVisitableViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNVisitableViewManager.swift; sourceTree = "<group>"; };
 		299E5F302865F22600E5B077 /* RNVisitableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNVisitableView.swift; sourceTree = "<group>"; };
@@ -117,12 +121,14 @@
 			children = (
 				299E5F2A2865C12C00E5B077 /* HotwireRNDemo-Bridging-Header.h */,
 				29E4FCA228A3B7F100CA4720 /* RNSession.swift */,
+				2988B99C28B792D70071E43B /* RNSessionModule.swift */,
 				29E4FC9E28A25BAD00CA4720 /* RNSessionManager.swift */,
 				299E5F302865F22600E5B077 /* RNVisitableView.swift */,
 				299E5F2E2865E60500E5B077 /* RNVisitableViewManager.swift */,
 				294DB74A286A162C0048567D /* RNVisitableViewController.swift */,
 				2947EB0A28632DA00030C7D1 /* RNVisitableViewManager.m */,
 				29E4FCA028A25C3800CA4720 /* RNSessionManager.m */,
+				2988B99E28B794690071E43B /* RNSessionModule.m */,
 			);
 			name = TurboWebview;
 			sourceTree = "<group>";
@@ -442,6 +448,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2947EB0B28632DA00030C7D1 /* RNVisitableViewManager.m in Sources */,
+				2988B99F28B794690071E43B /* RNSessionModule.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				299E5F312865F22600E5B077 /* RNVisitableView.swift in Sources */,
@@ -449,6 +456,7 @@
 				294DB74B286A162C0048567D /* RNVisitableViewController.swift in Sources */,
 				29E4FCA328A3B7F100CA4720 /* RNSession.swift in Sources */,
 				299E5F2F2865E60500E5B077 /* RNVisitableViewManager.swift in Sources */,
+				2988B99D28B792D70071E43B /* RNSessionModule.swift in Sources */,
 				29E4FC9F28A25BAD00CA4720 /* RNSessionManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,7 +1,13 @@
 import React, {RefObject} from 'react';
-import {findNodeHandle, NativeSyntheticEvent} from 'react-native';
+import {
+  findNodeHandle,
+  NativeSyntheticEvent,
+  NativeModules,
+} from 'react-native';
 import {SessionContext} from './SessionContext';
 import RNSession from './SessionNativeComponent';
+
+const {RNSessionModule} = NativeModules;
 
 interface Message {
   message: object;
@@ -42,6 +48,7 @@ class Session extends React.Component<Props, State> {
    */
   injectJavaScript = (javaScriptString: string) => {
     console.warn('javaScriptString', javaScriptString);
+    RNSessionModule.injectJavaScript();
   };
 
   componentDidMount() {
