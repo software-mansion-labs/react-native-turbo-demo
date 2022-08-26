@@ -1,21 +1,10 @@
 <script>
-  let shared = false;
-  let btn = document.getElementById('shareButton');
-
-  function setShared(e) {
-    e.preventDefault();
-    btn.innerHTML = 'shared';
-  }
-
-  function share(e) {
-    e.preventDefault();
+  function share() {
     webkit.messageHandlers.nativeApp.postMessage({
       method: 'share',
       shareText: 'Hello from the webview 👋',
     });
   }
-
-  btn.addEventListener('click', share);
 </script>
 
 <h1 class="page-title">Try sharing using native modal</h1>
@@ -29,7 +18,10 @@
   Try button <em>Open native share modal</em> to see how it works in action 🚀
 </p>
 <p>
-  <a id="shareButton" class="button@native space --bottom-flush"
+  <a
+    id="shareButton"
+    onclick="share()"
+    class="button@native space --bottom-flush"
     >Open native share modal</a
   >
 </p>

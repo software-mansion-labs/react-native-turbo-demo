@@ -14,10 +14,15 @@ import Foundation
     
     DispatchQueue.main.async {
       guard let session = self.bridge?.uiManager?.view(forReactTag: sessionHandle) as? RNSession else {
-        reject("Webview couldn't inject JS","Couldn't find session for sessionHandle: \(sessionHandle)", nil)
+        reject("webview_js_inject_error", "Couldn't find session for sessionHandle: \(sessionHandle)", nil)
         return
       }
-      session.session.webView.evaluateJavaScript(code as String, completionHandler: {res, _ in
+
+      session.session.webView.evaluateJavaScript(code as String, completionHandler: {res, err in
+        if (err != nil) {
+          reject("webview_js_inject_error", err?.localizedDescription, err)
+          return
+        }
         resolve(res)
       })
     }

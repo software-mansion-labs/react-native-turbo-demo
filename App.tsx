@@ -1,4 +1,4 @@
-import React, {useCallback, useRef} from 'react';
+import React, {useCallback} from 'react';
 import {
   LinkingOptions,
   NavigationContainer,
@@ -10,7 +10,8 @@ import WebviewScreen from './src/WebviewScreen';
 import NumbersScreen from './src/NumbersScreen';
 import ErrorScreen from './src/ErrorScreen';
 import Session, {withSession} from './src/lib/Session';
-import {Pressable, Share} from 'react-native';
+import {Share} from 'react-native';
+import useInjectJavaScript from './src/lib/useInjectJavaScript';
 
 interface Props {}
 const Stack = createNativeStackNavigator<any>();
@@ -38,8 +39,6 @@ const webviewScreensConfig: PathConfigMap<any> = {
 };
 
 const App: React.FC<Props> = () => {
-  const sessionRef = useRef<Session>(null);
-
   const linking: LinkingOptions<any> = {
     prefixes: [BASE_URL],
     config: {
@@ -60,13 +59,7 @@ const App: React.FC<Props> = () => {
 
   return (
     <NavigationContainer linking={linking}>
-      <Pressable
-        onPress={() => {
-          sessionRef.current?.injectJavaScript('1;2;3');
-        }}
-        style={{height: 100, margin: 40, backgroundColor: 'red'}}
-      />
-      <Session ref={sessionRef} onMessage={handleMessage}>
+      <Session onMessage={handleMessage}>
         <Stack.Navigator
           screenOptions={{
             headerBackTitle: 'Back',
