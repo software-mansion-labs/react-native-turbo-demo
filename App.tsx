@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useRef} from 'react';
 import {
   LinkingOptions,
   NavigationContainer,
@@ -10,6 +10,7 @@ import WebviewScreen from './src/WebviewScreen';
 import NumbersScreen from './src/NumbersScreen';
 import ErrorScreen from './src/ErrorScreen';
 import Session, {withSession} from './src/lib/Session';
+import {Share} from 'react-native';
 
 interface Props {}
 const Stack = createNativeStackNavigator<any>();
@@ -30,12 +31,15 @@ const webviewScreensConfig: PathConfigMap<any> = {
   [Routes.Files]: `${BASE_URL}/files`,
   [Routes.Follow]: `${BASE_URL}/follow`,
   [Routes.Redirected]: `${BASE_URL}/redirected`,
+  [Routes.Share]: `${BASE_URL}/share`,
   [Routes.NotFound]: {
     path: `${BASE_URL}/*`,
   },
 };
 
 const App: React.FC<Props> = () => {
+  const sessionRef = useRef<Session>(null);
+
   const linking: LinkingOptions<any> = {
     prefixes: [BASE_URL],
     config: {
@@ -45,9 +49,25 @@ const App: React.FC<Props> = () => {
     },
   };
 
+  const share = async (message: string) => {
+    const res = await Share.share({message});
+    if (res.action === 'sharedAction') {
+      sessionRef.current?.injectJavaScript(`shared()`);
+    }
+  };
+
+  const handleMessage = useCallback(message => {
+    switch (message.method) {
+      case 'share': {
+        share(message.shareText);
+        break;
+      }
+    }
+  }, []);
+
   return (
     <NavigationContainer linking={linking}>
-      <Session>
+      <Session ref={sessionRef} onMessage={handleMessage}>
         <Stack.Navigator
           screenOptions={{
             headerBackTitle: 'Back',
@@ -126,6 +146,11 @@ const App: React.FC<Props> = () => {
             name={Routes.NotFound}
             component={ErrorScreen}
             options={{title: 'Not Found'}}
+          />
+          <Stack.Screen
+            name={Routes.Share}
+            component={WebviewScreen}
+            options={{title: 'Try Sharing'}}
           />
         </Stack.Navigator>
       </Session>

@@ -7,9 +7,24 @@
 
 import Turbo
 import UIKit
+import WebKit
 
 class RNSession: UIView {
   
-  public var session: Session = Session()
+  @objc var onMessage: RCTDirectEventBlock?
+  
+  public lazy var session: Session = {
+    let configuration = WKWebViewConfiguration()
+    configuration.userContentController.add(self, name: "nativeApp")
+    return Session(webViewConfiguration: configuration)
+  }()
+  
+}
+
+extension RNSession: WKScriptMessageHandler {
+  
+  func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+    onMessage?(["message": message.body])
+  }
   
 }

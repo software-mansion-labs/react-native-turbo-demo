@@ -5,9 +5,9 @@
 //  Created by Bartłomiej Fryz on 22/06/2022.
 //
 
-#import "React/RCTViewManager.h"
-#import "React/RCTEventEmitter.h"
-#import "React/RCTBridgeModule.h"
+#import <React/RCTViewManager.h>
+#import <React/RCTEventEmitter.h>
+#import <React/RCTBridgeModule.h>
 
 @interface RCT_EXTERN_MODULE(RNVisitableViewManager, NSObject)
 

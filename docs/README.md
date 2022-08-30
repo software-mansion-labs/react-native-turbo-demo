@@ -82,7 +82,7 @@ const webviewScreensConfig = {
 
 ## Examples
 
-You can see all the examples in action, just check out the example app.
+You can see all the examples in action, just check out the example app. You need to first start the local demo web page from the [demo directory](../demo/).
 
 ### Opening webview from RN screen
 
