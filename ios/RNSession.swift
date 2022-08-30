@@ -15,11 +15,8 @@ class RNSession: UIView {
   
   public lazy var session: Session = {
     let configuration = WKWebViewConfiguration()
-          
     configuration.userContentController.add(self, name: "nativeApp")
-    let session = Session(webViewConfiguration: configuration)
-    
-    return session
+    return Session(webViewConfiguration: configuration)
   }()
   
 }
@@ -27,7 +24,6 @@ class RNSession: UIView {
 extension RNSession: WKScriptMessageHandler {
   
   func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-    print("message", message.body)
     onMessage?(["message": message.body])
   }
   

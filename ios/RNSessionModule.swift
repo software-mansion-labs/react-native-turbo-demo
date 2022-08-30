@@ -7,11 +7,17 @@
 
 import Foundation
 
-@objc(RNSessionModule) class RNSessionModule: RCTEventEmitter {
+@objc(RNSessionModule)
+class RNSessionModule: RCTEventEmitter {
   
-  @objc public func injectJavaScript(_ sessionHandle: NSNumber, code: NSString, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
-    print("Triggering injectJavaScript func \(sessionHandle) \(code)")
-    
+  @objc
+  public func injectJavaScript(
+    _ sessionHandle: NSNumber,
+    code: NSString,
+    resolver resolve: @escaping RCTPromiseResolveBlock,
+    rejecter reject: @escaping RCTPromiseRejectBlock)
+  -> Void {
+
     DispatchQueue.main.async {
       guard let session = self.bridge?.uiManager?.view(forReactTag: sessionHandle) as? RNSession else {
         reject("webview_js_inject_error", "Couldn't find session for sessionHandle: \(sessionHandle)", nil)
@@ -27,7 +33,6 @@ import Foundation
       })
     }
   }
-  
   
   override func supportedEvents() -> [String]! {
     return []
