@@ -2,6 +2,9 @@ import React, {RefObject} from 'react';
 import {findNodeHandle, NativeSyntheticEvent} from 'react-native';
 import {SessionContext} from './SessionContext';
 import RNSession from './SessionNativeComponent';
+import {NativeModules} from 'react-native';
+
+const {RNSessionModule} = NativeModules;
 
 interface Message {
   message: object;
@@ -27,8 +30,26 @@ class Session extends React.Component<Props, State> {
     this.state = {
       sessionHandle: null,
     };
-    this.nativeComponentRef = React.createRef(null);
+    this.nativeComponentRef = React.createRef();
   }
+
+  /**
+   * Evaluates Javascript code on webview, mind that this function run in the context
+   * of webview runtime and doesn't have access to other js functions.
+   */
+  injectJavaScript = async (jsCallback: Function | string) => {
+    const isString =
+      typeof jsCallback === 'string' || jsCallback instanceof String;
+
+    const callbackStringified = isString
+      ? jsCallback
+      : `(${jsCallback.toString()})()`;
+
+    await RNSessionModule.injectJavaScript(
+      this.state.sessionHandle,
+      callbackStringified,
+    );
+  };
 
   getNativeComponentHandleId = () => {
     const sessionHandle = findNodeHandle(this.nativeComponentRef.current);

@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useRef} from 'react';
 import {
   LinkingOptions,
   NavigationContainer,
@@ -11,7 +11,6 @@ import NumbersScreen from './src/NumbersScreen';
 import ErrorScreen from './src/ErrorScreen';
 import Session, {withSession} from './src/lib/Session';
 import {Share} from 'react-native';
-import useInjectJavaScript from './src/lib/useInjectJavaScript';
 
 interface Props {}
 const Stack = createNativeStackNavigator<any>();
@@ -39,6 +38,8 @@ const webviewScreensConfig: PathConfigMap<any> = {
 };
 
 const App: React.FC<Props> = () => {
+  const sessionRef = useRef<Session>(null);
+
   const linking: LinkingOptions<any> = {
     prefixes: [BASE_URL],
     config: {
@@ -48,10 +49,17 @@ const App: React.FC<Props> = () => {
     },
   };
 
+  const share = async (message: string) => {
+    const res = await Share.share({message});
+    if (res.action === 'sharedAction') {
+      sessionRef.current?.injectJavaScript(`shared()`);
+    }
+  };
+
   const handleMessage = useCallback(message => {
     switch (message.method) {
       case 'share': {
-        Share.share({message: message.shareText});
+        share(message.shareText);
         break;
       }
     }
@@ -59,7 +67,7 @@ const App: React.FC<Props> = () => {
 
   return (
     <NavigationContainer linking={linking}>
-      <Session onMessage={handleMessage}>
+      <Session ref={sessionRef} onMessage={handleMessage}>
         <Stack.Navigator
           screenOptions={{
             headerBackTitle: 'Back',
