@@ -1,6 +1,6 @@
 # Turbo for React Native
 
-Demonstration PoC for [Turbo](https://github.com/hotwired/turbo-ios) support for React Native apps.
+Demonstration PoC for [Turbo iOS](https://github.com/hotwired/turbo-ios) and [Turbo Android](https://github.com/hotwired/turbo-android) support for React Native apps.
 
 ## Documentation
 
