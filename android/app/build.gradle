@@ -270,7 +270,8 @@ dependencies {
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
-    implementation 'dev.hotwire:turbo:7.0.0-rc12'
+//    implementation 'dev.hotwire:turbo:+' TODO uncomment, local fork
+    implementation project(":turbo")
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'
