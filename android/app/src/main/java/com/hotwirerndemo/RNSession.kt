@@ -9,21 +9,4 @@ import dev.hotwire.turbo.views.TurboWebView
 
 class RNSession(context: Context) : FrameLayout(context) {
 
-    private lateinit var session: TurboSession private set
-    private val reactContext = context as ReactContext
-
-    init {
-        createNewSession()
-    }
-
-    private fun createNewSession() {
-        val activity = reactContext.currentActivity as AppCompatActivity
-        session = TurboSession("testSessionName", activity, onCreateWebView(activity))
-        Log.d("RNSession", "created session")
-    }
-
-    private fun onCreateWebView(context: Context): TurboWebView {
-        return TurboWebView(context, null)
-    }
-
 }
