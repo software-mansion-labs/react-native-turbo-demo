@@ -2,6 +2,8 @@ package com.hotwirerndemo
 import android.content.Context
 import android.graphics.Color
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.facebook.react.bridge.ReactContext
@@ -16,20 +18,21 @@ class RNVisitableView (context: Context) : FrameLayout(context) {
 
     private lateinit var session: TurboSession
     private lateinit var visit: TurboVisit
-    private lateinit var visitableView: TurboView
+    private var turboView: TurboView
+    private var visitableView: ViewGroup
 
     private val reactContext = context as ReactContext
 
     init {
         setupNewSession()
-        visitableView = TurboView(context)
-        visitableView.attachWebView(session.webView, { a: Boolean -> 0 })
+        visitableView = LayoutInflater.from(context).inflate(R.layout.turbo_view, null) as ViewGroup
         addView(visitableView)
+
+        turboView = visitableView.findViewById(R.id.turbo_view)
+        turboView.attachWebView(session.webView, { a: Boolean -> 0 })
         session.visit(visit)
-    }
 
-    fun onAttachedToNewDestination(a: Boolean) {
-
+        Log.d("RNSession", "created session")
     }
 
     private fun setupNewSession() {
@@ -44,7 +47,6 @@ class RNVisitableView (context: Context) : FrameLayout(context) {
             identifier = "",
             options = TurboVisitOptions()
         )
-        Log.d("RNSession", "created session")
     }
 
     private fun onCreateWebView(context: Context): TurboWebView {
