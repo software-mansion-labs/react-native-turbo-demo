@@ -2,9 +2,9 @@ package com.hotwirerndemo
 import android.content.Context
 import android.graphics.Color
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.facebook.react.bridge.ReactContext
 import dev.hotwire.turbo.session.TurboSession
@@ -14,44 +14,49 @@ import dev.hotwire.turbo.visit.TurboVisit
 import dev.hotwire.turbo.visit.TurboVisitOptions
 
 
-class RNVisitableView (context: Context) : FrameLayout(context) {
+class RNVisitableView (context: Context) : LinearLayout(context) {
 
     private lateinit var session: TurboSession
     private lateinit var visit: TurboVisit
     private var turboView: TurboView
     private var visitableView: ViewGroup
-
     private val reactContext = context as ReactContext
 
     init {
         setupNewSession()
-        visitableView = LayoutInflater.from(context).inflate(R.layout.turbo_view, null) as ViewGroup
+        visitableView = inflate(context, R.layout.turbo_view, null) as ViewGroup
         addView(visitableView)
-
         turboView = visitableView.findViewById(R.id.turbo_view)
-        turboView.attachWebView(session.webView, { a: Boolean -> 0 })
-        session.visit(visit)
-
-        Log.d("RNSession", "created session")
     }
 
-    private fun setupNewSession() {
-        val activity = reactContext.currentActivity as AppCompatActivity
-        session = TurboSession("testSessionName", activity, onCreateWebView(activity))
+    internal fun openUrl(url: String) {
         visit = TurboVisit(
-            location = "https://turbo.hotwired.dev",
+            location = url,
             destinationIdentifier = 1,
             restoreWithCachedSnapshot = false,
             reload = false,
             callback = null,
-            identifier = "",
+            identifier = url,
             options = TurboVisitOptions()
         )
+        session.visit(visit)
+        turboView.attachWebView(session.webView, { a: Boolean -> 0 })
     }
 
-    private fun onCreateWebView(context: Context): TurboWebView {
-        return TurboWebView(context, null)
+    /**
+     * Fixes initial size of WebView problem
+     */
+    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+        super.onLayout(changed, l, t, r, b)
+        var width = r - l
+        var height = b - t
+        session.webView.layout(0, 0, width, height)
     }
 
 
+    private fun setupNewSession() {
+        val activity = reactContext.currentActivity as AppCompatActivity
+        val webView = TurboWebView(context, null)
+        session = TurboSession("testSessionName", activity, webView)
+    }
 }
