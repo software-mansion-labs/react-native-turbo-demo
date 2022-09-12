@@ -55,9 +55,10 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
         session.webView.layout(0, 0, width, height)
     }
 
-    private fun onReceiveVisitProposeEvent(location: String) {
+    private fun onReceiveVisitProposeEvent(location: String, action: String?) {
         val event = Arguments.createMap().apply {
             putString("url", location)
+            putString("action", action)
         }
         reactContext
             .getJSModule(RCTEventEmitter::class.java)
@@ -120,8 +121,8 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
     }
 
     override fun visitProposedToLocation(location: String, options: TurboVisitOptions) {
-        onReceiveVisitProposeEvent(location)
-        Log.d("RNVisitableView", "visitProposedToLocation ${location}")
+        onReceiveVisitProposeEvent(location, options.action.name.lowercase())
+        Log.d("RNVisitableView", "visitProposedToLocation ${location} ${options}")
     }
 
     override fun visitNavDestination(): TurboNavDestination? {

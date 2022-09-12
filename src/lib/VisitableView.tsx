@@ -42,6 +42,7 @@ const VisitableView: React.FC<Props> = props => {
           return (
             <VisitableViewNativeComponent
               {...props}
+              // onVisitProposal={e => console.warn(e.nativeEvent)}
               sessionHandle={sessionHandle}
               style={styles.container}
             />
