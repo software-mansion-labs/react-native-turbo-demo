@@ -6,6 +6,12 @@ import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
 
+enum class RNVisitableViewEvent(val jsCallbackName: String) {
+    VISIT_PROPOSED("onVisitProposal"),
+    VISIT_ERROR("onVisitError"),
+    PAGE_LOADED("onLoad")
+}
+
 class RNVisitableViewManager(
     private val callerContext: ReactApplicationContext
 ) : SimpleViewManager<RNVisitableView>() {
@@ -19,23 +25,11 @@ class RNVisitableViewManager(
     }
 
     override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any> {
-        return mapOf(
-            "visitProposed" to mapOf(
-                "phasedRegistrationNames" to mapOf(
-                    "bubbled" to "onVisitProposal"
-                )
-            ),
-            "visitError" to mapOf(
-                "phasedRegistrationNames" to mapOf(
-                    "bubbled" to "onVisitError"
-                )
-            ),
-            "webViewLoaded" to mapOf(
-                "phasedRegistrationNames" to mapOf(
-                    "bubbled" to "onLoad"
-                )
+        return RNVisitableViewEvent.values().map { it.name to mapOf(
+            "phasedRegistrationNames" to mapOf(
+                "bubbled" to it.jsCallbackName
             )
-        )
+        )}.toMap()
     }
 
     companion object {

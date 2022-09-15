@@ -7,7 +7,9 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
+import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.events.RCTEventEmitter
+import com.facebook.react.uimanager.events.RCTModernEventEmitter
 import dev.hotwire.turbo.nav.TurboNavDestination
 import dev.hotwire.turbo.session.TurboSession
 import dev.hotwire.turbo.session.TurboSessionCallback
@@ -62,34 +64,8 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
         session.webView.layout(0, 0, width, height)
     }
 
-    private fun sendVisitProposeEvent(location: String, action: String?) {
-        val event = Arguments.createMap().apply {
-            putString("url", location)
-            putString("action", action)
-        }
-        reactContext
-            .getJSModule(RCTEventEmitter::class.java)
-            .receiveEvent(id, "visitProposed", event)
-    }
-
-    private fun sendVisitErrorEvent(statusCode: Int) {
-        val event = Arguments.createMap().apply {
-            putInt("statusCode", statusCode)
-            putString("url", session.webView.url)
-        }
-        reactContext
-            .getJSModule(RCTEventEmitter::class.java)
-            .receiveEvent(id, "visitError", event)
-    }
-
-    private fun sendOnLoadEvent() {
-        val event = Arguments.createMap().apply {
-            putString("title", session.webView.title)
-            putString("url", session.webView.url)
-        }
-        reactContext
-            .getJSModule(RCTEventEmitter::class.java)
-            .receiveEvent(id, "webViewLoaded", event)
+    private fun sendEvent(event: RNVisitableViewEvent, params: WritableMap) {
+        reactContext.getJSModule(RCTEventEmitter::class.java).receiveEvent(id, event.name, params)
     }
 
     // TurboSessionCallback =====
@@ -99,13 +75,19 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
     }
 
     override fun onPageFinished(location: String) {
-        sendOnLoadEvent()
         Log.d("RNVisitableView", "onPageFinished ${session.webView.title} ${session.webView.url}")
+        sendEvent(RNVisitableViewEvent.PAGE_LOADED, Arguments.createMap().apply {
+            putString("title", session.webView.title)
+            putString("url", session.webView.url)
+        })
     }
 
     override fun onReceivedError(errorCode: Int) {
-        sendVisitErrorEvent(errorCode)
         Log.d("RNVisitableView", "onReceivedError")
+        sendEvent(RNVisitableViewEvent.VISIT_ERROR, Arguments.createMap().apply {
+            putInt("statusCode", errorCode)
+            putString("url", session.webView.url)
+        })
     }
 
     override fun onRenderProcessGone() {
@@ -145,8 +127,11 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
     }
 
     override fun visitProposedToLocation(location: String, options: TurboVisitOptions) {
-        sendVisitProposeEvent(location, options.action.name.lowercase())
         Log.d("RNVisitableView", "visitProposedToLocation ${location} ${options}")
+        sendEvent(RNVisitableViewEvent.VISIT_PROPOSED, Arguments.createMap().apply {
+            putString("url", location)
+            putString("action", options.action.name.lowercase())
+        })
     }
 
     override fun visitNavDestination(): TurboNavDestination? {
