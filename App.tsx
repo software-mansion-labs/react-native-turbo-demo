@@ -105,7 +105,10 @@ const App: React.FC<Props> = () => {
           <Stack.Screen
             name={Routes.New}
             component={withSession(WebviewScreen)}
-            options={{title: 'A Modal Webpage', presentation: 'modal'}}
+            options={{
+              title: 'A Modal Webpage',
+              presentation: 'modal',
+            }}
           />
           <Stack.Screen
             name={Routes.SuccessScreen}

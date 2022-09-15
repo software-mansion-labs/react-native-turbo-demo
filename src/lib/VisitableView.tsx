@@ -16,9 +16,9 @@ export interface OnLoadEvent {
 }
 
 export interface VisitProposalError {
-  url: string;
-  error: string;
   statusCode: number;
+  url: string;
+  error?: string;
 }
 
 interface Props {
