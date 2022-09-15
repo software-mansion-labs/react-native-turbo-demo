@@ -50,7 +50,7 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
             options = TurboVisitOptions()
         )
         session.visit(visit)
-        turboView.attachWebView(session.webView, { a: Boolean -> 0 })
+        turboView.attachWebView(session.webView, { 0 })
     }
 
     /**

@@ -12,6 +12,8 @@ enum class RNVisitableViewEvent(val jsCallbackName: String) {
     PAGE_LOADED("onLoad")
 }
 
+private const val REACT_CLASS = "RNVisitableView"
+
 class RNVisitableViewManager(
     private val callerContext: ReactApplicationContext
 ) : SimpleViewManager<RNVisitableView>() {
@@ -30,10 +32,6 @@ class RNVisitableViewManager(
                 "bubbled" to it.jsCallbackName
             )
         )}.toMap()
-    }
-
-    companion object {
-        const val REACT_CLASS = "RNVisitableView"
     }
 
     override fun createViewInstance(reactContext: ThemedReactContext) = RNVisitableView(reactContext)
