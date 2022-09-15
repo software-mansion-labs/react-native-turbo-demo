@@ -31,6 +31,13 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
         turboView = visitableView.findViewById(R.id.turbo_view)
     }
 
+    private fun setupNewSession() {
+        val activity = reactContext.currentActivity as AppCompatActivity
+        val webView = TurboWebView(context, null)
+        session = TurboSession("testSessionName", activity, webView)
+        session.setDebugLoggingEnabled(true) // TODO, remove
+    }
+
     internal fun openUrl(url: String) {
         visit = TurboVisit(
             location = url,
@@ -46,7 +53,7 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
     }
 
     /**
-     * Fixes initial size of WebView problem
+     * Fixes initial size of WebView
      */
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         super.onLayout(changed, l, t, r, b)
@@ -55,7 +62,7 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
         session.webView.layout(0, 0, width, height)
     }
 
-    private fun onReceiveVisitProposeEvent(location: String, action: String?) {
+    private fun sendVisitProposeEvent(location: String, action: String?) {
         val event = Arguments.createMap().apply {
             putString("url", location)
             putString("action", action)
@@ -65,12 +72,16 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
             .receiveEvent(id, "visitProposed", event)
     }
 
-    private fun setupNewSession() {
-        val activity = reactContext.currentActivity as AppCompatActivity
-        val webView = TurboWebView(context, null)
-        session = TurboSession("testSessionName", activity, webView)
-        session.setDebugLoggingEnabled(true) // TODO, remove
+    private fun sendVisitErrorEvent(statusCode: Int) {
+        val event = Arguments.createMap().apply {
+            putInt("statusCode", statusCode)
+        }
+        reactContext
+            .getJSModule(RCTEventEmitter::class.java)
+            .receiveEvent(id, "visitError", event)
     }
+
+    // TurboSessionCallback =====
 
     override fun onPageStarted(location: String) {
         Log.d("RNVisitableView", "onPageStarted")
@@ -81,6 +92,7 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
     }
 
     override fun onReceivedError(errorCode: Int) {
+        sendVisitErrorEvent(errorCode)
         Log.d("RNVisitableView", "onReceivedError")
     }
 
@@ -121,7 +133,7 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
     }
 
     override fun visitProposedToLocation(location: String, options: TurboVisitOptions) {
-        onReceiveVisitProposeEvent(location, options.action.name.lowercase())
+        sendVisitProposeEvent(location, options.action.name.lowercase())
         Log.d("RNVisitableView", "visitProposedToLocation ${location} ${options}")
     }
 

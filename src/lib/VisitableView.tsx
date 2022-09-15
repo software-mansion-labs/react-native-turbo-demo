@@ -16,9 +16,9 @@ export interface OnLoadEvent {
 }
 
 export interface VisitProposalError {
-  url: string;
-  error: string;
   statusCode: number;
+  url?: string;
+  error?: string;
 }
 
 interface Props {
@@ -42,7 +42,7 @@ const VisitableView: React.FC<Props> = props => {
           return (
             <VisitableViewNativeComponent
               {...props}
-              // onVisitProposal={e => console.warn(e.nativeEvent)}
+              // onVisitError={e => console.warn(e.nativeEvent)}
               sessionHandle={sessionHandle}
               style={styles.container}
             />
