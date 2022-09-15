@@ -67,7 +67,7 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
         reactContext.getJSModule(RCTEventEmitter::class.java).receiveEvent(id, event.name, params)
     }
 
-    // TurboSessionCallback =====
+    // region TurboSessionCallback
 
     override fun onPageStarted(location: String) {
         Log.d("RNVisitableView", "onPageStarted")
@@ -145,5 +145,7 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
     override fun formSubmissionFinished(location: String) {
         Log.d("RNVisitableView", "formSubmissionFinished")
     }
+
+    // end region
 }
 
