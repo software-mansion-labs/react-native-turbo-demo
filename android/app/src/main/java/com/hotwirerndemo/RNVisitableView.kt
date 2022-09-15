@@ -75,10 +75,21 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
     private fun sendVisitErrorEvent(statusCode: Int) {
         val event = Arguments.createMap().apply {
             putInt("statusCode", statusCode)
+            putString("url", session.webView.url)
         }
         reactContext
             .getJSModule(RCTEventEmitter::class.java)
             .receiveEvent(id, "visitError", event)
+    }
+
+    private fun sendOnLoadEvent() {
+        val event = Arguments.createMap().apply {
+            putString("title", session.webView.title)
+            putString("url", session.webView.url)
+        }
+        reactContext
+            .getJSModule(RCTEventEmitter::class.java)
+            .receiveEvent(id, "webViewLoaded", event)
     }
 
     // TurboSessionCallback =====
@@ -88,7 +99,8 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
     }
 
     override fun onPageFinished(location: String) {
-        Log.d("RNVisitableView", "onPageFinished")
+        sendOnLoadEvent()
+        Log.d("RNVisitableView", "onPageFinished ${session.webView.title} ${session.webView.url}")
     }
 
     override fun onReceivedError(errorCode: Int) {

@@ -29,6 +29,11 @@ class RNVisitableViewManager(
                 "phasedRegistrationNames" to mapOf(
                     "bubbled" to "onVisitError"
                 )
+            ),
+            "webViewLoaded" to mapOf(
+                "phasedRegistrationNames" to mapOf(
+                    "bubbled" to "onLoad"
+                )
             )
         )
     }
