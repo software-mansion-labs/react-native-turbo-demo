@@ -9,7 +9,6 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.events.RCTEventEmitter
-import com.facebook.react.uimanager.events.RCTModernEventEmitter
 import dev.hotwire.turbo.nav.TurboNavDestination
 import dev.hotwire.turbo.session.TurboSession
 import dev.hotwire.turbo.session.TurboSessionCallback
