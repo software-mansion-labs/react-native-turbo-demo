@@ -270,7 +270,7 @@ dependencies {
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
-    implementation 'com.github.Fryzu:turbo-android:1142800dd4386dc33b382ce59327de514a1687ba'
+    implementation 'com.github.Fryzu:turbo-android:cd08237433234fccc7f6b0128d088ef2ba71a82d'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'
