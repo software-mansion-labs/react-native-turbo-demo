@@ -13,7 +13,7 @@ class RNSession(context: Context) : FrameLayout(context) {
 
     lateinit var session: TurboSession private set
     private val reactContext = context as ReactContext
-    private var prevTurboView: TurboView? = null // Needed to webView when changing view
+    private var prevVisitableView: RNVisitableView? = null // Needed to webView when changing view
 
     init {
         setupNewSession()
@@ -27,12 +27,22 @@ class RNSession(context: Context) : FrameLayout(context) {
         session.setDebugLoggingEnabled(true) // TODO, remove
     }
 
-    internal fun visit(visit: TurboVisit, view: TurboView) {
-        Log.d("RNVisitableView", "trigger visit ${visit} to view ${view}")
-        prevTurboView?.detachWebView(session.webView, { 0 })
+    private fun triggerVisit(visit: TurboVisit, view: RNVisitableView) {
         session.visit(visit)
-        view.attachWebView(session.webView, { 0 })
-        prevTurboView = view
+        view.attachWebView() {
+            prevVisitableView = view
+        }
+    }
+
+    internal fun visit(visit: TurboVisit, view: RNVisitableView) {
+        Log.d("RNVisitableView", "trigger visit ${visit} to view ${view}")
+        if (prevVisitableView != null) {
+            prevVisitableView?.detachWebView() {
+                triggerVisit(visit, view)
+            }
+        } else {
+            triggerVisit(visit, view)
+        }
     }
 
 }

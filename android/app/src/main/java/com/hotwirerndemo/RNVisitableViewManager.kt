@@ -37,10 +37,6 @@ class RNVisitableViewManager(
         view.session = sessionView
     }
 
-    override fun onAfterUpdateTransaction(view: RNVisitableView) {
-        super.onAfterUpdateTransaction(view)
-        view.triggerVisit()
-    }
 
     override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any> {
         return RNVisitableViewEvent.values().map { it.name to mapOf(

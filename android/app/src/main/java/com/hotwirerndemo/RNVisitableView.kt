@@ -45,8 +45,22 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
         )
     }
 
-    internal fun triggerVisit() {
-        session.visit(visit, turboView)
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        session.visit(visit, this)
+    }
+
+    internal fun detachWebView(onFinished: () -> Unit) {
+        Log.d("RNVisitableView", "webView detached ${visit}")
+        screenshot = turboView.createScreenshot()
+        turboView.addScreenshot(screenshot)
+        turboView.detachWebView(session.session.webView, onFinished)
+    }
+
+    internal fun attachWebView(onFinished: (Boolean) -> Unit) {
+        Log.d("RNVisitableView", "webView attached ${visit}")
+        turboView.removeScreenshot()
+        turboView.attachWebView(session.session.webView, onFinished)
     }
 
     /**
@@ -85,15 +99,10 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
 
     override fun visitProposedToLocation(location: String, options: TurboVisitOptions) {
         Log.d("RNVisitableView", "visitProposedToLocation ${location} ${options}")
-        screenshot = turboView.createScreenshot()
-        turboView.addScreenshot(screenshot)
-        turboView.detachWebView(session.session.webView) {
             sendEvent(RNVisitableViewEvent.VISIT_PROPOSED, Arguments.createMap().apply {
-                putString("url", location)
-                putString("action", options.action.name.lowercase())
-            })
-            turboView.addScreenshot(screenshot)
-        }
+            putString("url", location)
+            putString("action", options.action.name.lowercase())
+        })
     }
 
     override fun formSubmissionStarted(location: String) {}
