@@ -1,13 +1,17 @@
 package com.hotwirerndemo
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.Log
 import android.view.ViewGroup
 import android.webkit.HttpAuthHandler
+import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.events.RCTEventEmitter
+import dev.hotwire.turbo.delegates.TurboWebFragmentDelegate
 import dev.hotwire.turbo.nav.TurboNavDestination
 import dev.hotwire.turbo.session.TurboSessionCallback
 import dev.hotwire.turbo.views.TurboView
@@ -21,6 +25,8 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
     private val reactContext = context as ReactContext
     lateinit var visit: TurboVisit
     lateinit var session: RNSession
+    private var screenshot: Bitmap? = null
+    private val screenshotView: ImageView get() = findViewById(R.id.turbo_screenshot)
 
     init {
         addView(visitableView)
@@ -51,6 +57,7 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
         val width = r - l
         val height = b - t
         session.session.webView.layout(0, 0, width, height)
+        screenshotView.layout(0,0,width,height)
     }
 
 
@@ -78,11 +85,15 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
 
     override fun visitProposedToLocation(location: String, options: TurboVisitOptions) {
         Log.d("RNVisitableView", "visitProposedToLocation ${location} ${options}")
-        sendEvent(RNVisitableViewEvent.VISIT_PROPOSED, Arguments.createMap().apply {
-            putString("url", location)
-            putString("action", options.action.name.lowercase())
-        })
-        turboView.detachWebView(session.session.webView, {0})
+        screenshot = turboView.createScreenshot()
+        turboView.addScreenshot(screenshot)
+        turboView.detachWebView(session.session.webView) {
+            sendEvent(RNVisitableViewEvent.VISIT_PROPOSED, Arguments.createMap().apply {
+                putString("url", location)
+                putString("action", options.action.name.lowercase())
+            })
+            turboView.addScreenshot(screenshot)
+        }
     }
 
     override fun formSubmissionStarted(location: String) {}
