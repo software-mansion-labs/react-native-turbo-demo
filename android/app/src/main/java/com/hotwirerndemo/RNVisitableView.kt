@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.events.RCTEventEmitter
@@ -18,12 +19,12 @@ import dev.hotwire.turbo.views.TurboView
 import dev.hotwire.turbo.visit.TurboVisit
 import dev.hotwire.turbo.visit.TurboVisitOptions
 
-class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCallback {
+class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCallback, SessionSubscriber {
 
     private var visitableView = inflate(context, R.layout.turbo_view, null) as ViewGroup
     private var turboView: TurboView
     private val reactContext = context as ReactContext
-    lateinit var visit: TurboVisit
+    override lateinit var visit: TurboVisit
     lateinit var session: RNSession
     private var screenshot: Bitmap? = null
     private val screenshotView: ImageView get() = findViewById(R.id.turbo_screenshot)
@@ -47,20 +48,27 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        session.visit(visit, this)
+        session.registerVisitableView(this)
     }
 
-    internal fun detachWebView(onFinished: () -> Unit) {
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        session.removeVisitableView(this)
+    }
+
+    override fun detachWebView(callback: () -> Unit) {
         Log.d("RNVisitableView", "webView detached ${visit}")
         screenshot = turboView.createScreenshot()
         turboView.addScreenshot(screenshot)
-        turboView.detachWebView(session.session.webView, onFinished)
+        turboView.detachWebView(session.session.webView) {
+            callback()
+        }
     }
 
-    internal fun attachWebView(onFinished: (Boolean) -> Unit) {
+    override fun attachWebView() {
         Log.d("RNVisitableView", "webView attached ${visit}")
         turboView.removeScreenshot()
-        turboView.attachWebView(session.session.webView, onFinished)
+        turboView.attachWebView(session.session.webView, {0})
     }
 
     /**
@@ -82,7 +90,6 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
     // region TurboSessionCallback
 
     override fun onPageFinished(location: String) {
-        Log.d("RNVisitableView", "onPageFinished ${session.session.webView.title} ${session.session.webView.url}")
         sendEvent(RNVisitableViewEvent.PAGE_LOADED, Arguments.createMap().apply {
             putString("title", session.session.webView.title)
             putString("url", session.session.webView.url)
@@ -90,7 +97,6 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
     }
 
     override fun onReceivedError(errorCode: Int) {
-        Log.d("RNVisitableView", "onReceivedError")
         sendEvent(RNVisitableViewEvent.VISIT_ERROR, Arguments.createMap().apply {
             putInt("statusCode", errorCode)
             putString("url", session.session.webView.url)
@@ -98,8 +104,7 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
     }
 
     override fun visitProposedToLocation(location: String, options: TurboVisitOptions) {
-        Log.d("RNVisitableView", "visitProposedToLocation ${location} ${options}")
-            sendEvent(RNVisitableViewEvent.VISIT_PROPOSED, Arguments.createMap().apply {
+        sendEvent(RNVisitableViewEvent.VISIT_PROPOSED, Arguments.createMap().apply {
             putString("url", location)
             putString("action", options.action.name.lowercase())
         })

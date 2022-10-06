@@ -13,7 +13,7 @@ class RNSession(context: Context) : FrameLayout(context) {
 
     lateinit var session: TurboSession private set
     private val reactContext = context as ReactContext
-    private var prevVisitableView: RNVisitableView? = null // Needed to webView when changing view
+    private val registeredVisitableViews = mutableListOf<SessionSubscriber>()
 
     init {
         setupNewSession()
@@ -27,22 +27,52 @@ class RNSession(context: Context) : FrameLayout(context) {
         session.setDebugLoggingEnabled(true) // TODO, remove
     }
 
-    private fun triggerVisit(visit: TurboVisit, view: RNVisitableView) {
-        session.visit(visit)
-        view.attachWebView() {
-            prevVisitableView = view
+
+    internal fun registerVisitableView(newView: SessionSubscriber) {
+        var callbacksCount = registeredVisitableViews.size
+
+        if (callbacksCount == 0) {
+            session.visit(newView.visit)
+            newView.attachWebView()
         }
+
+        fun onDetached() = synchronized(this) {
+            callbacksCount--
+            if (callbacksCount == 0) {
+                session.visit(newView.visit)
+                newView.attachWebView()
+            }
+        }
+
+        for (view in registeredVisitableViews) {
+            view.detachWebView() {
+                onDetached()
+            }
+        }
+
+        registeredVisitableViews.add(newView)
     }
 
-    internal fun visit(visit: TurboVisit, view: RNVisitableView) {
-        Log.d("RNVisitableView", "trigger visit ${visit} to view ${view}")
-        if (prevVisitableView != null) {
-            prevVisitableView?.detachWebView() {
-                triggerVisit(visit, view)
-            }
-        } else {
-            triggerVisit(visit, view)
-        }
+    internal fun removeVisitableView(view: SessionSubscriber) {
+        registeredVisitableViews.remove(view)
     }
+
+//    private fun triggerVisit(visit: TurboVisit, view: RNVisitableView) {
+//        session.visit(visit)
+//        view.attachWebView() {
+//            prevVisitableView = view
+//        }
+//    }
+//
+//    internal fun visit(visit: TurboVisit, view: RNVisitableView) {
+//        Log.d("RNVisitableView", "trigger visit ${visit} to view ${view}")
+//        if (prevVisitableView != null) {
+//            prevVisitableView?.detachWebView() {
+//                triggerVisit(visit, view)
+//            }
+//        } else {
+//            triggerVisit(visit, view)
+//        }
+//    }
 
 }

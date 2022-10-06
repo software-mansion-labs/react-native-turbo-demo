@@ -25,13 +25,11 @@ class RNVisitableViewManager(
 
     @ReactProp(name = "url")
     fun setUrl(view: RNVisitableView, url: String) {
-        Log.d("RNVisitableView", "url set ${url}")
         view.setVisit(url)
     }
 
     @ReactProp(name = "sessionHandle")
     fun setSessionHandle(view: RNVisitableView, sessionHandle: Int) {
-        Log.d("RNVisitableView", "session set handle: ${sessionHandle}")
         val uiManager = getReactContext(view).getNativeModule(UIManagerModule::class.java)
         val sessionView = uiManager?.resolveView(sessionHandle) as RNSession
         view.session = sessionView
