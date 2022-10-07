@@ -57,18 +57,19 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
     }
 
     override fun detachWebView(callback: () -> Unit) {
-        Log.d("RNVisitableView", "webView detached ${visit}")
         screenshot = turboView.createScreenshot()
         turboView.addScreenshot(screenshot)
         turboView.detachWebView(session.session.webView) {
+            Log.d("RNVisitableView", "webView detached ${visit}")
             callback()
         }
     }
 
     override fun attachWebView() {
-        Log.d("RNVisitableView", "webView attached ${visit}")
         turboView.removeScreenshot()
-        turboView.attachWebView(session.session.webView, {0})
+        turboView.attachWebView(session.session.webView) {
+            Log.d("RNVisitableView", "webView attached ${visit}")
+        }
     }
 
     /**

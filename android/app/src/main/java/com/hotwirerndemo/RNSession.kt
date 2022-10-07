@@ -50,29 +50,13 @@ class RNSession(context: Context) : FrameLayout(context) {
             }
         }
 
-        registeredVisitableViews.add(newView)
+        if (!registeredVisitableViews.contains(newView)) {
+            registeredVisitableViews.add(newView)
+        }
     }
 
     internal fun removeVisitableView(view: SessionSubscriber) {
         registeredVisitableViews.remove(view)
     }
-
-//    private fun triggerVisit(visit: TurboVisit, view: RNVisitableView) {
-//        session.visit(visit)
-//        view.attachWebView() {
-//            prevVisitableView = view
-//        }
-//    }
-//
-//    internal fun visit(visit: TurboVisit, view: RNVisitableView) {
-//        Log.d("RNVisitableView", "trigger visit ${visit} to view ${view}")
-//        if (prevVisitableView != null) {
-//            prevVisitableView?.detachWebView() {
-//                triggerVisit(visit, view)
-//            }
-//        } else {
-//            triggerVisit(visit, view)
-//        }
-//    }
 
 }
