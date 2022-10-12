@@ -8,6 +8,7 @@ import dev.hotwire.turbo.session.TurboSession
 import dev.hotwire.turbo.views.TurboView
 import dev.hotwire.turbo.views.TurboWebView
 import dev.hotwire.turbo.visit.TurboVisit
+import java.util.*
 
 class RNSession(context: Context) : FrameLayout(context) {
 
@@ -23,7 +24,9 @@ class RNSession(context: Context) : FrameLayout(context) {
         val activity = reactContext.currentActivity as AppCompatActivity
         val webView = TurboWebView(context, null)
 
-        session = TurboSession("testSessionName", activity, webView)
+        val sessionName = UUID.randomUUID().toString()
+
+        session = TurboSession(sessionName, activity, webView)
         session.setDebugLoggingEnabled(true) // TODO, remove
     }
 
