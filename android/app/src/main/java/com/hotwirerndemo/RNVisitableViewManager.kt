@@ -4,7 +4,10 @@ import android.util.Log
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
+import com.facebook.react.uimanager.UIManagerModule
+import com.facebook.react.uimanager.ViewGroupManager
 import com.facebook.react.uimanager.annotations.ReactProp
+import com.th3rdwave.safeareacontext.getReactContext
 
 enum class RNVisitableViewEvent(val jsCallbackName: String) {
     VISIT_PROPOSED("onVisitProposal"),
@@ -22,9 +25,16 @@ class RNVisitableViewManager(
 
     @ReactProp(name = "url")
     fun setUrl(view: RNVisitableView, url: String) {
-        Log.d("RMVisitableView", "url set ${url}")
-        view.openUrl(url)
+        view.setVisit(url)
     }
+
+    @ReactProp(name = "sessionHandle")
+    fun setSessionHandle(view: RNVisitableView, sessionHandle: Int) {
+        val uiManager = getReactContext(view).getNativeModule(UIManagerModule::class.java)
+        val sessionView = uiManager?.resolveView(sessionHandle) as RNSession
+        view.session = sessionView
+    }
+
 
     override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any> {
         return RNVisitableViewEvent.values().map { it.name to mapOf(
