@@ -53,5 +53,4 @@ class RNSession(context: Context) : FrameLayout(context) {
     internal fun removeVisitableView(view: SessionSubscriber) {
         registeredVisitableViews.remove(view)
     }
-
 }
