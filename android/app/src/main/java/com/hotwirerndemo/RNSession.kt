@@ -15,6 +15,9 @@ import org.json.JSONObject
 
 class RNSession(context: Context) : FrameLayout(context) {
 
+    private val reactContext = context as ReactContext
+    private val registeredVisitableViews = mutableListOf<SessionSubscriber>()
+
     val session: TurboSession = run {
         val activity = reactContext.currentActivity as AppCompatActivity
         val webView = TurboWebView(context, null)
@@ -24,9 +27,6 @@ class RNSession(context: Context) : FrameLayout(context) {
         
         TurboSession(sessionName, activity, webView)
     }
-
-    private val reactContext = context as ReactContext
-    private val registeredVisitableViews = mutableListOf<SessionSubscriber>()
 
     fun sendEvent(event: RNSessionEvent, params: WritableMap) {
         reactContext.getJSModule(RCTEventEmitter::class.java).receiveEvent(id, event.name, params)
