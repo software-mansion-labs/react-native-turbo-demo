@@ -12,24 +12,16 @@ import java.util.*
 
 class RNSession(context: Context) : FrameLayout(context) {
 
-    lateinit var session: TurboSession private set
-    private val reactContext = context as ReactContext
-    private val registeredVisitableViews = mutableListOf<SessionSubscriber>()
-
-    init {
-        setupNewSession()
-    }
-
-    private fun setupNewSession() {
+    val session: TurboSession = run {
         val activity = reactContext.currentActivity as AppCompatActivity
         val webView = TurboWebView(context, null)
-
         val sessionName = UUID.randomUUID().toString()
 
-        session = TurboSession(sessionName, activity, webView)
-        session.setDebugLoggingEnabled(true) // TODO, remove
+        TurboSession(sessionName, activity, webView)
     }
 
+    private val reactContext = context as ReactContext
+    private val registeredVisitableViews = mutableListOf<SessionSubscriber>()
 
     internal fun registerVisitableView(newView: SessionSubscriber) {
         var callbacksCount = registeredVisitableViews.size
