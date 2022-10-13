@@ -45,7 +45,7 @@ class Session extends React.Component<Props, State> {
       ? jsCallback
       : `(${jsCallback.toString()})()`;
 
-    await RNSessionModule.injectJavaScript(
+    return RNSessionModule.injectJavaScript(
       this.state.sessionHandle,
       callbackStringified,
     );
