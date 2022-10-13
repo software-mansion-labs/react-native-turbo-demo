@@ -6,13 +6,10 @@ import android.view.ViewGroup
 import android.webkit.HttpAuthHandler
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.core.view.isVisible
 import com.facebook.react.bridge.Arguments
-import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.events.RCTEventEmitter
-import dev.hotwire.turbo.delegates.TurboWebFragmentDelegate
 import dev.hotwire.turbo.nav.TurboNavDestination
 import dev.hotwire.turbo.session.TurboSessionCallback
 import dev.hotwire.turbo.views.TurboView
