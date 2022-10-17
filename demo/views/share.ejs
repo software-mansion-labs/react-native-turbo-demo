@@ -1,9 +1,11 @@
 <script>
   function share() {
-    webkit.messageHandlers.nativeApp.postMessage({
+    const message = {
       method: 'share',
       shareText: 'Hello from the webview 👋',
-    });
+    };
+    AndroidInterface.postMessage(JSON.stringify({message}));
+    webkit.messageHandlers.nativeApp.postMessage(message);
   }
 
   function shared() {

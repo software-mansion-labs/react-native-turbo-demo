@@ -1,11 +1,9 @@
 package com.hotwirerndemo
 
-import android.util.Log
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerModule
-import com.facebook.react.uimanager.ViewGroupManager
 import com.facebook.react.uimanager.annotations.ReactProp
 import com.th3rdwave.safeareacontext.getReactContext
 
@@ -37,13 +35,16 @@ class RNVisitableViewManager(
 
 
     override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any> {
-        return RNVisitableViewEvent.values().map { it.name to mapOf(
-            "phasedRegistrationNames" to mapOf(
-                "bubbled" to it.jsCallbackName
+        return RNVisitableViewEvent.values().map {
+            it.name to mapOf(
+                "phasedRegistrationNames" to mapOf(
+                    "bubbled" to it.jsCallbackName
+                )
             )
-        )}.toMap()
+        }.toMap()
     }
 
-    override fun createViewInstance(reactContext: ThemedReactContext) = RNVisitableView(reactContext)
+    override fun createViewInstance(reactContext: ThemedReactContext) =
+        RNVisitableView(reactContext)
 
 }
