@@ -17,11 +17,13 @@ class RNSessionManager(
     override fun getName() = REACT_CLASS
 
     override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any> {
-        return RNSessionEvent.values().map { it.name to mapOf(
-            "phasedRegistrationNames" to mapOf(
-                "bubbled" to it.jsCallbackName
+        return RNSessionEvent.values().map {
+            it.name to mapOf(
+                "phasedRegistrationNames" to mapOf(
+                    "bubbled" to it.jsCallbackName
+                )
             )
-        )}.toMap()
+        }.toMap()
     }
 
     override fun createViewInstance(reactContext: ThemedReactContext) = RNSession(reactContext)

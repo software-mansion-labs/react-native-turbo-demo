@@ -1,4 +1,5 @@
 package com.hotwirerndemo
+
 import android.content.Context
 import android.util.Log
 import android.webkit.JavascriptInterface
@@ -18,13 +19,13 @@ class RNSession(context: Context) : FrameLayout(context) {
     private val reactContext = context as ReactContext
     private val registeredVisitableViews = mutableListOf<SessionSubscriber>()
 
-    val session: TurboSession = run {
+    val turboSession: TurboSession = run {
         val activity = reactContext.currentActivity as AppCompatActivity
         val webView = TurboWebView(context, null)
         val sessionName = UUID.randomUUID().toString()
         webView.getSettings().setJavaScriptEnabled(true)
         webView.addJavascriptInterface(JavaScriptInterface(), "AndroidInterface")
-        
+
         TurboSession(sessionName, activity, webView)
     }
 
@@ -36,14 +37,14 @@ class RNSession(context: Context) : FrameLayout(context) {
         var callbacksCount = registeredVisitableViews.size
 
         if (callbacksCount == 0) {
-            session.visit(newView.visit)
+            turboSession.visit(newView.visit)
             newView.attachWebView()
         }
 
         fun onDetached() = synchronized(this) {
             callbacksCount--
             if (callbacksCount == 0) {
-                session.visit(newView.visit)
+                turboSession.visit(newView.visit)
                 newView.attachWebView()
             }
         }
@@ -68,7 +69,8 @@ class RNSession(context: Context) : FrameLayout(context) {
         fun postMessage(messageStr: String) {
             Log.d("RNVisitableView", "postMessage ${messageStr}")
             // Android interface works only with primitive types, that's why we need to use JSON
-            val messageObj = Utils.convertJsonToBundle(JSONObject(messageStr)) // TODO remove double conversion
+            val messageObj =
+                Utils.convertJsonToBundle(JSONObject(messageStr)) // TODO remove double conversion
             sendEvent(RNSessionEvent.RECEIVED_JS_MESSAGE, Arguments.fromBundle(messageObj))
         }
     }

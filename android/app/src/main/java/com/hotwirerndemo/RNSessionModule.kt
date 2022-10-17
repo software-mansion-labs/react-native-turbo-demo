@@ -1,4 +1,5 @@
 package com.hotwirerndemo
+
 import android.util.Log
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
@@ -9,7 +10,8 @@ import dev.hotwire.turbo.session.TurboSession
 
 private const val MODULE_NAME = "RNSessionModule"
 
-class RNSessionModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
+class RNSessionModule(reactContext: ReactApplicationContext) :
+    ReactContextBaseJavaModule(reactContext) {
 
     override fun getName() = MODULE_NAME
 
@@ -19,7 +21,7 @@ class RNSessionModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
         val uiManager = reactApplicationContext.getNativeModule(UIManagerModule::class.java)
         reactApplicationContext.currentActivity?.runOnUiThread {
             val sessionView = uiManager?.resolveView(sessionHandle) as RNSession
-            sessionView.session.webView.evaluateJavascript(callback) {
+            sessionView.turboSession.webView.evaluateJavascript(callback) {
                 promise.resolve(it)
             }
         }

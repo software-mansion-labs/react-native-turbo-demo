@@ -35,13 +35,16 @@ class RNVisitableViewManager(
 
 
     override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any> {
-        return RNVisitableViewEvent.values().map { it.name to mapOf(
-            "phasedRegistrationNames" to mapOf(
-                "bubbled" to it.jsCallbackName
+        return RNVisitableViewEvent.values().map {
+            it.name to mapOf(
+                "phasedRegistrationNames" to mapOf(
+                    "bubbled" to it.jsCallbackName
+                )
             )
-        )}.toMap()
+        }.toMap()
     }
 
-    override fun createViewInstance(reactContext: ThemedReactContext) = RNVisitableView(reactContext)
+    override fun createViewInstance(reactContext: ThemedReactContext) =
+        RNVisitableView(reactContext)
 
 }

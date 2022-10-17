@@ -1,4 +1,5 @@
 package com.hotwirerndemo
+
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
@@ -16,7 +17,8 @@ import dev.hotwire.turbo.views.TurboView
 import dev.hotwire.turbo.visit.TurboVisit
 import dev.hotwire.turbo.visit.TurboVisitOptions
 
-class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCallback, SessionSubscriber {
+class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCallback,
+    SessionSubscriber {
 
     private var visitableView = inflate(context, R.layout.turbo_view, null) as ViewGroup
     private var turboView: TurboView
@@ -56,7 +58,7 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
     override fun detachWebView(callback: () -> Unit) {
         screenshot = turboView.createScreenshot()
         turboView.addScreenshot(screenshot)
-        turboView.detachWebView(session.session.webView) {
+        turboView.detachWebView(session.turboSession.webView) {
             Log.d("RNVisitableView", "webView detached ${visit}")
             callback()
         }
@@ -64,7 +66,7 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
 
     override fun attachWebView() {
         turboView.removeScreenshot()
-        turboView.attachWebView(session.session.webView) {
+        turboView.attachWebView(session.turboSession.webView) {
             Log.d("RNVisitableView", "webView attached ${visit}")
         }
     }
@@ -76,8 +78,8 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
         super.onLayout(changed, l, t, r, b)
         val width = r - l
         val height = b - t
-        session.session.webView.layout(0, 0, width, height)
-        screenshotView.layout(0,0,width,height)
+        session.turboSession.webView.layout(0, 0, width, height)
+        screenshotView.layout(0, 0, width, height)
     }
 
 
@@ -89,15 +91,15 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
 
     override fun onPageFinished(location: String) {
         sendEvent(RNVisitableViewEvent.PAGE_LOADED, Arguments.createMap().apply {
-            putString("title", session.session.webView.title)
-            putString("url", session.session.webView.url)
+            putString("title", session.turboSession.webView.title)
+            putString("url", session.turboSession.webView.url)
         })
     }
 
     override fun onReceivedError(errorCode: Int) {
         sendEvent(RNVisitableViewEvent.VISIT_ERROR, Arguments.createMap().apply {
             putInt("statusCode", errorCode)
-            putString("url", session.session.webView.url)
+            putString("url", session.turboSession.webView.url)
         })
     }
 
@@ -130,10 +132,11 @@ class RNVisitableView (context: Context) : LinearLayout(context), TurboSessionCa
 
     override fun visitLocationStarted(location: String) {}
 
-    override fun visitNavDestination(): TurboNavDestination? { return null }
+    override fun visitNavDestination(): TurboNavDestination? {
+        return null
+    }
 
     override fun onPageStarted(location: String) {}
 
     // end region
 }
-
