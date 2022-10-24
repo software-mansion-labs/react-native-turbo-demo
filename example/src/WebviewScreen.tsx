@@ -1,33 +1,33 @@
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React from 'react';
-import {StyleSheet, View, NativeSyntheticEvent} from 'react-native';
-import {BASE_URL} from './config';
+import { StyleSheet, View, NativeSyntheticEvent } from 'react-native';
+import { BASE_URL } from './config';
 import VisitableView, {
   OnLoadEvent,
   VisitProposal,
   VisitProposalError,
-} from './lib/VisitableView';
-import useWebviewNavigate from './lib/useWebviewNavigate';
-import {RouteProp} from '@react-navigation/native';
+  useWebviewNavigate,
+} from 'react-native-turbo-webview';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RouteProp } from '@react-navigation/native';
 
 interface Props {
   navigation: NativeStackNavigationProp<any>;
   route: RouteProp<any>;
 }
 
-const WebviewScreen: React.FC<Props> = ({navigation, route}) => {
+const WebviewScreen: React.FC<Props> = ({ navigation, route }) => {
   const navigateTo = useWebviewNavigate();
 
   const currentUrl = route?.path || BASE_URL;
 
   const onVisitProposal = ({
-    nativeEvent: {action: actionType, url},
+    nativeEvent: { action: actionType, url },
   }: NativeSyntheticEvent<VisitProposal>) => {
     navigateTo(url, actionType);
   };
 
   const onVisitError = ({
-    nativeEvent: {statusCode},
+    nativeEvent: { statusCode },
   }: NativeSyntheticEvent<VisitProposalError>) => {
     switch (statusCode) {
       case 401: {
@@ -41,9 +41,9 @@ const WebviewScreen: React.FC<Props> = ({navigation, route}) => {
   };
 
   const onLoad = ({
-    nativeEvent: {title},
+    nativeEvent: { title },
   }: NativeSyntheticEvent<OnLoadEvent>) => {
-    navigation.setOptions({title});
+    navigation.setOptions({ title });
   };
 
   return (

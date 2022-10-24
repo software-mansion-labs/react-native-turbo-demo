@@ -1,16 +1,16 @@
-import React, {useCallback, useRef} from 'react';
+import React, { useCallback, useRef } from 'react';
 import {
   LinkingOptions,
   NavigationContainer,
   PathConfigMap,
 } from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {BASE_URL, Routes} from './src/config';
-import WebviewScreen from './src/WebviewScreen';
-import NumbersScreen from './src/NumbersScreen';
-import ErrorScreen from './src/ErrorScreen';
-import Session, {withSession} from './src/lib/Session';
-import {Share} from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { BASE_URL, Routes } from './config';
+import WebviewScreen from './WebviewScreen';
+import NumbersScreen from './NumbersScreen';
+import ErrorScreen from './ErrorScreen';
+import Session, { withSession } from 'react-native-turbo-webview';
+import { Share } from 'react-native';
 
 interface Props {}
 const Stack = createNativeStackNavigator<any>();
@@ -50,13 +50,13 @@ const App: React.FC<Props> = () => {
   };
 
   const share = async (message: string) => {
-    const res = await Share.share({message});
+    const res = await Share.share({ message });
     if (res.action === 'sharedAction') {
       sessionRef.current?.injectJavaScript(`shared()`);
     }
   };
 
-  const handleMessage = useCallback(message => {
+  const handleMessage = useCallback((message) => {
     switch (message.method) {
       case 'share': {
         share(message.shareText);
@@ -71,36 +71,37 @@ const App: React.FC<Props> = () => {
         <Stack.Navigator
           screenOptions={{
             headerBackTitle: 'Back',
-          }}>
+          }}
+        >
           <Stack.Screen
             name={Routes.WebviewInitial}
             component={WebviewScreen}
-            options={{title: 'Turbo Native Demo'}}
+            options={{ title: 'Turbo Native Demo' }}
           />
           <Stack.Screen
             name={Routes.One}
             component={WebviewScreen}
-            options={{title: "How'd You Get Here?"}}
+            options={{ title: "How'd You Get Here?" }}
           />
           <Stack.Screen
             name={Routes.Two}
             component={WebviewScreen}
-            options={{title: 'Push or Replace?'}}
+            options={{ title: 'Push or Replace?' }}
           />
           <Stack.Screen
             name={Routes.Slow}
             component={WebviewScreen}
-            options={{title: 'Slow-loading Page'}}
+            options={{ title: 'Slow-loading Page' }}
           />
           <Stack.Screen
             name={Routes.NumbersScreen}
             component={NumbersScreen}
-            options={{title: 'A List of Numbers'}}
+            options={{ title: 'A List of Numbers' }}
           />
           <Stack.Screen
             name={Routes.LongScreen}
             component={WebviewScreen}
-            options={{title: 'A Really Long Page'}}
+            options={{ title: 'A Really Long Page' }}
           />
           <Stack.Screen
             name={Routes.New}
@@ -113,47 +114,47 @@ const App: React.FC<Props> = () => {
           <Stack.Screen
             name={Routes.SuccessScreen}
             component={withSession(WebviewScreen)}
-            options={{title: 'It Worked!', presentation: 'modal'}}
+            options={{ title: 'It Worked!', presentation: 'modal' }}
           />
           <Stack.Screen
             name={Routes.NonExistentScreen}
             component={WebviewScreen}
-            options={{title: 'Not Found'}}
+            options={{ title: 'Not Found' }}
           />
           <Stack.Screen
             name={Routes.SignIn}
             component={withSession(WebviewScreen)}
-            options={{title: 'Sign In', presentation: 'modal'}}
+            options={{ title: 'Sign In', presentation: 'modal' }}
           />
           <Stack.Screen
             name={Routes.Protected}
             component={WebviewScreen}
-            options={{title: 'Protected Webpage'}}
+            options={{ title: 'Protected Webpage' }}
           />
           <Stack.Screen
             name={Routes.Files}
             component={WebviewScreen}
-            options={{title: 'Handling Files'}}
+            options={{ title: 'Handling Files' }}
           />
           <Stack.Screen
             name={Routes.Follow}
             component={WebviewScreen}
-            options={{title: 'Redirected Page'}}
+            options={{ title: 'Redirected Page' }}
           />
           <Stack.Screen
             name={Routes.Redirected}
             component={WebviewScreen}
-            options={{title: 'Redirected Page'}}
+            options={{ title: 'Redirected Page' }}
           />
           <Stack.Screen
             name={Routes.NotFound}
             component={ErrorScreen}
-            options={{title: 'Not Found'}}
+            options={{ title: 'Not Found' }}
           />
           <Stack.Screen
             name={Routes.Share}
             component={WebviewScreen}
-            options={{title: 'Try Sharing'}}
+            options={{ title: 'Try Sharing' }}
           />
         </Stack.Navigator>
       </Session>

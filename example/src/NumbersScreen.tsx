@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, FlatList, Text} from 'react-native';
+import { View, StyleSheet, FlatList, Text } from 'react-native';
 
 const styles = StyleSheet.create({
   row: {
@@ -20,7 +20,7 @@ const NumbersScreen: React.FC<Props> = () => {
     <FlatList
       data={new Array(100)}
       ItemSeparatorComponent={() => <View style={styles.separator} />}
-      renderItem={({index}) => (
+      renderItem={({ index }) => (
         <View style={styles.row}>
           <Text>Row {index}</Text>
         </View>

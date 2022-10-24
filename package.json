@@ -150,5 +150,8 @@
         }
       ]
     ]
+  },
+  "dependencies": {
+    "@react-navigation/native": "^6.0.13"
   }
 }

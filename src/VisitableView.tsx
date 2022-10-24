@@ -1,6 +1,6 @@
 import React from 'react';
-import {NativeSyntheticEvent, StyleSheet} from 'react-native';
-import {SessionContext} from './SessionContext';
+import { NativeSyntheticEvent, StyleSheet } from 'react-native';
+import { SessionContext } from './SessionContext';
 import VisitableViewNativeComponent from './VisitableViewNativeComponent';
 
 export type Action = 'advance' | 'replace' | 'restore';
@@ -28,13 +28,13 @@ interface Props {
   onVisitError?: (proposal: NativeSyntheticEvent<VisitProposalError>) => void;
 }
 
-const VisitableView: React.FC<Props> = props => {
+const VisitableView: React.FC<Props> = (props) => {
   return (
     <SessionContext.Consumer>
-      {({sessionHandle}) => {
+      {({ sessionHandle }) => {
         if (sessionHandle === undefined) {
           console.warn(
-            "[Webview] Couldn't find Session, make sure that the your webview is wrapped with Session component.",
+            "[Webview] Couldn't find Session, make sure that the your webview is wrapped with Session component."
           );
           return null;
         }

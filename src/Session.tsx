@@ -1,10 +1,10 @@
-import React, {RefObject} from 'react';
-import {findNodeHandle, NativeSyntheticEvent} from 'react-native';
-import {SessionContext} from './SessionContext';
+import React, { RefObject } from 'react';
+import { findNodeHandle, NativeSyntheticEvent } from 'react-native';
+import { SessionContext } from './SessionContext';
 import RNSession from './SessionNativeComponent';
-import {NativeModules} from 'react-native';
+import { NativeModules } from 'react-native';
 
-const {RNSessionModule} = NativeModules;
+const { RNSessionModule } = NativeModules;
 
 interface Message {
   message: object;
@@ -23,7 +23,7 @@ class Session extends React.Component<Props, State> {
   //   await SessionNativeModule.createSession(setSessionHandle);
   // };
 
-  nativeComponentRef: RefObject<typeof RNSession>;
+  nativeComponentRef: RefObject<any>;
 
   constructor(props: Props) {
     super(props);
@@ -47,7 +47,7 @@ class Session extends React.Component<Props, State> {
 
     return RNSessionModule.injectJavaScript(
       this.state.sessionHandle,
-      callbackStringified,
+      callbackStringified
     );
   };
 
@@ -62,19 +62,19 @@ class Session extends React.Component<Props, State> {
     this.getNativeComponentHandleId();
   }
 
-  onMessage = ({nativeEvent: {message}}: NativeSyntheticEvent<Message>) => {
+  onMessage = ({ nativeEvent: { message } }: NativeSyntheticEvent<Message>) => {
     if (this.props.onMessage) {
       this.props.onMessage(message);
     }
   };
 
   render() {
-    const {sessionHandle} = this.state;
+    const { sessionHandle } = this.state;
 
     return (
       <>
         <RNSession ref={this.nativeComponentRef} onMessage={this.onMessage} />
-        <SessionContext.Provider value={{sessionHandle}}>
+        <SessionContext.Provider value={{ sessionHandle }}>
           {this.props.children}
         </SessionContext.Provider>
       </>
@@ -82,8 +82,8 @@ class Session extends React.Component<Props, State> {
   }
 }
 
-export function withSession<T>(Component: React.ComponentType<T>) {
-  return (props: T) => (
+export function withSession(Component: React.ComponentType) {
+  return (props: any) => (
     <Session>
       <Component {...props} />
     </Session>
