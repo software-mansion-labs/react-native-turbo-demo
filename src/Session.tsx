@@ -1,8 +1,12 @@
 import React, { RefObject } from 'react';
 import { findNodeHandle, NativeSyntheticEvent } from 'react-native';
 import { SessionContext } from './SessionContext';
-import RNSession from './SessionNativeComponent';
 import { NativeModules } from 'react-native';
+import { getNativeComponent } from './common';
+
+const RNSession = getNativeComponent<any>('RNSession');
+
+const NO_SESSION_HANDLE_ERROR = "Couldn't find handle id for component.";
 
 const { RNSessionModule } = NativeModules;
 
@@ -10,7 +14,7 @@ interface Message {
   message: object;
 }
 
-interface Props {
+export interface Props {
   onMessage?: (message: object) => void;
 }
 
@@ -18,7 +22,7 @@ interface State {
   sessionHandle?: number | null;
 }
 
-class Session extends React.Component<Props, State> {
+export default class Session extends React.Component<Props, State> {
   // const onSessionCreated = async () => {
   //   await SessionNativeModule.createSession(setSessionHandle);
   // };
@@ -53,8 +57,13 @@ class Session extends React.Component<Props, State> {
 
   getNativeComponentHandleId = () => {
     const sessionHandle = findNodeHandle(this.nativeComponentRef.current);
+
+    if (!sessionHandle) {
+      throw new Error(NO_SESSION_HANDLE_ERROR);
+    }
+
     this.setState({
-      sessionHandle: sessionHandle || null,
+      sessionHandle: sessionHandle,
     });
   };
 
@@ -82,12 +91,10 @@ class Session extends React.Component<Props, State> {
   }
 }
 
-export function withSession(Component: React.ComponentType) {
+export function withSession<T>(Component: React.ComponentType<T>) {
   return (props: any) => (
     <Session>
       <Component {...props} />
     </Session>
   );
 }
-
-export default Session;

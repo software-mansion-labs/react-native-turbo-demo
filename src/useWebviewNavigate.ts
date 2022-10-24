@@ -5,9 +5,9 @@ import {
 } from '@react-navigation/core';
 import * as React from 'react';
 import LinkingContext from '@react-navigation/native/src/LinkingContext';
-import type { Action } from './VisitableView';
+import type { Action } from './types';
 
-export type To<
+type To<
   ParamList extends ReactNavigation.RootParamList = ReactNavigation.RootParamList,
   RouteName extends keyof ParamList = keyof ParamList
 > =

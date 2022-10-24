@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, NativeSyntheticEvent } from 'react-native';
 import { BASE_URL } from './config';
-import VisitableView, {
+import {
+  VisitableView,
   OnLoadEvent,
   VisitProposal,
   VisitProposalError,

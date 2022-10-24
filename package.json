@@ -152,6 +152,8 @@
     ]
   },
   "dependencies": {
-    "@react-navigation/native": "^6.0.13"
+    "@react-navigation/native": "^6.0.13",
+    "react-native-safe-area-context": "^4.4.1",
+    "react-native-screens": "^3.13.1"
   }
 }

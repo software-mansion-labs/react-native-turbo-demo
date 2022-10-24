@@ -1,27 +1,15 @@
 import React from 'react';
 import { NativeSyntheticEvent, StyleSheet } from 'react-native';
+import { getNativeComponent } from './common';
+import type { OnLoadEvent, VisitProposal, VisitProposalError } from './types';
 import { SessionContext } from './SessionContext';
-import VisitableViewNativeComponent from './VisitableViewNativeComponent';
 
-export type Action = 'advance' | 'replace' | 'restore';
+const RNVisitableView = getNativeComponent<any>('RNVisitableView');
 
-export interface VisitProposal {
-  url: string;
-  action: Action;
-}
+const NO_SESSION_ERROR =
+  "[Webview] Couldn't find Session, make sure that the your webview is wrapped with Session component.";
 
-export interface OnLoadEvent {
-  title: string;
-  url: string;
-}
-
-export interface VisitProposalError {
-  statusCode: number;
-  url: string;
-  error?: string;
-}
-
-interface Props {
+export interface Props {
   url: string;
   onVisitProposal: (proposal: NativeSyntheticEvent<VisitProposal>) => void;
   onLoad?: (proposal: NativeSyntheticEvent<OnLoadEvent>) => void;
@@ -33,14 +21,11 @@ const VisitableView: React.FC<Props> = (props) => {
     <SessionContext.Consumer>
       {({ sessionHandle }) => {
         if (sessionHandle === undefined) {
-          console.warn(
-            "[Webview] Couldn't find Session, make sure that the your webview is wrapped with Session component."
-          );
-          return null;
+          throw new Error(NO_SESSION_ERROR);
         }
         if (sessionHandle) {
           return (
-            <VisitableViewNativeComponent
+            <RNVisitableView
               {...props}
               sessionHandle={sessionHandle}
               style={styles.container}
