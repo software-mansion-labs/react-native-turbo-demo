@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.license      = package["license"]
   s.authors      = package["author"]
 
-  s.platforms    = { :ios => "10.0" }
+  s.platforms    = { :ios => "12.0" }
   s.source       = { :git => "https://github.com/software-mansion-labs/react-native-turbo-demo.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm,swift}"
@@ -31,5 +31,6 @@ Pod::Spec.new do |s|
     s.dependency "RCTRequired"
     s.dependency "RCTTypeSafety"
     s.dependency "ReactCommon/turbomodule/core"
+    s.dependency "Turbo"
   end
 end

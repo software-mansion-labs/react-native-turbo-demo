@@ -15,7 +15,6 @@
 		29A3F33F2906F24B00E8945A /* RNVisitableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A3F3372906F24B00E8945A /* RNVisitableView.swift */; };
 		29A3F3402906F24B00E8945A /* RNVisitableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A3F3382906F24B00E8945A /* RNVisitableViewController.swift */; };
 		29A3F3412906F24B00E8945A /* RNSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A3F3392906F24B00E8945A /* RNSessionManager.swift */; };
-		F4FF95D7245B92E800C19C63 /* TurboWebview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /* TurboWebview.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -40,9 +39,7 @@
 		29A3F3372906F24B00E8945A /* RNVisitableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNVisitableView.swift; sourceTree = "<group>"; };
 		29A3F3382906F24B00E8945A /* RNVisitableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNVisitableViewController.swift; sourceTree = "<group>"; };
 		29A3F3392906F24B00E8945A /* RNSessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNSessionManager.swift; sourceTree = "<group>"; };
-		B3E7B5891CC2AC0600A0062D /* TurboWebview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TurboWebview.m; sourceTree = "<group>"; };
 		F4FF95D5245B92E700C19C63 /* TurboWebview-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TurboWebview-Bridging-Header.h"; sourceTree = "<group>"; };
-		F4FF95D6245B92E800C19C63 /* TurboWebview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TurboWebview.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,8 +64,6 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				F4FF95D6245B92E800C19C63 /* TurboWebview.swift */,
-				B3E7B5891CC2AC0600A0062D /* TurboWebview.m */,
 				F4FF95D5245B92E700C19C63 /* TurboWebview-Bridging-Header.h */,
 				29A3F3322906F24B00E8945A /* RNSession.swift */,
 				29A3F3352906F24B00E8945A /* RNSessionManager.m */,
@@ -147,7 +142,6 @@
 				29A3F3412906F24B00E8945A /* RNSessionManager.swift in Sources */,
 				29A3F33D2906F24B00E8945A /* RNSessionManager.m in Sources */,
 				29A3F33F2906F24B00E8945A /* RNVisitableView.swift in Sources */,
-				F4FF95D7245B92E800C19C63 /* TurboWebview.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

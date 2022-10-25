@@ -30,6 +30,8 @@ target 'TurboWebviewExample' do
     inherit! :complete
     # Pods for testing
   end
+  
+  pod 'Turbo', :git => 'https://github.com/hotwired/turbo-ios.git', :tag => '7.0.0-rc.6' # TODO: refactor
 
   post_install do |installer|
     react_native_post_install(
