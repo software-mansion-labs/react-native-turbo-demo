@@ -1,4 +1,4 @@
-package com.hotwirerndemo
+package com.reactnativeturbowebview
 
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.NativeModule

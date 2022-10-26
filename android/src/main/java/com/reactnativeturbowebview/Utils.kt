@@ -1,4 +1,4 @@
-package com.hotwirerndemo
+package com.reactnativeturbowebview
 
 import android.os.Bundle
 import org.json.JSONException

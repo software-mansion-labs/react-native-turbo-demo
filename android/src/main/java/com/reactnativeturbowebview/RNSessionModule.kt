@@ -1,4 +1,4 @@
-package com.hotwirerndemo
+package com.reactnativeturbowebview
 
 import android.util.Log
 import com.facebook.react.bridge.Promise

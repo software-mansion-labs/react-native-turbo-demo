@@ -1,4 +1,4 @@
-package com.hotwirerndemo
+package com.reactnativeturbowebview
 
 import dev.hotwire.turbo.visit.TurboVisit
 

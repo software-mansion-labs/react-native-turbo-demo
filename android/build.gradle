@@ -3,8 +3,8 @@ buildscript {
   def kotlin_version = rootProject.ext.has('kotlinVersion') ? rootProject.ext.get('kotlinVersion') : project.properties['TurboWebview_kotlinVersion']
 
   repositories {
-      google()
-      mavenCentral()
+    google()
+    mavenCentral()
   }
 
   dependencies {
@@ -15,7 +15,7 @@ buildscript {
 }
 
 def isNewArchitectureEnabled() {
-  return rootProject.hasProperty("newArchEnabled") &&  rootProject.getProperty("newArchEnabled") == "true"
+  return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
 }
 
 apply plugin: 'com.android.library'
@@ -61,6 +61,7 @@ android {
 repositories {
   mavenCentral()
   google()
+  maven { url 'https://www.jitpack.io' }
 
   def found = false
   def defaultDir = null
@@ -123,7 +124,7 @@ repositories {
   if (!found) {
     throw new GradleException(
       "${project.name}: unable to locate React Native android sources. " +
-      "Ensure you have you installed React Native as a dependency in your project and try again."
+        "Ensure you have you installed React Native as a dependency in your project and try again."
     )
   }
 }
@@ -131,10 +132,11 @@ repositories {
 def kotlin_version = getExtOrDefault('kotlinVersion')
 
 dependencies {
-    //noinspection GradleDynamicVersion
+  //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-// From node_modules
+  implementation 'com.github.Fryzu:turbo-android:8f7c1a190aede97b39f17d9b02701c83356d71fc'
+  // From node_modules
 }
 
 if (isNewArchitectureEnabled()) {
