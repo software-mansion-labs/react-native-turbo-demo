@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <title><%= title %></title>
+
+    <link rel="stylesheet" href="/base.css">
+    <link rel="stylesheet" href="/utilities.css">
+    <link rel="stylesheet" href="/app.css">
+
+    <% if (locals.native_app) { %>
+      <link rel="stylesheet" href="/native.css">
+    <% } %>
+
+    <script src="<%= locals.useTurbolinks ? "/turbolinks-5.2.0.js" : "/dist/turbo.es2017-umd.js" %>"></script>
+  </head>
+  <body class="<%= locals.page_class || "" %>">
+    <main id="content" class="grid pad --bottom-soft">
+      <%- body %>
+      
+      <footer class="text --size-s --color-subtle space --top-xxl">
+        Rendered <%- new Date() %>
+
+        <% if (locals.useTurbolinks) { %>
+          via Turbolinks 5
+        <% } else { %>
+          via Turbo 7
+        <% } %>
+      </footer>
+    </main>
+  </body>
+</html>

@@ -33,7 +33,7 @@
     "prepare": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
-    "bootstrap": "yarn example && yarn install && yarn example pods"
+    "bootstrap": "yarn example && yarn install && yarn example pods && yarn example server"
   },
   "keywords": [
     "react-native",
@@ -136,7 +136,8 @@
   },
   "eslintIgnore": [
     "node_modules/",
-    "lib/"
+    "lib/",
+    "example/server"
   ],
   "prettier": {
     "quoteProps": "consistent",
