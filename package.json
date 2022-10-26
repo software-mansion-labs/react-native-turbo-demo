@@ -77,7 +77,8 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "@react-navigation/core": "*"
+    "@react-navigation/core": "*",
+    "@react-navigation/native": "*"
   },
   "jest": {
     "preset": "react-native",
