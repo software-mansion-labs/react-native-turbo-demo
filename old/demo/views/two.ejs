@@ -1,9 +1,0 @@
-<h1 class="page-title">Push or Replace?</h1>
-<p>Isn’t this fun?</p>
-
-<% if (action && action == "replace") { %>
-  <p>This screen was loaded via a <code>replace</code> action. That replaced the "How’d You Get Here?" screen that was previously on the top of the navigation stack. Now, going back will take you to the home screen.</p>
-<% } else { %>
-  <p>This screen was pushed on the navigation stack through an <code>advance</code> action. You can go back to the previous screen by tapping the <em>Back</em> button.</p>
-  <p>Go back and try the <em>replace</em> link to see the difference.</p>
-<% } %>
