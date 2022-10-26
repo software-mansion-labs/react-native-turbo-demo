@@ -6,8 +6,6 @@ import { getNativeComponent } from './common';
 
 const RNSession = getNativeComponent<any>('RNSession');
 
-const NO_SESSION_HANDLE_ERROR = "Couldn't find handle id for component.";
-
 const { RNSessionModule } = NativeModules;
 
 interface Message {
@@ -58,12 +56,8 @@ export default class Session extends React.Component<Props, State> {
   getNativeComponentHandleId = () => {
     const sessionHandle = findNodeHandle(this.nativeComponentRef.current);
 
-    if (!sessionHandle) {
-      throw new Error(NO_SESSION_HANDLE_ERROR);
-    }
-
     this.setState({
-      sessionHandle: sessionHandle,
+      sessionHandle: sessionHandle || null,
     });
   };
 

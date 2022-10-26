@@ -39,6 +39,8 @@ export default function useWebviewNavigate<
         );
       }
 
+      console.warn('to', to);
+
       if (typeof to !== 'string') {
         navigation.navigate(to.screen, to.params);
         return;
