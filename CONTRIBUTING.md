@@ -34,7 +34,6 @@ To run the example app on iOS:
 yarn example ios
 ```
 
-
 Make sure your code passes TypeScript and ESLint. Run the following to verify:
 
 ```sh
@@ -53,9 +52,15 @@ Remember to add tests for your change if possible. Run the unit tests by:
 ```sh
 yarn test
 ```
+
 To edit the Objective-C files, open `example/ios/TurboWebviewExample.xcworkspace` in XCode and find the source files at `Pods > Development Pods > react-native-turbo-webview`.
 
 To edit the Kotlin files, open `example/android` in Android studio and find the source files at `reactnativeturbowebview` under `Android`.
+
+### Demo web views source
+
+While developing, you can use the example web app as a webview pages source. Please check [example web app](/example/server). This app is based on [`Turbo Native Demo`](https://github.com/hotwired/turbo-native-demo) app with with a few tweaks.
+
 ### Commit message convention
 
 We follow the [conventional commits specification](https://www.conventionalcommits.org/en) for our commit messages:
