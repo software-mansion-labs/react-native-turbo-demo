@@ -20,4 +20,5 @@ export enum Routes {
   Follow = 'Follow',
   Redirected = 'Redirected',
   Share = 'Share',
+  Fallback = 'Fallback'
 }

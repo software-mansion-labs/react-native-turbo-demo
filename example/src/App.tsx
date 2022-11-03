@@ -16,24 +16,13 @@ interface Props {}
 const Stack = createNativeStackNavigator<any>();
 
 const webviewScreensConfig: PathConfigMap<any> = {
-  [Routes.WebviewInitial]: `${BASE_URL}`,
-  [Routes.New]: `${BASE_URL}/new`,
-  [Routes.Two]: `${BASE_URL}/two`,
-  [Routes.One]: `${BASE_URL}/one`,
-  [Routes.Slow]: `${BASE_URL}/slow`,
-  [Routes.NumbersScreen]: `${BASE_URL}/numbers`,
-  [Routes.LongScreen]: `${BASE_URL}/long`,
-  [Routes.SuccessScreen]: `${BASE_URL}/success`,
-  [Routes.NonExistentScreen]: `${BASE_URL}/nonexistent`,
-  [Routes.SignIn]: `${BASE_URL}/signin`,
-  [Routes.Protected]: `${BASE_URL}/protected`,
-  [Routes.NotFound]: `${BASE_URL}/notfound`,
-  [Routes.Files]: `${BASE_URL}/files`,
-  [Routes.Follow]: `${BASE_URL}/follow`,
-  [Routes.Redirected]: `${BASE_URL}/redirected`,
-  [Routes.Share]: `${BASE_URL}/share`,
-  [Routes.NotFound]: {
-    path: `${BASE_URL}/*`,
+  [Routes.WebviewInitial]: `/`,
+  [Routes.New]: `/new`,
+  [Routes.SuccessScreen]: `/success`,
+  [Routes.NumbersScreen]: `/numbers`,
+  [Routes.SignIn]: `/signin`,
+  [Routes.Fallback]: {
+    path: '*',
   },
 };
 
@@ -79,29 +68,9 @@ const App: React.FC<Props> = () => {
             options={{ title: 'Turbo Native Demo' }}
           />
           <Stack.Screen
-            name={Routes.One}
-            component={WebviewScreen}
-            options={{ title: "How'd You Get Here?" }}
-          />
-          <Stack.Screen
-            name={Routes.Two}
-            component={WebviewScreen}
-            options={{ title: 'Push or Replace?' }}
-          />
-          <Stack.Screen
-            name={Routes.Slow}
-            component={WebviewScreen}
-            options={{ title: 'Slow-loading Page' }}
-          />
-          <Stack.Screen
             name={Routes.NumbersScreen}
             component={NumbersScreen}
             options={{ title: 'A List of Numbers' }}
-          />
-          <Stack.Screen
-            name={Routes.LongScreen}
-            component={WebviewScreen}
-            options={{ title: 'A Really Long Page' }}
           />
           <Stack.Screen
             name={Routes.New}
@@ -127,34 +96,14 @@ const App: React.FC<Props> = () => {
             options={{ title: 'Sign In', presentation: 'modal' }}
           />
           <Stack.Screen
-            name={Routes.Protected}
-            component={WebviewScreen}
-            options={{ title: 'Protected Webpage' }}
-          />
-          <Stack.Screen
-            name={Routes.Files}
-            component={WebviewScreen}
-            options={{ title: 'Handling Files' }}
-          />
-          <Stack.Screen
-            name={Routes.Follow}
-            component={WebviewScreen}
-            options={{ title: 'Redirected Page' }}
-          />
-          <Stack.Screen
-            name={Routes.Redirected}
-            component={WebviewScreen}
-            options={{ title: 'Redirected Page' }}
-          />
-          <Stack.Screen
             name={Routes.NotFound}
             component={ErrorScreen}
             options={{ title: 'Not Found' }}
           />
           <Stack.Screen
-            name={Routes.Share}
+            name={Routes.Fallback}
             component={WebviewScreen}
-            options={{ title: 'Try Sharing' }}
+            options={{ title: '' }}
           />
         </Stack.Navigator>
       </Session>

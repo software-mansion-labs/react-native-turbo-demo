@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, NativeSyntheticEvent } from 'react-native';
-import { BASE_URL } from './config';
+import { BASE_URL, Routes } from './config';
 import {
   VisitableView,
   OnLoadEvent,
@@ -19,7 +19,8 @@ interface Props {
 const WebviewScreen: React.FC<Props> = ({ navigation, route }) => {
   const navigateTo = useWebviewNavigate();
 
-  const currentUrl = route?.path || BASE_URL;
+  const path = route?.params?.path || route?.path;
+  const currentUrl = path ? `${BASE_URL}${path}` : BASE_URL;
 
   const onVisitProposal = ({
     nativeEvent: { action: actionType, url },
@@ -32,7 +33,7 @@ const WebviewScreen: React.FC<Props> = ({ navigation, route }) => {
   }: NativeSyntheticEvent<VisitProposalError>) => {
     switch (statusCode) {
       case 401: {
-        navigateTo(`${BASE_URL}/signin`);
+        navigateTo(`/signin`);
         break;
       }
       default: {
