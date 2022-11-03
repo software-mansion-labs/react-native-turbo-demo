@@ -1,5 +1,5 @@
 {
-  "name": "core",
+  "name": "@react-native-turbo-webview/core",
   "version": "0.1.0",
   "description": "Adds support for Hotired Turbo components in React Native",
   "main": "lib/commonjs/index",

@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
+    "composite": true,
     "baseUrl": ".",
     "paths": {
-      "react-native-turbo-webview": ["./src/index"]
+      "@react-native-turbo-webview/*": ["./packages/*/src"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

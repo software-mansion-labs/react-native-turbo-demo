@@ -7,7 +7,7 @@ import {
   VisitProposal,
   VisitProposalError,
   useWebviewNavigate,
-} from 'react-native-turbo-webview';
+} from '@react-native-turbo-webview/core';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RouteProp } from '@react-navigation/native';
 

@@ -1,3 +1,3 @@
 {
-  "extends": "react-native-turbo-webview/tsconfig.base.json"
+  "extends": "../../tsconfig.base.json"
 }

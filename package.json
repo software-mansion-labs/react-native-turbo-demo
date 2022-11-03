@@ -21,11 +21,12 @@
   },
   "scripts": {
     "example": "yarn --cwd example",
-    "bootstrap": "yarn install && lerna run pods"
+    "bootstrap": "yarn install && yarn example server && lerna run pods"
   },
   "workspaces": {
     "packages": [
-      "packages/*"
+      "packages/*",
+      "example"
     ]
   },
   "devDependencies": {
