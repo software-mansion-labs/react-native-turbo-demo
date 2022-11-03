@@ -30,7 +30,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		134814201AA4EA6300B7C361 /* libTurboWebview.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTurboWebview.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		134814201AA4EA6300B7C361 /* libTurboWebviewCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTurboWebviewCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		29A3F3322906F24B00E8945A /* RNSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNSession.swift; sourceTree = "<group>"; };
 		29A3F3332906F24B00E8945A /* RNVisitableViewManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNVisitableViewManager.swift; sourceTree = "<group>"; };
 		29A3F3342906F24B00E8945A /* RNSessionModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNSessionModule.m; sourceTree = "<group>"; };
@@ -39,7 +39,7 @@
 		29A3F3372906F24B00E8945A /* RNVisitableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNVisitableView.swift; sourceTree = "<group>"; };
 		29A3F3382906F24B00E8945A /* RNVisitableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNVisitableViewController.swift; sourceTree = "<group>"; };
 		29A3F3392906F24B00E8945A /* RNSessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNSessionManager.swift; sourceTree = "<group>"; };
-		F4FF95D5245B92E700C19C63 /* TurboWebview-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TurboWebview-Bridging-Header.h"; sourceTree = "<group>"; };
+		F4FF95D5245B92E700C19C63 /* TurboWebviewCore-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TurboWebviewCore-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,7 +56,7 @@
 		134814211AA4EA7D00B7C361 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				134814201AA4EA6300B7C361 /* libTurboWebview.a */,
+				134814201AA4EA6300B7C361 /* libTurboWebviewCore.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -64,7 +64,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				F4FF95D5245B92E700C19C63 /* TurboWebview-Bridging-Header.h */,
+				F4FF95D5245B92E700C19C63 /* TurboWebviewCore-Bridging-Header.h */,
 				29A3F3322906F24B00E8945A /* RNSession.swift */,
 				29A3F3352906F24B00E8945A /* RNSessionManager.m */,
 				29A3F3392906F24B00E8945A /* RNSessionManager.swift */,
@@ -80,9 +80,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		58B511DA1A9E6C8500147676 /* TurboWebview */ = {
+		58B511DA1A9E6C8500147676 /* TurboWebviewCore */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "TurboWebview" */;
+			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "TurboWebviewCore" */;
 			buildPhases = (
 				58B511D71A9E6C8500147676 /* Sources */,
 				58B511D81A9E6C8500147676 /* Frameworks */,
@@ -92,9 +92,9 @@
 			);
 			dependencies = (
 			);
-			name = TurboWebview;
+			name = TurboWebviewCore;
 			productName = RCTDataManager;
-			productReference = 134814201AA4EA6300B7C361 /* libTurboWebview.a */;
+			productReference = 134814201AA4EA6300B7C361 /* libTurboWebviewCore.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -111,7 +111,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "TurboWebview" */;
+			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "TurboWebviewCore" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -124,7 +124,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				58B511DA1A9E6C8500147676 /* TurboWebview */,
+				58B511DA1A9E6C8500147676 /* TurboWebviewCore */,
 			);
 		};
 /* End PBXProject section */
@@ -254,7 +254,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = TurboWebview;
+				PRODUCT_NAME = TurboWebviewCore;
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "TurboWebview-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -273,7 +273,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = TurboWebview;
+				PRODUCT_NAME = TurboWebviewCore;
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "TurboWebview-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -283,7 +283,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "TurboWebview" */ = {
+		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "TurboWebviewCore" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				58B511ED1A9E6C8500147676 /* Debug */,
@@ -292,7 +292,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "TurboWebview" */ = {
+		58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "TurboWebviewCore" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				58B511F01A9E6C8500147676 /* Debug */,

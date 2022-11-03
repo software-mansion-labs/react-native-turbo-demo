@@ -14,8 +14,6 @@ buildscript {
   }
 }
 
-print "Build gradle of core package here!"
-
 def isNewArchitectureEnabled() {
   return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
 }

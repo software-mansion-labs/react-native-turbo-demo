@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "author": "Bartek Fryz <bartlomiej.fryz@swmansion.com> (https://github.com/Fryzu)",
+  "description": "Adds support for Hotwired Turbo in React Native",
   "license": "MIT",
   "keywords": [
     "react-native",

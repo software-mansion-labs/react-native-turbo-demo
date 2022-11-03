@@ -1,7 +1,10 @@
 {
   "name": "@react-native-turbo-webview/core",
   "version": "0.1.0",
-  "description": "Adds support for Hotired Turbo components in React Native",
+  "author": "Bartek Fryz <bartlomiej.fryz@swmansion.com> (https://github.com/Fryzu)",
+  "license": "MIT",
+  "description": "Core implementation of React Native Turbo support",
+  "homepage": "https://github.com/software-mansion-labs/react-native-turbo-demo#readme",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/index.d.ts",
