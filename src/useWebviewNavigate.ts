@@ -5,6 +5,7 @@ import {
 } from '@react-navigation/core';
 import * as React from 'react';
 import LinkingContext from '@react-navigation/native/src/LinkingContext';
+import extractPathFromURL from '@react-navigation/native/src/extractPathFromURL';
 import type { Action } from './types';
 
 type To<
@@ -46,9 +47,13 @@ export default function useWebviewNavigate<
 
       const { options } = linking;
 
+      const path = to.match(/^https?:\/\//)
+        ? extractPathFromURL(options?.prefixes, to)
+        : to;
+
       const state = options?.getStateFromPath
-        ? options.getStateFromPath(to, options.config)
-        : getStateFromPath(to, options?.config);
+        ? options.getStateFromPath(path, options.config)
+        : getStateFromPath(`${path}`, options?.config);
 
       if (state) {
         const action = getActionFromState(state, options?.config);
