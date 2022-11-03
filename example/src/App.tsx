@@ -16,11 +16,11 @@ interface Props {}
 const Stack = createNativeStackNavigator<any>();
 
 const webviewScreensConfig: PathConfigMap<any> = {
-  [Routes.WebviewInitial]: `/`,
-  [Routes.New]: `/new`,
-  [Routes.SuccessScreen]: `/success`,
-  [Routes.NumbersScreen]: `/numbers`,
-  [Routes.SignIn]: `/signin`,
+  [Routes.WebviewInitial]: ``,
+  [Routes.New]: `new`,
+  [Routes.SuccessScreen]: `success`,
+  [Routes.NumbersScreen]: `numbers`,
+  [Routes.SignIn]: `signin`,
   [Routes.Fallback]: {
     path: '*',
   },

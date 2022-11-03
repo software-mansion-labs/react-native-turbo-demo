@@ -33,7 +33,7 @@ const WebviewScreen: React.FC<Props> = ({ navigation, route }) => {
   }: NativeSyntheticEvent<VisitProposalError>) => {
     switch (statusCode) {
       case 401: {
-        navigateTo(`/signin`);
+        navigateTo(`signin`);
         break;
       }
       default: {
