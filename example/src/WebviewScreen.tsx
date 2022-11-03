@@ -36,7 +36,7 @@ const WebviewScreen: React.FC<Props> = ({ navigation, route }) => {
         break;
       }
       default: {
-        navigateTo(`${BASE_URL}/notfound`, 'replace');
+        navigation.replace(Routes.NotFound);
       }
     }
   };
