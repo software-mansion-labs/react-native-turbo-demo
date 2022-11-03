@@ -88,7 +88,7 @@ const linking = {
   prefixes: [BASE_URL],
   config: {
     screens: {
-      NativeNumbersScreenName: '/numbers',
+      NativeNumbersScreenName: 'numbers', // Will be shown when navigating to BASE_URL/numbers
       FallbackScreen: {
         path: '*'
       }
@@ -106,8 +106,8 @@ const linking: LinkingOptions<any> = {
   prefixes: [BASE_URL],
   config: {
     screens: {
-      FirstScreen: '/firstScreen',
-      SecondScreen: '/secondScreen',
+      FirstScreen: 'firstScreen',
+      SecondScreen: 'secondScreen',
     },
   },
 };
@@ -126,11 +126,11 @@ const onVisitError = ({
   switch (statusCode) {
     case 401: {
       // Open sign in screen
-      navigateTo(`/signin`);
+      navigateTo(`signin`);
       break;
     }
     default: {
-      navigateTo(`/notfound`, 'replace');
+      navigateTo(`notfound`, 'replace');
     }
   }
 };
