@@ -22,7 +22,11 @@
   },
   "scripts": {
     "example": "yarn --cwd example",
-    "bootstrap": "yarn install && yarn example server && lerna run pods"
+    "bootstrap": "yarn install && yarn example server && lerna run pods",
+    "prepare": "lerna run prepare",
+    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "typescript": "tsc --noEmit --composite false",
+    "clean": "lerna run clean"
   },
   "workspaces": {
     "packages": [
@@ -49,7 +53,8 @@
     "release-it": "^15.0.0",
     "typescript": "^4.5.2",
     "@release-it/conventional-changelog": "^5.0.0",
-    "lerna": "6.0.1"
+    "lerna": "6.0.1",
+    "del-cli": "^3.0.1"
   },
   "resolutions": {
     "@types/react": "17.0.21"
@@ -78,11 +83,6 @@
       ]
     }
   },
-  "eslintIgnore": [
-    "node_modules/",
-    "lib/",
-    "example/server"
-  ],
   "prettier": {
     "quoteProps": "consistent",
     "singleQuote": true,

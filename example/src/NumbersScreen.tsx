@@ -16,10 +16,12 @@ const styles = StyleSheet.create({
 interface Props {}
 
 const NumbersScreen: React.FC<Props> = () => {
+  const renderSeparator = () => <View style={styles.separator} />;
+
   return (
     <FlatList
       data={new Array(100)}
-      ItemSeparatorComponent={() => <View style={styles.separator} />}
+      ItemSeparatorComponent={renderSeparator}
       renderItem={({ index }) => (
         <View style={styles.row}>
           <Text>Row {index}</Text>
