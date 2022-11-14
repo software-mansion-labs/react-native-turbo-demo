@@ -6,7 +6,7 @@ import {
 import * as React from 'react';
 import LinkingContext from '@react-navigation/native/src/LinkingContext';
 import extractPathFromURL from '@react-navigation/native/src/extractPathFromURL';
-import type { Action } from './types';
+import type { Action } from '@react-native-turbo-webview/core';
 
 type To<
   ParamList extends ReactNavigation.RootParamList = ReactNavigation.RootParamList,
