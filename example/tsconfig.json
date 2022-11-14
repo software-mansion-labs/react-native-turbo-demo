@@ -1,11 +1,10 @@
 {
   "extends": "../tsconfig.json",
+  "references": [
+    { "path": "../packages/core" },
+    { "path": "../packages/navigation" }
+  ],
   "compilerOptions": {
     "noEmit": true
-  },
-  "references": [
-    {
-      "path": "../packages/core"
-    }
-  ]
+  }
 }
