@@ -1,3 +1,10 @@
 {
-  "extends": "../../tsconfig.base.json"
+  "extends": "../../tsconfig.json",
+  "references": [
+    { "path": "../packages/navigation" },
+    { "path": "../packages/core" }
+  ],
+  "compilerOptions": {
+    "outDir": "./lib/typescript"
+  }
 }

@@ -14,7 +14,10 @@
   "module": "lib/module/index.js",
   "types": "lib/typescript/src/index.d.ts",
   "scripts": {
-    "prepare": "bob build"
+    "prepare": "bob build",
+    "clean": "del lib",
+    "release": "release-it",
+    "pods": "pod-install --quiet"
   },
   "peerDependencies": {
     "react": "*",
