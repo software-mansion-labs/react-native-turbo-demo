@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://localhost:45678';
+export const BASE_URL = 'http://localhost:45678/';
 
 export enum Routes {
   TabBar = 'TabBar',
@@ -20,4 +20,5 @@ export enum Routes {
   Follow = 'Follow',
   Redirected = 'Redirected',
   Share = 'Share',
+  Fallback = 'Fallback',
 }
