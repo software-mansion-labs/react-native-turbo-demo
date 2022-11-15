@@ -1,0 +1,5 @@
+android/
+ios/
+node_modules/
+lib/
+example/server

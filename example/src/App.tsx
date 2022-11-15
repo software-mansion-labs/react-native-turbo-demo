@@ -9,7 +9,7 @@ import { BASE_URL, Routes } from './config';
 import WebviewScreen from './WebviewScreen';
 import NumbersScreen from './NumbersScreen';
 import ErrorScreen from './ErrorScreen';
-import { Session, withSession } from 'react-native-turbo-webview';
+import { Session, withSession } from '@react-native-turbo-webview/core';
 import { Share } from 'react-native';
 
 interface Props {}

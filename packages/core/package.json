@@ -1,0 +1,50 @@
+{
+  "name": "@react-native-turbo-webview/core",
+  "version": "0.1.0",
+  "author": "Bartek Fryz <bartlomiej.fryz@swmansion.com> (https://github.com/Fryzu)",
+  "license": "MIT",
+  "description": "Core implementation of React Native Turbo support",
+  "homepage": "https://github.com/software-mansion-labs/react-native-turbo-demo#readme",
+  "main": "lib/commonjs/index.js",
+  "module": "lib/module/index.js",
+  "types": "lib/typescript/src/index.d.ts",
+  "react-native": "src/index.tsx",
+  "source": "src/index",
+  "scripts": {
+    "prepare": "bob build",
+    "clean": "del lib",
+    "release": "release-it",
+    "pods": "pod-install --quiet"
+  },
+  "devDependencies": {
+    "@react-navigation/core": "^6.0.0",
+    "@react-navigation/native": "^6.0.0",
+    "react-native-builder-bob": "^0.20.0",
+    "react-native-safe-area-context": "^4.3.0",
+    "react-native-screens": "^3.13.0"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*",
+    "@react-navigation/core": "^6.0.0",
+    "@react-navigation/native": "^6.0.0",
+    "react-native-safe-area-context": "^4.3.0",
+    "react-native-screens": "^3.13.0"
+  },
+  "files": [
+    "src",
+    "lib",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__"
+  ],
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      "typescript"
+    ]
+  }
+}

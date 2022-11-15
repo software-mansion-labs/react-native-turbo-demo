@@ -1,0 +1,47 @@
+{
+  "name": "@react-native-turbo-webview/navigation",
+  "version": "0.1.0",
+  "description": "React Native Turbo library support for React Navigation",
+  "source": "src/index",
+  "repository": "https://github.com/software-mansion-labs/react-native-turbo-demo#readme",
+  "author": "Bartek Fryz <bartlomiej.fryz@swmansion.com> (https://github.com/Fryzu)",
+  "license": "MIT",
+  "devDependencies": {
+    "react-native-builder-bob": "^0.20.0"
+  },
+  "main": "lib/commonjs/index.js",
+  "react-native": "src/index.tsx",
+  "module": "lib/module/index.js",
+  "types": "lib/typescript/src/index.d.ts",
+  "scripts": {
+    "prepare": "bob build",
+    "clean": "del lib",
+    "release": "release-it",
+    "pods": "pod-install --quiet"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*",
+    "@react-native-turbo-webview/core": "*"
+  },
+  "files": [
+    "src",
+    "lib",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__"
+  ],
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      "typescript"
+    ]
+  },
+  "eslintIgnore": [
+    "node_modules/",
+    "lib/"
+  ]
+}

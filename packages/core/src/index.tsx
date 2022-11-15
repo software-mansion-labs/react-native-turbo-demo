@@ -9,6 +9,4 @@ export {
   Props as VisitableViewProps,
 } from './VisitableView';
 
-export { default as useWebviewNavigate } from './useWebviewNavigate';
-
 export * from './types';
