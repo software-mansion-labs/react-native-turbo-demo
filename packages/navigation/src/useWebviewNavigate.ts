@@ -6,7 +6,21 @@ import {
 import * as React from 'react';
 import LinkingContext from '@react-navigation/native/src/LinkingContext';
 import extractPathFromURL from '@react-navigation/native/src/extractPathFromURL';
+import { StackActions } from '@react-navigation/native';
+import type {
+  NavigationState,
+  NavigatorScreenParams,
+} from '@react-navigation/core';
 import type { Action } from '@react-native-turbo-webview/core';
+
+type NavigateAction<State extends NavigationState> = {
+  type: 'NAVIGATE';
+  payload: {
+    name: string;
+    params?: NavigatorScreenParams<State>;
+    path?: string;
+  };
+};
 
 type To<
   ParamList extends ReactNavigation.RootParamList = ReactNavigation.RootParamList,
@@ -56,15 +70,22 @@ export default function useWebviewNavigate<
         : getStateFromPath(`${path}`, options?.config);
 
       if (state) {
-        const action = getActionFromState(state, options?.config);
+        const action = <NavigateAction<NavigationState>>(
+          getActionFromState(state, options?.config)
+        );
 
         if (action === undefined) {
           navigation.reset(state);
         } else {
-          if (actionType === 'replace') {
-            navigation.goBack();
-          }
-          navigation.dispatch(action);
+          const stackAction =
+            actionType === 'replace' ? StackActions.replace : StackActions.push;
+
+          navigation.dispatch({
+            ...stackAction(action.payload.name, {
+              ...action.payload.params,
+              path,
+            }),
+          });
         }
       } else {
         throw new Error('Failed to parse the path to a navigation state.');
