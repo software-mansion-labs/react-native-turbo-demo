@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.webkit.JavascriptInterface
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
@@ -22,6 +23,7 @@ class RNSession(context: Context) : FrameLayout(context) {
   val turboSession: TurboSession = run {
     val activity = reactContext.currentActivity as AppCompatActivity
     val webView = TurboWebView(context, null)
+
     val sessionName = UUID.randomUUID().toString()
     webView.getSettings().setJavaScriptEnabled(true)
     webView.addJavascriptInterface(JavaScriptInterface(), "AndroidInterface")
@@ -34,20 +36,22 @@ class RNSession(context: Context) : FrameLayout(context) {
   }
 
   internal fun registerVisitableView(newView: SessionSubscriber) {
-//    val visit = newView.visit ?: return
-
     var callbacksCount = registeredVisitableViews.size
 
-    fun onDetached() = synchronized(this) {
-      callbacksCount--
-      if (callbacksCount == 0) {
-        newView.attachWebView()
+    if (callbacksCount == 0) {
+      newView.attachWebViewAndVisit()
+    } else {
+      fun onDetached() = synchronized(this) {
+        callbacksCount--
+        if (callbacksCount == 0) {
+          newView.attachWebViewAndVisit()
+        }
       }
-    }
 
-    for (view in registeredVisitableViews) {
-      view.detachWebView() {
-        onDetached()
+      for (view in registeredVisitableViews) {
+        view.detachWebView() {
+          onDetached()
+        }
       }
     }
 
