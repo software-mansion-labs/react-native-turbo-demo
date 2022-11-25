@@ -23,7 +23,7 @@ class RNVisitableViewManager(
 
   @ReactProp(name = "url")
   fun setUrl(view: RNVisitableView, url: String) {
-    view.setVisit(url)
+    view.url = url
   }
 
   @ReactProp(name = "sessionHandle")
