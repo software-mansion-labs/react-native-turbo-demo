@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import android.webkit.JavascriptInterface
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
