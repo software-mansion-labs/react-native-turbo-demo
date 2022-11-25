@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
+    "android": "adb reverse tcp:8081 tcp:8081 && adb reverse tcp:45678 tcp:45678 && react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "pods": "pod-install --quiet",
