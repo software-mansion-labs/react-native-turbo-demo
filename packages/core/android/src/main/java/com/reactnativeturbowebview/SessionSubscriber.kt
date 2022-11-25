@@ -4,5 +4,5 @@ import dev.hotwire.turbo.visit.TurboVisit
 
 interface SessionSubscriber {
   fun detachWebView(callback: () -> Unit)
-  fun attachWebView(onReady: (Boolean) -> Unit = {})
+  fun attachWebViewAndVisit()
 }

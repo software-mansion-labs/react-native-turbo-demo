@@ -3,11 +3,10 @@ package com.reactnativeturbowebview
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.util.Log
 import android.view.ViewGroup
 import android.webkit.HttpAuthHandler
-import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -16,10 +15,10 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.events.RCTEventEmitter
-import dev.hotwire.turbo.fragments.TurboWebFragmentCallback
 import dev.hotwire.turbo.nav.TurboNavDestination
 import dev.hotwire.turbo.session.TurboSessionCallback
 import dev.hotwire.turbo.views.TurboView
+import dev.hotwire.turbo.views.TurboWebView
 import dev.hotwire.turbo.visit.TurboVisit
 import dev.hotwire.turbo.visit.TurboVisitAction
 import dev.hotwire.turbo.visit.TurboVisitOptions
@@ -32,6 +31,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
 
   private var visitableView = inflate(context, R.layout.turbo_view, null) as ViewGroup
   private var turboView: TurboView
+  private var screenshotView: AppCompatImageView
   private val viewTreeLifecycleOwner
     get() = turboView?.findViewTreeLifecycleOwner()
   private val reactContext = context as ReactContext
@@ -43,10 +43,13 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
   private var screenshotOrientation = 0
   private var screenshotZoomed = false
   private var screenshot: Bitmap? = null
+  val webView: TurboWebView
+    get() = session.turboSession.webView
 
   init {
     addView(visitableView)
     turboView = visitableView.findViewById(R.id.turbo_view)
+    screenshotView = visitableView.findViewById(R.id.turbo_screenshot)
 
     turboView.setBackgroundColor(Color.parseColor("#FF0000"))
 
@@ -90,7 +93,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
     }
   }
 
-  private fun attachWebViewAndVisit() {
+  override fun attachWebViewAndVisit() {
     attachWebView {
       isWebViewAttachedToNewDestination = it
 
@@ -123,7 +126,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
   }
 
   fun refresh(displayProgress: Boolean) {
-    if (session.turboSession.webView.url == null) return
+    if (webView.url == null) return
 
     turboView?.webViewRefresh?.apply {
       if (displayProgress && !isRefreshing) {
@@ -162,7 +165,6 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
-    attachWebViewAndVisit()
     session.registerVisitableView(this)
   }
 
@@ -172,7 +174,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
   }
 
   override fun detachWebView(onReady: () -> Unit) {
-    val webView = session.turboSession.webView
+    val webView = webView
     screenshotView()
 
     turboView?.detachWebView(webView) {
@@ -180,7 +182,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
     }
   }
 
-  override fun attachWebView(onReady: (Boolean) -> Unit) {
+  private fun attachWebView(onReady: (Boolean) -> Unit) {
     val view = turboView
 
     if (view == null) {
@@ -188,11 +190,11 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
       return
     }
 
-    view.attachWebView(session.turboSession.webView) { attachedToNewDestination ->
+    view.attachWebView(webView) { attachedToNewDestination ->
       onReady(attachedToNewDestination)
 
 //      if (attachedToNewDestination) {
-//        onWebViewAttached(session.turboSession.webView)
+//        onWebViewAttached(webView)
 //      }
     }
   }
@@ -204,12 +206,12 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
     super.onLayout(changed, l, t, r, b)
     val width = r - l
     val height = b - t
-    session.turboSession.webView.layout(0, 0, width, height)
+    webView.layout(0, 0, width, height)
+    turboView.layout(0, 0, width, height)
+    screenshotView.layout(0, 0, width, height)
   }
 
   private fun screenshotView() {
-    if (!session.turboSession.screenshotsEnabled) return
-
     turboView?.let {
       screenshot = it.createScreenshot()
       screenshotOrientation = it.screenshotOrientation()
@@ -245,7 +247,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
   override fun onReceivedError(errorCode: Int) {
     sendEvent(RNVisitableViewEvent.VISIT_ERROR, Arguments.createMap().apply {
       putInt("statusCode", errorCode)
-      putString("url", session.turboSession.webView.url)
+      putString("url", webView.url)
     })
   }
 
@@ -285,16 +287,16 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
 
   override fun visitRendered() {
     sendEvent(RNVisitableViewEvent.PAGE_LOADED, Arguments.createMap().apply {
-      putString("title", session.turboSession.webView.title)
-      putString("url", session.turboSession.webView.url)
+      putString("title", webView.title)
+      putString("url", webView.url)
     })
     removeTransitionalViews()
   }
 
   override fun visitCompleted(completedOffline: Boolean) {
     sendEvent(RNVisitableViewEvent.PAGE_LOADED, Arguments.createMap().apply {
-      putString("title", session.turboSession.webView.title)
-      putString("url", session.turboSession.webView.url)
+      putString("title", webView.title)
+      putString("url", webView.url)
     })
   }
 
