@@ -32,6 +32,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
   private var visitableView = inflate(context, R.layout.turbo_view, null) as ViewGroup
   private var turboView: TurboView
   private var screenshotView: AppCompatImageView
+  private val webViewContainer: ViewGroup get() = findViewById(R.id.turbo_webView_container)
   private val viewTreeLifecycleOwner
     get() = turboView?.findViewTreeLifecycleOwner()
   private val reactContext = context as ReactContext
@@ -179,7 +180,8 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
 
     (session.turboSession.webView.parent as ViewGroup)?.endViewTransition(session.turboSession.webView)
 
-    turboView?.detachWebView(webView) {
+    webViewContainer.post {
+      webViewContainer.removeAllViews()
       onReady()
     }
   }
