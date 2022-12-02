@@ -11,8 +11,11 @@ import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.events.RCTEventEmitter
 import dev.hotwire.turbo.session.TurboSession
 import dev.hotwire.turbo.views.TurboWebView
+import kotlinx.coroutines.*
+import kotlin.coroutines.suspendCoroutine
 import java.util.*
 import org.json.JSONObject
+import kotlin.coroutines.resume
 
 class RNSession(context: Context) : FrameLayout(context) {
 
@@ -35,28 +38,24 @@ class RNSession(context: Context) : FrameLayout(context) {
   }
 
   internal fun registerVisitableView(newView: SessionSubscriber) {
-    var callbacksCount = registeredVisitableViews.size
-
-    if (callbacksCount == 0) {
+    MainScope().launch {
+      registeredVisitableViews.map { view ->
+        async {
+          suspendCoroutine { continuation ->
+            view.detachWebView {
+              continuation.resume(0)
+            }
+          }
+        }
+      }.awaitAll()
+        if(!registeredVisitableViews.contains(newView)) {
+        registeredVisitableViews.add(newView)
+      }
       newView.attachWebViewAndVisit()
-    } else {
-      fun onDetached() = synchronized(this) {
-        callbacksCount--
-        if (callbacksCount == 0) {
-          newView.attachWebViewAndVisit()
-        }
-      }
-
-      for (view in registeredVisitableViews) {
-        view.detachWebView() {
-          onDetached()
-        }
-      }
     }
 
-    if (!registeredVisitableViews.contains(newView)) {
-      registeredVisitableViews.add(newView)
-    }
+
+
   }
 
   internal fun removeVisitableView(view: SessionSubscriber) {
