@@ -16,62 +16,60 @@ import org.json.JSONObject
 
 class RNSession(context: Context) : FrameLayout(context) {
 
-    private val reactContext = context as ReactContext
-    private val registeredVisitableViews = mutableListOf<SessionSubscriber>()
+  private val reactContext = context as ReactContext
+  private val registeredVisitableViews = mutableListOf<SessionSubscriber>()
 
-    val turboSession: TurboSession = run {
-        val activity = reactContext.currentActivity as AppCompatActivity
-        val webView = TurboWebView(context, null)
-        val sessionName = UUID.randomUUID().toString()
-        webView.getSettings().setJavaScriptEnabled(true)
-        webView.addJavascriptInterface(JavaScriptInterface(), "AndroidInterface")
+  val turboSession: TurboSession = run {
+    val activity = reactContext.currentActivity as AppCompatActivity
+    val webView = TurboWebView(context, null)
 
-        TurboSession(sessionName, activity, webView)
-    }
+    val sessionName = UUID.randomUUID().toString()
+    webView.getSettings().setJavaScriptEnabled(true)
+    webView.addJavascriptInterface(JavaScriptInterface(), "AndroidInterface")
 
-    fun sendEvent(event: RNSessionEvent, params: WritableMap) {
-        reactContext.getJSModule(RCTEventEmitter::class.java).receiveEvent(id, event.name, params)
-    }
+    TurboSession(sessionName, activity, webView)
+  }
 
-    internal fun registerVisitableView(newView: SessionSubscriber) {
-        var callbacksCount = registeredVisitableViews.size
+  fun sendEvent(event: RNSessionEvent, params: WritableMap) {
+    reactContext.getJSModule(RCTEventEmitter::class.java).receiveEvent(id, event.name, params)
+  }
 
+  internal fun registerVisitableView(newView: SessionSubscriber) {
+    var callbacksCount = registeredVisitableViews.size
+
+    if (callbacksCount == 0) {
+      newView.attachWebViewAndVisit()
+    } else {
+      fun onDetached() = synchronized(this) {
+        callbacksCount--
         if (callbacksCount == 0) {
-            turboSession.visit(newView.visit)
-            newView.attachWebView()
+          newView.attachWebViewAndVisit()
         }
+      }
 
-        fun onDetached() = synchronized(this) {
-            callbacksCount--
-            if (callbacksCount == 0) {
-                turboSession.visit(newView.visit)
-                newView.attachWebView()
-            }
+      for (view in registeredVisitableViews) {
+        view.detachWebView() {
+          onDetached()
         }
-
-        for (view in registeredVisitableViews) {
-            view.detachWebView() {
-                onDetached()
-            }
-        }
-
-        if (!registeredVisitableViews.contains(newView)) {
-            registeredVisitableViews.add(newView)
-        }
+      }
     }
 
-    internal fun removeVisitableView(view: SessionSubscriber) {
-        registeredVisitableViews.remove(view)
+    if (!registeredVisitableViews.contains(newView)) {
+      registeredVisitableViews.add(newView)
     }
+  }
 
-    inner class JavaScriptInterface {
-        @JavascriptInterface
-        fun postMessage(messageStr: String) {
-            Log.d("RNVisitableView", "postMessage ${messageStr}")
-            // Android interface works only with primitive types, that's why we need to use JSON
-            val messageObj =
-                Utils.convertJsonToBundle(JSONObject(messageStr)) // TODO remove double conversion
-            sendEvent(RNSessionEvent.RECEIVED_JS_MESSAGE, Arguments.fromBundle(messageObj))
-        }
+  internal fun removeVisitableView(view: SessionSubscriber) {
+    registeredVisitableViews.remove(view)
+  }
+
+  inner class JavaScriptInterface {
+    @JavascriptInterface
+    fun postMessage(messageStr: String) {
+      // Android interface works only with primitive types, that's why we need to use JSON
+      val messageObj =
+        Utils.convertJsonToBundle(JSONObject(messageStr)) // TODO remove double conversion
+      sendEvent(RNSessionEvent.RECEIVED_JS_MESSAGE, Arguments.fromBundle(messageObj))
     }
+  }
 }

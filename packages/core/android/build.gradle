@@ -135,7 +135,7 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  implementation 'com.github.Fryzu:turbo-android:8f7c1a190aede97b39f17d9b02701c83356d71fc'
+  implementation 'com.github.Fryzu:turbo-android:013efda29df919e23ef916d71104e966f368dbbf'
   // From node_modules
 }
 
