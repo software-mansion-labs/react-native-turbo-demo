@@ -60,7 +60,6 @@ const App: React.FC<Props> = () => {
         <Stack.Navigator
           screenOptions={{
             headerBackTitle: 'Back',
-            animation: 'none',
           }}
         >
           <Stack.Screen

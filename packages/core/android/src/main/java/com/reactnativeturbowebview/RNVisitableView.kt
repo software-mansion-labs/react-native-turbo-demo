@@ -52,8 +52,6 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
     turboView = visitableView.findViewById(R.id.turbo_view)
     screenshotView = visitableView.findViewById(R.id.turbo_screenshot)
 
-    turboView.setBackgroundColor(Color.parseColor("#FF0000"))
-
     currentlyZoomed = false
     turboView?.apply {
       initializePullToRefresh(this)
