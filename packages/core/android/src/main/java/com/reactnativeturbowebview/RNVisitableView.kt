@@ -200,10 +200,10 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
   /**
    * Fixes initial size of WebView
    */
-  override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-    super.onLayout(changed, l, t, r, b)
-    val width = r - l
-    val height = b - t
+  override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+    super.onLayout(changed, left, top, right, bottom)
+    val width = right - left
+    val height = bottom - top
     webView.layout(0, 0, width, height)
     turboView.layout(0, 0, width, height)
     screenshotView.layout(0, 0, width, height)
