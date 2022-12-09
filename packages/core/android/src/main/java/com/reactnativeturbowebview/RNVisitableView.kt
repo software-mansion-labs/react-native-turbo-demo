@@ -194,10 +194,6 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
 
     view.attachWebView(webView) { attachedToNewDestination ->
       onReady(attachedToNewDestination)
-
-//      if (attachedToNewDestination) {
-//        onWebViewAttached(webView)
-//      }
     }
   }
 

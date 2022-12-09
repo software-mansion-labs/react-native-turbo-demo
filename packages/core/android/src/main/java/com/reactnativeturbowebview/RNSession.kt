@@ -66,7 +66,6 @@ class RNSession(context: Context) : FrameLayout(context) {
   inner class JavaScriptInterface {
     @JavascriptInterface
     fun postMessage(messageStr: String) {
-      Log.d("RNVisitableView", "postMessage ${messageStr}")
       // Android interface works only with primitive types, that's why we need to use JSON
       val messageObj =
         Utils.convertJsonToBundle(JSONObject(messageStr)) // TODO remove double conversion
