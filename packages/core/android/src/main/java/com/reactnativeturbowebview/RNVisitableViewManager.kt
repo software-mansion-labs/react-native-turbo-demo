@@ -30,7 +30,7 @@ class RNVisitableViewManager(
   fun setSessionHandle(view: RNVisitableView, sessionHandle: Int) {
     val uiManager = getReactContext(view).getNativeModule(UIManagerModule::class.java)
     val sessionView = uiManager?.resolveView(sessionHandle) as RNSession
-    view.session = sessionView
+    view.sessionContainer = sessionView
   }
 
 

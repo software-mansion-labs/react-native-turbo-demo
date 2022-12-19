@@ -1,7 +1,6 @@
 package com.reactnativeturbowebview
 
 import android.content.Context
-import android.util.Log
 import android.webkit.JavascriptInterface
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
