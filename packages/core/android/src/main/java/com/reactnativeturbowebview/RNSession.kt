@@ -25,8 +25,9 @@ class RNSession(context: Context) : FrameLayout(context) {
     val sessionName = UUID.randomUUID().toString()
     webView.getSettings().setJavaScriptEnabled(true)
     webView.addJavascriptInterface(JavaScriptInterface(), "AndroidInterface")
-
-    TurboSession(sessionName, activity, webView)
+    val session = TurboSession(sessionName, activity, webView)
+    session.isRunningInAndroidNavigation = false
+    session
   }
 
   fun sendEvent(event: RNSessionEvent, params: WritableMap) {
