@@ -3,7 +3,6 @@ package com.reactnativeturbowebview
 import android.content.Context
 import android.graphics.Bitmap
 import android.view.ViewGroup
-import android.webkit.HttpAuthHandler
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.lifecycle.Lifecycle
@@ -14,9 +13,7 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.events.RCTEventEmitter
-import dev.hotwire.turbo.nav.TurboNavDestination
 import dev.hotwire.turbo.session.TurboSession
-import dev.hotwire.turbo.session.TurboSessionCallback
 import dev.hotwire.turbo.views.TurboView
 import dev.hotwire.turbo.views.TurboWebView
 import dev.hotwire.turbo.visit.TurboVisit
@@ -26,7 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class RNVisitableView(context: Context) : LinearLayout(context), SessionCallbackAdaptor,
+class RNVisitableView(context: Context) : LinearLayout(context), SessionCallbackAdapter,
   SessionSubscriber {
 
   private var visitableView = inflate(context, R.layout.turbo_view, null) as ViewGroup
