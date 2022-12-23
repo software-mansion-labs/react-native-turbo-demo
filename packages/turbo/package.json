@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "author": "Bartek Fryz <bartlomiej.fryz@swmansion.com> (https://github.com/Fryzu)",
   "license": "MIT",
-  "description": "Core implementation of React Native Turbo support",
+  "description": "Support for @hotwired/turbo in React Native apps",
   "homepage": "https://github.com/software-mansion-labs/react-native-turbo-demo#readme",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
