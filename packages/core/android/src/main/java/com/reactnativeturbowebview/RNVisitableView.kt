@@ -2,9 +2,7 @@ package com.reactnativeturbowebview
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.view.ViewGroup
-import android.webkit.HttpAuthHandler
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.lifecycle.Lifecycle
@@ -15,8 +13,7 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.events.RCTEventEmitter
-import dev.hotwire.turbo.nav.TurboNavDestination
-import dev.hotwire.turbo.session.TurboSessionCallback
+import dev.hotwire.turbo.session.TurboSession
 import dev.hotwire.turbo.views.TurboView
 import dev.hotwire.turbo.views.TurboWebView
 import dev.hotwire.turbo.visit.TurboVisit
@@ -26,7 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCallback,
+class RNVisitableView(context: Context) : LinearLayout(context), SessionCallbackAdapter,
   SessionSubscriber {
 
   private var visitableView = inflate(context, R.layout.turbo_view, null) as ViewGroup
@@ -37,15 +34,17 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
     get() = turboView?.findViewTreeLifecycleOwner()
   private val reactContext = context as ReactContext
   private var isInitialVisit = true
-  lateinit var session: RNSession
+  lateinit var sessionContainer: RNSession
   lateinit var url: String
   private var currentlyZoomed = false
   private var isWebViewAttachedToNewDestination = false
   private var screenshotOrientation = 0
   private var screenshotZoomed = false
   private var screenshot: Bitmap? = null
-  val webView: TurboWebView
-    get() = session.turboSession.webView
+  private val webView: TurboWebView
+    get() = sessionContainer.turboSession.webView
+  private val session: TurboSession
+    get() = sessionContainer.turboSession
 
   init {
     addView(visitableView)
@@ -78,7 +77,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
       }
 
       viewTreeLifecycleOwner?.lifecycle?.whenStateAtLeast(Lifecycle.State.STARTED) {
-        session.turboSession.visit(
+        session.visit(
           TurboVisit(
             location = url,
             destinationIdentifier = url.hashCode(),
@@ -99,7 +98,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
       // Visit every time the WebView is reattached to the current Fragment.
       if (isWebViewAttachedToNewDestination) {
         val currentSessionVisitRestored =
-          !isInitialVisit && session.turboSession.currentVisit?.destinationIdentifier == url.hashCode() && session.turboSession.restoreCurrentVisit(
+          !isInitialVisit && session.currentVisit?.destinationIdentifier == url.hashCode() && session.restoreCurrentVisit(
             this
           )
 
@@ -114,7 +113,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
 
   private suspend fun fetchCachedSnapshot(): String? {
     return withContext(Dispatchers.IO) {
-      val response = session.turboSession.offlineRequestHandler?.getCachedSnapshot(
+      val response = session.offlineRequestHandler?.getCachedSnapshot(
         url = url
       )
 
@@ -164,19 +163,18 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
-    session.registerVisitableView(this)
+    sessionContainer.registerVisitableView(this)
   }
 
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
-    session.removeVisitableView(this)
+    sessionContainer.removeVisitableView(this)
   }
 
   override fun detachWebView(onReady: () -> Unit) {
-    val webView = webView
     screenshotView()
 
-    (session.turboSession.webView.parent as ViewGroup)?.endViewTransition(session.turboSession.webView)
+    (session.webView.parent as ViewGroup)?.endViewTransition(session.webView)
 
     webViewContainer.post {
       webViewContainer.removeAllViews()
@@ -240,8 +238,6 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
 
   // region TurboSessionCallback
 
-  override fun onPageFinished(location: String) {}
-
   override fun onReceivedError(errorCode: Int) {
     sendEvent(RNVisitableViewEvent.VISIT_ERROR, Arguments.createMap().apply {
       putInt("statusCode", errorCode)
@@ -255,10 +251,6 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
       putString("action", options.action.name.lowercase())
     })
   }
-
-  override fun formSubmissionStarted(location: String) {}
-
-  override fun formSubmissionFinished(location: String) {}
 
   override fun onRenderProcessGone() {
     sendEvent(RNVisitableViewEvent.VISIT_PROPOSED, Arguments.createMap().apply {
@@ -276,12 +268,6 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
     currentlyZoomed = false
     pullToRefreshEnabled(true)
   }
-
-  override fun pageInvalidated() {}
-
-  override fun requestFailedWithStatusCode(visitHasCachedSnapshot: Boolean, statusCode: Int) {}
-
-  override fun onReceivedHttpAuthRequest(handler: HttpAuthHandler, host: String, realm: String) {}
 
   override fun visitRendered() {
     sendEvent(RNVisitableViewEvent.PAGE_LOADED, Arguments.createMap().apply {
@@ -304,11 +290,6 @@ class RNVisitableView(context: Context) : LinearLayout(context), TurboSessionCal
     }
   }
 
-  override fun visitNavDestination(): TurboNavDestination? {
-    return null
-  }
-
-  override fun onPageStarted(location: String) {}
-
   // end region
+
 }
