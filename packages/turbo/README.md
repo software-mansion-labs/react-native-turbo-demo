@@ -10,6 +10,12 @@ First step is to install react-native-turbo as a dependency in your project:
 yarn add react-native-turbo
 ```
 
+Currently on iOS you need to manually add the [Turbo](https://github.com/hotwired/turbo-ios/blob/main/Docs/Installation.md#cocoapods) dependency to your `Podfile`:
+
+```
+pod 'Turbo', :git => 'https://github.com/hotwired/turbo-ios.git', :tag => '7.0.0-rc.6'
+```
+
 ## Usage
 
 Turbo `webview` can be rendered using native view `VisitableView`.
