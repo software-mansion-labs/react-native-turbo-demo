@@ -48,7 +48,7 @@
     "lib",
     "android",
     "ios",
-    "ReactNativeTurbo.podspec",
+    "RNTurbo.podspec",
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__"
