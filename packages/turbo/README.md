@@ -1,12 +1,18 @@
 # React Native Turbo
 
-React Native apps [Hotwired Turbo](https://turbo.hotwired.dev/handbook/introduction) support for creating hybrid apps with single a single shared web view.
+React Native apps [Hotwired Turbo](https://turbo.hotwired.dev/handbook/introduction) support for creating hybrid apps with a single shared web view.
 
-## Getting Started
+## Installation
+
+First step is to install react-native-turbo as a dependency in your project:
+
+```
+yarn add react-native-turbo
+```
 
 ## Usage
 
-Turbo `web view` can be rendered using native view `VisitableView`.
+Turbo `webview` can be rendered using native view `VisitableView`.
 
 ```jsx
 import {
@@ -16,18 +22,25 @@ import {
   VisitProposalError,
   Session,
 } from 'react-native-turbo';
+import { useNavigation } from '@react-navigation/native';
 
-const onVisitProposal = ({ nativeEvent: { action: actionType, url } }) => {
-  // Handle opening new screen
+const TurboScreen = () => {
+  const navigation = useNavigation();
+
+  const onVisitProposal = ({ nativeEvent: { action: actionType, url } }) => {
+    // Handle opening new screen e.g. using react-navigation
+    navigation.push('TurboScreen', { url });
+  };
+
+  return (
+    <Session>
+      <VisitableView
+        url="https://turbo-native-demo.glitch.me"
+        onVisitProposal={onVisitProposal}
+      />
+    </Session>
+  );
 };
-
-<Session>
-  <VisitableView
-    url="https://turbo-native-demo.glitch.me"
-    onVisitProposal={onVisitProposal}
-  />
-  ;
-</Session>;
 ```
 
 You can use `onVisitProposal()` to handle turbo visits.
