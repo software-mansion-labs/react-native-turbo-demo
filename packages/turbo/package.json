@@ -4,7 +4,19 @@
   "author": "Bartek Fryz <bartlomiej.fryz@swmansion.com> (https://github.com/Fryzu)",
   "license": "MIT",
   "description": "Support for @hotwired/turbo in React Native apps",
+  "keywords": [
+    "react-native",
+    "ios",
+    "android",
+    "turbo",
+    "hotwired"
+  ],
   "homepage": "https://github.com/software-mansion-labs/react-native-turbo-demo#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/software-mansion-labs/react-native-turbo-demo",
+    "directory": "packages/turbo"
+  },
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
   "types": "lib/typescript/src/index.d.ts",
@@ -34,6 +46,8 @@
   "files": [
     "src",
     "lib",
+    "android",
+    "ios",
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__"
