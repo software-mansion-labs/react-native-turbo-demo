@@ -16,6 +16,12 @@ Currently on iOS you need to manually add the [Turbo](https://github.com/hotwire
 pod 'Turbo', :git => 'https://github.com/hotwired/turbo-ios.git', :tag => '7.0.0-rc.6'
 ```
 
+For Android you need to adjust your SDK version in your `build.gradle`.
+
+> [_Turbo Documentation:_](https://github.com/hotwired/turbo-android#requirements)
+>
+> Android SDK 24+ is required as the minSdkVersion in your build.gradle.
+
 ## Usage
 
 Turbo `webview` can be rendered using native view `VisitableView`.
