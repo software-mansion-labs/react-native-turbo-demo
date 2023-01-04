@@ -13,4 +13,4 @@ if (settings.hasProperty("newArchEnabled") && settings.newArchEnabled == "true")
 }
 
 include(":core")
-project(":core").projectDir = file('../../packages/core/android')
+project(":core").projectDir = file('../../packages/turbo/android')

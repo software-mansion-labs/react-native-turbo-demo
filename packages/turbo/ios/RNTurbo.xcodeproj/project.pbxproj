@@ -39,7 +39,7 @@
 		29A3F3372906F24B00E8945A /* RNVisitableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNVisitableView.swift; sourceTree = "<group>"; };
 		29A3F3382906F24B00E8945A /* RNVisitableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNVisitableViewController.swift; sourceTree = "<group>"; };
 		29A3F3392906F24B00E8945A /* RNSessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNSessionManager.swift; sourceTree = "<group>"; };
-		F4FF95D5245B92E700C19C63 /* TurboWebviewCore-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TurboWebviewCore-Bridging-Header.h"; sourceTree = "<group>"; };
+		F4FF95D5245B92E700C19C63 /* RNTurbo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNTurbo-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,7 +64,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				F4FF95D5245B92E700C19C63 /* TurboWebviewCore-Bridging-Header.h */,
+				F4FF95D5245B92E700C19C63 /* RNTurbo-Bridging-Header.h */,
 				29A3F3322906F24B00E8945A /* RNSession.swift */,
 				29A3F3352906F24B00E8945A /* RNSessionManager.m */,
 				29A3F3392906F24B00E8945A /* RNSessionManager.swift */,
@@ -111,7 +111,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "TurboWebviewCore" */;
+			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RNTurbo" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -283,7 +283,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "TurboWebviewCore" */ = {
+		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RNTurbo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				58B511ED1A9E6C8500147676 /* Debug */,

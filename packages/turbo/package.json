@@ -1,10 +1,22 @@
 {
-  "name": "@react-native-turbo-webview/core",
-  "version": "0.1.0",
+  "name": "react-native-turbo",
+  "version": "0.1.5",
   "author": "Bartek Fryz <bartlomiej.fryz@swmansion.com> (https://github.com/Fryzu)",
   "license": "MIT",
-  "description": "Core implementation of React Native Turbo support",
+  "description": "Support for @hotwired/turbo in React Native apps",
+  "keywords": [
+    "react-native",
+    "ios",
+    "android",
+    "turbo",
+    "hotwired"
+  ],
   "homepage": "https://github.com/software-mansion-labs/react-native-turbo-demo#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/software-mansion-labs/react-native-turbo-demo",
+    "directory": "packages/turbo"
+  },
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
   "types": "lib/typescript/src/index.d.ts",
@@ -34,6 +46,9 @@
   "files": [
     "src",
     "lib",
+    "android",
+    "ios",
+    "RNTurbo.podspec",
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__"

@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "references": [
-    { "path": "../packages/core" },
+    { "path": "../packages/turbo" },
     { "path": "../packages/navigation" }
   ],
   "compilerOptions": {

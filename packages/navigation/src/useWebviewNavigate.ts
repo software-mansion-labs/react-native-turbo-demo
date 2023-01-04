@@ -11,7 +11,7 @@ import type {
   NavigationState,
   NavigatorScreenParams,
 } from '@react-navigation/core';
-import type { Action } from '@react-native-turbo-webview/core';
+import type { Action } from 'react-native-turbo';
 
 type NavigateAction<State extends NavigationState> = {
   type: 'NAVIGATE';

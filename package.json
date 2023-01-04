@@ -5,13 +5,6 @@
   "author": "Bartek Fryz <bartlomiej.fryz@swmansion.com> (https://github.com/Fryzu)",
   "description": "Adds support for Hotwired Turbo in React Native",
   "license": "MIT",
-  "keywords": [
-    "react-native",
-    "ios",
-    "android",
-    "turbo",
-    "hotwired"
-  ],
   "repository": "https://github.com/software-mansion-labs/react-native-turbo-demo",
   "bugs": {
     "url": "https://github.com/software-mansion-labs/react-native-turbo-demo/issues"
