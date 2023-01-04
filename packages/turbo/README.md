@@ -1,6 +1,6 @@
 # React Native Turbo
 
-React Native apps [Hotwired Turbo](https://turbo.hotwired.dev/handbook/introduction) support for creating hybrid apps with a single shared web view.
+React Native apps [Hotwired Turbo](https://turbo.hotwired.dev/handbook/introduction) support creating hybrid apps with a single shared web view.
 
 ## Installation
 
@@ -67,7 +67,7 @@ Callback called when the webview detects turbo visit action.
 
 ### `onLoad`
 
-Callback called with screen title and url when the webview successfully loads.
+Callback called with screen title and URL when the webview successfully loads.
 
 ### `onVisitError`
 
@@ -75,11 +75,11 @@ Callback called when the webview fails to load.
 
 ## Overview
 
-The library implements native view `RNVisitable` component for React Native. This view is an equivalent of the [Turbo Visitable](https://github.com/hotwired/turbo-ios/blob/main/Docs/Overview.md#visitable).
+The library implements a native view `RNVisitable` component for React Native. This view is equivalent to the [Turbo Visitable](https://github.com/hotwired/turbo-ios/blob/main/Docs/Overview.md#visitable).
 
 ### Visitable
 
-Turbo manages a single webview instance, shared between multiple view controllers. It also automatically show a screenshot of web page content when the web view is not focused. The `Visitable` views are rendered as native view from React `RNVisitable`.
+Turbo manages a single webview instance, shared between multiple view controllers. It also automatically shows a screenshot of web page content when the web view is not focused. The `Visitable` views are rendered as a native view from React `RNVisitable`.
 
 ### Session
 
@@ -91,7 +91,7 @@ Each [Session](https://github.com/hotwired/turbo-ios/blob/main/Docs/Overview.md#
 </Session>
 ```
 
-Session enables communication between native app and JavaScript (the visited page):
+The session enables communication between the native app and JavaScript (the visited page):
 
 ### `onMessage`
 
