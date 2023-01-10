@@ -1,4 +1,5 @@
 import { Platform, requireNativeComponent, UIManager } from 'react-native';
+import { NativeModules } from 'react-native';
 
 const LINKING_ERROR =
   `The package react-native-turbo doesn't seem to be linked. Make sure: \n\n` +
@@ -12,4 +13,17 @@ export function getNativeComponent<T>(componentName: string) {
     : () => {
         throw new Error(LINKING_ERROR);
       };
+}
+
+export function getNativeModule(moduleName: string) {
+  return NativeModules[moduleName]
+    ? NativeModules[moduleName]
+    : new Proxy(
+        {},
+        {
+          get() {
+            throw new Error(LINKING_ERROR);
+          },
+        }
+      );
 }

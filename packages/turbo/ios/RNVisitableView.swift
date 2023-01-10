@@ -14,7 +14,7 @@ class RNVisitableView: UIView {
   @objc var onVisitProposal: RCTDirectEventBlock?
   @objc var onLoad: RCTDirectEventBlock?
   @objc var onVisitError: RCTDirectEventBlock?
-  @objc var sessionHandle: NSNumber?
+  @objc var sessionHandle: NSString?
   var bridge: RCTBridge?
   
   private var controller: RNVisitableViewController?
@@ -34,16 +34,11 @@ class RNVisitableView: UIView {
       return nil
     }
     
-    guard let sessionHandle = sessionHandle else {
-      print("Couldn't find session for nil")
-      return nil
+    guard let sessionModule = self.bridge?.uiManager.moduleRegistry.module(forName: "RNSessionModule") as? RNSessionModule else {
+        print("Couldn't find session for sessionHandle:", sessionHandle ?? "default session")
+        return nil
     }
-    
-    guard let view = self.bridge?.uiManager?.view(forReactTag: sessionHandle) as? RNSession else {
-      print("Couldn't find session for sessionHandle:", sessionHandle)
-      return nil
-    }
-    return view.session
+    return sessionModule.getSession(sessionHandle: sessionHandle).turboSession
   }
   
   override func didMoveToWindow() {

@@ -9,11 +9,11 @@ import Turbo
 import UIKit
 import WebKit
 
-class RNSession: UIView {
+class RNSession: NSObject {
   
   @objc var onMessage: RCTDirectEventBlock?
   
-  public lazy var session: Session = {
+  public lazy var turboSession: Session = {
     let configuration = WKWebViewConfiguration()
     configuration.userContentController.add(self, name: "nativeApp")
     return Session(webViewConfiguration: configuration)

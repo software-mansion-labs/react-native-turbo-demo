@@ -1,12 +1,9 @@
+import { getNativeModule } from './common';
 import React, { RefObject } from 'react';
-import { findNodeHandle, NativeSyntheticEvent } from 'react-native';
+import type { NativeSyntheticEvent } from 'react-native';
 import { SessionContext } from './SessionContext';
-import { NativeModules } from 'react-native';
-import { getNativeComponent } from './common';
 
-const RNSession = getNativeComponent<any>('RNSession');
-
-const { RNSessionModule } = NativeModules;
+const RNSessionModule = getNativeModule('RNSessionModule');
 
 interface Message {
   message: object;
@@ -53,9 +50,8 @@ export default class Session extends React.Component<Props, State> {
     );
   };
 
-  getNativeComponentHandleId = () => {
-    const sessionHandle = findNodeHandle(this.nativeComponentRef.current);
-
+  getNativeComponentHandleId = async () => {
+    const sessionHandle = await RNSessionModule.registerSession();
     this.setState({
       sessionHandle: sessionHandle || null,
     });
@@ -63,6 +59,10 @@ export default class Session extends React.Component<Props, State> {
 
   componentDidMount() {
     this.getNativeComponentHandleId();
+  }
+
+  componentWillUnmount() {
+    RNSessionModule.removeSession(this.state.sessionHandle);
   }
 
   onMessage = ({ nativeEvent: { message } }: NativeSyntheticEvent<Message>) => {
@@ -75,12 +75,9 @@ export default class Session extends React.Component<Props, State> {
     const { sessionHandle } = this.state;
 
     return (
-      <>
-        <RNSession ref={this.nativeComponentRef} onMessage={this.onMessage} />
-        <SessionContext.Provider value={{ sessionHandle }}>
-          {this.props.children}
-        </SessionContext.Provider>
-      </>
+      <SessionContext.Provider value={{ sessionHandle }}>
+        {this.props.children}
+      </SessionContext.Provider>
     );
   }
 }

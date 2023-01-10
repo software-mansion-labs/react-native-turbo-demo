@@ -6,9 +6,6 @@ import { SessionContext } from './SessionContext';
 
 const RNVisitableView = getNativeComponent<any>('RNVisitableView');
 
-const NO_SESSION_ERROR =
-  "[Webview] Couldn't find Session, make sure that the your webview is wrapped with Session component.";
-
 export interface Props {
   url: string;
   onVisitProposal: (proposal: NativeSyntheticEvent<VisitProposal>) => void;
@@ -20,10 +17,8 @@ const VisitableView: React.FC<Props> = (props) => {
   return (
     <SessionContext.Consumer>
       {({ sessionHandle }) => {
-        if (sessionHandle === undefined) {
-          throw new Error(NO_SESSION_ERROR);
-        }
-        if (sessionHandle) {
+        const waitingForSession = sessionHandle === null;
+        if (!waitingForSession) {
           return (
             <RNVisitableView
               {...props}
