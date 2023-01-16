@@ -12,33 +12,35 @@ import java.util.UUID
 private const val MODULE_NAME = "RNSessionModule"
 
 @ReactModule(name = MODULE_NAME)
-class RNSessionModule(reactContext: ReactApplicationContext) :
+class RNSessionModule(private val reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
 
   override fun getName() = MODULE_NAME
 
-  private var sessions = mapOf<String, RNSession>()
-
-  // Lazy property needs to be set on the UI thread
+  // Sessions must be lazy properties because we cant call view methods
+  // on another thread than the UI thread
+  private val sessions = mutableMapOf<String, Lazy<RNSession>>()
   private val defaultSession: RNSession by lazy {
-    RNSession(context = reactContext, activity = currentActivity)
+    RNSession(context = reactContext)
   }
 
   @ReactMethod
   fun registerSession(promise: Promise) {
-    val sessionHandle = UUID.randomUUID().toString()
-    Log.d("RNSession", "register session $sessionHandle")
+    var sessionHandle = UUID.randomUUID().toString()
+    sessions[sessionHandle] = lazy { RNSession(context = reactContext) }
     promise.resolve(sessionHandle)
   }
 
   @ReactMethod
   fun removeSession(sessionHandle: String, promise: Promise) {
-    Log.d("RNSession", "removeSession session $sessionHandle")
+    sessions.remove(sessionHandle)
   }
 
   fun getSession(sessionHandle: String?): RNSession {
-    Log.d("RNSession", "getSession session $sessionHandle")
-    return defaultSession
+    if (!sessions.containsKey(sessionHandle)) {
+      return defaultSession
+    }
+    return sessions[sessionHandle]!!.value
   }
 
   // TODO: Add promise from WebView JS handling on Android

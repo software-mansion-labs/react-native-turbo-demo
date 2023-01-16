@@ -9,7 +9,7 @@ import dev.hotwire.turbo.views.TurboWebView
 import java.util.*
 import org.json.JSONObject
 
-class RNSession(context: ReactApplicationContext, activity: Activity?) {
+class RNSession(context: ReactApplicationContext) {
 
   private val registeredVisitableViews = mutableListOf<SessionSubscriber>()
 
@@ -24,7 +24,7 @@ class RNSession(context: ReactApplicationContext, activity: Activity?) {
     session.isRunningInAndroidNavigation = false
     session
   }
-  
+
 //  fun sendEvent(event: RNSessionEvent, params: WritableMap) {
 //    reactContext.getJSModule(RCTEventEmitter::class.java).receiveEvent(id, event.name, params)
 //  }
