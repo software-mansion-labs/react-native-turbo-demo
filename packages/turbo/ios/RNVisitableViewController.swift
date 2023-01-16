@@ -31,4 +31,9 @@ class RNVisitableViewController: VisitableViewController {
     self.delegate?.visitableDidRender(visitable: self)
   }
   
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    self.delegate?.visitableWillAppear(visitable: self)
+  }
+  
 }

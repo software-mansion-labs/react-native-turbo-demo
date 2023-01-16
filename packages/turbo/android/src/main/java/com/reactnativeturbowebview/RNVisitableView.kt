@@ -23,7 +23,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class RNVisitableView(context: Context) : LinearLayout(context), SessionCallbackAdapter,
+class RNVisitableView(context: Context, sessionModule: RNSessionModule) : LinearLayout(context),
+  SessionCallbackAdapter,
   SessionSubscriber {
 
   private var visitableView = inflate(context, R.layout.turbo_view, null) as ViewGroup
@@ -34,7 +35,10 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionCallback
     get() = turboView?.findViewTreeLifecycleOwner()
   private val reactContext = context as ReactContext
   private var isInitialVisit = true
-  lateinit var sessionContainer: RNSession
+  var sessionHandle: String? = null
+  private val sessionContainer: RNSession by lazy {
+    sessionModule.getSession(sessionHandle)
+  }
   lateinit var url: String
   private var currentlyZoomed = false
   private var isWebViewAttachedToNewDestination = false

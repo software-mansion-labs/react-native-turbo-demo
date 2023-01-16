@@ -18,10 +18,6 @@ interface State {
 }
 
 export default class Session extends React.Component<Props, State> {
-  // const onSessionCreated = async () => {
-  //   await SessionNativeModule.createSession(setSessionHandle);
-  // };
-
   nativeComponentRef: RefObject<any>;
 
   constructor(props: Props) {

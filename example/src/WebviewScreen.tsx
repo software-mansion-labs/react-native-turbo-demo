@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, NativeSyntheticEvent } from 'react-native';
+import type { NativeSyntheticEvent } from 'react-native';
 import { BASE_URL, Routes } from './config';
 import {
   VisitableView,
@@ -49,21 +49,13 @@ const WebviewScreen: React.FC<Props> = ({ navigation, route }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <VisitableView
-        url={currentUrl}
-        onVisitProposal={onVisitProposal}
-        onVisitError={onVisitError}
-        onLoad={onLoad}
-      />
-    </View>
+    <VisitableView
+      url={currentUrl}
+      onVisitProposal={onVisitProposal}
+      onVisitError={onVisitError}
+      onLoad={onLoad}
+    />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default WebviewScreen;
