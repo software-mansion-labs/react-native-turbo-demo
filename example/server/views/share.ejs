@@ -4,7 +4,7 @@
       method: 'share',
       shareText: 'Hello from the webview 👋',
     };
-    AndroidInterface.postMessage(JSON.stringify({message}));
+    AndroidInterface.postMessage(JSON.stringify({ message }));
     webkit.messageHandlers.nativeApp.postMessage(message);
   }
 

@@ -15,3 +15,14 @@ export interface VisitProposalError {
   url: string;
   error?: string;
 }
+
+export type SessionMessageCallback = (message: object) => void;
+
+export interface SessionModule {
+  registerSession: () => Promise<string>;
+  removeSession: (sessionHandle: string) => Promise<string>;
+  injectJavaScript: (
+    sessionHandle: string,
+    callbackStringified: string
+  ) => Promise<unknown>;
+}

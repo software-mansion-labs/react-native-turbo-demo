@@ -1,4 +1,11 @@
-import { Platform, requireNativeComponent, UIManager } from 'react-native';
+import type { SessionMessageCallback } from 'packages/turbo/src/types';
+import type { EmitterSubscription } from 'react-native';
+import {
+  DeviceEventEmitter,
+  Platform,
+  requireNativeComponent,
+  UIManager,
+} from 'react-native';
 import { NativeModules } from 'react-native';
 
 const LINKING_ERROR =
@@ -6,6 +13,10 @@ const LINKING_ERROR =
   Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
+
+export enum SessionEvents {
+  MESSAGE = 'MESSAGE',
+}
 
 export function getNativeComponent<T>(componentName: string) {
   return UIManager.getViewManagerConfig(componentName) != null
@@ -15,7 +26,7 @@ export function getNativeComponent<T>(componentName: string) {
       };
 }
 
-export function getNativeModule(moduleName: string) {
+export function getNativeModule<T>(moduleName: string): T {
   return NativeModules[moduleName]
     ? NativeModules[moduleName]
     : new Proxy(
@@ -26,4 +37,12 @@ export function getNativeModule(moduleName: string) {
           },
         }
       );
+}
+
+export function registerMessageEventListener(
+  sessionHandle: string,
+  onMessage: SessionMessageCallback
+): EmitterSubscription {
+  const eventName = `sessionMessage${sessionHandle}`;
+  return DeviceEventEmitter.addListener(eventName, onMessage);
 }

@@ -1,24 +1,29 @@
-import { getNativeModule } from './common';
+import { getNativeModule, registerMessageEventListener } from './common';
 import React, { RefObject } from 'react';
-import type { NativeSyntheticEvent } from 'react-native';
+import type { EmitterSubscription, NativeSyntheticEvent } from 'react-native';
 import { SessionContext } from './SessionContext';
+import type {
+  SessionModule,
+  SessionMessageCallback,
+} from 'packages/turbo/src/types';
 
-const RNSessionModule = getNativeModule('RNSessionModule');
+const RNSessionModule = getNativeModule<SessionModule>('RNSessionModule');
 
 interface Message {
   message: object;
 }
 
 export interface Props {
-  onMessage?: (message: object) => void;
+  onMessage?: SessionMessageCallback;
 }
 
 interface State {
-  sessionHandle?: number | null;
+  sessionHandle?: string | null;
 }
 
 export default class Session extends React.Component<Props, State> {
   nativeComponentRef: RefObject<any>;
+  messageHandlerEventSubscription: EmitterSubscription | null = null;
 
   constructor(props: Props) {
     super(props);
@@ -32,22 +37,25 @@ export default class Session extends React.Component<Props, State> {
    * Evaluates Javascript code on webview, mind that this function run in the context
    * of webview runtime and doesn't have access to other js functions.
    */
-  injectJavaScript = async (jsCallback: Function | string) => {
-    const isString =
-      typeof jsCallback === 'string' || jsCallback instanceof String;
-
-    const callbackStringified = isString
-      ? jsCallback
-      : `(${jsCallback.toString()})()`;
-
-    return RNSessionModule.injectJavaScript(
-      this.state.sessionHandle,
-      callbackStringified
-    );
+  injectJavaScript = async (callbackStringified: string) => {
+    if (this.state.sessionHandle) {
+      return RNSessionModule.injectJavaScript(
+        this.state.sessionHandle,
+        callbackStringified
+      );
+    }
   };
 
   getNativeComponentHandleId = async () => {
+    const { onMessage } = this.props;
     const sessionHandle = await RNSessionModule.registerSession();
+
+    if (onMessage) {
+      this.messageHandlerEventSubscription = registerMessageEventListener(
+        sessionHandle,
+        onMessage
+      );
+    }
     this.setState({
       sessionHandle: sessionHandle || null,
     });
@@ -58,7 +66,9 @@ export default class Session extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    RNSessionModule.removeSession(this.state.sessionHandle);
+    RNSessionModule.removeSession(this.state.sessionHandle!);
+    this.messageHandlerEventSubscription?.remove();
+    this.messageHandlerEventSubscription = null;
   }
 
   onMessage = ({ nativeEvent: { message } }: NativeSyntheticEvent<Message>) => {

@@ -21,19 +21,20 @@ class RNSessionModule(private val reactContext: ReactApplicationContext) :
   // on another thread than the UI thread
   private val sessions = mutableMapOf<String, Lazy<RNSession>>()
   private val defaultSession: RNSession by lazy {
-    RNSession(context = reactContext)
+    RNSession(reactContext)
   }
 
   @ReactMethod
   fun registerSession(promise: Promise) {
     var sessionHandle = UUID.randomUUID().toString()
-    sessions[sessionHandle] = lazy { RNSession(context = reactContext) }
+    sessions[sessionHandle] = lazy { RNSession(reactContext, sessionHandle) }
     promise.resolve(sessionHandle)
   }
 
   @ReactMethod
   fun removeSession(sessionHandle: String, promise: Promise) {
     sessions.remove(sessionHandle)
+    promise.resolve(sessionHandle)
   }
 
   fun getSession(sessionHandle: String?): RNSession {

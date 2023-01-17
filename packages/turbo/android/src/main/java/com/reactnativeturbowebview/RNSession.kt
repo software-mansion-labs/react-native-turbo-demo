@@ -1,21 +1,28 @@
 package com.reactnativeturbowebview
 
 import android.app.Activity
+import android.util.Log
 import android.webkit.JavascriptInterface
 import androidx.appcompat.app.AppCompatActivity
+import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.WritableMap
+import com.facebook.react.modules.core.DeviceEventManagerModule
 import dev.hotwire.turbo.session.TurboSession
 import dev.hotwire.turbo.views.TurboWebView
 import java.util.*
 import org.json.JSONObject
 
-class RNSession(context: ReactApplicationContext) {
+class RNSession(
+  private val reactContext: ReactApplicationContext,
+  private val sessionHandle: String? = null
+) {
 
   private val registeredVisitableViews = mutableListOf<SessionSubscriber>()
 
   val turboSession: TurboSession = run {
-    val activity = context.currentActivity as AppCompatActivity
-    val webView = TurboWebView(context, null)
+    val activity = reactContext.currentActivity as AppCompatActivity
+    val webView = TurboWebView(reactContext, null)
 
     val sessionName = UUID.randomUUID().toString()
     webView.getSettings().setJavaScriptEnabled(true)
@@ -25,9 +32,17 @@ class RNSession(context: ReactApplicationContext) {
     session
   }
 
-//  fun sendEvent(event: RNSessionEvent, params: WritableMap) {
-//    reactContext.getJSModule(RCTEventEmitter::class.java).receiveEvent(id, event.name, params)
-//  }
+  /**
+   * Sends message from web view js runtime to the RN runtime
+   */
+  fun sendMessage(params: WritableMap) {
+    if (sessionHandle != null) {
+      val eventName = "sessionMessage${sessionHandle}"
+      Log.d("RNSession", "$eventName")
+      reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+        .emit(eventName, params)
+    }
+  }
 
   internal fun registerVisitableView(newView: SessionSubscriber) {
     var callbacksCount = registeredVisitableViews.size
@@ -64,7 +79,7 @@ class RNSession(context: ReactApplicationContext) {
       // Android interface works only with primitive types, that's why we need to use JSON
       val messageObj =
         Utils.convertJsonToBundle(JSONObject(messageStr)) // TODO remove double conversion
-//      sendEvent(RNSessionEvent.RECEIVED_JS_MESSAGE, Arguments.fromBundle(messageObj)) // TODO: add
+      sendMessage(Arguments.fromBundle(messageObj))
     }
   }
 }
