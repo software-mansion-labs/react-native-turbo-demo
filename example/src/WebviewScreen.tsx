@@ -10,8 +10,6 @@ import {
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RouteProp } from '@react-navigation/native';
 import { useWebviewNavigate } from '@react-native-turbo-webview/navigation';
-// import { useCallback } from 'react';
-// import { Share } from 'react-native';
 
 interface Props {
   navigation: NativeStackNavigationProp<any>;
@@ -19,28 +17,10 @@ interface Props {
 }
 
 const WebviewScreen: React.FC<Props> = ({ navigation, route }) => {
-  // const sessionRef = useRef<VisitableView>(null);
   const navigateTo = useWebviewNavigate();
 
   const path = route?.params?.path || route?.path;
   const currentUrl = path ? `${BASE_URL}${path}` : BASE_URL;
-
-  // const share = async (message: string) => {
-  //   const res = await Share.share({ message });
-  //   if (res.action === 'sharedAction') {
-  //     sessionRef.current?.injectJavaScript(`shared()`);
-  //   }
-  // };
-
-  // const handleMessage = useCallback<SessionMessageCallback>((message) => {
-  //   console.warn('message', message);
-  //   switch (message.method) {
-  //     case 'share': {
-  //       share(message.shareText);
-  //       break;
-  //     }
-  //   }
-  // }, []);
 
   const onVisitProposal = ({
     nativeEvent: { action: actionType, url },

@@ -22,7 +22,7 @@ export interface SessionModule {
   registerSession: () => Promise<string>;
   removeSession: (sessionHandle: string) => Promise<string>;
   injectJavaScript: (
-    sessionHandle: string,
+    sessionHandle: string | null,
     callbackStringified: string
   ) => Promise<unknown>;
 }

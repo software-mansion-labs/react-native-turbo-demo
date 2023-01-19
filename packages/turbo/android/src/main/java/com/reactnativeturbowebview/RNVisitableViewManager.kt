@@ -29,7 +29,6 @@ class RNVisitableViewManager(
     view.sessionHandle = sessionHandle
   }
 
-
   override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any> {
     return RNVisitableViewEvent.values().map {
       it.name to mapOf(

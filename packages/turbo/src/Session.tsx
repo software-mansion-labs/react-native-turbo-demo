@@ -22,7 +22,7 @@ interface State {
 }
 
 export default class Session extends React.Component<Props, State> {
-  nativeComponentRef: RefObject<any>;
+  nativeComponentRef: RefObject<EmitterSubscription>;
   messageHandlerEventSubscription: EmitterSubscription | null = null;
 
   constructor(props: Props) {
@@ -37,13 +37,14 @@ export default class Session extends React.Component<Props, State> {
    * Evaluates Javascript code on webview, mind that this function run in the context
    * of webview runtime and doesn't have access to other js functions.
    */
-  injectJavaScript = async (callbackStringified: string) => {
+  injectJavaScript = (callbackStringified: string) => {
     if (this.state.sessionHandle) {
       return RNSessionModule.injectJavaScript(
         this.state.sessionHandle,
         callbackStringified
       );
     }
+    return null;
   };
 
   getNativeComponentHandleId = async () => {
@@ -68,7 +69,6 @@ export default class Session extends React.Component<Props, State> {
   componentWillUnmount() {
     RNSessionModule.removeSession(this.state.sessionHandle!);
     this.messageHandlerEventSubscription?.remove();
-    this.messageHandlerEventSubscription = null;
   }
 
   onMessage = ({ nativeEvent: { message } }: NativeSyntheticEvent<Message>) => {

@@ -15,7 +15,7 @@ import org.json.JSONObject
 
 class RNSession(
   private val reactContext: ReactApplicationContext,
-  private val sessionHandle: String? = null
+  private val sessionHandle: String = "Default"
 ) {
 
   private val registeredVisitableViews = mutableListOf<SessionSubscriber>()
@@ -36,12 +36,10 @@ class RNSession(
    * Sends message from web view js runtime to the RN runtime
    */
   fun sendMessage(params: WritableMap) {
-    if (sessionHandle != null) {
-      val eventName = "sessionMessage${sessionHandle}"
-      Log.d("RNSession", "$eventName")
-      reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-        .emit(eventName, params)
-    }
+    val eventName = "sessionMessage${sessionHandle}"
+    Log.d("RNSession", "$eventName")
+    reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+      .emit(eventName, params)
   }
 
   internal fun registerVisitableView(newView: SessionSubscriber) {
