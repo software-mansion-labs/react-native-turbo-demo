@@ -8,8 +8,8 @@
 import Turbo
 import UIKit
 
-class RNVisitableView: UIView {
-  
+class RNVisitableView: UIView, SessionSubscriber {
+  var id: UUID = UUID()
   @objc var url: NSString = ""
   @objc var onVisitProposal: RCTDirectEventBlock?
   @objc var onLoad: RCTDirectEventBlock?
@@ -17,7 +17,7 @@ class RNVisitableView: UIView {
   @objc var sessionHandle: NSString?
   var bridge: RCTBridge?
   
-  private var controller: RNVisitableViewController?
+  var controller: RNVisitableViewController?
   
   init(bridge: RCTBridge) {
     self.bridge = bridge
@@ -28,7 +28,7 @@ class RNVisitableView: UIView {
     super.init(coder: aDecoder)
   }
   
-  public func getSession() -> Session? {
+  public func getRNSesssion() -> RNSession? {
     if (!Thread.isMainThread) {
       print("getSession accessed from incorrect thread")
       return nil
@@ -38,7 +38,11 @@ class RNVisitableView: UIView {
         print("Couldn't find session for sessionHandle:", sessionHandle ?? "default session")
         return nil
     }
-    return sessionModule.getSession(sessionHandle: sessionHandle).turboSession
+    return sessionModule.getSession(sessionHandle: sessionHandle)
+  }
+  
+  public func getSession() -> Session? {
+    return getRNSesssion()?.turboSession
   }
   
   override func didMoveToWindow() {
@@ -57,18 +61,23 @@ class RNVisitableView: UIView {
     self.reactViewController().addChild(self.controller!)
     self.controller?.didMove(toParent: self.reactViewController())
   }
-}
-
-extension RNVisitableView: RNVisitableViewControllerDelegate {
-
-  func visitableWillAppear(visitable: Visitable) {
-    print("View will appear for URL", visitable.visitableURL.absoluteString)
+  
+  func attachDelegateAndVisit(_ visitable: Visitable) {
     let session = getSession()
     session?.delegate = self
     session?.visit(visitable)
   }
+}
+
+extension RNVisitableView: RNVisitableViewControllerDelegate {
+  func visitableWillAppear(visitable: Visitable) {
+    getRNSesssion()?.registerVisitableView(newView: self)
+  }
   
-  
+  func visitableDidDisappear(visitable: Turbo.Visitable) {
+    getRNSesssion()?.removeVisitableView(view: self)
+  }
+
   func visitableDidRender(visitable: Visitable) {
     guard let session = getSession() else {
       return
