@@ -46,6 +46,7 @@ class RNVisitableView: UIView, SessionSubscriber {
   }
   
   override func didMoveToWindow() {
+
     let url = URL(string: String(url))!
     
     if (self.controller == nil) {

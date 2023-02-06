@@ -1,4 +1,13 @@
-export const BASE_URL = 'http://localhost:45678/';
+export type ParamsList = {
+  [Routes.New]: undefined;
+  [Routes.WebviewInitial]: undefined;
+  [Routes.NumbersScreen]: undefined;
+  [Routes.NotFound]: undefined;
+  [Routes.SuccessScreen]: undefined;
+  [Routes.NonExistentScreen]: undefined;
+  [Routes.SignIn]: undefined;
+  [Routes.Fallback]: undefined;
+};
 
 export enum Routes {
   NotFound = 'NotFound',
