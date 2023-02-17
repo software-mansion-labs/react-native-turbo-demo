@@ -1,5 +1,8 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  NavigatorScreenParams,
+} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
   buildLinkingOptions,
@@ -7,10 +10,17 @@ import {
 } from '@react-native-turbo-webview/navigation';
 import { default as NativeScreen } from './NumbersScreen';
 import ErrorScreen from './ErrorScreen';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 const Stack = createNativeStackNavigator();
+const Tab = createMaterialTopTabNavigator();
 
-export type ParamsList = {
+type NestedTabParamsList = {
+  [Routes.NestedTabNative]: undefined;
+  [Routes.NestedTabWeb]: undefined;
+};
+
+type ParamsList = {
   [Routes.New]: undefined;
   [Routes.WebviewInitial]: undefined;
   [Routes.NumbersScreen]: undefined;
@@ -19,9 +29,10 @@ export type ParamsList = {
   [Routes.NonExistentScreen]: undefined;
   [Routes.SignIn]: undefined;
   [Routes.Fallback]: undefined;
+  [Routes.NestedTab]: NavigatorScreenParams<NestedTabParamsList>;
 };
 
-export enum Routes {
+enum Routes {
   NotFound = 'NotFound',
   NumbersScreen = 'NumbersScreen',
   WebviewInitial = 'WebviewInitial',
@@ -30,6 +41,9 @@ export enum Routes {
   NonExistentScreen = 'NonExistentScreen',
   SignIn = 'SignIn',
   Fallback = 'Fallback',
+  NestedTabNative = 'NestedTabNative',
+  NestedTabWeb = 'NestedTabWeb',
+  NestedTab = 'NestedTab',
 }
 
 const webScreenConfig: WebScreenRuleConfig<ParamsList> = {
@@ -58,6 +72,15 @@ const webScreenConfig: WebScreenRuleConfig<ParamsList> = {
 
 const WebScreen = buildLinkingOptions<ParamsList>(webScreenConfig);
 
+const NestedTab: React.FC = () => {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name={Routes.NestedTabNative} component={NativeScreen} />
+      <Tab.Screen name={Routes.NestedTabNative} component={NativeScreen} />
+    </Tab.Navigator>
+  );
+};
+
 const App: React.FC = () => {
   return (
     <NavigationContainer linking={WebScreen.linking}>
@@ -80,6 +103,11 @@ const App: React.FC = () => {
           name={Routes.NotFound}
           component={ErrorScreen}
           options={{ title: 'Not Found' }}
+        />
+        <Stack.Screen
+          name={Routes.NestedTab}
+          component={NestedTab}
+          options={{ title: 'Nested Top Tab' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

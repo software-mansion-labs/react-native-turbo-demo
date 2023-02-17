@@ -302,6 +302,8 @@ PODS:
   - React-jsinspector (0.70.3)
   - React-logger (0.70.3):
     - glog
+  - react-native-pager-view (6.1.4):
+    - React-Core
   - react-native-safe-area-context (4.4.1):
     - RCT-Folly
     - RCTRequired
@@ -433,6 +435,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../../node_modules/react-native/ReactCommon/logger`)
+  - react-native-pager-view (from `../../node_modules/react-native-pager-view`)
   - react-native-safe-area-context (from `../../node_modules/react-native-safe-area-context`)
   - React-perflogger (from `../../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -512,6 +515,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../../node_modules/react-native/ReactCommon/logger"
+  react-native-pager-view:
+    :path: "../../node_modules/react-native-pager-view"
   react-native-safe-area-context:
     :path: "../../node_modules/react-native-safe-area-context"
   React-perflogger:
@@ -588,6 +593,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 7e2e1772ef7b97168c880eeaf3749d8c145ffd6e
   React-jsinspector: 0553c9fe7218e1f127be070bd5a4d2fc19fb8190
   React-logger: cffcc09e8aba8a3014be8d18da7f922802e9f19e
+  react-native-pager-view: b58cb9e9f42f64e50cab3040815772c1d119a2e2
   react-native-safe-area-context: 99b24a0c5acd0d5dcac2b1a7f18c49ea317be99a
   React-perflogger: 082b4293f0b3914ff41da35a6c06ac4490fcbcc8
   React-RCTActionSheet: 83da3030deb5dea54b398129f56540a44e64d3ae

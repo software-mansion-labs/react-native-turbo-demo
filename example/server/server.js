@@ -14,7 +14,7 @@ app.use(express.static('public'));
 app.use(express.static('json'));
 app.use(
   '/dist',
-  express.static(__dirname + '/node_modules/@hotwired/turbo/dist/'),
+  express.static(__dirname + '/node_modules/@hotwired/turbo/dist/')
 );
 app.use(cookieParser());
 app.use(layouts);
@@ -68,11 +68,11 @@ app.use((request, response, next) => {
 // Routes
 
 app.get('/', (request, response) => {
-  response.render('index', {title: 'Turbo Native Demo', page_class: 'index'});
+  response.render('index', { title: 'Turbo Native Demo', page_class: 'index' });
 });
 
 app.get('/one', (request, response) => {
-  response.render('one', {title: 'How’d You Get Here?'});
+  response.render('one', { title: 'How’d You Get Here?' });
 });
 
 app.get('/two', (request, response) => {
@@ -83,11 +83,11 @@ app.get('/two', (request, response) => {
 });
 
 app.get('/long', (request, response) => {
-  response.render('long', {title: 'A Really Long Page'});
+  response.render('long', { title: 'A Really Long Page' });
 });
 
 app.get('/scroll', (request, response) => {
-  response.render('scroll', {title: 'Restoring Your Scroll'});
+  response.render('scroll', { title: 'Restoring Your Scroll' });
 });
 
 app.get('/follow', (request, response) => {
@@ -95,19 +95,19 @@ app.get('/follow', (request, response) => {
 });
 
 app.get('/redirected', (request, response) => {
-  response.render('redirected', {title: 'Redirected Page'});
+  response.render('redirected', { title: 'Redirected Page' });
 });
 
 app.get('/reference', (request, response) => {
-  response.render('reference', {title: 'Reference', page_class: 'index'});
+  response.render('reference', { title: 'Reference', page_class: 'index' });
 });
 
 app.get('/files', (request, response) => {
-  response.render('files', {title: 'Handling Files'});
+  response.render('files', { title: 'Handling Files' });
 });
 
 app.get('/new', (request, response) => {
-  response.render('new', {title: 'A Modal Webpage'});
+  response.render('new', { title: 'A Modal Webpage' });
 });
 
 app.post('/new', (request, response) => {
@@ -115,11 +115,11 @@ app.post('/new', (request, response) => {
 });
 
 app.get('/success', (request, response) => {
-  response.render('success', {title: 'It Worked!'});
+  response.render('success', { title: 'It Worked!' });
 });
 
 app.get('/numbers', (request, response) => {
-  response.render('numbers', {title: 'A List of Numbers'});
+  response.render('numbers', { title: 'A List of Numbers' });
 });
 
 app.get('/nonexistent', (request, response) => {
@@ -127,35 +127,39 @@ app.get('/nonexistent', (request, response) => {
 });
 
 app.get('/share', (request, response) => {
-  response.render('share', {title: 'Try Sharing'});
+  response.render('share', { title: 'Try Sharing' });
+});
+
+app.get('/nested', (request, response) => {
+  response.render('nested', { title: 'Nested Navigator' });
 });
 
 app.get('/reference/turbo-drive', (request, response) => {
-  response.render('turbo-drive', {title: 'Turbo Drive'});
+  response.render('turbo-drive', { title: 'Turbo Drive' });
 });
 
 app.get('/reference/turbo-frames', (request, response) => {
-  response.render('turbo-frames', {title: 'Turbo Frames'});
+  response.render('turbo-frames', { title: 'Turbo Frames' });
 });
 
 app.get('/reference/turbo-streams', (request, response) => {
-  response.render('turbo-streams', {title: 'Turbo Streams'});
+  response.render('turbo-streams', { title: 'Turbo Streams' });
 });
 
 app.get('/reference/turbo-native', (request, response) => {
-  response.render('turbo-native', {title: 'Turbo Native'});
+  response.render('turbo-native', { title: 'Turbo Native' });
 });
 
 app.get('/protected', (request, response) => {
   if (response.locals.authenticated) {
-    response.render('protected', {title: 'Protected Webpage'});
+    response.render('protected', { title: 'Protected Webpage' });
   } else {
     response.status(401).send('Unauthorized');
   }
 });
 
 app.get('/signin', (request, response) => {
-  response.render('signin', {title: 'Sign In'});
+  response.render('signin', { title: 'Sign In' });
 });
 
 app.post('/signin', upload.none(), (request, response) => {
@@ -176,7 +180,7 @@ app.post('/signout', (request, response) => {
 
 app.get('/slow', (request, response) => {
   setTimeout(() => {
-    response.render('slow', {title: 'Slow-loading Page'});
+    response.render('slow', { title: 'Slow-loading Page' });
   }, 3000);
 });
 

@@ -2,7 +2,8 @@
 <form
   action="/signout"
   method="post"
-  class="auth grid__item --start-2 --span-10 space --bottom-m">
+  class="auth grid__item --start-2 --span-10 space --bottom-m"
+>
   👋 Hey <%= locals.authenticated %>!
   <button class="auth__signout" type="submit">Sign Out</button>
 </form>
@@ -40,6 +41,10 @@
 <h2 class="actions__header space --top-l">Advanced Features</h2>
 
 <div class="actions grid__item --start-2 --span-10">
+  <a class="actions__item" href="/nested">
+    <div class="actions__icon --navigate" aria-hidden="true"></div>
+    Open nested navigator
+  </a>
   <a class="actions__item" href="/protected">
     <div class="actions__icon --protected" aria-hidden="true"></div>
     Intercept unauthorized access
