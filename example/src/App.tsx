@@ -5,7 +5,7 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
-  buildLinkingOptions,
+  buildWebScreen,
   WebScreenRuleConfig,
 } from '@react-native-turbo-webview/navigation';
 import { default as NativeScreen } from './NumbersScreen';
@@ -49,7 +49,10 @@ enum Routes {
 const webScreenConfig: WebScreenRuleConfig<ParamsList> = {
   baseURL: 'http://localhost:45678/',
   routes: {
-    [Routes.WebviewInitial]: { urlPattern: '', title: 'Turbo Native Demo' },
+    [Routes.WebviewInitial]: {
+      urlPattern: '',
+      title: 'React Native Web Screen',
+    },
     [Routes.New]: {
       urlPattern: 'new',
       title: 'A Modal Webpage',
@@ -70,7 +73,7 @@ const webScreenConfig: WebScreenRuleConfig<ParamsList> = {
   },
 };
 
-const WebScreen = buildLinkingOptions<ParamsList>(webScreenConfig);
+const WebScreen = buildWebScreen<ParamsList>(webScreenConfig);
 
 const NestedTab: React.FC = () => {
   return (
@@ -87,6 +90,7 @@ const App: React.FC = () => {
       <Stack.Navigator
         screenOptions={{
           headerBackTitle: 'Back',
+          headerTintColor: '#00094a',
         }}
       >
         <Stack.Screen {...WebScreen.screens.WebviewInitial} />

@@ -20,7 +20,7 @@ export type WebScreenRuleConfig<ParamList extends {}> = {
 const buildWebviewComponent = (baseURL: string) => (navProps: any) =>
   <WebScreen {...navProps} baseURL={baseURL} />;
 
-export const buildLinkingOptions = <ParamsList extends {}>({
+export const buildWebScreen = <ParamsList extends {}>({
   routes,
   baseURL,
 }: WebScreenRuleConfig<ParamsList>) => {
