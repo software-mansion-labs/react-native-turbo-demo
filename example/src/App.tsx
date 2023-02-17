@@ -5,11 +5,32 @@ import {
   buildLinkingOptions,
   WebScreenRuleConfig,
 } from '@react-native-turbo-webview/navigation';
-import { ParamsList, Routes } from './config';
-import NumbersScreen from './NumbersScreen';
+import { default as NativeScreen } from './NumbersScreen';
 import ErrorScreen from './ErrorScreen';
 
 const Stack = createNativeStackNavigator();
+
+export type ParamsList = {
+  [Routes.New]: undefined;
+  [Routes.WebviewInitial]: undefined;
+  [Routes.NumbersScreen]: undefined;
+  [Routes.NotFound]: undefined;
+  [Routes.SuccessScreen]: undefined;
+  [Routes.NonExistentScreen]: undefined;
+  [Routes.SignIn]: undefined;
+  [Routes.Fallback]: undefined;
+};
+
+export enum Routes {
+  NotFound = 'NotFound',
+  NumbersScreen = 'NumbersScreen',
+  WebviewInitial = 'WebviewInitial',
+  New = 'New',
+  SuccessScreen = 'SuccessScreen',
+  NonExistentScreen = 'NonExistentScreen',
+  SignIn = 'SignIn',
+  Fallback = 'Fallback',
+}
 
 const webScreenConfig: WebScreenRuleConfig<ParamsList> = {
   baseURL: 'http://localhost:45678/',
@@ -48,7 +69,7 @@ const App: React.FC = () => {
         <Stack.Screen {...WebScreen.screens.WebviewInitial} />
         <Stack.Screen
           name={Routes.NumbersScreen}
-          component={NumbersScreen}
+          component={NativeScreen}
           options={{ title: 'A List of Numbers' }}
         />
         <Stack.Screen {...WebScreen.screens.New} />
