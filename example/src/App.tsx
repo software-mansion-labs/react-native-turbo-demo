@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  NavigationContainer,
-  NavigatorScreenParams,
-} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
   buildWebScreen,
@@ -14,23 +11,6 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialTopTabNavigator();
-
-type NestedTabParamsList = {
-  [Routes.NestedTabNative]: undefined;
-  [Routes.NestedTabWeb]: undefined;
-};
-
-type ParamsList = {
-  [Routes.New]: undefined;
-  [Routes.WebviewInitial]: undefined;
-  [Routes.NumbersScreen]: undefined;
-  [Routes.NotFound]: undefined;
-  [Routes.SuccessScreen]: undefined;
-  [Routes.NonExistentScreen]: undefined;
-  [Routes.SignIn]: undefined;
-  [Routes.Fallback]: undefined;
-  [Routes.NestedTab]: NavigatorScreenParams<NestedTabParamsList>;
-};
 
 enum Routes {
   NotFound = 'NotFound',
@@ -46,7 +26,7 @@ enum Routes {
   NestedTab = 'NestedTab',
 }
 
-const webScreenConfig: WebScreenRuleConfig<ParamsList> = {
+const webScreenConfig: WebScreenRuleConfig = {
   baseURL: 'http://localhost:45678/',
   routes: {
     [Routes.WebviewInitial]: {
@@ -63,17 +43,27 @@ const webScreenConfig: WebScreenRuleConfig<ParamsList> = {
       title: 'It Worked!',
       presentation: 'modal',
     },
-    [Routes.NumbersScreen]: { urlPattern: 'numbers' },
+    [Routes.NumbersScreen]: {
+      urlPattern: 'numbers',
+    },
     [Routes.SignIn]: {
       urlPattern: 'signin',
       title: 'Sign In',
       presentation: 'modal',
     },
+    [Routes.NestedTab]: {
+      routes: {
+        [Routes.NestedTabWeb]: {
+          urlPattern: 'nested',
+          title: 'Nested Navigator',
+        },
+      },
+    },
     [Routes.Fallback]: { urlPattern: '*', title: '' },
   },
 };
 
-const WebScreen = buildWebScreen<ParamsList>(webScreenConfig);
+const WebScreen = buildWebScreen(webScreenConfig);
 
 const NestedTab: React.FC = () => {
   return (
