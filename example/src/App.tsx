@@ -55,7 +55,7 @@ const webScreenConfig: WebScreenRuleConfig = {
       routes: {
         [Routes.NestedTabWeb]: {
           urlPattern: 'nested',
-          title: 'Nested Navigator',
+          title: 'Nested Web',
         },
       },
     },
@@ -68,8 +68,12 @@ const WebScreen = buildWebScreen(webScreenConfig);
 const NestedTab: React.FC = () => {
   return (
     <Tab.Navigator>
-      <Tab.Screen name={Routes.NestedTabNative} component={NativeScreen} />
-      <Tab.Screen name={Routes.NestedTabNative} component={NativeScreen} />
+      <Tab.Screen {...WebScreen.screens.NestedTabWeb} />
+      <Tab.Screen
+        name={Routes.NestedTabNative}
+        component={NativeScreen}
+        options={{ title: 'Nested Native' }}
+      />
     </Tab.Navigator>
   );
 };

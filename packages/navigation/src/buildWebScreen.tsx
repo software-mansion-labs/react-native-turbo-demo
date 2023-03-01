@@ -69,8 +69,10 @@ const getLinkingAndScreens = (
 
         return merge(prev, {
           screens,
-          [routeName]: {
-            screens: linking,
+          linking: {
+            [routeName]: {
+              screens: linking,
+            },
           },
         });
       }

@@ -1,4 +1,4 @@
-import { buildWebScreen } from '../buildWebScreen';
+import { buildWebScreen, WebScreenRuleConfig } from '../buildWebScreen';
 
 const mockComponent = jest.fn();
 
@@ -8,10 +8,10 @@ jest.mock('../WebScreen', () => ({
 
 jest.mock('../buildWebScreen', () => ({
   ...jest.requireActual('../buildWebScreen'),
-  buildWebviewComponent: jest.fn().mockReturnValue(mockComponent),
+  buildWebviewComponent: () => () => mockComponent,
 }));
 
-const exampleConfig = {
+const exampleConfig: WebScreenRuleConfig = {
   baseURL: 'http://localhost:test/',
   routes: {
     TestRoute1: {
@@ -26,6 +26,7 @@ const exampleConfig = {
       routes: {
         NestedRoute: {
           urlPattern: 'urlNested',
+          title: 'Nested',
         },
       },
     },
@@ -67,7 +68,9 @@ const exampleWebScreenResult = {
     NestedRoute: {
       name: 'NestedRoute',
       component: () => mockComponent,
-      options: {},
+      options: {
+        title: 'Nested',
+      },
     },
     Fallback: {
       name: 'Fallback',

@@ -29,8 +29,8 @@
     "pods": "pod-install --quiet"
   },
   "devDependencies": {
-    "@react-navigation/core": ">=5.0.0",
-    "@react-navigation/native": ">=5.0.0",
+    "@react-navigation/core": "^6.0.0",
+    "@react-navigation/native": "^6.0.0",
     "react-native-builder-bob": "^0.20.0",
     "react-native-safe-area-context": "^4.3.0",
     "react-native-screens": "^3.13.0"
@@ -38,8 +38,8 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "@react-navigation/core": ">=5.0.0",
-    "@react-navigation/native": ">=5.0.0",
+    "@react-navigation/core": ">=6.0.0",
+    "@react-navigation/native": ">=6.0.0",
     "react-native-safe-area-context": "^4.3.0",
     "react-native-screens": "^3.13.0"
   },

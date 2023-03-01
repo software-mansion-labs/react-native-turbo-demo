@@ -2,7 +2,7 @@ import {
   getActionFromState,
   getStateFromPath,
   NavigationContainerRefContext,
-} from '@react-navigation/core';
+} from '@react-navigation/native';
 import * as React from 'react';
 import LinkingContext from '@react-navigation/native/src/LinkingContext';
 import extractPathFromURL from '@react-navigation/native/src/extractPathFromURL';
