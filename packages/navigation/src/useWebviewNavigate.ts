@@ -65,9 +65,13 @@ export default function useWebviewNavigate<
         ? extractPathFromURL(options?.prefixes, to)
         : to;
 
+      /* We need to send the path name as screen param
+      to the screen this way cause it works also for nested navigators */
+      const pathWithScreenParams = `${path}?path=${path}`;
+
       const state = options?.getStateFromPath
-        ? options.getStateFromPath(path, options.config)
-        : getStateFromPath(`${path}`, options?.config);
+        ? options.getStateFromPath(pathWithScreenParams, options.config)
+        : getStateFromPath(pathWithScreenParams, options?.config);
 
       if (state) {
         const action = <NavigateAction<NavigationState>>(
@@ -83,7 +87,6 @@ export default function useWebviewNavigate<
           navigation.dispatch({
             ...stackAction(action.payload.name, {
               ...action.payload.params,
-              path,
             }),
           });
         }
