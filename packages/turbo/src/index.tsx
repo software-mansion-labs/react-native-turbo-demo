@@ -7,6 +7,7 @@ export {
 export {
   default as VisitableView,
   Props as VisitableViewProps,
+  RefObject as VisitableViewRefObject,
 } from './VisitableView';
 
 export * from './types';

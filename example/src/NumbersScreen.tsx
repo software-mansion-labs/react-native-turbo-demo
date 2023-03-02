@@ -11,6 +11,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     backgroundColor: 'lightgray',
   },
+  text: {
+    color: '#00094a',
+  },
 });
 
 interface Props {}
@@ -24,7 +27,7 @@ const NumbersScreen: React.FC<Props> = () => {
       ItemSeparatorComponent={renderSeparator}
       renderItem={({ index }) => (
         <View style={styles.row}>
-          <Text>Row {index}</Text>
+          <Text style={styles.text}>Row {index}</Text>
         </View>
       )}
     />

@@ -3,8 +3,6 @@ package com.reactnativeturbowebview
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
-import com.facebook.react.uimanager.UIManagerHelper.getReactContext
-import com.facebook.react.uimanager.UIManagerModule
 import com.facebook.react.uimanager.annotations.ReactProp
 
 enum class RNVisitableViewEvent(val jsCallbackName: String) {
@@ -27,12 +25,9 @@ class RNVisitableViewManager(
   }
 
   @ReactProp(name = "sessionHandle")
-  fun setSessionHandle(view: RNVisitableView, sessionHandle: Int) {
-    val uiManager = getReactContext(view).getNativeModule(UIManagerModule::class.java)
-    val sessionView = uiManager?.resolveView(sessionHandle) as RNSession
-    view.sessionContainer = sessionView
+  fun setSessionHandle(view: RNVisitableView, sessionHandle: String) {
+    view.sessionHandle = sessionHandle
   }
-
 
   override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any> {
     return RNVisitableViewEvent.values().map {
@@ -45,6 +40,9 @@ class RNVisitableViewManager(
   }
 
   override fun createViewInstance(reactContext: ThemedReactContext) =
-    RNVisitableView(reactContext)
+    RNVisitableView(
+      reactContext,
+      sessionModule = reactContext.getNativeModule(RNSessionModule::class.java)!!
+    )
 
 }

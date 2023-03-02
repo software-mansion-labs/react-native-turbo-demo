@@ -16,6 +16,7 @@
   "scripts": {
     "example": "yarn --cwd example",
     "bootstrap": "yarn install && yarn example server && lerna run pods",
+    "test": "jest",
     "prepare": "lerna run prepare",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "typescript": "tsc --noEmit --composite false",
@@ -48,6 +49,14 @@
     "@release-it/conventional-changelog": "^5.0.0",
     "lerna": "6.0.1",
     "del-cli": "^3.0.1"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/lib/"
+    ],
+    "preset": "react-native",
+    "testEnvironment": "node"
   },
   "resolutions": {
     "@types/react": "17.0.21"

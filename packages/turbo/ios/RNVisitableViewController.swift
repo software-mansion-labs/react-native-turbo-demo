@@ -8,11 +8,13 @@
 import Foundation
 import Turbo
 
-public protocol RNVisitableViewControllerDelegate: UIAdaptivePresentationControllerDelegate {
+public protocol RNVisitableViewControllerDelegate {
   
   func visitableWillAppear(visitable: Visitable)
   
   func visitableDidRender(visitable: Visitable)
+  
+  func visitableDidDisappear(visitable: Visitable)
   
 }
 
@@ -28,7 +30,13 @@ class RNVisitableViewController: VisitableViewController {
   }
   
   override func visitableDidRender() {
+    super.visitableDidRender()
     self.delegate?.visitableDidRender(visitable: self)
+  }
+  
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    self.delegate?.visitableDidDisappear(visitable: self)
   }
   
 }

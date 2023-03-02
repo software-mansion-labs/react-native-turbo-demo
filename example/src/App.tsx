@@ -1,112 +1,113 @@
-import React, { useCallback, useRef } from 'react';
-import {
-  LinkingOptions,
-  NavigationContainer,
-  PathConfigMap,
-} from '@react-navigation/native';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { BASE_URL, Routes } from './config';
-import WebviewScreen from './WebviewScreen';
-import NumbersScreen from './NumbersScreen';
+import {
+  buildWebScreen,
+  WebScreenRuleConfig,
+} from '@react-native-turbo-webview/navigation';
+import { default as NativeScreen } from './NumbersScreen';
 import ErrorScreen from './ErrorScreen';
-import { Session, withSession } from 'react-native-turbo';
-import { Share } from 'react-native';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
-interface Props {}
-const Stack = createNativeStackNavigator<any>();
+const Stack = createNativeStackNavigator();
+const Tab = createMaterialTopTabNavigator();
 
-const webviewScreensConfig: PathConfigMap<any> = {
-  [Routes.WebviewInitial]: '',
-  [Routes.New]: 'new',
-  [Routes.SuccessScreen]: 'success',
-  [Routes.NumbersScreen]: 'numbers',
-  [Routes.SignIn]: 'signin',
-  [Routes.Fallback]: {
-    path: '*',
+enum Routes {
+  NotFound = 'NotFound',
+  NumbersScreen = 'NumbersScreen',
+  WebviewInitial = 'WebviewInitial',
+  New = 'New',
+  SuccessScreen = 'SuccessScreen',
+  NonExistentScreen = 'NonExistentScreen',
+  SignIn = 'SignIn',
+  Fallback = 'Fallback',
+  NestedTabNative = 'NestedTabNative',
+  NestedTabWeb = 'NestedTabWeb',
+  NestedTab = 'NestedTab',
+}
+
+const webScreenConfig: WebScreenRuleConfig = {
+  baseURL: 'http://localhost:45678/',
+  routes: {
+    [Routes.WebviewInitial]: {
+      urlPattern: '',
+      title: 'React Native Web Screen',
+    },
+    [Routes.New]: {
+      urlPattern: 'new',
+      title: 'A Modal Webpage',
+      presentation: 'modal',
+    },
+    [Routes.SuccessScreen]: {
+      urlPattern: 'success',
+      title: 'It Worked!',
+      presentation: 'modal',
+    },
+    [Routes.NumbersScreen]: {
+      urlPattern: 'numbers',
+    },
+    [Routes.SignIn]: {
+      urlPattern: 'signin',
+      title: 'Sign In',
+      presentation: 'modal',
+    },
+    [Routes.NestedTab]: {
+      routes: {
+        [Routes.NestedTabWeb]: {
+          urlPattern: 'nested',
+          title: 'Nested Web',
+        },
+      },
+    },
+    [Routes.Fallback]: { urlPattern: '*', title: '' },
   },
 };
 
-const App: React.FC<Props> = () => {
-  const sessionRef = useRef<Session>(null);
+const WebScreen = buildWebScreen(webScreenConfig);
 
-  const linking: LinkingOptions<any> = {
-    prefixes: [BASE_URL],
-    config: {
-      screens: {
-        ...webviewScreensConfig,
-      },
-    },
-  };
-
-  const share = async (message: string) => {
-    const res = await Share.share({ message });
-    if (res.action === 'sharedAction') {
-      sessionRef.current?.injectJavaScript(`shared()`);
-    }
-  };
-
-  const handleMessage = useCallback((message) => {
-    switch (message.method) {
-      case 'share': {
-        share(message.shareText);
-        break;
-      }
-    }
-  }, []);
-
+const NestedTab: React.FC = () => {
   return (
-    <NavigationContainer linking={linking}>
-      <Session ref={sessionRef} onMessage={handleMessage}>
-        <Stack.Navigator
-          screenOptions={{
-            headerBackTitle: 'Back',
-          }}
-        >
-          <Stack.Screen
-            name={Routes.WebviewInitial}
-            component={WebviewScreen}
-            options={{ title: 'Turbo Native Demo' }}
-          />
-          <Stack.Screen
-            name={Routes.NumbersScreen}
-            component={NumbersScreen}
-            options={{ title: 'A List of Numbers' }}
-          />
-          <Stack.Screen
-            name={Routes.New}
-            component={withSession(WebviewScreen)}
-            options={{
-              title: 'A Modal Webpage',
-              presentation: 'modal',
-            }}
-          />
-          <Stack.Screen
-            name={Routes.SuccessScreen}
-            component={withSession(WebviewScreen)}
-            options={{ title: 'It Worked!', presentation: 'modal' }}
-          />
-          <Stack.Screen
-            name={Routes.NonExistentScreen}
-            component={WebviewScreen}
-            options={{ title: 'Not Found' }}
-          />
-          <Stack.Screen
-            name={Routes.SignIn}
-            component={withSession(WebviewScreen)}
-            options={{ title: 'Sign In', presentation: 'modal' }}
-          />
-          <Stack.Screen
-            name={Routes.NotFound}
-            component={ErrorScreen}
-            options={{ title: 'Not Found' }}
-          />
-          <Stack.Screen
-            name={Routes.Fallback}
-            component={WebviewScreen}
-            options={{ title: '' }}
-          />
-        </Stack.Navigator>
-      </Session>
+    <Tab.Navigator>
+      <Tab.Screen {...WebScreen.screens.NestedTabWeb} />
+      <Tab.Screen
+        name={Routes.NestedTabNative}
+        component={NativeScreen}
+        options={{ title: 'Nested Native' }}
+      />
+    </Tab.Navigator>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <NavigationContainer linking={WebScreen.linking}>
+      <Stack.Navigator
+        screenOptions={{
+          headerBackTitle: 'Back',
+          headerTintColor: '#00094a',
+        }}
+      >
+        <Stack.Screen {...WebScreen.screens.WebviewInitial} />
+        <Stack.Screen
+          name={Routes.NumbersScreen}
+          component={NativeScreen}
+          options={{ title: 'A List of Numbers' }}
+        />
+        <Stack.Screen {...WebScreen.screens.New} />
+        <Stack.Screen {...WebScreen.screens.SuccessScreen} />
+        <Stack.Screen {...WebScreen.screens.SignIn} />
+        <Stack.Screen {...WebScreen.screens.Fallback} />
+        <Stack.Screen
+          name={Routes.NotFound}
+          component={ErrorScreen}
+          options={{ title: 'Not Found' }}
+        />
+        <Stack.Screen
+          name={Routes.NestedTab}
+          component={NestedTab}
+          options={{ title: 'Nested Top Tab' }}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };

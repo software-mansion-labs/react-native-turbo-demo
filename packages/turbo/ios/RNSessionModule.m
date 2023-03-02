@@ -9,7 +9,16 @@
 
 @interface RCT_EXTERN_MODULE(RNSessionModule, NSObject)
 
-  RCT_EXTERN_METHOD(injectJavaScript: (nonnull NSNumber) sessionHandle
+  RCT_EXTERN_METHOD(registerSession: (RCTPromiseResolveBlock) resolve
+                    rejecter: (RCTPromiseRejectBlock) reject)
+
+
+  RCT_EXTERN_METHOD(removeSession: (nonnull NSString) sessionHandle
+                    resolver: (RCTPromiseResolveBlock) resolve
+                    rejecter: (RCTPromiseRejectBlock) reject)
+
+
+  RCT_EXTERN_METHOD(injectJavaScript: (nonnull NSString) sessionHandle
                     code: (nonnull NSString) code
                     resolver: (RCTPromiseResolveBlock) resolve
                     rejecter: (RCTPromiseRejectBlock) reject)
