@@ -29,6 +29,7 @@ const WebScreen: React.FC<Props> = ({ navigation, route, baseURL }) => {
 
   return (
     <VisitableView
+      key={route}
       url={currentUrl}
       onVisitProposal={onVisitProposal}
       onLoad={onLoad}

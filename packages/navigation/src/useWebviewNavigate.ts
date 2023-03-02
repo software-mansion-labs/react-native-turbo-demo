@@ -6,7 +6,7 @@ import {
 import * as React from 'react';
 import LinkingContext from '@react-navigation/native/src/LinkingContext';
 import extractPathFromURL from '@react-navigation/native/src/extractPathFromURL';
-import { StackActions } from '@react-navigation/native';
+import { StackActions, CommonActions } from '@react-navigation/native';
 import type {
   NavigationState,
   NavigatorScreenParams,
@@ -81,14 +81,14 @@ export default function useWebviewNavigate<
         if (action === undefined) {
           navigation.reset(state);
         } else {
-          const stackAction =
-            actionType === 'replace' ? StackActions.replace : StackActions.push;
+          const actionToDispatch =
+            actionType === 'replace'
+              ? CommonActions.setParams({ path })
+              : StackActions.push(action.payload.name, {
+                  ...action.payload.params,
+                });
 
-          navigation.dispatch({
-            ...stackAction(action.payload.name, {
-              ...action.payload.params,
-            }),
-          });
+          navigation.dispatch(actionToDispatch);
         }
       } else {
         throw new Error('Failed to parse the path to a navigation state.');
