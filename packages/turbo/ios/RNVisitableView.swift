@@ -60,6 +60,7 @@ class RNVisitableView: UIView, SessionSubscriber {
     self.controller = RNVisitableViewController(url: url)
     self.controller?.delegate = self
     self.reactViewController().addChild(self.controller!)
+    self.controller?.view.frame = bounds // Fixes incorrect size of the webview
     self.controller?.didMove(toParent: self.reactViewController())
   }
   
