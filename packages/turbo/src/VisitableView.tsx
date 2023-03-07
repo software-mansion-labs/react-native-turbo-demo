@@ -36,7 +36,7 @@ export interface RefObject {
 
 const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
   (props, ref) => {
-    const { onMessage, url } = props;
+    const { onMessage } = props;
     const messageHandlerEventSubscription = useRef<EmitterSubscription>();
     const { sessionHandle } = useContext(SessionContext);
 
@@ -75,7 +75,6 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
     return (
       <RNVisitableView
         {...props}
-        key={url} // Makes replace action possible
         sessionHandle={sessionHandle}
         style={styles.container}
       />

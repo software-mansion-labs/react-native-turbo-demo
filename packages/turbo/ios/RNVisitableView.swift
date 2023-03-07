@@ -10,7 +10,14 @@ import UIKit
 
 class RNVisitableView: UIView, SessionSubscriber {
   var id: UUID = UUID()
-  @objc var url: NSString = ""
+  @objc var url: NSString = "" {
+    didSet {
+      if (oldValue != "") {
+        self.controller?.visitableURL = URL(string: String(url))!
+        getSession()?.visit(controller!)
+      }
+    }
+  }
   @objc var onVisitProposal: RCTDirectEventBlock?
   @objc var onLoad: RCTDirectEventBlock?
   @objc var onVisitError: RCTDirectEventBlock?
