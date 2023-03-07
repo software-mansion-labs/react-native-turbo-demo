@@ -9,7 +9,7 @@
   --color-pink: #e9509a;
   --color-blue: #317af6;
   --color-text: var(--color-black);
-  --color-text-subtle: var(--color-gray);
+  --color-text-subtle: var(--color-black);
   --color-text-reversed: var(--color-white);
   --color-tint: var(--color-teal);
   --color-tint-alt: var(--color-yellow);

@@ -10,7 +10,14 @@ import UIKit
 
 class RNVisitableView: UIView, SessionSubscriber {
   var id: UUID = UUID()
-  @objc var url: NSString = ""
+  @objc var url: NSString = "" {
+    didSet {
+      if (oldValue != "") {
+        self.controller?.visitableURL = URL(string: String(url))!
+        getSession()?.visit(controller!)
+      }
+    }
+  }
   @objc var onVisitProposal: RCTDirectEventBlock?
   @objc var onLoad: RCTDirectEventBlock?
   @objc var onVisitError: RCTDirectEventBlock?
@@ -60,6 +67,7 @@ class RNVisitableView: UIView, SessionSubscriber {
     self.controller = RNVisitableViewController(url: url)
     self.controller?.delegate = self
     self.reactViewController().addChild(self.controller!)
+    self.controller?.view.frame = bounds // Fixes incorrect size of the webview
     self.controller?.didMove(toParent: self.reactViewController())
   }
   

@@ -67,7 +67,11 @@ const WebScreen = buildWebScreen(webScreenConfig);
 
 const NestedTab: React.FC = () => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: '#00094a',
+      }}
+    >
       <Tab.Screen {...WebScreen.screens.NestedTabWeb} />
       <Tab.Screen
         name={Routes.NestedTabNative}
