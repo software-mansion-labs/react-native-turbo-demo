@@ -11,10 +11,10 @@
     "turbo",
     "hotwired"
   ],
-  "homepage": "https://github.com/software-mansion-labs/react-native-turbo-demo#readme",
+  "homepage": "https://github.com/software-mansion-labs/react-native-turbo-demo/tree/main/packages/turbo",
   "repository": {
     "type": "git",
-    "url": "https://github.com/software-mansion-labs/react-native-turbo-demo",
+    "url": "https://github.com/software-mansion-labs/react-native-turbo-demo/tree/main/packages/turbo",
     "directory": "packages/turbo"
   },
   "main": "lib/commonjs/index.js",
