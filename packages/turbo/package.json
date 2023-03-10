@@ -1,6 +1,6 @@
 {
   "name": "react-native-turbo",
-  "version": "0.1.5",
+  "version": "2.0.0",
   "author": "Bartek Fryz <bartlomiej.fryz@swmansion.com> (https://github.com/Fryzu)",
   "license": "MIT",
   "description": "Support for @hotwired/turbo in React Native apps",
@@ -61,5 +61,10 @@
       "module",
       "typescript"
     ]
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release v${version}"
+    }
   }
 }

@@ -50,5 +50,10 @@
   ],
   "dependencies": {
     "lodash": "^4.17.21"
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release v${version}"
+    }
   }
 }
