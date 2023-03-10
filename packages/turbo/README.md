@@ -145,7 +145,7 @@ webkit.messageHandlers.nativeApp.postMessage(message);
 
 ### Methods:
 
-### `injectJavaScript()`
+### `injectJavaScript(jsCode)`
 
 Executes the javascript code in the webview js runtime.
 
