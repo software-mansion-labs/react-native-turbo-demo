@@ -1,6 +1,6 @@
 {
   "name": "react-native-turbo",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "author": "Bartek Fryz <bartlomiej.fryz@swmansion.com> (https://github.com/Fryzu)",
   "license": "MIT",
   "description": "Support for @hotwired/turbo in React Native apps",
