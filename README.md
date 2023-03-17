@@ -10,11 +10,11 @@ https://user-images.githubusercontent.com/25584895/225870138-b034f335-a30f-4e25-
 Install the library using:
 
 ```sh
-npm install react-native-turbo-webview
+npm install react-native-web-screen
 ```
 or
 ```sh
-yarn add react-native-turbo-webview
+yarn add react-native-web-screen
 ```
 
 Currently on iOS, you need to manually add the Turbo dependency to your Podfile:
@@ -22,6 +22,10 @@ Currently on iOS, you need to manually add the Turbo dependency to your Podfile:
 ```ruby
 pod 'Turbo', :git => 'https://github.com/hotwired/turbo-ios.git', :tag => '7.0.0-rc.6'
 ```
+
+## Getting started
+
+The library provides you with simple API to define the relationship between the web and native screens.
 
 ## Advanced usage
 
