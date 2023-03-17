@@ -4,9 +4,35 @@ React Native Web Screen is an open source library that will allow you to easily 
 
 https://user-images.githubusercontent.com/25584895/225870138-b034f335-a30f-4e25-92fd-06c19cdf6e04.mov
 
-## Documentation
+## Installation
 
-Check out full [documentation](packages/navigation/README.md) page.
+Install the library using:
+
+```sh
+npm install react-native-web-screen
+```
+
+or
+
+```sh
+yarn add react-native-web-screen
+```
+
+Currently on iOS, you need to manually add the Turbo dependency to your Podfile:
+
+```ruby
+pod 'Turbo', :git => 'https://github.com/hotwired/turbo-ios.git', :tag => '7.0.0-rc.6'
+```
+
+## Getting started
+
+The library provides you with simple API to define the relationship between the web and native screens.
+
+## Advanced usage
+
+This library under the hood uses [react-native-turbo](packages/turbo). You can use React Navigation support (described ⬆️) or standalone React `VisitableView.tsx` component for more advanced cases.
+
+Check out [react-native-turbo](packages/turbo) for more info.
 
 ## Contributing
 
