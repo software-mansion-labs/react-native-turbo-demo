@@ -6,11 +6,11 @@ https://user-images.githubusercontent.com/25584895/225870138-b034f335-a30f-4e25-
 
 _This an early stage version of the library, so issues may appear. You can help us by reporting them in the issues section._
 
-## Documentation
+## Documentation 📖
 
 Check out full [documentation](packages/navigation/README.md) page.
 
-## Contributing
+## Contributing 💪
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
 
