@@ -22,6 +22,8 @@ Currently on iOS, you need to manually add the Turbo dependency to your Podfile:
 pod 'Turbo', :git => 'https://github.com/hotwired/turbo-ios.git', :tag => '7.0.0-rc.6'
 ```
 
+The library should be used alongside React Navigation library, follow [these steps](https://reactnavigation.org/docs/getting-started/) to install it.
+
 ## Basic example
 
 The library provides you with simple API to define the relationship between the web and native screens. The `react-native-web-screen` uses React Navigation [configurable links](https://reactnavigation.org/docs/configuring-links/) to handle navigation within the app. To generate the desired linking configuration you can use the `buildWebScreen(webScreenConfig)` function. After that, all you need to do is to pass the generated objects to the [Navigation Container](https://reactnavigation.org/docs/navigation-container/) and to the corresponding screens in the navigator tree.
