@@ -28,9 +28,9 @@ The library provides you with simple API to define the relationship between the 
 
 ## Advanced usage
 
-This library under the hood uses [react-native-turbo](packages/turbo). You can use React Navigation support (described ⬆️) or standalone React `VisitableView.tsx` component for more advanced cases.
+This library under the hood uses [react-native-turbo](../turbo/README.md). You can use React Navigation support (described ⬆️) or standalone React `VisitableView.tsx` component for more advanced cases.
 
-Check out [react-native-turbo](packages/turbo) for more info.
+Check out [react-native-turbo](../turbo/README.md) for more info.
 
 ## Contributing
 
