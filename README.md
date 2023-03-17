@@ -4,6 +4,8 @@ React Native Web Screen is an open source library that will allow you to easily 
 
 https://user-images.githubusercontent.com/25584895/225870138-b034f335-a30f-4e25-92fd-06c19cdf6e04.mov
 
+_This an early stage version of the library, so issues may appear. You can help us by reporting them in the issues section._
+
 ## Documentation
 
 Check out full [documentation](packages/navigation/README.md) page.
