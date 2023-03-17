@@ -1,10 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {
-  buildWebScreen,
-  WebScreenRuleConfig,
-} from '@react-native-turbo-webview/navigation';
+import { buildWebScreen, WebScreenRuleConfig } from 'react-native-web-screen';
 import { default as NativeScreen } from './NumbersScreen';
 import ErrorScreen from './ErrorScreen';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';

@@ -33,7 +33,9 @@ const modules = []
   .filter(
     (m, i, self) =>
       // Remove duplicates and package names of the packages in the monorepo
-      self.lastIndexOf(m) === i && !m.startsWith('@react-native-turbo-webview/')
+      self.lastIndexOf(m) === i &&
+      (!m.startsWith('react-native-turbo/') ||
+        !m.startsWith('react-native-web-screen'))
   );
 
 module.exports = {

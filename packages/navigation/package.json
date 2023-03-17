@@ -1,8 +1,17 @@
 {
-  "name": "@react-native-turbo-webview/navigation",
+  "name": "react-native-web-screen",
   "version": "0.1.0",
-  "description": "React Native Turbo library support for React Navigation",
+  "description": "Native like web screen in React Native",
+  "keywords": [
+    "react-native",
+    "ios",
+    "android",
+    "web",
+    "webview",
+    "navigation"
+  ],
   "source": "src/index",
+  "homepage": "https://github.com/software-mansion-labs/react-native-turbo-demo",
   "repository": "https://github.com/software-mansion-labs/react-native-turbo-demo#readme",
   "author": "Bartek Fryz <bartlomiej.fryz@swmansion.com> (https://github.com/Fryzu)",
   "license": "MIT",
@@ -53,7 +62,7 @@
   },
   "release-it": {
     "git": {
-      "commitMessage": "chore: release v${version}"
+      "commitMessage": "chore: react-native-web-screen release v${version}"
     }
   }
 }

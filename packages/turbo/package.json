@@ -64,7 +64,8 @@
   },
   "release-it": {
     "git": {
-      "commitMessage": "chore: release v${version}"
+      "commitMessage": "chore: react-native-turbo release v${version}",
+      "tag": false
     }
   }
 }
