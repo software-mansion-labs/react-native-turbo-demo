@@ -2,7 +2,7 @@
 
 # React Native Web Screen
 
-React Native Web Screen is an open source library that will allow you to easily bring your web application into the [React Native](https://reactnative.dev/) mobile world. It allows you to render web views as if they were real native screens, caching the results and providing native animation between screens. You can easily move your entire web app, or embed a few screens that pretend to be native, without having to code them second time in React Native.
+React Native Web Screen is an open source library that can bring your web application into the [React Native](https://reactnative.dev/) world. It allows you to render web pages as if they were native iOS or Android screens. It supports caching and provides native navigation animations resulting in mobile-like user experience. You can easily move your entire web app, or embed a few screens that pretend to be native, without reimplementing them in React Native.
 
 <p align="center">
   <a aria-label="NPM version" href="https://www.npmjs.com/package/react-native-web-screen" target="_blank">
@@ -29,9 +29,9 @@ _An example app adapted from [turbo-native-demo](https://github.com/hotwired/tur
 
 ## Documentation 📖
 
-Check out full [documentation](packages/navigation/README.md) page.
+Check out the full [documentation](packages/navigation/README.md) page.
 
-_This an early stage version of the library, so issues may appear. You can help us by reporting them in the issues section._
+_This an early stage version of the library, so issues may appear. You can help us by reporting them in the [issues](https://github.com/software-mansion-labs/react-native-turbo-demo/issues) section._
 
 ## Contributing 💪
 
