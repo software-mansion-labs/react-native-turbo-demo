@@ -1,10 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {
-  buildWebScreen,
-  WebScreenRuleConfig,
-} from '@react-native-turbo-webview/navigation';
+import { buildWebScreen, WebScreenRuleConfig } from 'react-native-web-screen';
 import { default as NativeScreen } from './NumbersScreen';
 import ErrorScreen from './ErrorScreen';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -63,7 +60,7 @@ const webScreenConfig: WebScreenRuleConfig = {
   },
 };
 
-const WebScreen = buildWebScreen(webScreenConfig);
+const webScreens = buildWebScreen(webScreenConfig);
 
 const NestedTab: React.FC = () => {
   return (
@@ -72,7 +69,7 @@ const NestedTab: React.FC = () => {
         tabBarActiveTintColor: '#00094a',
       }}
     >
-      <Tab.Screen {...WebScreen.screens.NestedTabWeb} />
+      <Tab.Screen {...webScreens.screens.NestedTabWeb} />
       <Tab.Screen
         name={Routes.NestedTabNative}
         component={NativeScreen}
@@ -84,23 +81,23 @@ const NestedTab: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <NavigationContainer linking={WebScreen.linking}>
+    <NavigationContainer linking={webScreens.linking}>
       <Stack.Navigator
         screenOptions={{
           headerBackTitle: 'Back',
           headerTintColor: '#00094a',
         }}
       >
-        <Stack.Screen {...WebScreen.screens.WebviewInitial} />
+        <Stack.Screen {...webScreens.screens.WebviewInitial} />
         <Stack.Screen
           name={Routes.NumbersScreen}
           component={NativeScreen}
           options={{ title: 'A List of Numbers' }}
         />
-        <Stack.Screen {...WebScreen.screens.New} />
-        <Stack.Screen {...WebScreen.screens.SuccessScreen} />
-        <Stack.Screen {...WebScreen.screens.SignIn} />
-        <Stack.Screen {...WebScreen.screens.Fallback} />
+        <Stack.Screen {...webScreens.screens.New} />
+        <Stack.Screen {...webScreens.screens.SuccessScreen} />
+        <Stack.Screen {...webScreens.screens.SignIn} />
+        <Stack.Screen {...webScreens.screens.Fallback} />
         <Stack.Screen
           name={Routes.NotFound}
           component={ErrorScreen}

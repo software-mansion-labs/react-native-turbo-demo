@@ -1,6 +1,6 @@
 {
   "name": "react-native-turbo",
-  "version": "0.1.5",
+  "version": "0.2.3",
   "author": "Bartek Fryz <bartlomiej.fryz@swmansion.com> (https://github.com/Fryzu)",
   "license": "MIT",
   "description": "Support for @hotwired/turbo in React Native apps",
@@ -11,7 +11,7 @@
     "turbo",
     "hotwired"
   ],
-  "homepage": "https://github.com/software-mansion-labs/react-native-turbo-demo#readme",
+  "homepage": "https://github.com/software-mansion-labs/react-native-turbo-demo/tree/main/packages/turbo",
   "repository": {
     "type": "git",
     "url": "https://github.com/software-mansion-labs/react-native-turbo-demo",
@@ -61,5 +61,11 @@
       "module",
       "typescript"
     ]
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: react-native-turbo release v${version}",
+      "tag": false
+    }
   }
 }

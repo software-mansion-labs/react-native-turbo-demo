@@ -3,7 +3,8 @@
     "composite": true,
     "baseUrl": ".",
     "paths": {
-      "@react-native-turbo-webview/*": ["./packages/*/src"]
+      "react-native-turbo": ["./packages/turbo/src"],
+      "react-native-web-screen": ["./packages/navigation/src"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

@@ -1,9 +1,8 @@
 {
-  "name": "react-native-turbo-webview",
+  "name": "react-native-web-screen-monorepo",
   "version": "0.1.0",
   "private": true,
   "author": "Bartek Fryz <bartlomiej.fryz@swmansion.com> (https://github.com/Fryzu)",
-  "description": "Adds support for Hotwired Turbo in React Native",
   "license": "MIT",
   "repository": "https://github.com/software-mansion-labs/react-native-turbo-demo",
   "bugs": {

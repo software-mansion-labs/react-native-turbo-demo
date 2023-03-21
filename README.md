@@ -1,151 +1,39 @@
-## 🚧 Work in progress version 🚧
+<div align="center">
 
-# Docs page 📖
+# React Native Web Screen
 
-## Installation
+React Native Web Screen is an open source library that can bring your web application into the [React Native](https://reactnative.dev/) world. It allows you to render web pages as if they were native iOS or Android screens. It supports caching and provides native navigation animations resulting in mobile-like user experience. You can easily move your entire web app, or embed a few screens that pretend to be native, without reimplementing them in React Native.
 
-```sh
-npm install react-native-turbo-webview
-```
+<p align="center">
+  <a aria-label="NPM version" href="https://www.npmjs.com/package/react-native-web-screen" target="_blank">
+    <img alt="NPM version" src="https://img.shields.io/npm/v/react-native-web-screen?color=red&label=npm%20version" />
+  </a>
+  <a aria-label="Licence MIT" href="https://www.npmjs.com/package/react-native-web-screen" target="_blank">
+    <img alt="Licence MIT" src="https://img.shields.io/github/license/software-mansion-labs/react-native-turbo-demo" />
+  </a>
+  <a aria-label="Github issues" href="https://github.com/software-mansion-labs/react-native-turbo-demo/issues" target="_blank">
+    <img alt="Github issues" src="https://img.shields.io/github/issues/software-mansion-labs/react-native-turbo-demo" />
+  </a>
+  <a aria-label="Github activity" href="https://github.com/software-mansion-labs/react-native-turbo-demo" target="_blank">
+    <img alt="Github activity" src="https://img.shields.io/github/last-commit/software-mansion-labs/react-native-turbo-demo" />
+  </a>
+</p>
 
-## Turbo implementation for React Native
+https://user-images.githubusercontent.com/25584895/225870138-b034f335-a30f-4e25-92fd-06c19cdf6e04.mov
 
-The example implements native view `RNVisitable` component for React Native. This view is an equivalent of the [Turbo Visitable](https://github.com/hotwired/turbo-ios/blob/main/Docs/Overview.md#visitable).
+_An example app adapted from [turbo-native-demo](https://github.com/hotwired/turbo-native-demo) using react-native-web-screen_
 
-### Visitable
+</div>
 
-Turbo manages a single webview instance, shared between multiple view controllers. It also automatically show a screenshot of web page content when the web view is not focused. The `Visitable` views are rendered as native view from React `RNVisitable`.
+---
 
-### Session
+## Documentation 📖
 
-Each [Session](https://github.com/hotwired/turbo-ios/blob/main/Docs/Overview.md#session) manages a single WKWebView instance. We've added support for multiple sessions, now each session instance is managed by `<RNSession>` native component. Every `Session` is used by all its React children `RNVisitable` components. The session is shared using React.Context API.
+Check out the full [documentation](packages/navigation/README.md) page.
 
-```tsx
-<Session>
-  <VisitableView />
-</Session>
-```
+_This an early stage version of the library, so issues may appear. You can help us by reporting them in the [issues](https://github.com/software-mansion-labs/react-native-turbo-demo/issues) section._
 
-You are also able to use `withSession(...)` React HOC instead of composition.
-
-### Visitable component
-
-We can use React Navigation support (described below) or standalone React `VisitableView.tsx` component for more advanced cases.
-
-```tsx
-const onVisitProposal = ({
-  nativeEvent: { action: actionType, url },
-}: NativeSyntheticEvent<VisitProposal>) => {
-  // Handle opening new webview screen
-};
-
-<VisitableView
-  url="https://turbo-native-demo.glitch.me"
-  onVisitProposal={onVisitProposal}
-/>;
-```
-
-Props:
-
-- **url** – _URL for the WKWebview to open_
-
-- **onVisitProposal** – _callback called when the webview detects changing navigate action_
-- **onLoad** – _callback called when the webview successfully loads_
-- **onVisitError** – _callback called when the webview fails to load_
-
-## React Navigation integration 🔗
-
-The example uses [Configurable Links](https://reactnavigation.org/docs/configuring-links) for smooth integration with the webview. It enables us to:
-
-- Open native screen from webview.
-- Open webview from native screen.
-- Open webview screen from webview screen.
-- Setup title for every webview screen (we don't need to wait for the page load).
-- It supports Turbo replace action.
-- We can set the presentation type to modal.
-
-Example setup for example setup see [App.tsx](../App.tsx).
-
-## Examples
-
-You can see all the examples in action, just check out the example app. You need to first start the local demo web page from the [demo directory](../demo/).
-
-### Opening webview from RN screen
-
-You need to use the [useWebviewNavigate](../src/useWebviewNavigate.ts) hook which is a slightly modified [useLinkTo](https://github.com/react-navigation/react-navigation/blob/4ae53e1705e39aee75041928c07a56ec110bfd05/packages/native/src/useLinkTo.tsx) hook from React Navigation.
-
-```ts
-const navigateTo = useWebviewNavigate();
-navigateTo(urlOrPath, actionType /* "replace" | "advance" */);
-```
-
-### Opening RN screen from webview
-
-In the linking object in the `<NavigationContainer/>` you need to define the url/route that opens specific screen.
-
-You can also add a wildcard path that will be navigated to on all URLs matching the prefixes, but not matching any other defined screens.
-
-```ts
-const linking = {
-  prefixes: [BASE_URL],
-  config: {
-    screens: {
-      NativeNumbersScreenName: 'numbers', // Will be shown when navigating to BASE_URL/numbers
-      FallbackScreen: {
-        path: '*'
-      }
-    },
-  },
-};
-```
-
-When you open this link in the webview, you will automatically be taken to a screen in RN.
-
-### Opening webview screen from a webview
-
-```ts
-const linking: LinkingOptions<any> = {
-  prefixes: [BASE_URL],
-  config: {
-    screens: {
-      FirstScreen: 'firstScreen',
-      SecondScreen: 'secondScreen',
-    },
-  },
-};
-```
-
-But wildcard support is in progress.
-
-### Example authorization
-
-See example app [WebviewScreen.tsx](../src/WebviewScreen.tsx).
-
-```tsx
-const onVisitError = ({
-  nativeEvent: { statusCode },
-}: NativeSyntheticEvent<VisitProposalError>) => {
-  switch (statusCode) {
-    case 401: {
-      // Open sign in screen
-      navigateTo(`signin`);
-      break;
-    }
-    default: {
-      navigateTo(`notfound`, 'replace');
-    }
-  }
-};
-
-<VisitableView
-  url={currentUrl}
-  onVisitProposal={onVisitProposal}
-  onVisitError={onVisitError}
-  onLoad={onLoad}
-/>;
-```
-
-## Contributing
+## Contributing 💪
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
 
