@@ -2,6 +2,17 @@
 
 React Native [Hotwired Turbo](https://turbo.hotwired.dev/handbook/introduction) support for creating hybrid apps with a single shared web view session.
 
+<p>
+  <a aria-label="NPM version" href="https://www.npmjs.com/package/react-native-turbo" target="_blank">
+    <img alt="NPM version" src="https://img.shields.io/npm/v/react-native-turbo?color=red&label=npm%20version" />
+  </a>
+  <a aria-label="Licence MIT" href="https://www.npmjs.com/package/react-native-web-screen" target="_blank">
+    <img alt="Licence MIT" src="https://img.shields.io/github/license/software-mansion-labs/react-native-turbo-demo" />
+  </a>
+</p>
+
+---
+
 ## Installation
 
 First step is to install `react-native-turbo` as a dependency to your project:
