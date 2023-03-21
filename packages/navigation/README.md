@@ -92,7 +92,7 @@ const webScreenConfig: WebScreenRuleConfig = {
 
 ## Example app
 
-The repository contains [example app directory](../../example/README.md) and an example [web app](../../example/server/README.md).
+The repository contains [example app directory](../../example/README.md) and an example [web app](../../example/server/README.md) adapted from [turbo-native-demo](https://github.com/hotwired/turbo-native-demo) using react-native-web-screen.
 
 ```sh
 yarn
