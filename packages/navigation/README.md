@@ -50,14 +50,14 @@ const webScreenConfig: WebScreenRuleConfig = {
   },
 };
 
-const WebScreen = buildWebScreen(webScreenConfig);
+const webScreens = buildWebScreen(webScreenConfig);
 
 const App: React.FC = () => {
   return (
-    <NavigationContainer linking={WebScreen.linking}>
+    <NavigationContainer linking={webScreens.linking}>
       <Stack.Navigator>
         <Stack.Screen name="Initial" component={YourNativeComponent} />
-        <Stack.Screen {...WebScreen.screens.Welcome} />
+        <Stack.Screen {...webScreens.screens.Welcome} />
       </Stack.Navigator>
     </NavigationContainer>
   );
