@@ -21,6 +21,8 @@ React Native Web Screen is an open source library that will allow you to easily 
 
 https://user-images.githubusercontent.com/25584895/225870138-b034f335-a30f-4e25-92fd-06c19cdf6e04.mov
 
+_An example app adapted from [turbo-native-demo](https://github.com/hotwired/turbo-native-demo) using react-native-web-screen_
+
 </div>
 
 ---
