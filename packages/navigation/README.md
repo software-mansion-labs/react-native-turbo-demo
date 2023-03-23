@@ -16,12 +16,6 @@ or
 yarn add react-native-web-screen
 ```
 
-Currently on iOS, you need to manually add the Turbo dependency to your Podfile:
-
-```ruby
-pod 'Turbo', :git => 'https://github.com/hotwired/turbo-ios.git', :tag => '7.0.0-rc.6'
-```
-
 The library should be used alongside React Navigation library, follow [these steps](https://reactnavigation.org/docs/getting-started/) to install it.
 
 ## Basic example
