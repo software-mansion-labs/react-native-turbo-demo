@@ -5,7 +5,7 @@
 //  Created by Bartłomiej Fryz on 24/06/2022.
 //
 
-import Turbo
+import RNTurboiOS
 import UIKit
 
 class RNVisitableView: UIView, SessionSubscriber {
@@ -83,7 +83,7 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
     getRNSesssion()?.registerVisitableView(newView: self)
   }
   
-  func visitableDidDisappear(visitable: Turbo.Visitable) {
+  func visitableDidDisappear(visitable: RNTurboiOS.Visitable) {
     getRNSesssion()?.removeVisitableView(view: self)
   }
 

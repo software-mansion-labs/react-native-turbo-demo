@@ -31,7 +31,6 @@ target 'TurboWebviewExample' do
     # Pods for testing
   end
   
-  pod 'Turbo', :git => 'https://github.com/hotwired/turbo-ios.git', :tag => '7.0.0-rc.6' # TODO: refactor
   pod 'RNTurbo', :path => '../../packages/turbo'
 
   post_install do |installer|

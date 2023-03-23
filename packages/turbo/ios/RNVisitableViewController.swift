@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Turbo
+import RNTurboiOS
 
 public protocol RNVisitableViewControllerDelegate {
   

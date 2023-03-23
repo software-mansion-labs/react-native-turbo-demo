@@ -379,11 +379,11 @@ PODS:
   - RNScreens (3.18.2):
     - React-Core
     - React-RCTImage
-  - RNTurbo (0.2.2):
+  - RNTurbo (0.2.3):
     - React-Core
-    - Turbo
+    - RNTurboiOS (= 7.0.0-beta.1)
+  - RNTurboiOS (7.0.0-beta.1)
   - SocketRocket (0.6.0)
-  - Turbo (7.0.0-beta.1)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -451,7 +451,6 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../../node_modules/react-native/ReactCommon`)
   - RNScreens (from `../../node_modules/react-native-screens`)
   - RNTurbo (from `../../packages/turbo`)
-  - Turbo (from `https://github.com/hotwired/turbo-ios.git`, tag `7.0.0-rc.6`)
   - Yoga (from `../../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -469,6 +468,7 @@ SPEC REPOS:
     - fmt
     - libevent
     - OpenSSL-Universal
+    - RNTurboiOS
     - SocketRocket
     - YogaKit
 
@@ -547,16 +547,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/react-native-screens"
   RNTurbo:
     :path: "../../packages/turbo"
-  Turbo:
-    :git: https://github.com/hotwired/turbo-ios.git
-    :tag: 7.0.0-rc.6
   Yoga:
     :path: "../../node_modules/react-native/ReactCommon/yoga"
-
-CHECKOUT OPTIONS:
-  Turbo:
-    :git: https://github.com/hotwired/turbo-ios.git
-    :tag: 7.0.0-rc.6
 
 SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
@@ -608,12 +600,12 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: e9b1f9310158a1e265bcdfdfd8c62d6174b947a2
   ReactCommon: 01064177e66d652192c661de899b1076da962fd9
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
-  RNTurbo: 9351cdf6f32e6dfd12981e433960b6add144d6b0
+  RNTurbo: f6318754627342c26601983f552d08307846ff53
+  RNTurboiOS: 22091eb5d7be50050c694443a32a34b3069dd229
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
-  Turbo: 817a6d5d9e9d4c93dd0154742d31d2cda67e65a1
   Yoga: 2ed968a4f060a92834227c036279f2736de0fce3
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 27e529a761d601c240618c9e877aa03684e6806d
+PODFILE CHECKSUM: 85b06d0ed137749e786ec852f3aa1ff84759e876
 
 COCOAPODS: 1.11.3
