@@ -12,7 +12,7 @@
   ],
   "source": "src/index",
   "homepage": "https://github.com/software-mansion-labs/react-native-turbo-demo",
-  "repository": "https://github.com/software-mansion-labs/react-native-turbo-demo#readme",
+  "repository": "https://github.com/software-mansion-labs/react-native-turbo-demo",
   "author": "Bartek Fryz <bartlomiej.fryz@swmansion.com> (https://github.com/Fryzu)",
   "license": "MIT",
   "devDependencies": {

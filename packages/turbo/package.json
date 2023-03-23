@@ -14,8 +14,7 @@
   "homepage": "https://github.com/software-mansion-labs/react-native-turbo-demo/tree/main/packages/turbo",
   "repository": {
     "type": "git",
-    "url": "https://github.com/software-mansion-labs/react-native-turbo-demo",
-    "directory": "packages/turbo"
+    "url": "https://github.com/software-mansion-labs/react-native-turbo-demo/tree/main/packages/turbo"
   },
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
