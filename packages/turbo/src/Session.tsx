@@ -5,6 +5,7 @@ import { SessionContext } from './SessionContext';
 import type {
   SessionModule,
   SessionMessageCallback,
+  OnErrorCallback,
 } from 'packages/turbo/src/types';
 
 const RNSessionModule = getNativeModule<SessionModule>('RNSessionModule');
@@ -15,6 +16,7 @@ interface Message {
 
 export interface Props {
   onMessage?: SessionMessageCallback;
+  onVisitError?: OnErrorCallback;
 }
 
 interface State {
@@ -79,9 +81,10 @@ export default class Session extends React.Component<Props, State> {
 
   render() {
     const { sessionHandle } = this.state;
+    const { onVisitError } = this.props;
 
     return (
-      <SessionContext.Provider value={{ sessionHandle }}>
+      <SessionContext.Provider value={{ sessionHandle, onVisitError }}>
         {this.props.children}
       </SessionContext.Provider>
     );
