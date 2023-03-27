@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
 import android.view.ViewGroup
+import android.webkit.CookieManager
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.lifecycle.Lifecycle
@@ -287,6 +288,8 @@ class RNVisitableView(context: Context, sessionModule: RNSessionModule) : Linear
       putString("title", webView.title)
       putString("url", webView.url)
     })
+    val cookieManager = CookieManager.getInstance()
+    cookieManager.flush()
   }
 
   override fun visitLocationStarted(location: String) {
