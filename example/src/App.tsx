@@ -8,7 +8,7 @@ import { buildWebScreen, WebScreenRuleConfig } from 'react-native-web-screen';
 import { default as NativeScreen } from './NumbersScreen';
 import ErrorScreen from './ErrorScreen';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { OnErrorCallback, Session } from 'react-native-turbo';
+import { OnErrorCallback, Session, withSession } from 'react-native-turbo';
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialTopTabNavigator();
@@ -123,7 +123,7 @@ const App: React.FC = () => {
           />
           <Stack.Screen
             name={Routes.NestedTab}
-            component={NestedTab}
+            component={withSession(NestedTab)}
             options={{ title: 'Nested Top Tab' }}
           />
         </Stack.Navigator>
