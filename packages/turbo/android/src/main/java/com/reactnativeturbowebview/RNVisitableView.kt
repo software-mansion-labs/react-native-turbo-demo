@@ -288,8 +288,9 @@ class RNVisitableView(context: Context, sessionModule: RNSessionModule) : Linear
       putString("title", webView.title)
       putString("url", webView.url)
     })
-    val cookieManager = CookieManager.getInstance()
-    cookieManager.flush()
+    CookieManager
+      .getInstance()
+      .flush()
   }
 
   override fun visitLocationStarted(location: String) {
