@@ -2,7 +2,9 @@ package com.reactnativeturbowebview
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import android.view.ViewGroup
+import android.webkit.CookieManager
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.lifecycle.Lifecycle
@@ -286,12 +288,23 @@ class RNVisitableView(context: Context, sessionModule: RNSessionModule) : Linear
       putString("title", webView.title)
       putString("url", webView.url)
     })
+    CookieManager
+      .getInstance()
+      .flush()
   }
 
   override fun visitLocationStarted(location: String) {
     if (isWebViewAttachedToNewDestination) {
       showProgressView()
     }
+  }
+
+  override fun requestFailedWithStatusCode(visitHasCachedSnapshot: Boolean, statusCode: Int) {
+    super.requestFailedWithStatusCode(visitHasCachedSnapshot, statusCode)
+    sendEvent(RNVisitableViewEvent.VISIT_ERROR, Arguments.createMap().apply {
+      putInt("statusCode", statusCode)
+      putString("url", webView.url)
+    })
   }
 
   // end region

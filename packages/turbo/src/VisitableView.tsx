@@ -1,4 +1,9 @@
-import React, { useContext, useEffect, useImperativeHandle } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useImperativeHandle,
+} from 'react';
 import {
   EmitterSubscription,
   NativeSyntheticEvent,
@@ -10,6 +15,7 @@ import {
   registerMessageEventListener,
 } from './common';
 import type {
+  OnErrorCallback,
   OnLoadEvent,
   SessionMessageCallback,
   SessionModule,
@@ -26,7 +32,7 @@ export interface Props {
   url: string;
   onVisitProposal: (proposal: NativeSyntheticEvent<VisitProposal>) => void;
   onLoad?: (proposal: NativeSyntheticEvent<OnLoadEvent>) => void;
-  onVisitError?: (proposal: NativeSyntheticEvent<VisitProposalError>) => void;
+  onVisitError?: OnErrorCallback;
   onMessage?: SessionMessageCallback;
 }
 
@@ -36,9 +42,10 @@ export interface RefObject {
 
 const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
   (props, ref) => {
-    const { onMessage } = props;
+    const { onMessage, onVisitError: viewErrorHandler } = props;
     const messageHandlerEventSubscription = useRef<EmitterSubscription>();
-    const { sessionHandle } = useContext(SessionContext);
+    const { sessionHandle, onVisitError: sessionErrorHandler } =
+      useContext(SessionContext);
 
     const waitingForSession = sessionHandle === null;
 
@@ -71,11 +78,20 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       };
     }, []);
 
+    const handleVisitError = useCallback(
+      (e: NativeSyntheticEvent<VisitProposalError>) => {
+        sessionErrorHandler?.(e.nativeEvent);
+        viewErrorHandler?.(e.nativeEvent);
+      },
+      [sessionErrorHandler, viewErrorHandler]
+    );
+
     if (waitingForSession) return null;
     return (
       <RNVisitableView
         {...props}
         sessionHandle={sessionHandle}
+        onVisitError={handleVisitError}
         style={styles.container}
       />
     );

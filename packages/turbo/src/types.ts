@@ -26,3 +26,5 @@ export interface SessionModule {
     callbackStringified: string
   ) => Promise<unknown>;
 }
+
+export type OnErrorCallback = (error: VisitProposalError) => void;
