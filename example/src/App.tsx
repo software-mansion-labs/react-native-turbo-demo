@@ -9,11 +9,29 @@ import ErrorScreen from './ErrorScreen';
 import { OnErrorCallback, Session, withSession } from 'react-native-turbo';
 import { Routes, webScreens } from 'example/src/webScreen';
 import NestedTab from 'example/src/NestedTab';
-// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-// const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator();
 
 const Stack = createNativeStackNavigator();
+
+const BottomTabs = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        headerTintColor: '#00094a',
+        tabBarActiveTintColor: '#00094a',
+      }}
+    >
+      <Tab.Screen {...webScreens.screens.WebviewInitial} />
+      <Tab.Screen
+        name={Routes.NestedTabNative}
+        component={NativeScreen}
+        options={{ title: 'Native Tab' }}
+      />
+    </Tab.Navigator>
+  );
+};
 
 const App: React.FC = () => {
   const navigation = useNavigationContainerRef<any>();
@@ -38,7 +56,11 @@ const App: React.FC = () => {
             headerTintColor: '#00094a',
           }}
         >
-          <Stack.Screen {...webScreens.screens.WebviewInitial} />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name={Routes.BottomTabs}
+            component={BottomTabs}
+          />
           <Stack.Screen
             name={Routes.NumbersScreen}
             component={NativeScreen}

@@ -1,6 +1,7 @@
 import { buildWebScreen, WebScreenRuleConfig } from 'react-native-web-screen';
 
 export enum Routes {
+  BottomTabs = 'BottomTabs',
   NotFound = 'NotFound',
   NumbersScreen = 'NumbersScreen',
   WebviewInitial = 'WebviewInitial',
@@ -17,9 +18,13 @@ export enum Routes {
 const webScreenConfig: WebScreenRuleConfig = {
   baseURL: 'http://localhost:45678/',
   routes: {
-    [Routes.WebviewInitial]: {
-      urlPattern: '',
-      title: 'React Native Web Screen',
+    [Routes.BottomTabs]: {
+      routes: {
+        [Routes.WebviewInitial]: {
+          urlPattern: '',
+          title: 'React Native Web Screen',
+        },
+      },
     },
     [Routes.New]: {
       urlPattern: 'new',

@@ -18,7 +18,6 @@ const WebScreen: React.FC<Props> = ({ navigation, route, baseURL }) => {
   const onVisitProposal = ({
     nativeEvent: { action: actionType, url },
   }: NativeSyntheticEvent<VisitProposal>) => {
-    console.warn({ currentUrl, url, actionType });
     navigateTo(url, actionType);
   };
 
