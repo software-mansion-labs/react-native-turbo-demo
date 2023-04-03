@@ -34,11 +34,6 @@ const webScreenConfig: WebScreenRuleConfig = {
     [Routes.NumbersScreen]: {
       urlPattern: 'numbers',
     },
-    [Routes.SignIn]: {
-      urlPattern: 'signin',
-      title: 'Sign In',
-      presentation: 'modal',
-    },
     [Routes.NestedTab]: {
       routes: {
         [Routes.NestedTabWeb]: {

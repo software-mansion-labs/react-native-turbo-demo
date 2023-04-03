@@ -10,7 +10,7 @@
     "server": "yarn --cwd server"
   },
   "dependencies": {
-    "@react-navigation/bottom-tabs": "^6.3.1",
+    "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/material-top-tabs": "^6.6.0",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.6.2",

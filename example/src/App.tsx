@@ -9,6 +9,9 @@ import ErrorScreen from './ErrorScreen';
 import { OnErrorCallback, Session, withSession } from 'react-native-turbo';
 import { Routes, webScreens } from 'example/src/webScreen';
 import NestedTab from 'example/src/NestedTab';
+// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+// const Tab = createBottomTabNavigator();
 
 const Stack = createNativeStackNavigator();
 
@@ -43,7 +46,6 @@ const App: React.FC = () => {
           />
           <Stack.Screen {...webScreens.screens.New} />
           <Stack.Screen {...webScreens.screens.SuccessScreen} />
-          <Stack.Screen {...webScreens.screens.SignIn} />
           <Stack.Screen {...webScreens.screens.Fallback} />
           <Stack.Screen
             name={Routes.NotFound}

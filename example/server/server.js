@@ -178,7 +178,7 @@ app.post('/signin', upload.none(), (request, response) => {
     expires: expiration,
     httpOnly: true,
   });
-  response.redirect('/');
+  response.redirect('/signin');
 });
 
 app.post('/signout', (request, response) => {
