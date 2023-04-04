@@ -75,7 +75,7 @@ app.get('/', (request, response) => {
       page_class: 'index',
     });
   } else {
-    response.redirect('/signin');
+    response.status(401).send('Logged out...');
   }
 });
 
@@ -178,7 +178,7 @@ app.post('/signin', upload.none(), (request, response) => {
     expires: expiration,
     httpOnly: true,
   });
-  response.redirect('/signin');
+  response.redirect('/');
 });
 
 app.post('/signout', (request, response) => {

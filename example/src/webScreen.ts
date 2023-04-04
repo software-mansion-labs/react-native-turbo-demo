@@ -13,6 +13,7 @@ export enum Routes {
   NestedTabNative = 'NestedTabNative',
   NestedTabWeb = 'NestedTabWeb',
   NestedTab = 'NestedTab',
+  One = 'One',
 }
 
 const webScreenConfig: WebScreenRuleConfig = {
@@ -36,8 +37,16 @@ const webScreenConfig: WebScreenRuleConfig = {
       title: 'It Worked!',
       presentation: 'modal',
     },
+    [Routes.One]: {
+      urlPattern: 'one',
+      title: "How'd You Get Here?",
+    },
     [Routes.NumbersScreen]: {
       urlPattern: 'numbers',
+    },
+    [Routes.SignIn]: {
+      urlPattern: 'signin',
+      presentation: 'modal',
     },
     [Routes.NestedTab]: {
       routes: {

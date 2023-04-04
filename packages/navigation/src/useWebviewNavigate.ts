@@ -6,7 +6,7 @@ import {
 import * as React from 'react';
 import LinkingContext from '@react-navigation/native/src/LinkingContext';
 import extractPathFromURL from '@react-navigation/native/src/extractPathFromURL';
-import { StackActions, CommonActions } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 import type {
   NavigationState,
   NavigatorScreenParams,
@@ -84,7 +84,7 @@ export default function useWebviewNavigate<
           const actionToDispatch =
             actionType === 'replace'
               ? CommonActions.setParams({ path })
-              : StackActions.push(action.payload.name, {
+              : CommonActions.navigate(action.payload.name, {
                   ...action.payload.params,
                 });
 

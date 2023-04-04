@@ -38,9 +38,9 @@ const App: React.FC = () => {
 
   const handleVisitError = useCallback<OnErrorCallback>(
     (error) => {
+      console.warn('error', error);
       const notLoggedIn = error.statusCode === 401;
       if (notLoggedIn) {
-        navigation.goBack();
         navigation.navigate(Routes.SignIn, { path: 'signin' });
       }
     },
@@ -68,7 +68,15 @@ const App: React.FC = () => {
           />
           <Stack.Screen {...webScreens.screens.New} />
           <Stack.Screen {...webScreens.screens.SuccessScreen} />
+          <Stack.Screen {...webScreens.screens.One} />
           <Stack.Screen {...webScreens.screens.Fallback} />
+          <Stack.Screen
+            {...webScreens.screens.SignIn}
+            options={{
+              presentation: 'formSheet',
+              gestureEnabled: 'false',
+            }}
+          />
           <Stack.Screen
             name={Routes.NotFound}
             component={ErrorScreen}
