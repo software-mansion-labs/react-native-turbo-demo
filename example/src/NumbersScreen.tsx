@@ -14,6 +14,11 @@ const styles = StyleSheet.create({
   text: {
     color: '#00094a',
   },
+  header: {
+    padding: 16,
+    color: '#00094a',
+    fontWeight: '500',
+  },
 });
 
 interface Props {}
@@ -21,10 +26,15 @@ interface Props {}
 const NumbersScreen: React.FC<Props> = () => {
   const renderSeparator = () => <View style={styles.separator} />;
 
+  const headerComponent = () => (
+    <Text style={styles.header}>This is a React Native component</Text>
+  );
+
   return (
     <FlatList
       data={new Array(100)}
       ItemSeparatorComponent={renderSeparator}
+      ListHeaderComponent={headerComponent}
       renderItem={({ index }) => (
         <View style={styles.row}>
           <Text style={styles.text}>Row {index}</Text>

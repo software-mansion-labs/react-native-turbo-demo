@@ -38,7 +38,6 @@ const App: React.FC = () => {
 
   const handleVisitError = useCallback<OnErrorCallback>(
     (error) => {
-      console.warn('error', error);
       const notLoggedIn = error.statusCode === 401;
       if (notLoggedIn) {
         navigation.navigate(Routes.SignIn, { path: 'signin' });
