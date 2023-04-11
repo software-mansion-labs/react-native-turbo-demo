@@ -68,10 +68,15 @@ app.use((request, response, next) => {
 // Routes
 
 app.get('/', (request, response) => {
-  response.render('index', {
-    title: 'React Native Web Screen',
-    page_class: 'index',
-  });
+  const isLoggedIn = response.locals.authenticated;
+  if (isLoggedIn) {
+    response.render('index', {
+      title: 'React Native Web Screen',
+      page_class: 'index',
+    });
+  } else {
+    response.status(401).send('Logged out...');
+  }
 });
 
 app.get('/one', (request, response) => {

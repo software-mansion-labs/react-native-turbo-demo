@@ -4,80 +4,30 @@ import {
   useNavigationContainerRef,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { buildWebScreen, WebScreenRuleConfig } from 'react-native-web-screen';
 import { default as NativeScreen } from './NumbersScreen';
 import ErrorScreen from './ErrorScreen';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { OnErrorCallback, Session, withSession } from 'react-native-turbo';
+import { Routes, webScreens } from 'example/src/webScreen';
+import NestedTab from 'example/src/NestedTab';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+const Tab = createBottomTabNavigator();
 
 const Stack = createNativeStackNavigator();
-const Tab = createMaterialTopTabNavigator();
 
-enum Routes {
-  NotFound = 'NotFound',
-  NumbersScreen = 'NumbersScreen',
-  WebviewInitial = 'WebviewInitial',
-  New = 'New',
-  SuccessScreen = 'SuccessScreen',
-  NonExistentScreen = 'NonExistentScreen',
-  SignIn = 'SignIn',
-  Fallback = 'Fallback',
-  NestedTabNative = 'NestedTabNative',
-  NestedTabWeb = 'NestedTabWeb',
-  NestedTab = 'NestedTab',
-}
-
-const webScreenConfig: WebScreenRuleConfig = {
-  baseURL: 'http://localhost:45678/',
-  routes: {
-    [Routes.WebviewInitial]: {
-      urlPattern: '',
-      title: 'React Native Web Screen',
-    },
-    [Routes.New]: {
-      urlPattern: 'new',
-      title: 'A Modal Webpage',
-      presentation: 'modal',
-    },
-    [Routes.SuccessScreen]: {
-      urlPattern: 'success',
-      title: 'It Worked!',
-      presentation: 'modal',
-    },
-    [Routes.NumbersScreen]: {
-      urlPattern: 'numbers',
-    },
-    [Routes.SignIn]: {
-      urlPattern: 'signin',
-      title: 'Sign In',
-      presentation: 'modal',
-    },
-    [Routes.NestedTab]: {
-      routes: {
-        [Routes.NestedTabWeb]: {
-          urlPattern: 'nested',
-          title: 'Nested Web',
-        },
-      },
-    },
-    [Routes.Fallback]: { urlPattern: '*', title: '' },
-  },
-};
-
-const webScreens = buildWebScreen(webScreenConfig);
-
-const NestedTab: React.FC = () => {
+const BottomTabs = () => {
   return (
     <Tab.Navigator
       screenOptions={{
+        headerTintColor: '#00094a',
         tabBarActiveTintColor: '#00094a',
       }}
     >
-      <Tab.Screen {...webScreens.screens.NestedTabWeb} />
+      <Tab.Screen {...webScreens.screens.WebviewInitial} />
       <Tab.Screen
         name={Routes.NestedTabNative}
         component={NativeScreen}
-        options={{ title: 'Nested Native' }}
+        options={{ title: 'Native Tab' }}
       />
     </Tab.Navigator>
   );
@@ -90,7 +40,6 @@ const App: React.FC = () => {
     (error) => {
       const notLoggedIn = error.statusCode === 401;
       if (notLoggedIn) {
-        navigation.goBack();
         navigation.navigate(Routes.SignIn, { path: 'signin' });
       }
     },
@@ -106,7 +55,11 @@ const App: React.FC = () => {
             headerTintColor: '#00094a',
           }}
         >
-          <Stack.Screen {...webScreens.screens.WebviewInitial} />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name={Routes.BottomTabs}
+            component={BottomTabs}
+          />
           <Stack.Screen
             name={Routes.NumbersScreen}
             component={NativeScreen}
@@ -114,8 +67,15 @@ const App: React.FC = () => {
           />
           <Stack.Screen {...webScreens.screens.New} />
           <Stack.Screen {...webScreens.screens.SuccessScreen} />
-          <Stack.Screen {...webScreens.screens.SignIn} />
+          <Stack.Screen {...webScreens.screens.One} />
           <Stack.Screen {...webScreens.screens.Fallback} />
+          <Stack.Screen
+            {...webScreens.screens.SignIn}
+            options={{
+              presentation: 'formSheet',
+              gestureEnabled: 'false',
+            }}
+          />
           <Stack.Screen
             name={Routes.NotFound}
             component={ErrorScreen}
