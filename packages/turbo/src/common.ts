@@ -1,7 +1,7 @@
 import type { SessionMessageCallback } from 'packages/turbo/src/types';
 import type { EmitterSubscription } from 'react-native';
 import {
-  DeviceEventEmitter,
+  NativeEventEmitter,
   Platform,
   requireNativeComponent,
   UIManager,
@@ -17,6 +17,8 @@ const LINKING_ERROR =
 export enum SessionEvents {
   MESSAGE = 'MESSAGE',
 }
+
+const eventEmitter = new NativeEventEmitter(NativeModules.RNSessionModule);
 
 export function getNativeComponent<T>(componentName: string) {
   return UIManager.getViewManagerConfig(componentName) != null
@@ -44,5 +46,5 @@ export function registerMessageEventListener(
   onMessage: SessionMessageCallback
 ): EmitterSubscription {
   const eventName = `sessionMessage${sessionHandle}`;
-  return DeviceEventEmitter.addListener(eventName, onMessage);
+  return eventEmitter.addListener(eventName, onMessage);
 }
