@@ -6,7 +6,12 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { default as NativeScreen } from './NumbersScreen';
 import ErrorScreen from './ErrorScreen';
-import { OnErrorCallback, Session, withSession } from 'react-native-turbo';
+import {
+  SessionMessageCallback,
+  OnErrorCallback,
+  Session,
+  withSession,
+} from 'react-native-turbo';
 import { Routes, webScreens } from 'example/src/webScreen';
 import NestedTab from 'example/src/NestedTab';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -46,8 +51,13 @@ const App: React.FC = () => {
     [navigation]
   );
 
+  const onMessageHandler = useCallback<SessionMessageCallback>(
+    (message) => console.log(message),
+    []
+  );
+
   return (
-    <Session onVisitError={handleVisitError}>
+    <Session onMessage={onMessageHandler} onVisitError={handleVisitError}>
       <NavigationContainer linking={webScreens.linking} ref={navigation}>
         <Stack.Navigator
           screenOptions={{
