@@ -24,6 +24,14 @@ class RNSessionModule(private val reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
+  fun setConfiguration(sessionHandle: String, promise: Promise) {
+    if(!sessions.containsKey(sessionHandle)) {
+      sessions[sessionHandle] = lazy { RNSession(reactContext, sessionHandle) }
+    }
+    promise.resolve(sessionHandle)
+  }
+
+  @ReactMethod
   fun registerSession(promise: Promise) {
     var sessionHandle = UUID.randomUUID().toString()
     sessions[sessionHandle] = lazy { RNSession(reactContext, sessionHandle) }
