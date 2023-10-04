@@ -1,7 +1,8 @@
 import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { Routes, webScreens } from 'example/src/webScreen';
+import { webScreens } from 'example/src/webScreen';
 import { NativeScreen } from 'react-native-screens';
+import { Routes } from 'example/src/webScreenRoutes';
 
 const Tab = createMaterialTopTabNavigator();
 

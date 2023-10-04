@@ -1,22 +1,8 @@
 import { buildWebScreen, WebScreenRuleConfig } from 'react-native-web-screen';
+import WebView from './WebView';
+import { Routes } from './webScreenRoutes';
 
-export enum Routes {
-  BottomTabs = 'BottomTabs',
-  NotFound = 'NotFound',
-  NumbersScreen = 'NumbersScreen',
-  WebviewInitial = 'WebviewInitial',
-  New = 'New',
-  SuccessScreen = 'SuccessScreen',
-  NonExistentScreen = 'NonExistentScreen',
-  SignIn = 'SignIn',
-  Fallback = 'Fallback',
-  NestedTabNative = 'NestedTabNative',
-  NestedTabWeb = 'NestedTabWeb',
-  NestedTab = 'NestedTab',
-  One = 'One',
-}
-
-const webScreenConfig: WebScreenRuleConfig = {
+export const webScreenConfig: WebScreenRuleConfig = {
   baseURL: 'http://localhost:45678/',
   routes: {
     [Routes.BottomTabs]: {
@@ -48,6 +34,9 @@ const webScreenConfig: WebScreenRuleConfig = {
       urlPattern: 'signin',
       presentation: 'modal',
     },
+    [Routes.Share]: {
+      urlPattern: 'share',
+    },
     [Routes.NestedTab]: {
       routes: {
         [Routes.NestedTabWeb]: {
@@ -58,6 +47,7 @@ const webScreenConfig: WebScreenRuleConfig = {
     },
     [Routes.Fallback]: { urlPattern: '*', title: '' },
   },
+  webScreenComponent: WebView,
 };
 
 export const webScreens = buildWebScreen(webScreenConfig);
