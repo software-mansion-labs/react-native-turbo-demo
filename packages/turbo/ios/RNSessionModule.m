@@ -9,6 +9,11 @@
 
 @interface RCT_EXTERN_MODULE(RNSessionModule, NSObject)
 
+  RCT_EXTERN_METHOD(setConfiguration: (nonnull NSString) sessionHandle
+                    resolver: (RCTPromiseResolveBlock) resolve
+                    rejecter: (RCTPromiseRejectBlock) reject)
+
+
   RCT_EXTERN_METHOD(registerSession: (RCTPromiseResolveBlock) resolve
                     rejecter: (RCTPromiseRejectBlock) reject)
 

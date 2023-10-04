@@ -17,6 +17,18 @@ class RNSessionModule: RCTEventEmitter {
   
   @objc
   private var defaultSession = RNSession()
+    
+  @objc
+  public func setConfiguration(
+    _ sessionHandle: NSString,
+    resolver resolve: @escaping RCTPromiseResolveBlock,
+    rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
+      if(sessions[sessionHandle] == nil){
+        sessions[sessionHandle] = RNSession(eventEmitter: self, sessionHandle: sessionHandle)
+        supportedEventNames.append("sessionMessage" + (sessionHandle as String))
+      }
+      resolve(sessionHandle)
+  }
   
   @objc
   public func registerSession(
