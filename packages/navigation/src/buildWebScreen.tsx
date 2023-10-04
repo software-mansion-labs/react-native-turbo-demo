@@ -10,16 +10,24 @@ export interface WebScreenRule {
 }
 
 export type WebScreenRuleMap = {
-  [key: string]: WebScreenRule | Omit<WebScreenRuleConfig, 'baseURL'>;
+  [key: string]:
+    | WebScreenRule
+    | Omit<WebScreenRuleConfig, 'baseURL' | 'webScreenComponent'>;
 };
 
 export type WebScreenRuleConfig = {
   baseURL: string;
   routes: WebScreenRuleMap;
+  webScreenComponent?: React.ElementType;
 };
 
-const buildWebviewComponent = (baseURL: string) => (navProps: any) =>
-  <WebScreen {...navProps} baseURL={baseURL} />;
+const buildWebviewComponent =
+  (baseURL: string, Component?: React.ElementType) => (navProps: any) =>
+    Component ? (
+      <Component {...navProps} baseURL={baseURL} />
+    ) : (
+      <WebScreen {...navProps} baseURL={baseURL} />
+    );
 
 const isRule = (obj: unknown): obj is WebScreenRule => {
   if (obj !== null && typeof obj === 'object') {
@@ -81,8 +89,12 @@ const getLinkingAndScreens = (
   );
 };
 
-export const buildWebScreen = ({ routes, baseURL }: WebScreenRuleConfig) => {
-  const nativeComponent = buildWebviewComponent(baseURL);
+export const buildWebScreen = ({
+  routes,
+  baseURL,
+  webScreenComponent,
+}: WebScreenRuleConfig) => {
+  const nativeComponent = buildWebviewComponent(baseURL, webScreenComponent);
 
   const { linking, screens } = getLinkingAndScreens(routes, nativeComponent);
   getLinkingAndScreens;
