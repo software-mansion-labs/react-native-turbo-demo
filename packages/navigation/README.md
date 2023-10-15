@@ -99,9 +99,29 @@ https://user-images.githubusercontent.com/25584895/225870138-b034f335-a30f-4e25-
 
 ## Advanced usage
 
-This library under the hood uses [react-native-turbo](../turbo/README.md). You can use React Navigation support (described here) or standalone React `VisitableView.tsx` component for more advanced cases.
+This library under the hood uses [react-native-turbo](../turbo/README.md). You can use React Navigation support (described here) or standalone React `VisitableView.tsx` component for more advanced cases. You can also define your own `WebScreen` component.
 
 Check out [react-native-turbo](../turbo/README.md) for more info.
+
+### Using custom WebScreen component
+
+You can use your custom `WebScreen` component by passing it to the `buildWebScreen` config. This can be useful if you want to define custom logic for each screen.
+
+```tsx
+import { WebView } from 'react-native-webview';
+
+const webScreens = buildWebScreen(webScreenConfig, {
+  webScreenComponent: WebScreen,
+});
+```
+
+To obtain `url` for current screen, use this code in the custom component:
+
+```tsx
+const path = route?.params?.path || route?.path;
+const baseURL = route?.params?.baseURL || props?.baseURL;
+const currentUrl = path ? `${baseURL}${path}` : baseURL;
+```
 
 ## Contributing
 
