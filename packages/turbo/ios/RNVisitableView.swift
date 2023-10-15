@@ -74,7 +74,13 @@ class RNVisitableView: UIView, SessionSubscriber {
   func attachDelegateAndVisit(_ visitable: Visitable) {
     let session = getSession()
     session?.delegate = self
-    session?.visit(visitable)
+    // Upon initial load, the session.visit function is called
+    // to set the currentVisit private variable.
+    if(session?.webView.url == nil){
+      session?.visit(visitable)
+      return
+    }
+    session?.visitableViewWillAppear(visitable)
   }
 }
 
