@@ -9,10 +9,12 @@ interface Props {
   baseURL: string;
 }
 
-const WebScreen: React.FC<Props> = ({ navigation, route, baseURL }) => {
+const WebScreen: React.FC<Props> = (props) => {
+  const { navigation, route } = props;
   const navigateTo = useWebviewNavigate();
 
   const path = route?.params?.path || route?.path;
+  const baseURL = route?.params?.baseURL || props?.baseURL;
   const currentUrl = path ? `${baseURL}${path}` : baseURL;
 
   const onVisitProposal = ({

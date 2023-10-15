@@ -37,6 +37,7 @@ const isRule = (obj: unknown): obj is WebScreenRule => {
 };
 
 const getLinkingAndScreens = (
+  baseURL: string,
   routes: WebScreenRuleMap,
   component: (navProps: any) => JSX.Element
 ): {
@@ -60,6 +61,7 @@ const getLinkingAndScreens = (
             [routeName]: {
               name: routeName,
               component,
+              initialParams: { baseURL, path: urlPattern },
               options: { ...options },
             },
           },
@@ -71,6 +73,7 @@ const getLinkingAndScreens = (
         const { routes: nestedRoutes } = route;
 
         const { screens, linking } = getLinkingAndScreens(
+          baseURL,
           nestedRoutes,
           component
         );
@@ -96,8 +99,12 @@ export const buildWebScreen = ({
 }: WebScreenRuleConfig) => {
   const nativeComponent = buildWebviewComponent(baseURL, webScreenComponent);
 
-  const { linking, screens } = getLinkingAndScreens(routes, nativeComponent);
-  getLinkingAndScreens;
+  const { linking, screens } = getLinkingAndScreens(
+    baseURL,
+    routes,
+    nativeComponent
+  );
+
   return {
     linking: {
       prefixes: [baseURL],
