@@ -196,6 +196,14 @@ class RNVisitableView(context: Context, sessionModule: RNSessionModule) : Linear
       return
     }
 
+    // Sometimes detachWebView is not called before attachWebView.
+    // This can happen when the user uses one session for different
+    // bottom tabs. In this case, we need to remove the webview from
+    // the parent before attaching it to the new one.
+    if(webView.parent != null){
+      (webView.parent as ViewGroup).removeView(webView)
+    }
+
     view.attachWebView(webView) { attachedToNewDestination ->
       onReady(attachedToNewDestination)
     }

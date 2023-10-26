@@ -46,4 +46,10 @@ class RNVisitableViewManager(
       sessionModule = reactContext.getNativeModule(RNSessionModule::class.java)!!
     )
 
+  override fun onDropViewInstance(view: RNVisitableView) {
+    view.detachWebView {
+      super.onDropViewInstance(view)
+    }
+  }
+
 }
