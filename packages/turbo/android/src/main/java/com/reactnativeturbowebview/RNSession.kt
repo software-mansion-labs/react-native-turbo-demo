@@ -27,6 +27,8 @@ class RNSession(
     webView.getSettings().setJavaScriptEnabled(true)
     webView.addJavascriptInterface(JavaScriptInterface(), "AndroidInterface")
     val session = TurboSession(sessionName, activity, webView)
+    // Override default web chrome client to handle file uploads
+    webView.webChromeClient = RNWebChromeClient(reactContext)
     session.isRunningInAndroidNavigation = false
     session
   }
