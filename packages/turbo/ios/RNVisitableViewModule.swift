@@ -1,5 +1,5 @@
 //
-//  RNSessionModule.swift
+//  RNVisitableViewModule.swift
 //  HotwireRNDemo
 //
 //  Created by Bartłomiej Fryz on 25/08/2022.
@@ -7,8 +7,8 @@
 
 import Foundation
 
-@objc(RNSessionModule)
-class RNSessionModule: RCTEventEmitter {
+@objc(RNVisitableViewModule)
+class RNVisitableViewModule: RCTEventEmitter {
   
   @objc
   private var sessions: [NSString: RNSession] = [:]

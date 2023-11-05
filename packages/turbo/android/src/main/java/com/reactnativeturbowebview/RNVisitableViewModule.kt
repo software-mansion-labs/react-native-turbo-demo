@@ -8,10 +8,10 @@ import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.module.annotations.ReactModule
 import java.util.*
 
-private const val MODULE_NAME = "RNSessionModule"
+private const val MODULE_NAME = "RNVisitableViewModule"
 
 @ReactModule(name = MODULE_NAME)
-class RNSessionModule(private val reactContext: ReactApplicationContext) :
+class RNVisitableViewModule(private val reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
 
   override fun getName() = MODULE_NAME

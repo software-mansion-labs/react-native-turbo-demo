@@ -25,7 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class RNVisitableView(context: Context, sessionModule: RNSessionModule) : LinearLayout(context),
+class RNVisitableView(context: Context, sessionModule: RNVisitableViewModule) : LinearLayout(context),
   SessionCallbackAdapter,
   SessionSubscriber {
 

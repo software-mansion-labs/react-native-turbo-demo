@@ -18,13 +18,15 @@ import type {
   OnErrorCallback,
   OnLoadEvent,
   SessionMessageCallback,
-  SessionModule,
+  VisitableViewModule,
   VisitProposal,
   VisitProposalError,
 } from './types';
 
 const RNVisitableView = getNativeComponent<any>('RNVisitableView');
-const RNSessionModule = getNativeModule<SessionModule>('RNSessionModule');
+const RNVisitableViewModule = getNativeModule<VisitableViewModule>(
+  'RNVisitableViewModule'
+);
 
 export interface Props {
   url: string;
@@ -47,7 +49,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
 
     useEffect(() => {
       const setSessionConfiguration = async () => {
-        await RNSessionModule.setConfiguration(resolvedSessionHandle);
+        await RNVisitableViewModule.setConfiguration(resolvedSessionHandle);
       };
       setSessionConfiguration();
     }, [resolvedSessionHandle]);
@@ -56,7 +58,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       ref,
       () => ({
         injectJavaScript: (callbackStringified) => {
-          RNSessionModule.injectJavaScript(
+          RNVisitableViewModule.injectJavaScript(
             resolvedSessionHandle,
             callbackStringified
           );
