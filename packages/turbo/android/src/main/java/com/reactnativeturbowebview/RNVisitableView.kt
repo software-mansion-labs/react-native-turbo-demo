@@ -200,6 +200,10 @@ class RNVisitableView(context: Context, sessionModule: RNSessionModule) : Linear
     }
   }
 
+  /*
+   * Fixes a bug in React Native, causing improper layout of the TurboView and its children.
+   * Refer to https://github.com/facebook/react-native/issues/17968 for the detailed issue discussion and context.
+   */
   override fun requestLayout() {
     super.requestLayout()
     post(measureAndLayout)
