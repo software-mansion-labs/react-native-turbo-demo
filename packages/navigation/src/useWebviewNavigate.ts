@@ -37,6 +37,19 @@ type To<
           params: ParamList[RouteName];
         });
 
+const parseQueryStringFromPath = (path: string) => {
+  let pathWithoutQueryString = path;
+  let queryString = '';
+  const queryStringIndex = path.indexOf('?');
+
+  if (queryStringIndex !== -1) {
+    pathWithoutQueryString = path.slice(0, queryStringIndex);
+    queryString = path.slice(queryStringIndex + 1);
+  }
+
+  return { pathWithoutQueryString, queryString };
+};
+
 /*
  * Its like useLinkTo with some custom tweaks
  */
@@ -68,15 +81,8 @@ export default function useWebviewNavigate<
 
       /* We need to send the path name as screen param
       to the screen this way cause it works also for nested navigators */
-      const queryStringIndex = path.indexOf('?');
-      let pathWithoutQueryString, queryString;
-      if (queryStringIndex !== -1) {
-        pathWithoutQueryString = path.slice(0, queryStringIndex);
-        queryString = path.slice(queryStringIndex + 1);
-      } else {
-        pathWithoutQueryString = path;
-        queryString = '';
-      }
+      const { pathWithoutQueryString, queryString } =
+        parseQueryStringFromPath(path);
       const pathWithScreenParams = `${pathWithoutQueryString}?${queryString}&path=${pathWithoutQueryString}`;
 
       const state = options?.getStateFromPath
