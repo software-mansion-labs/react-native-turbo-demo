@@ -11,9 +11,17 @@ import WebKit
 
 class RNSession: NSObject {
   
-  @objc var onMessage: RCTDirectEventBlock?
   private var registeredVisitableViews: [SessionSubscriber] = []
-  
+  private var eventEmitter: RCTEventEmitter? = nil
+  private var sessionHandle: NSString = "defaultHandle"
+    
+  override init() { }
+    
+  init(eventEmitter: RCTEventEmitter, sessionHandle: NSString){
+    self.eventEmitter = eventEmitter
+    self.sessionHandle = sessionHandle
+  }
+    
   public lazy var turboSession: Session = {
     let configuration = WKWebViewConfiguration()
     configuration.userContentController.add(self, name: "nativeApp")
@@ -49,8 +57,7 @@ class RNSession: NSObject {
 extension RNSession: WKScriptMessageHandler {
   
   func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-    onMessage?(["message": message.body])
+    eventEmitter?.sendEvent(withName: "sessionMessage" + (sessionHandle as String), body: ["message": message.body])
   }
   
 }
-

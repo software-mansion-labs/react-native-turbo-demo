@@ -4,8 +4,12 @@
       method: 'share',
       shareText: 'Hello from the webview 👋',
     };
-    AndroidInterface.postMessage(JSON.stringify({ message }));
-    webkit.messageHandlers.nativeApp.postMessage(message);
+    if (typeof AndroidInterface !== 'undefined') {
+      AndroidInterface.postMessage(JSON.stringify({ message }));
+    }
+    if (typeof webkit !== 'undefined') {
+      webkit.messageHandlers.nativeApp.postMessage(message);
+    }
   }
 
   function shared() {

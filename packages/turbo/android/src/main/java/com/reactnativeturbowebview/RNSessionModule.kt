@@ -53,4 +53,11 @@ class RNSessionModule(private val reactContext: ReactApplicationContext) :
       }
     }
   }
+
+  // Required methods for NativeEventEmitter calls
+  @ReactMethod
+  fun addListener(type: String?) { }
+
+  @ReactMethod
+  fun removeListeners(type: Int?) { }
 }

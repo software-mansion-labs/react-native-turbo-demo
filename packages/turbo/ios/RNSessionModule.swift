@@ -12,6 +12,8 @@ class RNSessionModule: RCTEventEmitter {
   
   @objc
   private var sessions: [NSString: RNSession] = [:]
+    
+  @objc var supportedEventNames: [String] = []
   
   @objc
   private var defaultSession = RNSession()
@@ -21,7 +23,8 @@ class RNSessionModule: RCTEventEmitter {
     _ resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
       let sessionHandle = UUID().uuidString as NSString
-      sessions[sessionHandle] = RNSession()
+      supportedEventNames.append("sessionMessage" + (sessionHandle as String))
+      sessions[sessionHandle] = RNSession(eventEmitter: self, sessionHandle: sessionHandle)
       resolve(sessionHandle)
   }
   
@@ -30,6 +33,9 @@ class RNSessionModule: RCTEventEmitter {
     _ sessionHandle: NSString,
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
+      if let index = supportedEventNames.firstIndex(of: "sessionMessage" + (sessionHandle as String)) {
+        supportedEventNames.remove(at: index)
+      }
       sessions[sessionHandle] = nil
   }
   
@@ -66,7 +72,7 @@ class RNSessionModule: RCTEventEmitter {
   }
   
   override func supportedEvents() -> [String]! {
-    return []
+    return supportedEventNames
   }
   
   override static func requiresMainQueueSetup() -> Bool {
