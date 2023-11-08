@@ -27,6 +27,7 @@ class RNSession(
     val sessionName = UUID.randomUUID().toString()
     webView.getSettings().setJavaScriptEnabled(true)
     webView.addJavascriptInterface(JavaScriptInterface(), "AndroidInterface")
+    webView.addJavascriptInterface(StradaJavaScriptInterface(), "StradaNative")
     setUserAgentString(webView, applicationNameForUserAgent)
     val session = TurboSession(sessionName, activity, webView)
     webView.webChromeClient = RNWebChromeClient(reactContext)
@@ -37,9 +38,7 @@ class RNSession(
   /**
    * Sends message from web view js runtime to the RN runtime
    */
-  fun sendMessage(params: WritableMap) {
-    val eventName = "sessionMessage${sessionHandle}"
-    Log.d("RNSession", "$eventName")
+  fun sendMessage(eventName: String, params: WritableMap) {
     reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
       .emit(eventName, params)
   }
@@ -87,7 +86,17 @@ class RNSession(
       // Android interface works only with primitive types, that's why we need to use JSON
       val messageObj =
         Utils.convertJsonToBundle(JSONObject(messageStr)) // TODO remove double conversion
-      sendMessage(Arguments.fromBundle(messageObj))
+      sendMessage("sessionMessage${sessionHandle}", Arguments.fromBundle(messageObj))
+    }
+  }
+
+  inner class StradaJavaScriptInterface {
+    @JavascriptInterface
+    fun postMessage(messageStr: String) {
+      val messageJSONObj = JSONObject(messageStr)
+      val messageObj = Utils.convertJsonToBundle(messageJSONObj)
+      val eventName = messageJSONObj.getString("component")
+      sendMessage(eventName, Arguments.fromBundle(messageObj))
     }
   }
 }

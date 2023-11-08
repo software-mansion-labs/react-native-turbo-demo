@@ -29,6 +29,8 @@ export interface VisitableViewModule {
     sessionHandle: string | null,
     callbackStringified: string
   ) => Promise<unknown>;
+  registerEvent: (eventName: string) => void;
+  unregisterEvent: (eventName: string) => void;
 }
 
 export type OnErrorCallback = (error: VisitProposalError) => void;

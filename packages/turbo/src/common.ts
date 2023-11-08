@@ -44,9 +44,8 @@ export function getNativeModule<T>(moduleName: string): T {
 }
 
 export function registerMessageEventListener(
-  sessionHandle: string,
+  eventName: string,
   onMessage: SessionMessageCallback
 ): EmitterSubscription {
-  const eventName = `sessionMessage${sessionHandle}`;
   return eventEmitter.addListener(eventName, onMessage);
 }

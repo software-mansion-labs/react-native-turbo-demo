@@ -26,7 +26,7 @@ class RNVisitableViewModule: RCTEventEmitter {
     rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
       if(sessions[sessionHandle] == nil){
         sessions[sessionHandle] = RNSession(eventEmitter: self, sessionHandle: sessionHandle, applicationNameForUserAgent: applicationNameForUserAgent)
-        supportedEventNames.append("sessionMessage" + (sessionHandle as String))
+        registerEvent("sessionMessage\(sessionHandle)" as NSString)
       }
       resolve(sessionHandle)
   }
@@ -36,7 +36,7 @@ class RNVisitableViewModule: RCTEventEmitter {
     _ resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
       let sessionHandle = UUID().uuidString as NSString
-      supportedEventNames.append("sessionMessage" + (sessionHandle as String))
+      registerEvent("sessionMessage\(sessionHandle)" as NSString)
       sessions[sessionHandle] = RNSession(eventEmitter: self, sessionHandle: sessionHandle)
       resolve(sessionHandle)
   }
@@ -46,9 +46,7 @@ class RNVisitableViewModule: RCTEventEmitter {
     _ sessionHandle: NSString,
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
-      if let index = supportedEventNames.firstIndex(of: "sessionMessage" + (sessionHandle as String)) {
-        supportedEventNames.remove(at: index)
-      }
+      unregisterEvent("sessionMessage\(sessionHandle)" as NSString)
       sessions[sessionHandle] = nil
   }
   
@@ -83,7 +81,21 @@ class RNVisitableViewModule: RCTEventEmitter {
       })
     }
   }
-  
+
+  @objc
+  public func registerEvent(_ eventName: NSString){
+    if (supportedEventNames.firstIndex(of: eventName as String) == nil){
+      supportedEventNames.append(eventName as String)
+    }
+  }
+
+  @objc
+  public func unregisterEvent(_ eventName: NSString){
+    if let index = supportedEventNames.firstIndex(of: eventName as String) {
+      supportedEventNames.remove(at: index)
+    }
+  }
+
   override func supportedEvents() -> [String]! {
     return supportedEventNames
   }

@@ -29,4 +29,11 @@
                     resolver: (RCTPromiseResolveBlock) resolve
                     rejecter: (RCTPromiseRejectBlock) reject)
 
+  
+  RCT_EXTERN_METHOD(registerEvent: (nonnull NSString) eventName)
+
+
+  RCT_EXTERN_METHOD(unregisterEvent: (nonnull NSString) eventName)
+                    
+
 @end

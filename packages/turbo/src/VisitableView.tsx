@@ -79,7 +79,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       if (onMessage) {
         messageHandlerEventSubscription.current?.remove();
         messageHandlerEventSubscription.current = registerMessageEventListener(
-          sessionHandle,
+          `sessionMessage${sessionHandle}`,
           onMessage
         );
       }
