@@ -21,7 +21,9 @@ import type {
   VisitableViewModule,
   VisitProposal,
   VisitProposalError,
+  StradaComponent,
 } from './types';
+import { useStradaBridge } from './stradaBridge';
 
 const RNVisitableView = getNativeComponent<any>('RNVisitableView');
 const RNVisitableViewModule = getNativeModule<VisitableViewModule>(
@@ -32,6 +34,7 @@ export interface Props {
   url: string;
   sessionHandle?: string;
   applicationNameForUserAgent?: string;
+  stradaComponents?: StradaComponent[];
   onVisitProposal: (proposal: NativeSyntheticEvent<VisitProposal>) => void;
   onLoad?: (proposal: NativeSyntheticEvent<OnLoadEvent>) => void;
   onVisitError?: OnErrorCallback;
@@ -45,22 +48,30 @@ export interface RefObject {
 const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
   (props, ref) => {
     const {
+      url,
       sessionHandle = 'Default',
       applicationNameForUserAgent,
       onMessage,
+      stradaComponents,
       onVisitError: viewErrorHandler,
+      onLoad,
     } = props;
     const messageHandlerEventSubscription = useRef<EmitterSubscription>();
+    const { initializeStradaBridge, stradaUserAgent } = useStradaBridge(
+      sessionHandle,
+      stradaComponents
+    );
+    const resolvedApplicationNameForUserAgent = `${applicationNameForUserAgent} ${stradaUserAgent}`;
 
     useEffect(() => {
       const setSessionConfiguration = async () => {
         await RNVisitableViewModule.setConfiguration(
           sessionHandle,
-          applicationNameForUserAgent
+          resolvedApplicationNameForUserAgent
         );
       };
       setSessionConfiguration();
-    }, [sessionHandle, applicationNameForUserAgent]);
+    }, [sessionHandle, resolvedApplicationNameForUserAgent]);
 
     useImperativeHandle(
       ref,
@@ -98,13 +109,32 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       [viewErrorHandler]
     );
 
+    const handleOnLoad = useCallback(
+      (e: NativeSyntheticEvent<OnLoadEvent>) => {
+        initializeStradaBridge();
+        onLoad?.(e);
+      },
+      [initializeStradaBridge, onLoad]
+    );
+
     return (
-      <RNVisitableView
-        {...props}
-        sessionHandle={sessionHandle}
-        onVisitError={handleVisitError}
-        style={styles.container}
-      />
+      <>
+        {stradaComponents?.map(({ StradaReactComponent, name }, i) => (
+          <StradaReactComponent
+            key={i}
+            sessionHandle={sessionHandle}
+            name={name}
+            url={url}
+          />
+        ))}
+        <RNVisitableView
+          {...props}
+          sessionHandle={sessionHandle}
+          onVisitError={handleVisitError}
+          onLoad={handleOnLoad}
+          style={styles.container}
+        />
+      </>
     );
   }
 );

@@ -47,5 +47,6 @@ export function registerMessageEventListener(
   eventName: string,
   onMessage: SessionMessageCallback
 ): EmitterSubscription {
+  NativeModules.RNVisitableViewModule.registerEvent(eventName);
   return eventEmitter.addListener(eventName, onMessage);
 }
