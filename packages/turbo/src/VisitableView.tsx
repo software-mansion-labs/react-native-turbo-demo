@@ -31,6 +31,7 @@ const RNVisitableViewModule = getNativeModule<VisitableViewModule>(
 export interface Props {
   url: string;
   sessionHandle?: string;
+  applicationNameForUserAgent?: string;
   onVisitProposal: (proposal: NativeSyntheticEvent<VisitProposal>) => void;
   onLoad?: (proposal: NativeSyntheticEvent<OnLoadEvent>) => void;
   onVisitError?: OnErrorCallback;
@@ -45,6 +46,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
   (props, ref) => {
     const {
       sessionHandle = 'Default',
+      applicationNameForUserAgent,
       onMessage,
       onVisitError: viewErrorHandler,
     } = props;
@@ -52,10 +54,13 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
 
     useEffect(() => {
       const setSessionConfiguration = async () => {
-        await RNVisitableViewModule.setConfiguration(sessionHandle);
+        await RNVisitableViewModule.setConfiguration(
+          sessionHandle,
+          applicationNameForUserAgent
+        );
       };
       setSessionConfiguration();
-    }, [sessionHandle]);
+    }, [sessionHandle, applicationNameForUserAgent]);
 
     useImperativeHandle(
       ref,
