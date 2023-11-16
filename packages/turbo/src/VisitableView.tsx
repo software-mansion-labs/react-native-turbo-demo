@@ -119,14 +119,18 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
 
     return (
       <>
-        {stradaComponents?.map(({ StradaReactComponent, name }, i) => (
-          <StradaReactComponent
-            key={i}
-            sessionHandle={sessionHandle}
-            name={name}
-            url={url}
-          />
-        ))}
+        {stradaComponents?.map((stradaComponent, i) => {
+          const { name } = stradaComponent;
+          const Component = stradaComponent.StradaComponent ?? stradaComponent;
+          return (
+            <Component
+              key={i}
+              sessionHandle={sessionHandle}
+              name={name}
+              url={url}
+            />
+          );
+        })}
         <RNVisitableView
           {...props}
           sessionHandle={sessionHandle}

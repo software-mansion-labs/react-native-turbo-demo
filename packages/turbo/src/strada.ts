@@ -4,15 +4,16 @@ import type {
   VisitableViewModule,
   StradaComponentWrapper,
   StradaEvent,
+  StradaMessages,
 } from './types';
 
 const RNVisitableViewModule = getNativeModule<VisitableViewModule>(
   'RNVisitableViewModule'
 );
 
-export const stradaComponent: StradaComponentWrapper = (name, component) => ({
+export const bridgeComponent: StradaComponentWrapper = (name, component) => ({
   name,
-  StradaReactComponent: component,
+  StradaComponent: component,
 });
 
 export const useStrada = (
@@ -25,7 +26,7 @@ export const useStrada = (
 ) => {
   const { name, url, sessionHandle } = props;
 
-  const previousMessages = useRef<{ [event: string]: StradaEvent }>({});
+  const previousMessages = useRef<StradaMessages>({});
 
   const didReceive = useCallback(
     (e) => {

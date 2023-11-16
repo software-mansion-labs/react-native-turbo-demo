@@ -55,10 +55,14 @@ type StradaReactComponent = React.ComponentType<StradaReactComponentProps>;
 
 export type StradaComponent = {
   name: string;
-  StradaReactComponent: StradaReactComponent;
+  StradaComponent: StradaReactComponent;
 };
 
 export type StradaComponentWrapper = (
   name: string,
   component: StradaReactComponent
 ) => StradaComponent;
+
+export type StradaMessages = {
+  [event: string]: StradaEvent;
+};

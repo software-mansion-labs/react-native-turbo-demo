@@ -119,7 +119,6 @@ const stradaBridgeScript = `
 `;
 
 const useStradaBridge = (
-  url: string,
   sessionHandle: string,
   stradaComponents?: StradaComponent[]
 ) => {

@@ -12,4 +12,6 @@ export {
 
 export * from './strada';
 
+export * from './BridgeComponent';
+
 export * from './types';
