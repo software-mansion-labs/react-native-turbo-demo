@@ -10,6 +10,6 @@ class ReactAppPackage : ReactPackage {
     listOf(RNVisitableViewManager(reactContext)).toMutableList()
 
   override fun createNativeModules(reactContext: ReactApplicationContext): MutableList<NativeModule> =
-    mutableListOf(RNSessionModule(reactContext))
+    mutableListOf(RNVisitableViewModule(reactContext))
 
 }

@@ -41,7 +41,7 @@ class RNVisitableView: UIView, SessionSubscriber {
       return nil
     }
     
-    guard let sessionModule = self.bridge?.uiManager.moduleRegistry.module(forName: "RNSessionModule") as? RNSessionModule else {
+    guard let sessionModule = self.bridge?.uiManager.moduleRegistry.module(forName: "RNVisitableViewModule") as? RNVisitableViewModule else {
         print("Couldn't find session for sessionHandle:", sessionHandle ?? "default session")
         return nil
     }

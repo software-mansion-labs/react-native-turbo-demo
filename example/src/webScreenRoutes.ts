@@ -1,0 +1,16 @@
+export enum Routes {
+  BottomTabs = 'BottomTabs',
+  NotFound = 'NotFound',
+  NumbersScreen = 'NumbersScreen',
+  WebviewInitial = 'WebviewInitial',
+  New = 'New',
+  Share = 'Share',
+  SuccessScreen = 'SuccessScreen',
+  NonExistentScreen = 'NonExistentScreen',
+  SignIn = 'SignIn',
+  Fallback = 'Fallback',
+  NestedTabNative = 'NestedTabNative',
+  NestedTabWeb = 'NestedTabWeb',
+  NestedTab = 'NestedTab',
+  One = 'One',
+}

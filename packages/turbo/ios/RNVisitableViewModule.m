@@ -1,5 +1,5 @@
 //
-//  RNSessionModule.m
+//  RNVisitableViewModule.m
 //  HotwireRNDemo
 //
 //  Created by Bartłomiej Fryz on 25/08/2022.
@@ -7,7 +7,12 @@
 
 #import <React/RCTBridgeModule.h>
 
-@interface RCT_EXTERN_MODULE(RNSessionModule, NSObject)
+@interface RCT_EXTERN_MODULE(RNVisitableViewModule, NSObject)
+
+  RCT_EXTERN_METHOD(setConfiguration: (nonnull NSString) sessionHandle
+                    resolver: (RCTPromiseResolveBlock) resolve
+                    rejecter: (RCTPromiseRejectBlock) reject)
+
 
   RCT_EXTERN_METHOD(registerSession: (RCTPromiseResolveBlock) resolve
                     rejecter: (RCTPromiseRejectBlock) reject)

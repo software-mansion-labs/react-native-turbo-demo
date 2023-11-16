@@ -43,7 +43,7 @@ class RNVisitableViewManager(
   override fun createViewInstance(reactContext: ThemedReactContext) =
     RNVisitableView(
       reactContext,
-      sessionModule = reactContext.getNativeModule(RNSessionModule::class.java)!!
+      sessionModule = reactContext.getNativeModule(RNVisitableViewModule::class.java)!!
     )
 
 }

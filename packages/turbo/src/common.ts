@@ -18,7 +18,9 @@ export enum SessionEvents {
   MESSAGE = 'MESSAGE',
 }
 
-const eventEmitter = new NativeEventEmitter(NativeModules.RNSessionModule);
+const eventEmitter = new NativeEventEmitter(
+  NativeModules.RNVisitableViewModule
+);
 
 export function getNativeComponent<T>(componentName: string) {
   return UIManager.getViewManagerConfig(componentName) != null

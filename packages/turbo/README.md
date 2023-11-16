@@ -50,12 +50,10 @@ const TurboScreen = () => {
   };
 
   return (
-    <Session>
-      <VisitableView
-        url="https://turbo-native-demo.glitch.me"
-        onVisitProposal={onVisitProposal}
-      />
-    </Session>
+    <VisitableView
+      url="https://turbo-native-demo.glitch.me"
+      onVisitProposal={onVisitProposal}
+    />
   );
 };
 ```
@@ -75,6 +73,10 @@ The library implements a native view `RNVisitable` component for React Native. T
 ### `url`
 
 URL for the WKWebview to open. Changing the url should result in view replacing opening different page.
+
+### `sessionHandle`
+
+Session handle for the webview. If not provided, the default session will be used. It can be used to create separate webview instances for different parts of the app.
 
 ### `onVisitProposal`
 
@@ -125,39 +127,4 @@ injectJavaScript(jsCode);
 
 ## Session Component
 
-Each [Session](https://github.com/hotwired/turbo-ios/blob/main/Docs/Overview.md#session) manages a single WKWebView instance. We've added support for multiple sessions, now each session instance is managed by `<RNSession>` native component. Every `Session` is used by all its React children `RNVisitable` components. The session is shared using React.Context API.
-
-```tsx
-<Session>
-  <VisitableView />
-</Session>
-```
-
-The session enables communication between the native app and JavaScript (the visited page).
-
-You are also able to use `withSession(...)` React HOC instead of composition.
-
-### Props:
-
-### `onMessage`
-
-Function that is invoked when the webview calls `postMessage`. Setting this property will inject this global into your webview.
-
-```
-AndroidInterface.postMessage(JSON.stringify({message}));
-webkit.messageHandlers.nativeApp.postMessage(message);
-```
-
-### Methods:
-
-### `injectJavaScript(jsCode)`
-
-Executes the javascript code in the webview js runtime.
-
-Supports async methods and promises.
-
-```ts
-const jsCode = "console.warn('foo')";
-
-injectJavaScript(jsCode);
-```
+Session component has been deprecated. To use multiple [sessions](https://github.com/hotwired/turbo-ios/blob/main/Docs/Overview.md#session), you can use `sessionHandle` prop on `VisitableView` component.

@@ -10,16 +10,21 @@ export interface WebScreenRule {
 }
 
 export type WebScreenRuleMap = {
-  [key: string]: WebScreenRule | Omit<WebScreenRuleConfig, 'baseURL'>;
+  [key: string]:
+    | WebScreenRule
+    | Omit<WebScreenRuleConfig, 'baseURL' | 'webScreenComponent'>;
 };
 
 export type WebScreenRuleConfig = {
   baseURL: string;
   routes: WebScreenRuleMap;
+  webScreenComponent?: React.ElementType;
 };
 
-const buildWebviewComponent = (baseURL: string) => (navProps: any) =>
-  <WebScreen {...navProps} baseURL={baseURL} />;
+const buildWebviewComponent =
+  (baseURL: string, Component: React.ElementType = WebScreen) =>
+  (navProps: any) =>
+    <Component {...navProps} baseURL={baseURL} />;
 
 const isRule = (obj: unknown): obj is WebScreenRule => {
   if (obj !== null && typeof obj === 'object') {
@@ -29,6 +34,7 @@ const isRule = (obj: unknown): obj is WebScreenRule => {
 };
 
 const getLinkingAndScreens = (
+  baseURL: string,
   routes: WebScreenRuleMap,
   component: (navProps: any) => JSX.Element
 ): {
@@ -52,6 +58,7 @@ const getLinkingAndScreens = (
             [routeName]: {
               name: routeName,
               component,
+              initialParams: { baseURL, path: urlPattern },
               options: { ...options },
             },
           },
@@ -63,6 +70,7 @@ const getLinkingAndScreens = (
         const { routes: nestedRoutes } = route;
 
         const { screens, linking } = getLinkingAndScreens(
+          baseURL,
           nestedRoutes,
           component
         );
@@ -81,11 +89,19 @@ const getLinkingAndScreens = (
   );
 };
 
-export const buildWebScreen = ({ routes, baseURL }: WebScreenRuleConfig) => {
-  const nativeComponent = buildWebviewComponent(baseURL);
+export const buildWebScreen = ({
+  routes,
+  baseURL,
+  webScreenComponent,
+}: WebScreenRuleConfig) => {
+  const nativeComponent = buildWebviewComponent(baseURL, webScreenComponent);
 
-  const { linking, screens } = getLinkingAndScreens(routes, nativeComponent);
-  getLinkingAndScreens;
+  const { linking, screens } = getLinkingAndScreens(
+    baseURL,
+    routes,
+    nativeComponent
+  );
+
   return {
     linking: {
       prefixes: [baseURL],

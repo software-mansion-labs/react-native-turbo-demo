@@ -1,8 +1,8 @@
 import React, {
   useCallback,
-  useContext,
   useEffect,
   useImperativeHandle,
+  useRef,
 } from 'react';
 import {
   EmitterSubscription,
@@ -18,18 +18,19 @@ import type {
   OnErrorCallback,
   OnLoadEvent,
   SessionMessageCallback,
-  SessionModule,
+  VisitableViewModule,
   VisitProposal,
   VisitProposalError,
 } from './types';
-import { SessionContext } from './SessionContext';
-import { useRef } from 'react';
 
 const RNVisitableView = getNativeComponent<any>('RNVisitableView');
-const RNSessionModule = getNativeModule<SessionModule>('RNSessionModule');
+const RNVisitableViewModule = getNativeModule<VisitableViewModule>(
+  'RNVisitableViewModule'
+);
 
 export interface Props {
   url: string;
+  sessionHandle?: string;
   onVisitProposal: (proposal: NativeSyntheticEvent<VisitProposal>) => void;
   onLoad?: (proposal: NativeSyntheticEvent<OnLoadEvent>) => void;
   onVisitError?: OnErrorCallback;
@@ -42,19 +43,26 @@ export interface RefObject {
 
 const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
   (props, ref) => {
-    const { onMessage, onVisitError: viewErrorHandler } = props;
+    const {
+      sessionHandle = 'Default',
+      onMessage,
+      onVisitError: viewErrorHandler,
+    } = props;
     const messageHandlerEventSubscription = useRef<EmitterSubscription>();
-    const { sessionHandle, onVisitError: sessionErrorHandler } =
-      useContext(SessionContext);
 
-    const waitingForSession = sessionHandle === null;
+    useEffect(() => {
+      const setSessionConfiguration = async () => {
+        await RNVisitableViewModule.setConfiguration(sessionHandle);
+      };
+      setSessionConfiguration();
+    }, [sessionHandle]);
 
     useImperativeHandle(
       ref,
       () => ({
         injectJavaScript: (callbackStringified) => {
-          RNSessionModule.injectJavaScript(
-            sessionHandle || null,
+          RNVisitableViewModule.injectJavaScript(
+            sessionHandle,
             callbackStringified
           );
         },
@@ -63,14 +71,14 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
     );
 
     useEffect(() => {
-      if (onMessage && !waitingForSession) {
+      if (onMessage) {
         messageHandlerEventSubscription.current?.remove();
         messageHandlerEventSubscription.current = registerMessageEventListener(
-          sessionHandle || 'Default',
+          sessionHandle,
           onMessage
         );
       }
-    }, [sessionHandle, onMessage, waitingForSession]);
+    }, [sessionHandle, onMessage]);
 
     useEffect(() => {
       return () => {
@@ -80,13 +88,11 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
 
     const handleVisitError = useCallback(
       (e: NativeSyntheticEvent<VisitProposalError>) => {
-        sessionErrorHandler?.(e.nativeEvent);
         viewErrorHandler?.(e.nativeEvent);
       },
-      [sessionErrorHandler, viewErrorHandler]
+      [viewErrorHandler]
     );
 
-    if (waitingForSession) return null;
     return (
       <RNVisitableView
         {...props}

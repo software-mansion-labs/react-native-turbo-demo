@@ -14,10 +14,9 @@ import org.json.JSONObject
 
 class RNSession(
   private val reactContext: ReactApplicationContext,
-  private val sessionHandle: String = "Default"
+  private val sessionHandle: String = "Default",
+  private val registeredVisitableViews: MutableList<SessionSubscriber> = mutableListOf()
 ) {
-
-  private val registeredVisitableViews = mutableListOf<SessionSubscriber>()
 
   val turboSession: TurboSession = run {
     val activity = reactContext.currentActivity as AppCompatActivity
