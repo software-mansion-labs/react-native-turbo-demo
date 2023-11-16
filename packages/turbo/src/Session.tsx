@@ -1,14 +1,18 @@
 import { getNativeModule, registerMessageEventListener } from './common';
 import React, { RefObject } from 'react';
 import type { EmitterSubscription, NativeSyntheticEvent } from 'react-native';
-import { SessionContext } from './SessionContext';
 import type {
-  SessionModule,
+  VisitableViewModule,
   SessionMessageCallback,
   OnErrorCallback,
 } from 'packages/turbo/src/types';
 
-const RNSessionModule = getNativeModule<SessionModule>('RNSessionModule');
+const deprecationMessage =
+  'Session component is no longer supported. Please refer to: https://github.com/software-mansion-labs/react-native-turbo-demo/pull/53#issue-1978014350 and https://github.com/software-mansion-labs/react-native-turbo-demo/blob/main/packages/turbo/README.md for more details.';
+
+const RNVisitableViewModule = getNativeModule<VisitableViewModule>(
+  'RNVisitableViewModule'
+);
 
 interface Message {
   message: object;
@@ -41,7 +45,7 @@ export default class Session extends React.Component<Props, State> {
    */
   injectJavaScript = (callbackStringified: string) => {
     if (this.state.sessionHandle) {
-      return RNSessionModule.injectJavaScript(
+      return RNVisitableViewModule.injectJavaScript(
         this.state.sessionHandle,
         callbackStringified
       );
@@ -51,7 +55,7 @@ export default class Session extends React.Component<Props, State> {
 
   getNativeComponentHandleId = async () => {
     const { onMessage } = this.props;
-    const sessionHandle = await RNSessionModule.registerSession();
+    const sessionHandle = await RNVisitableViewModule.registerSession();
 
     if (onMessage) {
       this.messageHandlerEventSubscription = registerMessageEventListener(
@@ -69,7 +73,7 @@ export default class Session extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    RNSessionModule.removeSession(this.state.sessionHandle!);
+    RNVisitableViewModule.removeSession(this.state.sessionHandle!);
     this.messageHandlerEventSubscription?.remove();
   }
 
@@ -80,21 +84,10 @@ export default class Session extends React.Component<Props, State> {
   };
 
   render() {
-    const { sessionHandle } = this.state;
-    const { onVisitError } = this.props;
-
-    return (
-      <SessionContext.Provider value={{ sessionHandle, onVisitError }}>
-        {this.props.children}
-      </SessionContext.Provider>
-    );
+    throw new Error(deprecationMessage);
   }
 }
 
-export function withSession<T>(Component: React.ComponentType<T>) {
-  return (props: any) => (
-    <Session>
-      <Component {...props} />
-    </Session>
-  );
+export function withSession<T>(_Component: React.ComponentType<T>) {
+  throw new Error(deprecationMessage);
 }
