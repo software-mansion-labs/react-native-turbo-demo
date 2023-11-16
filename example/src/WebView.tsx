@@ -20,9 +20,9 @@ const sessionHandle = 'TurboWebviewExample';
 const WebView: React.FC<Props> = (props) => {
   const { navigation, route } = props;
   const navigateTo = useWebviewNavigate();
-  const path = route?.params?.path || route?.path;
+  const path = route?.params?.path || route?.path || '';
   const baseURL = route?.params?.baseURL || props?.baseURL;
-  const currentUrl = path ? `${baseURL}${path}` : baseURL;
+  const currentUrl = `${baseURL}${path}`;
 
   const onVisitProposal = ({
     nativeEvent: { action: actionType, url },

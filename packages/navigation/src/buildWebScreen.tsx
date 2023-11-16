@@ -22,12 +22,9 @@ export type WebScreenRuleConfig = {
 };
 
 const buildWebviewComponent =
-  (baseURL: string, Component?: React.ElementType) => (navProps: any) =>
-    Component ? (
-      <Component {...navProps} baseURL={baseURL} />
-    ) : (
-      <WebScreen {...navProps} baseURL={baseURL} />
-    );
+  (baseURL: string, Component: React.ElementType = WebScreen) =>
+  (navProps: any) =>
+    <Component {...navProps} baseURL={baseURL} />;
 
 const isRule = (obj: unknown): obj is WebScreenRule => {
   if (obj !== null && typeof obj === 'object') {
