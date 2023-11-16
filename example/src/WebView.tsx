@@ -8,6 +8,7 @@ import {
 } from 'react-native-turbo';
 import { useWebviewNavigate } from 'react-native-web-screen';
 import { Routes } from './webScreenRoutes';
+import Form from './Strada/Form';
 
 interface Props {
   navigation: any;
@@ -16,6 +17,7 @@ interface Props {
 }
 
 const sessionHandle = 'TurboWebviewExample';
+const stradaComponents = [Form];
 
 const WebView: React.FC<Props> = (props) => {
   const { navigation, route } = props;
@@ -48,6 +50,8 @@ const WebView: React.FC<Props> = (props) => {
       {...props}
       sessionHandle={sessionHandle}
       url={currentUrl}
+      applicationNameForUserAgent="Turbo Native"
+      stradaComponents={stradaComponents}
       onVisitProposal={onVisitProposal}
       onLoad={onLoad}
       onVisitError={onVisitError}
