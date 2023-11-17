@@ -74,10 +74,10 @@ export default function useWebviewNavigate<
 
       const { options } = linking;
 
-      const path =
-        (to.match(/^https?:\/\//)
-          ? extractPathFromURL(options?.prefixes, to)
-          : to) ?? '';
+      let path = to;
+      if (to.match(/^https?:\/\//)) {
+        path = extractPathFromURL(options?.prefixes, to) ?? '';
+      }
 
       /* We need to send the path name as screen param
       to the screen this way cause it works also for nested navigators */
