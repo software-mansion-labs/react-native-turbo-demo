@@ -6,26 +6,24 @@ import { NavigationContext } from '@react-navigation/native';
 export default class Form extends BridgeComponent {
   static name = 'form';
   static contextType = NavigationContext;
-
-  constructor(props) {
-    super(props);
-  }
+  private submitTitle: string;
 
   setHeaderButton(disabled: boolean) {
     this.context.setOptions({
       headerRight: () => (
         <Button
           onPress={() => this.replyTo('connect')}
-          title="Send"
+          title={submitTitle}
           disabled={disabled}
         />
       ),
     });
   }
 
-  onReceive(e) {
-    switch (e.event) {
+  onReceive(message) {
+    switch (message.event) {
       case 'connect':
+        submitTitle = message.data.submitTitle;
         this.setHeaderButton(false);
         break;
 
