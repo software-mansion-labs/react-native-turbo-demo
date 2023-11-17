@@ -78,6 +78,10 @@ URL for the WKWebview to open. Changing the url should result in view replacing 
 
 Session handle for the webview. If not provided, the default session will be used. It can be used to create separate webview instances for different parts of the app.
 
+### `applicationNameForUserAgent`
+
+The name of the application as used in the user agent string.
+
 ### `onVisitProposal`
 
 Callback called when the webview detects turbo visit action.

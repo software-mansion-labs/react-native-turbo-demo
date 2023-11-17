@@ -21,10 +21,11 @@ class RNVisitableViewModule: RCTEventEmitter {
   @objc
   public func setConfiguration(
     _ sessionHandle: NSString,
+    applicationNameForUserAgent: NSString?,
     resolver resolve: @escaping RCTPromiseResolveBlock,
     rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
       if(sessions[sessionHandle] == nil){
-        sessions[sessionHandle] = RNSession(eventEmitter: self, sessionHandle: sessionHandle)
+        sessions[sessionHandle] = RNSession(eventEmitter: self, sessionHandle: sessionHandle, applicationNameForUserAgent: applicationNameForUserAgent)
         supportedEventNames.append("sessionMessage" + (sessionHandle as String))
       }
       resolve(sessionHandle)

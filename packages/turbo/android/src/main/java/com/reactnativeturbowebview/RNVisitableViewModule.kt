@@ -24,9 +24,9 @@ class RNVisitableViewModule(private val reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun setConfiguration(sessionHandle: String, promise: Promise) {
+  fun setConfiguration(sessionHandle: String, applicationNameForUserAgent: String?, promise: Promise) {
     if(!sessions.containsKey(sessionHandle)) {
-      sessions[sessionHandle] = lazy { RNSession(reactContext, sessionHandle) }
+      sessions[sessionHandle] = lazy { RNSession(reactContext, sessionHandle, applicationNameForUserAgent) }
     }
     promise.resolve(sessionHandle)
   }

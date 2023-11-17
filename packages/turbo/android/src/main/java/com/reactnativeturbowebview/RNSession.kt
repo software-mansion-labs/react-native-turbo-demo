@@ -2,6 +2,7 @@ package com.reactnativeturbowebview
 
 import android.util.Log
 import android.webkit.JavascriptInterface
+import android.webkit.WebSettings
 import androidx.appcompat.app.AppCompatActivity
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactApplicationContext
@@ -15,6 +16,7 @@ import org.json.JSONObject
 class RNSession(
   private val reactContext: ReactApplicationContext,
   private val sessionHandle: String = "Default",
+  private val applicationNameForUserAgent: String? = "",
   private val registeredVisitableViews: MutableList<SessionSubscriber> = mutableListOf()
 ) {
 
@@ -25,6 +27,7 @@ class RNSession(
     val sessionName = UUID.randomUUID().toString()
     webView.getSettings().setJavaScriptEnabled(true)
     webView.addJavascriptInterface(JavaScriptInterface(), "AndroidInterface")
+    setUserAgentString(webView, applicationNameForUserAgent)
     val session = TurboSession(sessionName, activity, webView)
     session.isRunningInAndroidNavigation = false
     session
@@ -67,6 +70,14 @@ class RNSession(
 
   internal fun removeVisitableView(view: SessionSubscriber) {
     registeredVisitableViews.remove(view)
+  }
+
+  private fun setUserAgentString(webView: TurboWebView, applicationNameForUserAgent: String?){
+    var userAgentString = WebSettings.getDefaultUserAgent(webView.context)
+    if (applicationNameForUserAgent != null) {
+      userAgentString = "$userAgentString $applicationNameForUserAgent"
+    }
+    webView.settings.userAgentString = userAgentString
   }
 
   inner class JavaScriptInterface {

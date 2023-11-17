@@ -19,7 +19,10 @@ export interface VisitProposalError {
 export type SessionMessageCallback = (message: object) => void;
 
 export interface VisitableViewModule {
-  setConfiguration: (sessionHandle: string) => Promise<string>;
+  setConfiguration: (
+    sessionHandle: string,
+    applicationNameForUserAgent?: string
+  ) => Promise<string>;
   registerSession: () => Promise<string>;
   removeSession: (sessionHandle: string) => Promise<string>;
   injectJavaScript: (

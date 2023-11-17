@@ -14,6 +14,7 @@ class RNSession: NSObject {
   private var registeredVisitableViews: [SessionSubscriber] = []
   private var eventEmitter: RCTEventEmitter? = nil
   private var sessionHandle: NSString = "defaultHandle"
+  private var applicationNameForUserAgent: String? = nil
     
   override init() { }
     
@@ -22,9 +23,15 @@ class RNSession: NSObject {
     self.sessionHandle = sessionHandle
   }
     
+  convenience init(eventEmitter: RCTEventEmitter, sessionHandle: NSString, applicationNameForUserAgent: NSString?){
+    self.init(eventEmitter: eventEmitter, sessionHandle: sessionHandle)
+    self.applicationNameForUserAgent = applicationNameForUserAgent as String?
+  }
+  
   public lazy var turboSession: Session = {
     let configuration = WKWebViewConfiguration()
     configuration.userContentController.add(self, name: "nativeApp")
+    configuration.applicationNameForUserAgent = applicationNameForUserAgent
     return Session(webViewConfiguration: configuration)
   }()
   
