@@ -1,6 +1,6 @@
 import { Button } from 'react-native';
 import React from 'react';
-import { BridgeComponent } from 'react-native-turbo';
+import { BridgeComponent, StradaMessage } from 'react-native-turbo';
 import { NavigationContext } from '@react-navigation/native';
 
 export default class Form extends BridgeComponent {
@@ -20,7 +20,7 @@ export default class Form extends BridgeComponent {
     });
   }
 
-  onReceive(message) {
+  onReceive(message: StradaMessage) {
     switch (message.event) {
       case 'connect':
         submitTitle = message.data.submitTitle;

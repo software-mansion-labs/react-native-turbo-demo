@@ -2,9 +2,9 @@ import { Component } from 'react';
 import type { EmitterSubscription } from 'react-native';
 import type {
   VisitableViewModule,
-  StradaEvent,
+  StradaMessage,
   StradaMessages,
-  StradaReactComponentProps,
+  StradaComponentProps,
 } from './types';
 import { getNativeModule, registerMessageEventListener } from './common';
 
@@ -12,9 +12,9 @@ const RNVisitableViewModule = getNativeModule<VisitableViewModule>(
   'RNVisitableViewModule'
 );
 
-const registerStradaMessageEventListener = (component) =>
+const registerStradaMessageEventListener = (component: BridgeComponent) =>
   registerMessageEventListener(component.name, (e: object) => {
-    const message = e as StradaEvent;
+    const message = e as StradaMessage;
     if (message.data.metadata.url !== component.url) {
       return;
     }
@@ -23,13 +23,13 @@ const registerStradaMessageEventListener = (component) =>
   });
 
 class BridgeComponent extends Component {
-  private name: string;
-  private url: string;
-  private sessionHandle: string;
-  private messageEventListenerSubscription?: EmitterSubscription;
-  private previousMessages: StradaMessages = {};
+  name: string;
+  url: string;
+  sessionHandle: string;
+  messageEventListenerSubscription?: EmitterSubscription;
+  previousMessages: StradaMessages = {};
 
-  constructor(props: StradaReactComponentProps) {
+  constructor(props: StradaComponentProps) {
     super(props);
 
     this.url = props.url;
@@ -47,6 +47,10 @@ class BridgeComponent extends Component {
 
   componentWillUnmount() {
     this.messageEventListenerSubscription?.remove();
+  }
+
+  onReceive(_message: StradaMessage) {
+    // This is a no-op, but it can be overridden by the subclass
   }
 
   replyTo(event: string, data?: object) {

@@ -10,8 +10,6 @@ export {
   RefObject as VisitableViewRefObject,
 } from './VisitableView';
 
-export * from './strada';
-
 export * from './BridgeComponent';
 
 export * from './types';
