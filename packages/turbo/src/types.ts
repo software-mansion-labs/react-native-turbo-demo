@@ -23,6 +23,7 @@ export type StradaMessage = {
     metadata: {
       url: string;
     };
+    [key: string]: any;
   };
 };
 
