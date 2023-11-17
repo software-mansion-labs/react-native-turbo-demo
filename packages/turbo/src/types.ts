@@ -16,6 +16,17 @@ export interface VisitProposalError {
   error?: string;
 }
 
+export type StradaMessage = {
+  component: string;
+  event: string;
+  data: {
+    metadata: {
+      url: string;
+    };
+    [key: string]: any;
+  };
+};
+
 export type SessionMessageCallback = (message: object) => void;
 
 export interface VisitableViewModule {
@@ -29,6 +40,22 @@ export interface VisitableViewModule {
     sessionHandle: string | null,
     callbackStringified: string
   ) => Promise<unknown>;
+  registerEvent: (eventName: string) => void;
+  unregisterEvent: (eventName: string) => void;
 }
 
 export type OnErrorCallback = (error: VisitProposalError) => void;
+
+export type StradaComponentProps = {
+  sessionHandle: string;
+  url: string;
+  name: string;
+};
+
+export type StradaComponent = React.ComponentType<StradaComponentProps> & {
+  componentName: string;
+};
+
+export type StradaMessages = {
+  [event: string]: StradaMessage;
+};

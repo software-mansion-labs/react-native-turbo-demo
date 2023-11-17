@@ -82,6 +82,42 @@ Session handle for the webview. If not provided, the default session will be use
 
 The name of the application as used in the user agent string.
 
+### `stradaComponents`
+
+`VisitableView` supports defining [Strada components](https://strada.hotwired.dev/) that receive and reply to messages from web components that are present on the page within one session. This prop accepts an array of Strada components that will be registered in the webview.
+
+You can define a Strada component by extending `BridgeComponent` class and implementing `onReceive` method and static `componentName` property.
+
+```jsx
+import { BridgeComponent } from 'react-native-turbo';
+
+export default class FormComponent extends BridgeComponent {
+  static componentName = 'form';
+
+  onReceive(message: StradaMessage) {
+
+    // Here you can catch events from webview and respond to them
+    if (message.event === 'connect'){
+      this.replyTo(message.event, { status: 'connected' });
+    }
+    ...
+  }
+}
+```
+
+In the WebView component, you should pass the array of Strada components to the `stradaComponents` prop.
+
+```jsx
+const stradaComponents = [FormComponent];
+
+...
+
+<VisitableView
+  ...
+  stradaComponents={stradaComponents}
+/>
+```
+
 ### `onVisitProposal`
 
 Callback called when the webview detects turbo visit action.
@@ -111,8 +147,10 @@ Function that is invoked when the webview calls `postMessage`. Setting this prop
 Currently you need to individually call this function for android and for ios separately.
 
 ```
+
 AndroidInterface.postMessage(JSON.stringify({message}));
 webkit.messageHandlers.nativeApp.postMessage(message);
+
 ```
 
 ### Methods:

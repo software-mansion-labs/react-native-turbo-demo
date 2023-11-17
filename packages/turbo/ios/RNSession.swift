@@ -31,6 +31,7 @@ class RNSession: NSObject {
   public lazy var turboSession: Session = {
     let configuration = WKWebViewConfiguration()
     configuration.userContentController.add(self, name: "nativeApp")
+    configuration.userContentController.add(RNStradaWKUserContentController(eventEmitter: eventEmitter), name: "stradaNative")
     configuration.applicationNameForUserAgent = applicationNameForUserAgent
     return Session(webViewConfiguration: configuration)
   }()

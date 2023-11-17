@@ -62,6 +62,16 @@ class RNVisitableViewModule(private val reactContext: ReactApplicationContext) :
     }
   }
 
+  @ReactMethod
+  fun registerEvent(eventName: String){
+
+  }
+
+  @ReactMethod
+  fun unregisterEvent(eventName: String){
+
+  }
+
   // Required methods for NativeEventEmitter calls
   @ReactMethod
   fun addListener(type: String?) { }
