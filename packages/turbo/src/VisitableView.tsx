@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useImperativeHandle,
   useRef,
+  useMemo,
 } from 'react';
 import {
   EmitterSubscription,
@@ -61,7 +62,14 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       sessionHandle,
       stradaComponents
     );
-    const resolvedApplicationNameForUserAgent = `${applicationNameForUserAgent} ${stradaUserAgent}`;
+
+    const resolvedApplicationNameForUserAgent = useMemo(
+      () =>
+        [applicationNameForUserAgent, stradaUserAgent]
+          .filter(Boolean)
+          .join(' '),
+      [applicationNameForUserAgent, stradaUserAgent]
+    );
 
     useEffect(() => {
       const setSessionConfiguration = async () => {
