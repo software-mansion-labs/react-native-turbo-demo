@@ -86,13 +86,13 @@ The name of the application as used in the user agent string.
 
 `VisitableView` supports defining [Strada components](https://strada.hotwired.dev/) that receive and reply to messages from web components that are present on the page within one session. This prop accepts an array of Strada components that will be registered in the webview.
 
-You can define a Strada component by extending `BridgeComponent` class and implementing `onReceive` method and static `name` property.
+You can define a Strada component by extending `BridgeComponent` class and implementing `onReceive` method and static `componentName` property.
 
 ```jsx
 import { BridgeComponent } from 'react-native-turbo';
 
 export default class FormComponent extends BridgeComponent {
-  static name = 'form';
+  static componentName = 'form';
 
   onReceive(message: StradaMessage) {
 

@@ -136,10 +136,10 @@ const useStradaBridge = (
         return;
       }
       Promise.all(
-        stradaComponents.map(({ name }) =>
+        stradaComponents.map(({ componentName }) =>
           RNVisitableViewModule.injectJavaScript(
             sessionHandle,
-            `window.nativeBridge.register('${name}')`
+            `window.nativeBridge.register('${componentName}')`
           )
         )
       );
@@ -149,7 +149,9 @@ const useStradaBridge = (
   const stradaUserAgent = useMemo(() => {
     if (!stradaComponents) return '';
 
-    const componentNames = stradaComponents.map(({ name }) => name);
+    const componentNames = stradaComponents.map(
+      ({ componentName }) => componentName
+    );
     return `bridge-components: [${componentNames.join(' ')}]`;
   }, [stradaComponents]);
 

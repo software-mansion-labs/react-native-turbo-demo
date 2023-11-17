@@ -22,7 +22,7 @@ const registerStradaMessageEventListener = (component: BridgeComponent) =>
     component.onReceive(message);
   });
 
-class BridgeComponent extends Component {
+class BridgeComponent extends Component<StradaComponentProps> {
   name: string;
   url: string;
   sessionHandle: string;

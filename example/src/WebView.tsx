@@ -5,16 +5,17 @@ import {
   VisitableView,
   VisitProposal,
   OnErrorCallback,
+  VisitableViewProps,
 } from 'react-native-turbo';
 import { useWebviewNavigate } from 'react-native-web-screen';
 import { Routes } from './webScreenRoutes';
 import Form from './Strada/Form';
 
-interface Props {
+export type Props = {
   navigation: any;
   route: any;
   baseURL: string;
-}
+} & VisitableViewProps;
 
 const sessionHandle = 'TurboWebviewExample';
 const stradaComponents = [Form];

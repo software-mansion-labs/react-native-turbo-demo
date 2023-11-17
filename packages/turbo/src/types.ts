@@ -52,7 +52,9 @@ export type StradaComponentProps = {
   name: string;
 };
 
-export type StradaComponent = React.ComponentType<StradaComponentProps>;
+export type StradaComponent = React.ComponentType<StradaComponentProps> & {
+  componentName: string;
+};
 
 export type StradaMessages = {
   [event: string]: StradaMessage;
