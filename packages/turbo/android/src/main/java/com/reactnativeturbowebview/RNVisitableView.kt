@@ -69,7 +69,7 @@ class RNVisitableView(context: Context, sessionModule: RNVisitableViewModule) : 
   }
 
   fun visit(restoreWithCachedSnapshot: Boolean, reload: Boolean) {
-    val restore = !restoreWithCachedSnapshot && !reload
+    val restore = restoreWithCachedSnapshot && !reload
 
     val options = when {
       restore -> TurboVisitOptions(action = TurboVisitAction.RESTORE)
