@@ -34,9 +34,6 @@ export default class Form extends BridgeComponent {
       case 'submitEnabled':
         this.setHeaderButton(false);
         break;
-
-      default:
-        break;
     }
   }
 }
