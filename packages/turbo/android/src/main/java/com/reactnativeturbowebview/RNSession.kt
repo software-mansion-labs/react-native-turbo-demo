@@ -29,6 +29,7 @@ class RNSession(
     webView.addJavascriptInterface(JavaScriptInterface(), "AndroidInterface")
     setUserAgentString(webView, applicationNameForUserAgent)
     val session = TurboSession(sessionName, activity, webView)
+    webView.webChromeClient = RNWebChromeClient(reactContext)
     session.isRunningInAndroidNavigation = false
     session
   }
