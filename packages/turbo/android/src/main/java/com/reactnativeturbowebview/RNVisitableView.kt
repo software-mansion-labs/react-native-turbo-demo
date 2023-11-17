@@ -2,7 +2,6 @@ package com.reactnativeturbowebview
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
 import android.view.ViewGroup
 import android.webkit.CookieManager
 import android.widget.LinearLayout
@@ -180,7 +179,7 @@ class RNVisitableView(context: Context, sessionModule: RNVisitableViewModule) : 
   override fun detachWebView(onReady: () -> Unit) {
     screenshotView()
 
-    (session.webView.parent as ViewGroup)?.endViewTransition(session.webView)
+    (session.webView.parent as ViewGroup?)?.endViewTransition(session.webView)
 
     webViewContainer.post {
       webViewContainer.removeAllViews()
@@ -209,6 +208,23 @@ class RNVisitableView(context: Context, sessionModule: RNVisitableViewModule) : 
     }
   }
 
+  /*
+   * Fixes a bug in React Native, causing improper layout of the TurboView and its children.
+   * Refer to https://github.com/facebook/react-native/issues/17968 for the detailed issue discussion and context.
+   */
+  override fun requestLayout() {
+    super.requestLayout()
+    post(measureAndLayout)
+  }
+
+  private val measureAndLayout = Runnable {
+    measure(
+      MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
+      MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
+    )
+    layout(left, top, right, bottom)
+  }
+
   /**
    * Fixes initial size of WebView
    */
@@ -216,8 +232,6 @@ class RNVisitableView(context: Context, sessionModule: RNVisitableViewModule) : 
     super.onLayout(changed, left, top, right, bottom)
     val width = right - left
     val height = bottom - top
-    webView.layout(0, 0, width, height)
-    turboView.layout(0, 0, width, height)
     screenshotView.layout(0, 0, width, height)
   }
 
