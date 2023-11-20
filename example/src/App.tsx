@@ -4,6 +4,7 @@ import {
   useNavigationContainerRef,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { default as NativeScreen } from './NumbersScreen';
 import ErrorScreen from './ErrorScreen';
 import { webScreens } from 'example/src/webScreen';
@@ -38,47 +39,49 @@ const App: React.FC = () => {
   const navigation = useNavigationContainerRef<any>();
 
   return (
-    <NavigationContainer linking={webScreens.linking} ref={navigation}>
-      <Stack.Navigator
-        screenOptions={{
-          headerBackTitle: 'Back',
-          headerTintColor: '#00094a',
-        }}
-      >
-        <Stack.Screen
-          options={{ headerShown: false }}
-          name={Routes.BottomTabs}
-          component={BottomTabs}
-        />
-        <Stack.Screen
-          name={Routes.NumbersScreen}
-          component={NativeScreen}
-          options={{ title: 'A List of Numbers' }}
-        />
-        <Stack.Screen {...webScreens.screens.New} />
-        <Stack.Screen {...webScreens.screens.SuccessScreen} />
-        <Stack.Screen {...webScreens.screens.One} />
-        <Stack.Screen {...webScreens.screens.Share} component={ShareScreen} />
-        <Stack.Screen {...webScreens.screens.Fallback} />
-        <Stack.Screen
-          {...webScreens.screens.SignIn}
-          options={{
-            presentation: 'formSheet',
-            gestureEnabled: 'false',
+    <ActionSheetProvider>
+      <NavigationContainer linking={webScreens.linking} ref={navigation}>
+        <Stack.Navigator
+          screenOptions={{
+            headerBackTitle: 'Back',
+            headerTintColor: '#00094a',
           }}
-        />
-        <Stack.Screen
-          name={Routes.NotFound}
-          component={ErrorScreen}
-          options={{ title: 'Not Found' }}
-        />
-        <Stack.Screen
-          name={Routes.NestedTab}
-          component={NestedTab}
-          options={{ title: 'Nested Top Tab' }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+        >
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name={Routes.BottomTabs}
+            component={BottomTabs}
+          />
+          <Stack.Screen
+            name={Routes.NumbersScreen}
+            component={NativeScreen}
+            options={{ title: 'A List of Numbers' }}
+          />
+          <Stack.Screen {...webScreens.screens.New} />
+          <Stack.Screen {...webScreens.screens.SuccessScreen} />
+          <Stack.Screen {...webScreens.screens.One} />
+          <Stack.Screen {...webScreens.screens.Share} component={ShareScreen} />
+          <Stack.Screen {...webScreens.screens.Fallback} />
+          <Stack.Screen
+            {...webScreens.screens.SignIn}
+            options={{
+              presentation: 'formSheet',
+              gestureEnabled: 'false',
+            }}
+          />
+          <Stack.Screen
+            name={Routes.NotFound}
+            component={ErrorScreen}
+            options={{ title: 'Not Found' }}
+          />
+          <Stack.Screen
+            name={Routes.NestedTab}
+            component={NestedTab}
+            options={{ title: 'Nested Top Tab' }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ActionSheetProvider>
   );
 };
 

@@ -10,6 +10,7 @@
     "server": "yarn --cwd server"
   },
   "dependencies": {
+    "@expo/react-native-action-sheet": "^4.0.1",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/material-top-tabs": "^6.6.0",
     "@react-navigation/native": "^6.0.10",
