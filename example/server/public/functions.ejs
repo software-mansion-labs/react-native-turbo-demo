@@ -1,4 +1,0 @@
-<% let btn = document.getElementById('shareButton'); btn.innerHTML = 'shared';
-openShareModal = function(shareText = "Hello from the webview 👋") {
-webkit.messageHandlers.nativeApp.postMessage({ method: 'share', shareText }); }
-btn.addEventListener('click', openShareModal); %>
