@@ -11,6 +11,7 @@ import { useWebviewNavigate } from 'react-native-web-screen';
 import { Routes } from './webScreenRoutes';
 import Form from './Strada/Form';
 import Menu from './Strada/Menu';
+import OverflowMenu from './Strada/OverflowMenu';
 
 export type Props = {
   navigation: any;
@@ -19,7 +20,7 @@ export type Props = {
 } & VisitableViewProps;
 
 const sessionHandle = 'TurboWebviewExample';
-const stradaComponents = [Form, Menu];
+const stradaComponents = [Form, Menu, OverflowMenu];
 
 const WebView: React.FC<Props> = (props) => {
   const { navigation, route } = props;
