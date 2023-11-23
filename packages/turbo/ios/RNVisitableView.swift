@@ -10,6 +10,16 @@ import UIKit
 
 class RNVisitableView: UIView, SessionSubscriber {
   var id: UUID = UUID()
+  @objc var sessionHandle: NSString? = nil {
+    didSet {
+      validateSessionProperty(propertyName: "sessionHandle", oldValue: oldValue)
+    }
+  }
+  @objc var applicationNameForUserAgent: NSString? = nil {
+    didSet {
+      validateSessionProperty(propertyName: "applicationNameForUserAgent", oldValue: oldValue)
+    }
+  }
   @objc var url: NSString = "" {
     didSet {
       if (oldValue != "") {
@@ -18,13 +28,16 @@ class RNVisitableView: UIView, SessionSubscriber {
       }
     }
   }
+  @objc var onMessage: RCTDirectEventBlock?
   @objc var onVisitProposal: RCTDirectEventBlock?
   @objc var onLoad: RCTDirectEventBlock?
   @objc var onVisitError: RCTDirectEventBlock?
-  @objc var sessionHandle: NSString?
-  var bridge: RCTBridge?
+  @objc var onWarning: RCTDirectEventBlock?
   
+  var bridge: RCTBridge?
   var controller: RNVisitableViewController?
+  
+  private var session: RNSession? = nil;
   
   init(bridge: RCTBridge) {
     self.bridge = bridge
@@ -34,22 +47,26 @@ class RNVisitableView: UIView, SessionSubscriber {
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
   }
+    
+  public func getWebViewConfiguration() -> WKWebViewConfiguration{
+    let configuration = WKWebViewConfiguration()
+    configuration.applicationNameForUserAgent = applicationNameForUserAgent as String?
+    return configuration
+  }
   
   public func getRNSesssion() -> RNSession? {
-    if (!Thread.isMainThread) {
-      print("getSession accessed from incorrect thread")
-      return nil
+    if(session == nil){
+      session = RNSessionManager.shared.findOrCreateSession(sessionHandle: self.sessionHandle, webViewConfiguration: self.getWebViewConfiguration())
     }
-    
-    guard let sessionModule = self.bridge?.uiManager.moduleRegistry.module(forName: "RNVisitableViewModule") as? RNVisitableViewModule else {
-        print("Couldn't find session for sessionHandle:", sessionHandle ?? "default session")
-        return nil
-    }
-    return sessionModule.getSession(sessionHandle: sessionHandle)
+    return session
   }
   
   public func getSession() -> Session? {
     return getRNSesssion()?.turboSession
+  }
+  
+  public func getWebView() -> WKWebView? {
+    return getRNSesssion()?.turboSession.webView
   }
   
   override func didMoveToWindow() {
@@ -82,6 +99,20 @@ class RNVisitableView: UIView, SessionSubscriber {
     }
     session?.visitableViewWillAppear(visitable)
   }
+    
+  public func handleMessage(message: WKScriptMessage){
+    onMessage?(["message": message.body])
+  }
+  
+  public func injectJavaScript(code: NSString) -> Void {
+    getWebView()?.evaluateJavaScript(code as String)
+  }
+    
+  private func validateSessionProperty(propertyName: NSString, oldValue: NSString?){
+    if (oldValue != nil && session != nil){
+      onWarning?(["message": "You cannot change \(propertyName) after initialization of the session."])
+    }
+  }
 }
 
 extension RNVisitableView: RNVisitableViewControllerDelegate {
@@ -94,12 +125,12 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
   }
 
   func visitableDidRender(visitable: Visitable) {
-    guard let session = getSession() else {
+    guard let webView = getWebView() else {
       return
     }
     let event: [AnyHashable: Any] = [
-      "title": session.webView.title!,
-      "url": session.webView.url!
+      "title": webView.title!,
+      "url": webView.url!
     ]
     onLoad?(event)
   }

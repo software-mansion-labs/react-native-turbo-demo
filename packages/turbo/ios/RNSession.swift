@@ -12,28 +12,17 @@ import WebKit
 class RNSession: NSObject {
   
   private var registeredVisitableViews: [SessionSubscriber] = []
-  private var eventEmitter: RCTEventEmitter? = nil
-  private var sessionHandle: NSString = "defaultHandle"
-  private var applicationNameForUserAgent: String? = nil
-    
-  override init() { }
-    
-  init(eventEmitter: RCTEventEmitter, sessionHandle: NSString){
-    self.eventEmitter = eventEmitter
-    self.sessionHandle = sessionHandle
-  }
-    
-  convenience init(eventEmitter: RCTEventEmitter, sessionHandle: NSString, applicationNameForUserAgent: NSString?){
-    self.init(eventEmitter: eventEmitter, sessionHandle: sessionHandle)
-    self.applicationNameForUserAgent = applicationNameForUserAgent as String?
-  }
+  private var sessionHandle: NSString
+  private var webViewConfiguration: WKWebViewConfiguration
   
+  init(sessionHandle: NSString, webViewConfiguration: WKWebViewConfiguration){
+    self.sessionHandle = sessionHandle
+    self.webViewConfiguration = webViewConfiguration
+  }
+
   public lazy var turboSession: Session = {
-    let configuration = WKWebViewConfiguration()
-    configuration.userContentController.add(self, name: "nativeApp")
-    configuration.userContentController.add(RNStradaWKUserContentController(eventEmitter: eventEmitter), name: "stradaNative")
-    configuration.applicationNameForUserAgent = applicationNameForUserAgent
-    return Session(webViewConfiguration: configuration)
+    self.webViewConfiguration.userContentController.add(self, name: "nativeApp")
+    return Session(webViewConfiguration: self.webViewConfiguration)
   }()
   
   func registerVisitableView(newView: SessionSubscriber) {
@@ -65,7 +54,9 @@ class RNSession: NSObject {
 extension RNSession: WKScriptMessageHandler {
   
   func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-    eventEmitter?.sendEvent(withName: "sessionMessage" + (sessionHandle as String), body: ["message": message.body])
+    for view in registeredVisitableViews {
+        view.handleMessage(message: message)
+    }
   }
   
 }

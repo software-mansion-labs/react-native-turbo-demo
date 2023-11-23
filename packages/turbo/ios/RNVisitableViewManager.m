@@ -13,9 +13,15 @@
 
   RCT_EXPORT_VIEW_PROPERTY(url, NSString)
   RCT_EXPORT_VIEW_PROPERTY(sessionHandle, NSString)
+  RCT_EXPORT_VIEW_PROPERTY(applicationNameForUserAgent, NSString)
   RCT_EXPORT_VIEW_PROPERTY(onVisitProposal, RCTDirectEventBlock)
+  RCT_EXPORT_VIEW_PROPERTY(onMessage, RCTDirectEventBlock)
   RCT_EXPORT_VIEW_PROPERTY(onLoad, RCTDirectEventBlock)
   RCT_EXPORT_VIEW_PROPERTY(onVisitError, RCTDirectEventBlock)
+  RCT_EXPORT_VIEW_PROPERTY(onWarning, RCTDirectEventBlock)
+
+  RCT_EXTERN_METHOD(injectJavaScript: (nonnull NSNumber) node
+                    code: (nonnull NSString) code)
 
 @end
 
