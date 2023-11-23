@@ -38,6 +38,8 @@ export interface RefObject {
   injectJavaScript: (callbackStringified: string) => void;
 }
 
+type SessionMessageCallbackArrayElement = SessionMessageCallback | undefined;
+
 function useDisableNavigationAnimation() {
   const navWithRoutes = React.useContext(NavigationContainerRefContext);
   const navigation = useNavigation();
@@ -74,13 +76,13 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       onVisitError: viewErrorHandler,
       onMessage: onMessageCallback,
     } = props;
-    const visitableViewRef = useRef<any>();
-    const onMessageCallbacks = useRef<SessionMessageCallback[]>([
+    const visitableViewRef = useRef<typeof VisitableView>();
+    const onMessageCallbacks = useRef<SessionMessageCallbackArrayElement[]>([
       onMessageCallback,
     ]);
 
     const { initializeStradaBridge, stradaUserAgent, sendToBridge } =
-      useStradaBridge(visitableViewRef, stradaComponents, dispatchCommand);
+      useStradaBridge(visitableViewRef, dispatchCommand, stradaComponents);
 
     const resolvedApplicationNameForUserAgent = useMemo(
       () =>

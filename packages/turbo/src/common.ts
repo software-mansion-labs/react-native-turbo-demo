@@ -1,5 +1,6 @@
 import { Platform, requireNativeComponent, UIManager } from 'react-native';
 import { NativeModules, findNodeHandle } from 'react-native';
+import type { DispatchCommand } from './types';
 
 const LINKING_ERROR =
   `The package react-native-turbo doesn't seem to be linked. Make sure: \n\n` +
@@ -11,7 +12,10 @@ export enum SessionEvents {
   MESSAGE = 'MESSAGE',
 }
 
-export function getNativeComponent<T>(componentName: string) {
+export function getNativeComponent<T>(componentName: string): {
+  [componentName: string]: any;
+  dispatchCommand: DispatchCommand;
+} {
   const viewConfig = UIManager.getViewManagerConfig(componentName);
 
   if (!viewConfig) {
@@ -20,13 +24,16 @@ export function getNativeComponent<T>(componentName: string) {
 
   return {
     [componentName]: requireNativeComponent<T>(componentName),
-    dispatchCommand: (ref, command, ...args) => {
+    dispatchCommand: (
+      ref: React.RefObject<any>,
+      command: string,
+      ...args: any[]
+    ) =>
       UIManager.dispatchViewManagerCommand(
         findNodeHandle(ref.current),
-        viewConfig.Commands[command],
+        viewConfig.Commands[command]!,
         args
-      );
-    },
+      ),
   };
 }
 

@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { Platform } from 'react-native';
-import type { StradaComponent } from './types';
+import type { StradaComponent, DispatchCommand } from './types';
 
 const stradaBridgeScript = `
 (() => {
@@ -117,16 +117,16 @@ const stradaBridgeScript = `
 `;
 
 const useStradaBridge = (
-  visitableViewRef: any,
-  stradaComponents?: StradaComponent[],
-  dispatchCommand: any
+  visitableViewRef: React.RefObject<any>,
+  dispatchCommand: DispatchCommand,
+  stradaComponents?: StradaComponent[]
 ) => {
   const initializeStradaBridge = useCallback(async () => {
     dispatchCommand(visitableViewRef, 'injectJavaScript', stradaBridgeScript);
 
     const stradaComponentNames =
       stradaComponents
-        .map(({ componentName }) => `'${componentName}'`)
+        ?.map(({ componentName }) => `'${componentName}'`)
         .join(',') || '';
 
     dispatchCommand(

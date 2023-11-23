@@ -7,8 +7,8 @@ import type {
 } from './types';
 
 const stradaMessageListener = (component: BridgeComponent) => (e: object) => {
-  const { message } = e as StradaMessage;
-  if (message?.data?.metadata?.url !== component.url) {
+  const message = e as StradaMessage;
+  if (message.data.metadata.url !== component.url) {
     return;
   }
   component.previousMessages[message.event] = message;
@@ -22,7 +22,7 @@ class BridgeComponent extends Component<StradaComponentProps> {
   messageEventListenerSubscription?: EmitterSubscription;
   previousMessages: StradaMessages = {};
   registerMessageListener: (listener: (e: object) => void) => void;
-  replyWith: (message: StradaMessage) => void;
+  sendToBridge: (message: StradaMessage) => void;
 
   constructor(props: StradaComponentProps) {
     super(props);
