@@ -26,17 +26,17 @@ class RNVisitableViewController: VisitableViewController {
   // as the view is replaced in the view hierarchy every time we navigate to a screen
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    self.delegate?.visitableWillAppear(visitable: self)
+    delegate?.visitableWillAppear(visitable: self)
   }
   
   override func visitableDidRender() {
     super.visitableDidRender()
-    self.delegate?.visitableDidRender(visitable: self)
+    delegate?.visitableDidRender(visitable: self)
   }
   
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
-    self.delegate?.visitableDidDisappear(visitable: self)
+    delegate?.visitableDidDisappear(visitable: self)
   }
   
 }

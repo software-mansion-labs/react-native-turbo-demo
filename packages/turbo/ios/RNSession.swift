@@ -11,7 +11,7 @@ import WebKit
 
 class RNSession: NSObject {
   
-  private var registeredVisitableViews: [SessionSubscriber] = []
+  private var visitableViews: [SessionSubscriber] = []
   private var sessionHandle: NSString
   private var webViewConfiguration: WKWebViewConfiguration
   
@@ -26,27 +26,33 @@ class RNSession: NSObject {
   }()
   
   func registerVisitableView(newView: SessionSubscriber) {
-    if (!registeredVisitableViews.contains {
+    if (!visitableViews.contains {
       $0.id == newView.id
     }) {
-      registeredVisitableViews.append(newView)
+      visitableViews.append(newView)
     }
-    newView.attachDelegateAndVisit(newView.controller!)
+    newView.attachDelegateAndVisit(newView.controller)
   }
   
   func removeVisitableView(view: SessionSubscriber) {
     // New view is not registered when presentation is modal
-    let isViewModal = registeredVisitableViews.last?.id == view.id
-    let viewIdx = registeredVisitableViews.lastIndex(where: {
+    let isViewModal = visitableViews.last?.id == view.id
+    let viewIdx = visitableViews.lastIndex(where: {
       view.id == $0.id
     })
-    registeredVisitableViews.remove(at: viewIdx!)
-    guard let newView = registeredVisitableViews.last else {
+    visitableViews.remove(at: viewIdx!)
+    guard let newView = visitableViews.last else {
       return
     }
     if (isViewModal) {
-      newView.attachDelegateAndVisit(newView.controller!)
+      newView.attachDelegateAndVisit(newView.controller)
     }
+  }
+    
+  func configurationEquals(webViewConfiguration: WKWebViewConfiguration) -> Bool {
+    // WKWebViewConfiguration doesn't conform to the Equatable protocol,
+    // therefore, we need to manually compare the properties.
+    return self.webViewConfiguration.applicationNameForUserAgent != webViewConfiguration.applicationNameForUserAgent
   }
   
 }
@@ -54,8 +60,8 @@ class RNSession: NSObject {
 extension RNSession: WKScriptMessageHandler {
   
   func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-    for view in registeredVisitableViews {
-        view.handleMessage(message: message)
+    for view in visitableViews {
+      view.handleMessage(message: message)
     }
   }
   

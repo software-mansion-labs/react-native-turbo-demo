@@ -12,19 +12,19 @@ class RNVisitableView: UIView, SessionSubscriber {
   var id: UUID = UUID()
   @objc var sessionHandle: NSString? = nil {
     didSet {
-      validateSessionProperty(propertyName: "sessionHandle", oldValue: oldValue)
+      validateSessionProperty(propertyName: "sessionHandle", oldValue: oldValue, newValue: sessionHandle)
     }
   }
   @objc var applicationNameForUserAgent: NSString? = nil {
     didSet {
-      validateSessionProperty(propertyName: "applicationNameForUserAgent", oldValue: oldValue)
+      validateSessionProperty(propertyName: "applicationNameForUserAgent", oldValue: oldValue, newValue: applicationNameForUserAgent)
     }
   }
   @objc var url: NSString = "" {
     didSet {
       if (oldValue != "") {
-        self.controller?.visitableURL = URL(string: String(url))!
-        getSession()?.visit(controller!)
+        controller.visitableURL = URL(string: String(url))!
+        turboSession.visit(controller)
       }
     }
   }
@@ -35,10 +35,28 @@ class RNVisitableView: UIView, SessionSubscriber {
   @objc var onWarning: RCTDirectEventBlock?
   
   var bridge: RCTBridge?
-  var controller: RNVisitableViewController?
   
-  private var session: RNSession? = nil;
-  
+  private lazy var session: RNSession = {
+    let webViewConfiguration = self.getWebViewConfiguration()
+    let session = RNSessionManager.shared.findOrCreateSession(sessionHandle: self.sessionHandle!, webViewConfiguration: webViewConfiguration)
+    if(session.configurationEquals(webViewConfiguration: webViewConfiguration)){
+      sendSessionConfigurationWarning(propertyName: "webViewConfiguration")
+    }
+    return session
+  }()
+  private lazy var turboSession: Session = session.turboSession
+  private lazy var webView: WKWebView = turboSession.webView
+    
+  lazy var controller: RNVisitableViewController = {
+    let url = URL(string: String(url))!
+    let controller = RNVisitableViewController(url: url)
+    controller.delegate = self
+    reactViewController().addChild(controller)
+    controller.view.frame = bounds // Fixes incorrect size of the webview
+    controller.didMove(toParent: reactViewController())
+    return controller
+  }()
+    
   init(bridge: RCTBridge) {
     self.bridge = bridge
     super.init(frame: CGRect.zero)
@@ -54,50 +72,21 @@ class RNVisitableView: UIView, SessionSubscriber {
     return configuration
   }
   
-  public func getRNSesssion() -> RNSession? {
-    if(session == nil){
-      session = RNSessionManager.shared.findOrCreateSession(sessionHandle: self.sessionHandle, webViewConfiguration: self.getWebViewConfiguration())
-    }
-    return session
-  }
-  
-  public func getSession() -> Session? {
-    return getRNSesssion()?.turboSession
-  }
-  
-  public func getWebView() -> WKWebView? {
-    return getRNSesssion()?.turboSession.webView
-  }
-  
   override func didMoveToWindow() {
-
-    let url = URL(string: String(url))!
-    
-    if (self.controller == nil) {
-      print("Open new VistableView with URL passed from JS: ", url)
-      setupViewController(url: url)
-      self.addSubview((controller?.view)!)
+    if (!subviews.contains(controller.view)){
+      addSubview(controller.view)
     }
-  }
-  
-  func setupViewController(url: URL) {
-    self.controller = RNVisitableViewController(url: url)
-    self.controller?.delegate = self
-    self.reactViewController().addChild(self.controller!)
-    self.controller?.view.frame = bounds // Fixes incorrect size of the webview
-    self.controller?.didMove(toParent: self.reactViewController())
   }
   
   func attachDelegateAndVisit(_ visitable: Visitable) {
-    let session = getSession()
-    session?.delegate = self
+    turboSession.delegate = self
     // Upon initial load, the session.visit function is called
     // to set the currentVisit private variable.
-    if(session?.webView.url == nil){
-      session?.visit(visitable)
+    if(webView.url == nil){
+      turboSession.visit(visitable)
       return
     }
-    session?.visitableViewWillAppear(visitable)
+    turboSession.visitableViewWillAppear(visitable)
   }
     
   public func handleMessage(message: WKScriptMessage){
@@ -105,29 +94,30 @@ class RNVisitableView: UIView, SessionSubscriber {
   }
   
   public func injectJavaScript(code: NSString) -> Void {
-    getWebView()?.evaluateJavaScript(code as String)
+    webView.evaluateJavaScript(code as String)
   }
     
-  private func validateSessionProperty(propertyName: NSString, oldValue: NSString?){
-    if (oldValue != nil && session != nil){
-      onWarning?(["message": "You cannot change \(propertyName) after initialization of the session."])
+  private func sendSessionConfigurationWarning(propertyName: NSString){
+    onWarning?(["message": "You cannot change \(propertyName) after initialization of the session."])
+  }
+  
+  private func validateSessionProperty(propertyName: NSString, oldValue: NSString?, newValue: NSString?) -> Void{
+    if (oldValue != nil && newValue != nil  && !oldValue!.isEqual(to: newValue! as String)){
+      sendSessionConfigurationWarning(propertyName: propertyName)
     }
   }
 }
 
 extension RNVisitableView: RNVisitableViewControllerDelegate {
   func visitableWillAppear(visitable: Visitable) {
-    getRNSesssion()?.registerVisitableView(newView: self)
+    session.registerVisitableView(newView: self)
   }
   
-  func visitableDidDisappear(visitable: RNTurboiOS.Visitable) {
-    getRNSesssion()?.removeVisitableView(view: self)
+  func visitableDidDisappear(visitable: Visitable) {
+    session.removeVisitableView(view: self)
   }
 
   func visitableDidRender(visitable: Visitable) {
-    guard let webView = getWebView() else {
-      return
-    }
     let event: [AnyHashable: Any] = [
       "title": webView.title!,
       "url": webView.url!
@@ -147,7 +137,7 @@ extension RNVisitableView: SessionDelegate {
     // Handle a visit proposal
     if (session.webView.url == proposal.url) {
       // When reopening same URL we want to reload webview
-      getSession()?.reload()
+      turboSession.reload()
     } else {
       let event: [AnyHashable: Any] = [
         "url": proposal.url.absoluteString,

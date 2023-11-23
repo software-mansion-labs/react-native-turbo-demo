@@ -14,14 +14,11 @@ class RNSessionManager {
 
   private init() {}
 
-  func findOrCreateSession(sessionHandle: NSString?, webViewConfiguration: WKWebViewConfiguration) -> RNSession {
-    let resolvedSessionHandle = sessionHandle ?? ("Default" as NSString)
-    
-    if(sessions[resolvedSessionHandle] == nil){
-      sessions[resolvedSessionHandle] = RNSession(sessionHandle: resolvedSessionHandle, webViewConfiguration: webViewConfiguration)
+  func findOrCreateSession(sessionHandle: NSString, webViewConfiguration: WKWebViewConfiguration) -> RNSession {
+    if(sessions[sessionHandle] == nil){
+      sessions[sessionHandle] = RNSession(sessionHandle: sessionHandle, webViewConfiguration: webViewConfiguration)
     }
-    
-    return sessions[resolvedSessionHandle]!
+    return sessions[sessionHandle]!
   }
 
 }
