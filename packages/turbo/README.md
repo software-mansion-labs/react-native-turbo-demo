@@ -80,7 +80,7 @@ Session handle for the webview. If not provided, the default session will be use
 
 ### `applicationNameForUserAgent`
 
-The name of the application as used in the user agent string.
+The name of the application as used in the user agent string. Please note that changing this value after the session initialization will not change the user agent string.
 
 ### `stradaComponents`
 
