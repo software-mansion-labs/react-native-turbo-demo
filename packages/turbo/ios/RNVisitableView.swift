@@ -14,8 +14,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var applicationNameForUserAgent: NSString? = nil
   @objc var url: NSString = "" {
     didSet {
-      controller.visitableURL = URL(string: String(url))
-      performVisitOnUrlChange(oldUrl: oldValue)
+      performVisit()
     }
   }
   @objc var onMessage: RCTDirectEventBlock?
@@ -61,19 +60,11 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   }
     
   private func performVisit(){
-    // Upon initial load, the session.visit function is called
-    // to set the currentVisit private variable.
-    if(webView.url == nil){
-      turboSession.visit(controller)
+    if(controller.visitableURL?.absoluteString == url as String){
       return
     }
-    turboSession.visitableViewWillAppear(controller)
-  }
-
-  private func performVisitOnUrlChange(oldUrl: NSString){
-    if(oldUrl != "" && url != "" && oldUrl != url){
-      turboSession.visit(controller, action: .replace)
-    }
+    controller.visitableURL = URL(string: String(url))
+    turboSession.visit(controller)
   }
 }
 
@@ -104,7 +95,7 @@ extension RNVisitableView: SessionDelegate {
 
   func session(_ session: Session, didProposeVisit proposal: VisitProposal) {
     // Handle a visit proposal
-    if (session.webView.url == proposal.url) {
+    if (webView.url == proposal.url) {
       // When reopening same URL we want to reload webview
       turboSession.reload()
     } else {
