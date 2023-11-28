@@ -15,6 +15,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var url: NSString = "" {
     didSet {
       controller.visitableURL = URL(string: String(url))
+      performReplaceVisitOnUrlChange(oldUrl: oldValue)
     }
   }
   @objc var onMessage: RCTDirectEventBlock?
@@ -75,6 +76,12 @@ class RNVisitableView: UIView, RNSessionSubscriber {
       return
     }
     turboSession.visitableViewWillAppear(controller)
+  }
+
+  private func performReplaceVisitOnUrlChange(oldUrl: NSString){
+    if(oldUrl != "" && url != "" && oldUrl != url){
+      turboSession.visit(controller, action: .replace)
+    }
   }
 }
 
