@@ -12,7 +12,7 @@ import RNTurboiOS
 class RNVisitableViewManager: RCTViewManager {
   
   override func view() -> UIView! {
-    return RNVisitableView(bridge: self.bridge)
+    return RNVisitableView()
   }
   
   override static func requiresMainQueueSetup() -> Bool {

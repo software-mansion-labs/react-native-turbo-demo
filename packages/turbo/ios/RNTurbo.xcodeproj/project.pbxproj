@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		298740DF299FB4DF007746C1 /* RNVisitableViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 298740DE299FB4DF007746C1 /* RNVisitableViewManager.m */; };
-		298740E1299FB4FF007746C1 /* SessionSubscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 298740E0299FB4FF007746C1 /* SessionSubscriber.swift */; };
+		298740E1299FB4FF007746C1 /* RNSessionSubscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 298740E0299FB4FF007746C1 /* RNSessionSubscriber.swift */; };
 		29A3F33A2906F24B00E8945A /* RNSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A3F3322906F24B00E8945A /* RNSession.swift */; };
 		29A3F33B2906F24B00E8945A /* RNVisitableViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A3F3332906F24B00E8945A /* RNVisitableViewManager.swift */; };
 		29A3F33C2906F24B00E8945A /* RNVisitableViewModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 29A3F3342906F24B00E8945A /* RNVisitableViewModule.m */; };
@@ -32,7 +32,7 @@
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libTurboWebviewCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTurboWebviewCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		298740DE299FB4DF007746C1 /* RNVisitableViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNVisitableViewManager.m; sourceTree = "<group>"; };
-		298740E0299FB4FF007746C1 /* SessionSubscriber.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionSubscriber.swift; sourceTree = "<group>"; };
+		298740E0299FB4FF007746C1 /* RNSessionSubscriber.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNSessionSubscriber.swift; sourceTree = "<group>"; };
 		29A3F3322906F24B00E8945A /* RNSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNSession.swift; sourceTree = "<group>"; };
 		29A3F3332906F24B00E8945A /* RNVisitableViewManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNVisitableViewManager.swift; sourceTree = "<group>"; };
 		29A3F3342906F24B00E8945A /* RNVisitableViewModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNVisitableViewModule.m; sourceTree = "<group>"; };
@@ -64,7 +64,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				298740E0299FB4FF007746C1 /* SessionSubscriber.swift */,
+				298740E0299FB4FF007746C1 /* RNSessionSubscriber.swift */,
 				298740DE299FB4DF007746C1 /* RNVisitableViewManager.m */,
 				F4FF95D5245B92E700C19C63 /* RNTurbo-Bridging-Header.h */,
 				29A3F3322906F24B00E8945A /* RNSession.swift */,
@@ -136,7 +136,7 @@
 			files = (
 				29A3F33E2906F24B00E8945A /* RNVisitableViewModule.swift in Sources */,
 				29A3F33B2906F24B00E8945A /* RNVisitableViewManager.swift in Sources */,
-				298740E1299FB4FF007746C1 /* SessionSubscriber.swift in Sources */,
+				298740E1299FB4FF007746C1 /* RNSessionSubscriber.swift in Sources */,
 				29A3F33A2906F24B00E8945A /* RNSession.swift in Sources */,
 				29A3F33C2906F24B00E8945A /* RNVisitableViewModule.m in Sources */,
 				29A3F3402906F24B00E8945A /* RNVisitableViewController.swift in Sources */,

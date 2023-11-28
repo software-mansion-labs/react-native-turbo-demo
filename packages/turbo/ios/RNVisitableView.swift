@@ -8,85 +8,53 @@
 import RNTurboiOS
 import UIKit
 
-class RNVisitableView: UIView, SessionSubscriber {
+class RNVisitableView: UIView, RNSessionSubscriber {
   var id: UUID = UUID()
-  @objc var sessionHandle: NSString? = nil {
-    didSet {
-      validateSessionProperty(propertyName: "sessionHandle", oldValue: oldValue, newValue: sessionHandle)
-    }
-  }
-  @objc var applicationNameForUserAgent: NSString? = nil {
-    didSet {
-      validateSessionProperty(propertyName: "applicationNameForUserAgent", oldValue: oldValue, newValue: applicationNameForUserAgent)
-    }
-  }
+  @objc var sessionHandle: NSString? = nil
+  @objc var applicationNameForUserAgent: NSString? = nil
   @objc var url: NSString = "" {
     didSet {
-      if (oldValue != "") {
-        controller.visitableURL = URL(string: String(url))!
-        turboSession.visit(controller)
-      }
+      performVisit()
     }
   }
   @objc var onMessage: RCTDirectEventBlock?
   @objc var onVisitProposal: RCTDirectEventBlock?
   @objc var onLoad: RCTDirectEventBlock?
   @objc var onVisitError: RCTDirectEventBlock?
-  @objc var onWarning: RCTDirectEventBlock?
   
-  var bridge: RCTBridge?
-  
-  private lazy var session: RNSession = {
-    let webViewConfiguration = self.getWebViewConfiguration()
-    let session = RNSessionManager.shared.findOrCreateSession(sessionHandle: self.sessionHandle!, webViewConfiguration: webViewConfiguration)
-    if(session.configurationEquals(webViewConfiguration: webViewConfiguration)){
-      sendSessionConfigurationWarning(propertyName: "webViewConfiguration")
-    }
-    return session
-  }()
+  private lazy var session: RNSession = RNSessionManager.shared.findOrCreateSession(sessionHandle: self.sessionHandle!, webViewConfiguration: webViewConfiguration)
   private lazy var turboSession: Session = session.turboSession
   private lazy var webView: WKWebView = turboSession.webView
+  private lazy var webViewConfiguration: WKWebViewConfiguration = {
+    let configuration = WKWebViewConfiguration()
+    configuration.applicationNameForUserAgent = applicationNameForUserAgent as String?
+    return configuration
+  }()
     
   lazy var controller: RNVisitableViewController = {
-    let url = URL(string: String(url))!
-    let controller = RNVisitableViewController(url: url)
+    let controller = RNVisitableViewController()
     controller.delegate = self
-    reactViewController().addChild(controller)
-    controller.view.frame = bounds // Fixes incorrect size of the webview
-    controller.didMove(toParent: reactViewController())
     return controller
   }()
     
-  init(bridge: RCTBridge) {
-    self.bridge = bridge
+  init() {
     super.init(frame: CGRect.zero)
   }
 
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
   }
-    
-  public func getWebViewConfiguration() -> WKWebViewConfiguration{
-    let configuration = WKWebViewConfiguration()
-    configuration.applicationNameForUserAgent = applicationNameForUserAgent as String?
-    return configuration
-  }
   
   override func didMoveToWindow() {
-    if (!subviews.contains(controller.view)){
-      addSubview(controller.view)
-    }
+    reactViewController().addChild(controller)
+    controller.view.frame = bounds // Fixes incorrect size of the webview
+    controller.didMove(toParent: reactViewController())
+    addSubview(controller.view)
   }
-  
-  func attachDelegateAndVisit(_ visitable: Visitable) {
+    
+  func attachDelegateAndVisit() {
     turboSession.delegate = self
-    // Upon initial load, the session.visit function is called
-    // to set the currentVisit private variable.
-    if(webView.url == nil){
-      turboSession.visit(visitable)
-      return
-    }
-    turboSession.visitableViewWillAppear(visitable)
+    turboSession.visitableViewWillAppear(controller)
   }
     
   public func handleMessage(message: WKScriptMessage){
@@ -99,13 +67,10 @@ class RNVisitableView: UIView, SessionSubscriber {
     webView.evaluateJavaScript(code as String)
   }
     
-  private func sendSessionConfigurationWarning(propertyName: NSString){
-    onWarning?(["message": "You cannot change \(propertyName) after initialization of the session."])
-  }
-  
-  private func validateSessionProperty(propertyName: NSString, oldValue: NSString?, newValue: NSString?) -> Void{
-    if (oldValue != nil && newValue != nil  && !oldValue!.isEqual(to: newValue! as String)){
-      sendSessionConfigurationWarning(propertyName: propertyName)
+  private func performVisit(){
+    if(url != ""){
+      controller.visitableURL = URL(string: String(url))
+      turboSession.visit(controller)
     }
   }
 }

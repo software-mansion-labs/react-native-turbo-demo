@@ -1,5 +1,5 @@
 //
-//  SessionSubscriber.swift
+//  RNSessionSubscriber.swift
 //  RNTurbo
 //
 //  Created by Bartłomiej Fryz on 23/01/2023.
@@ -7,11 +7,11 @@
 
 import RNTurboiOS
 
-protocol SessionSubscriber {
+protocol RNSessionSubscriber {
   
   var id: UUID { get set }
   var controller: RNVisitableViewController { get }
-  func attachDelegateAndVisit(_ visitable: Visitable)
+  func attachDelegateAndVisit()
   func handleMessage(message: WKScriptMessage)
   
 }

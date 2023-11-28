@@ -11,7 +11,7 @@ import WebKit
 
 class RNSession: NSObject {
   
-  private var visitableViews: [SessionSubscriber] = []
+  private var visitableViews: [RNSessionSubscriber] = []
   private var sessionHandle: NSString
   private var webViewConfiguration: WKWebViewConfiguration
   
@@ -25,16 +25,16 @@ class RNSession: NSObject {
     return Session(webViewConfiguration: self.webViewConfiguration)
   }()
   
-  func registerVisitableView(newView: SessionSubscriber) {
+  func registerVisitableView(newView: RNSessionSubscriber) {
     if (!visitableViews.contains {
       $0.id == newView.id
     }) {
       visitableViews.append(newView)
     }
-    newView.attachDelegateAndVisit(newView.controller)
+    newView.attachDelegateAndVisit()
   }
   
-  func removeVisitableView(view: SessionSubscriber) {
+  func removeVisitableView(view: RNSessionSubscriber) {
     // New view is not registered when presentation is modal
     let isViewModal = visitableViews.last?.id == view.id
     let viewIdx = visitableViews.lastIndex(where: {
@@ -45,14 +45,8 @@ class RNSession: NSObject {
       return
     }
     if (isViewModal) {
-      newView.attachDelegateAndVisit(newView.controller)
+      newView.attachDelegateAndVisit()
     }
-  }
-    
-  func configurationEquals(webViewConfiguration: WKWebViewConfiguration) -> Bool {
-    // WKWebViewConfiguration doesn't conform to the Equatable protocol,
-    // therefore, we need to manually compare the properties.
-    return self.webViewConfiguration.applicationNameForUserAgent != webViewConfiguration.applicationNameForUserAgent
   }
   
 }

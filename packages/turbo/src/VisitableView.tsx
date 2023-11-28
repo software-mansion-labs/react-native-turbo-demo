@@ -135,11 +135,6 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       [initializeStradaBridge, onLoad]
     );
 
-    const handleWarning = useCallback(
-      (e) => console.warn(e.nativeEvent.message),
-      []
-    );
-
     return (
       <>
         {stradaComponents?.map((Component, i) => (
@@ -160,7 +155,6 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           onMessage={handleOnMessage}
           onVisitError={handleVisitError}
           onLoad={handleOnLoad}
-          onWarning={handleWarning}
           style={styles.container}
         />
       </>

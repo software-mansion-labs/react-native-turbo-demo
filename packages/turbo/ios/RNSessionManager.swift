@@ -15,7 +15,7 @@ class RNSessionManager {
   private init() {}
 
   func findOrCreateSession(sessionHandle: NSString, webViewConfiguration: WKWebViewConfiguration) -> RNSession {
-    if(sessions[sessionHandle] == nil){
+    if(sessions[sessionHandle] == nil) {
       sessions[sessionHandle] = RNSession(sessionHandle: sessionHandle, webViewConfiguration: webViewConfiguration)
     }
     return sessions[sessionHandle]!
