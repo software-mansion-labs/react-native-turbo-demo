@@ -15,7 +15,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var url: NSString = "" {
     didSet {
       controller.visitableURL = URL(string: String(url))
-      performReplaceVisitOnUrlChange(oldUrl: oldValue)
+      performVisitOnUrlChange(oldUrl: oldValue)
     }
   }
   @objc var onMessage: RCTDirectEventBlock?
@@ -38,14 +38,6 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     return controller
   }()
     
-  init() {
-    super.init(frame: CGRect.zero)
-  }
-
-  required init?(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
-  }
-  
   override func didMoveToWindow() {
     reactViewController().addChild(controller)
     controller.view.frame = bounds // Fixes incorrect size of the webview
@@ -78,7 +70,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     turboSession.visitableViewWillAppear(controller)
   }
 
-  private func performReplaceVisitOnUrlChange(oldUrl: NSString){
+  private func performVisitOnUrlChange(oldUrl: NSString){
     if(oldUrl != "" && url != "" && oldUrl != url){
       turboSession.visit(controller, action: .replace)
     }
