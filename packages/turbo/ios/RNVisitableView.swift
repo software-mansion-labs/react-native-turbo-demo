@@ -14,7 +14,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var applicationNameForUserAgent: NSString? = nil
   @objc var url: NSString = "" {
     didSet {
-      performVisit()
+      controller.visitableURL = URL(string: String(url))
     }
   }
   @objc var onMessage: RCTDirectEventBlock?
@@ -54,7 +54,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     
   func attachDelegateAndVisit() {
     turboSession.delegate = self
-    turboSession.visitableViewWillAppear(controller)
+    performVisit()
   }
     
   public func handleMessage(message: WKScriptMessage){
@@ -68,10 +68,13 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   }
     
   private func performVisit(){
-    if(url != ""){
-      controller.visitableURL = URL(string: String(url))
+    // Upon initial load, the session.visit function is called
+    // to set the currentVisit private variable.
+    if(webView.url == nil){
       turboSession.visit(controller)
+      return
     }
+    turboSession.visitableViewWillAppear(controller)
   }
 }
 
