@@ -31,24 +31,26 @@ class RNSession: NSObject {
     }) {
       visitableViews.append(newView)
     }
-    newView.attachDelegateAndVisit()
+    newView.becameTopMostView()
   }
   
   func removeVisitableView(view: RNSessionSubscriber) {
-    // New view is not registered when presentation is modal
-    let isViewModal = visitableViews.last?.id == view.id
+    let wasTopMostView = visitableViews.last?.id == view.id
+    
     let viewIdx = visitableViews.lastIndex(where: {
       view.id == $0.id
     })
     visitableViews.remove(at: viewIdx!)
-    guard let newView = visitableViews.last else {
-      return
-    }
-    if (isViewModal) {
-      newView.attachDelegateAndVisit()
+
+    // The new top-most view is not registered when the previous top-most view is a modal
+    if (wasTopMostView) {
+      guard let newView = visitableViews.last else {
+        return
+      }
+      newView.becameTopMostView()
+      newView.performRestorationVisit()
     }
   }
-  
 }
 
 extension RNSession: WKScriptMessageHandler {

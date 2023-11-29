@@ -14,7 +14,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var applicationNameForUserAgent: NSString? = nil
   @objc var url: NSString = "" {
     didSet {
-      performVisit()
+      visit()
     }
   }
   @objc var onMessage: RCTDirectEventBlock?
@@ -44,9 +44,8 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     addSubview(controller.view)
   }
     
-  func attachDelegateAndVisit() {
+  func becameTopMostView() {
     turboSession.delegate = self
-    performVisit()
   }
     
   public func handleMessage(message: WKScriptMessage){
@@ -59,12 +58,20 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     webView.evaluateJavaScript(code as String)
   }
     
-  private func performVisit(){
+  private func visit(){
     if(controller.visitableURL?.absoluteString == url as String){
       return
     }
+    performVisit()
+  }
+    
+  public func performVisit(){
     controller.visitableURL = URL(string: String(url))
     turboSession.visit(controller)
+  }
+    
+  public func performRestorationVisit(){
+    turboSession.visit(controller, action: .restore)
   }
 }
 

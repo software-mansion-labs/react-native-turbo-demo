@@ -11,7 +11,8 @@ protocol RNSessionSubscriber {
   
   var id: UUID { get set }
   var controller: RNVisitableViewController { get }
-  func attachDelegateAndVisit()
+  func becameTopMostView()
+  func performRestorationVisit()
   func handleMessage(message: WKScriptMessage)
   
 }
