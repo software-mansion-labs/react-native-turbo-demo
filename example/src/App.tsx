@@ -64,7 +64,7 @@ const App: React.FC = () => {
           {...webScreens.screens.SignIn}
           options={{
             presentation: 'formSheet',
-            gestureEnabled: 'false',
+            gestureEnabled: false,
           }}
         />
         <Stack.Screen
