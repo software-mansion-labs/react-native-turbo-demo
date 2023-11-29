@@ -3,7 +3,7 @@ import WebView from './WebView';
 import { Routes } from './webScreenRoutes';
 
 export const webScreenConfig: WebScreenRuleConfig = {
-  baseURL: 'https://turbo-native-demo.glitch.me/',
+  baseURL: 'http://localhost:45678/',
   routes: {
     [Routes.BottomTabs]: {
       routes: {
