@@ -35,7 +35,7 @@ const BottomTabs = () => {
 };
 
 const App: React.FC = () => {
-  const navigation = useNavigationContainerRef<any>();
+  const navigation = useNavigationContainerRef();
 
   return (
     <NavigationContainer linking={webScreens.linking} ref={navigation}>
