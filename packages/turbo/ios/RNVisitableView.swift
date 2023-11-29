@@ -22,7 +22,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var onLoad: RCTDirectEventBlock?
   @objc var onVisitError: RCTDirectEventBlock?
   
-  private lazy var session: RNSession = RNSessionManager.shared.findOrCreateSession(sessionHandle: self.sessionHandle!, webViewConfiguration: webViewConfiguration)
+  private lazy var session: RNSession = RNSessionManager.shared.findOrCreateSession(sessionHandle: sessionHandle!, webViewConfiguration: webViewConfiguration)
   private lazy var turboSession: Session = session.turboSession
   private lazy var webView: WKWebView = turboSession.webView
   private lazy var webViewConfiguration: WKWebViewConfiguration = {
@@ -44,11 +44,15 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     addSubview(controller.view)
   }
     
-  func becameTopMostView() {
+  func didBecomeTopMostView(restored: Bool) {
     turboSession.delegate = self
+    
+    if (restored) {
+      turboSession.visitableViewWillAppear(controller)
+    }
   }
     
-  public func handleMessage(message: WKScriptMessage){
+  public func handleMessage(message: WKScriptMessage) {
     if let messageBody = message.body as? [AnyHashable : Any] {
       onMessage?(messageBody)
     }
@@ -58,26 +62,28 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     webView.evaluateJavaScript(code as String)
   }
     
-  private func visit(){
-    if(controller.visitableURL?.absoluteString == url as String){
+  private func visit() {
+    if(controller.visitableURL?.absoluteString == url as String) {
       return
     }
     performVisit()
   }
     
-  public func performVisit(){
+  private func performVisit() {
     controller.visitableURL = URL(string: String(url))
     turboSession.visit(controller)
   }
-    
-  public func viewWillAppear(){
-    turboSession.visitableViewWillAppear(controller)
-  }
+
 }
 
 extension RNVisitableView: RNVisitableViewControllerDelegate {
+  
   func visitableWillAppear(visitable: Visitable) {
     session.registerVisitableView(newView: self)
+  }
+    
+  func visitableDidAppear(visitable: Visitable) {
+    didBecomeTopMostView(restored: false)
   }
   
   func visitableDidDisappear(visitable: Visitable) {

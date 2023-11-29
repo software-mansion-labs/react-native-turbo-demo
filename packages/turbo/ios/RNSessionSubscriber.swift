@@ -11,8 +11,7 @@ protocol RNSessionSubscriber {
   
   var id: UUID { get set }
   var controller: RNVisitableViewController { get }
-  func becameTopMostView()
-  func viewWillAppear()
+  func didBecomeTopMostView(restored: Bool)
   func handleMessage(message: WKScriptMessage)
   
 }

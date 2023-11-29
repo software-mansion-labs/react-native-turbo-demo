@@ -15,14 +15,14 @@ class RNSession: NSObject {
   private var sessionHandle: NSString
   private var webViewConfiguration: WKWebViewConfiguration
   
-  init(sessionHandle: NSString, webViewConfiguration: WKWebViewConfiguration){
+  init(sessionHandle: NSString, webViewConfiguration: WKWebViewConfiguration) {
     self.sessionHandle = sessionHandle
     self.webViewConfiguration = webViewConfiguration
   }
 
   public lazy var turboSession: Session = {
-    self.webViewConfiguration.userContentController.add(self, name: "nativeApp")
-    return Session(webViewConfiguration: self.webViewConfiguration)
+    webViewConfiguration.userContentController.add(self, name: "nativeApp")
+    return Session(webViewConfiguration: webViewConfiguration)
   }()
   
   func registerVisitableView(newView: RNSessionSubscriber) {
@@ -31,7 +31,6 @@ class RNSession: NSObject {
     }) {
       visitableViews.append(newView)
     }
-    newView.becameTopMostView()
   }
   
   func unregisterVisitableView(view: RNSessionSubscriber) {
@@ -47,8 +46,7 @@ class RNSession: NSObject {
       guard let newView = visitableViews.last else {
         return
       }
-      newView.becameTopMostView()
-      newView.viewWillAppear()
+      newView.didBecomeTopMostView(restored: true)
     }
   }
 }
