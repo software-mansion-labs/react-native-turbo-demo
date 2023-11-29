@@ -23,7 +23,7 @@ export type WebScreenRuleConfig = {
 
 const buildWebviewComponent =
   (baseURL: string, Component: React.ElementType = WebScreen) =>
-  (navProps: any) =>
+  (navProps: Record<string, unknown>) =>
     <Component {...navProps} baseURL={baseURL} />;
 
 const isRule = (obj: unknown): obj is WebScreenRule => {
@@ -36,12 +36,12 @@ const isRule = (obj: unknown): obj is WebScreenRule => {
 const getLinkingAndScreens = (
   baseURL: string,
   routes: WebScreenRuleMap,
-  component: (navProps: any) => JSX.Element
+  component: (navProps: Record<string, unknown>) => JSX.Element
 ): {
   screens: {
     [key: string]: any;
   };
-  linking: any;
+  linking: Record<string, string>;
 } => {
   return Object.entries(routes).reduce(
     (prev, entry) => {
