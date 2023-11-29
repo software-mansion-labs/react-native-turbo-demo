@@ -34,7 +34,7 @@ class RNSession: NSObject {
     newView.becameTopMostView()
   }
   
-  func removeVisitableView(view: RNSessionSubscriber) {
+  func unregisterVisitableView(view: RNSessionSubscriber) {
     let wasTopMostView = visitableViews.last?.id == view.id
     
     let viewIdx = visitableViews.lastIndex(where: {
@@ -48,7 +48,7 @@ class RNSession: NSObject {
         return
       }
       newView.becameTopMostView()
-      newView.performRestorationVisit()
+      newView.viewWillAppear()
     }
   }
 }

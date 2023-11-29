@@ -70,8 +70,8 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     turboSession.visit(controller)
   }
     
-  public func performRestorationVisit(){
-    turboSession.visit(controller, action: .restore)
+  public func viewWillAppear(){
+    turboSession.visitableViewWillAppear(controller)
   }
 }
 
@@ -81,7 +81,7 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
   }
   
   func visitableDidDisappear(visitable: Visitable) {
-    session.removeVisitableView(view: self)
+    session.unregisterVisitableView(view: self)
   }
 
   func visitableDidRender(visitable: Visitable) {
