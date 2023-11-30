@@ -12,6 +12,7 @@ import type {
   SessionMessageCallback,
   VisitProposal,
   VisitProposalError,
+  OpenExternalUrlEvent,
   StradaComponent,
 } from './types';
 import { useStradaBridge } from './hooks/useStradaBridge';
@@ -25,8 +26,8 @@ export interface Props {
   stradaComponents?: StradaComponent[];
   onVisitProposal: (proposal: VisitProposal) => void;
   onLoad?: (params: LoadEvent) => void;
-  onNonTurboLinkPress?: (
-    proposal: NativeSyntheticEvent<NonTurboLinkPressEvent>
+  onOpenExternalUrl?: (
+    proposal: NativeSyntheticEvent<OpenExternalUrlEvent>
   ) => void;
   onVisitError?: OnErrorCallback;
   onMessage?: SessionMessageCallback;
@@ -47,7 +48,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       onVisitError: viewErrorHandler,
       onMessage,
       onVisitProposal,
-      onNonTurboLinkPress: onNonTurboLinkPressCallback,
+      onOpenExternalUrl: onOpenExternalUrlCallback,
     } = props;
     const visitableViewRef = useRef<typeof RNVisitableView>();
 
@@ -103,15 +104,15 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       [onVisitProposal]
     );
 
-    const handleOnNonTurboLinkPress = useCallback(
-      (e: NativeSyntheticEvent<NonTurboLinkPressEvent>) => {
+    const handleOnOpenExternalUrl = useCallback(
+      (e: NativeSyntheticEvent<OpenExternalUrlEvent>) => {
         if (!onNonTurboLinkPressCallback) {
           openExternalURL(e.nativeEvent.url);
           return;
         }
-        onNonTurboLinkPressCallback(e);
+        onOpenExternalUrlCallback(e);
       },
-      [onNonTurboLinkPressCallback]
+      [onOpenExternalUrlCallback]
     );
 
     return (
@@ -135,7 +136,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           onVisitProposal={handleVisitProposal}
           onMessage={handleOnMessage}
           onVisitError={handleVisitError}
-          onNonTurboLinkPress={handleOnNonTurboLinkPress}
+          onOpenExternalUrl={handleOnOpenExternalUrl}
           onLoad={handleOnLoad}
           style={styles.container}
         />

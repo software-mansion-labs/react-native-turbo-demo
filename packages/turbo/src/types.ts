@@ -10,7 +10,7 @@ export interface LoadEvent {
   url: string;
 }
 
-export interface NonTurboLinkPressEvent {
+export interface OpenExternalUrlEvent {
   url: string;
 }
 

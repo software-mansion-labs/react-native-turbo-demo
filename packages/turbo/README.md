@@ -125,7 +125,7 @@ Callback called when the webview detects turbo visit action.
 - url
 - action – e.g "replace"
 
-### `onNonTurboLinkPress`
+### `onOpenExternalUrl`
 
 Callback called when the webview detects non-turbo visit action (e.g. opening external link).
 

@@ -15,7 +15,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var url: NSString = ""
   @objc var onMessage: RCTDirectEventBlock?
   @objc var onVisitProposal: RCTDirectEventBlock?
-  @objc var onNonTurboLinkPress: RCTDirectEventBlock?
+  @objc var onOpenExternalUrl: RCTDirectEventBlock?
   @objc var onLoad: RCTDirectEventBlock?
   @objc var onVisitError: RCTDirectEventBlock?
 
