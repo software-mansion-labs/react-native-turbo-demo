@@ -10,6 +10,10 @@ export interface LoadEvent {
   url: string;
 }
 
+export interface NonTurboLinkPressEvent {
+  url: string;
+}
+
 export type MessageEvent = object;
 
 export interface VisitProposalError {

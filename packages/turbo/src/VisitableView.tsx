@@ -25,6 +25,9 @@ export interface Props {
   stradaComponents?: StradaComponent[];
   onVisitProposal: (proposal: VisitProposal) => void;
   onLoad?: (params: LoadEvent) => void;
+  onNonTurboLinkPress?: (
+    proposal: NativeSyntheticEvent<NonTurboLinkPressEvent>
+  ) => void;
   onVisitError?: OnErrorCallback;
   onMessage?: SessionMessageCallback;
 }
