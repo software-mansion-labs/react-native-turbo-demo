@@ -47,6 +47,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       onVisitError: viewErrorHandler,
       onMessage,
       onVisitProposal,
+      onNonTurboLinkPress: onNonTurboLinkPressCallback,
     } = props;
     const visitableViewRef = useRef<typeof RNVisitableView>();
 
@@ -102,6 +103,17 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       [onVisitProposal]
     );
 
+    const handleOnNonTurboLinkPress = useCallback(
+      (e: NativeSyntheticEvent<NonTurboLinkPressEvent>) => {
+        if (!onNonTurboLinkPressCallback) {
+          openExternalURL(e.nativeEvent.url);
+          return;
+        }
+        onNonTurboLinkPressCallback(e);
+      },
+      [onNonTurboLinkPressCallback]
+    );
+
     return (
       <>
         {stradaComponents?.map((Component, i) => (
@@ -123,6 +135,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           onVisitProposal={handleVisitProposal}
           onMessage={handleOnMessage}
           onVisitError={handleVisitError}
+          onNonTurboLinkPress={handleOnNonTurboLinkPress}
           onLoad={handleOnLoad}
           style={styles.container}
         />

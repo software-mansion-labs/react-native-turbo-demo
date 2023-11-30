@@ -106,5 +106,4 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
     ]
     onLoad?(event)
   }
-
 }
