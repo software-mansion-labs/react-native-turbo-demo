@@ -105,13 +105,8 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
     );
 
     const handleOnOpenExternalUrl = useCallback(
-      (e: NativeSyntheticEvent<OpenExternalUrlEvent>) => {
-        if (!onNonTurboLinkPressCallback) {
-          openExternalURL(e.nativeEvent.url);
-          return;
-        }
-        onOpenExternalUrlCallback(e);
-      },
+      (e: NativeSyntheticEvent<OpenExternalUrlEvent>) =>
+        onOpenExternalUrlCallback(e.nativeEvent),
       [onOpenExternalUrlCallback]
     );
 
