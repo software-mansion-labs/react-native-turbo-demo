@@ -56,8 +56,8 @@ const parseQueryStringFromPath = (path: string) => {
 export default function useWebviewNavigate<
   ParamList extends ReactNavigation.RootParamList
 >() {
-  const navigation: any = React.useContext(NavigationContainerRefContext);
-  const linking: any = React.useContext(LinkingContext);
+  const navigation = React.useContext(NavigationContainerRefContext);
+  const linking = React.useContext(LinkingContext);
 
   const linkTo = React.useCallback(
     (to: To<ParamList>, actionType?: Action) => {
@@ -68,14 +68,14 @@ export default function useWebviewNavigate<
       }
 
       if (typeof to !== 'string') {
+        // @ts-expect-error TODO use proper typing
         navigation.navigate(to.screen, to.params);
         return;
       }
 
       const { options } = linking;
-
       let path = to;
-      if (to.match(/^https?:\/\//)) {
+      if (options && to.match(/^https?:\/\//)) {
         path = extractPathFromURL(options?.prefixes, to) ?? '';
       }
 
