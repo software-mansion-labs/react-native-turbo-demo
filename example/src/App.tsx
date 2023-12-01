@@ -6,11 +6,11 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { default as NativeScreen } from './NumbersScreen';
 import ErrorScreen from './ErrorScreen';
-import { webScreens } from 'example/src/webScreen';
+import { webScreenConfig, webScreens } from 'example/src/webScreen';
 import NestedTab from 'example/src/NestedTab';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Routes } from 'example/src/webScreenRoutes';
-import ShareScreen from 'example/src/ShareScreen';
+import { webStackScreen } from 'react-native-web-screen';
 
 const Tab = createBottomTabNavigator();
 
@@ -50,23 +50,7 @@ const App: React.FC = () => {
           name={Routes.BottomTabs}
           component={BottomTabs}
         />
-        <Stack.Screen
-          name={Routes.NumbersScreen}
-          component={NativeScreen}
-          options={{ title: 'A List of Numbers' }}
-        />
-        <Stack.Screen {...webScreens.screens.New!} />
-        <Stack.Screen {...webScreens.screens.SuccessScreen!} />
-        <Stack.Screen {...webScreens.screens.One!} />
-        <Stack.Screen {...webScreens.screens.Share!} />
-        <Stack.Screen {...webScreens.screens.Fallback!} />
-        <Stack.Screen
-          {...webScreens.screens.SignIn!}
-          options={{
-            presentation: 'formSheet',
-            gestureEnabled: false,
-          }}
-        />
+        {webStackScreen({ Stack, config: webScreenConfig })}
         <Stack.Screen
           name={Routes.NotFound}
           component={ErrorScreen}

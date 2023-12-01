@@ -2,6 +2,7 @@ import React from 'react';
 import WebScreen from './WebScreen';
 import { PathConfigMap } from '@react-navigation/native';
 import type { NativeStackNavigationOptions } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 export interface WebScreenRule {
   urlPattern: string;
@@ -103,6 +104,38 @@ export function buildWebScreen({
     },
     screens: getScreens(baseURL, routes, nativeComponent),
   };
+}
+type StackType = ReturnType<typeof createNativeStackNavigator>;
+
+export function webStackScreen({
+  Stack,
+  config,
+}: {
+  Stack: StackType;
+  config: WebScreenRuleConfig;
+}) {
+  const { routes } = config;
+  const { baseURL, webScreenComponent: defaultComponent } = config;
+
+  return (
+    <Stack.Group>
+      {Object.entries(routes).map(([routeName, rule]) => {
+        if (isRule(rule)) {
+          const { urlPattern, component, options, presentation, title } = rule;
+          return (
+            <Stack.Screen
+              name={routeName}
+              //  @ts-expect-error Use proper typing for main components
+              component={component ?? defaultComponent}
+              initialParams={{ baseURL, path: urlPattern }}
+              options={{ ...options, presentation, title }}
+            />
+          );
+        }
+        return null;
+      })}
+    </Stack.Group>
+  );
 }
 
 // WIP: More intelligent type based on ScreenParams types
