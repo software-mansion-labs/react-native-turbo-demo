@@ -1,6 +1,7 @@
 import { buildWebScreen, WebScreenRuleConfig } from 'react-native-web-screen';
 import WebView from './WebView';
 import { Routes } from './webScreenRoutes';
+import ShareScreen from './ShareScreen';
 
 export const webScreenConfig: WebScreenRuleConfig = {
   baseURL: 'http://localhost:45678/',
@@ -36,6 +37,7 @@ export const webScreenConfig: WebScreenRuleConfig = {
     },
     [Routes.Share]: {
       urlPattern: 'share',
+      component: ShareScreen,
     },
     [Routes.NestedTab]: {
       routes: {

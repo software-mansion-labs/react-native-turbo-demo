@@ -7,6 +7,7 @@ export interface WebScreenRule {
   urlPattern: string;
   title?: string;
   presentation?: ScreenProps['stackPresentation'];
+  component?: React.ElementType;
 }
 
 export type WebScreenRuleMap = {
@@ -47,22 +48,23 @@ type ScreenConfig = {
 function getScreens(
   baseURL: string,
   routes: WebScreenRuleMap,
-  component: (navProps: Record<string, unknown>) => JSX.Element
+  defaultComponent: (navProps: Record<string, unknown>) => JSX.Element
 ): Record<string, ScreenConfig> {
   let screens: Record<string, ScreenConfig> = {};
   Object.entries(routes).forEach(([routeName, rule]) => {
     if (isRule(rule)) {
-      const { urlPattern, ...options } = rule;
+      const { urlPattern, component, ...options } = rule;
       screens[routeName] = {
         name: routeName,
-        component,
+        // @ts-expect-error Use proper typing for main components
+        component: component ?? defaultComponent,
         initialParams: { baseURL, path: urlPattern },
         options: { ...options },
       };
     } else {
       screens = {
         ...screens,
-        ...getScreens(baseURL, rule.routes, component),
+        ...getScreens(baseURL, rule.routes, defaultComponent),
       };
     }
   });
