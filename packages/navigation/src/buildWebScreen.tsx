@@ -3,6 +3,7 @@ import WebScreen from './WebScreen';
 import { PathConfigMap } from '@react-navigation/native';
 import type { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 export interface WebScreenRule {
   urlPattern: string;
@@ -105,37 +106,65 @@ export function buildWebScreen({
     screens: getScreens(baseURL, routes, nativeComponent),
   };
 }
-type StackType = ReturnType<typeof createNativeStackNavigator>;
+type StackType =
+  | ReturnType<typeof createNativeStackNavigator>
+  | ReturnType<typeof createBottomTabNavigator>;
 
-export function webStackScreen({
-  Stack,
-  config,
-}: {
-  Stack: StackType;
-  config: WebScreenRuleConfig;
-}) {
+export function findRouteInWebScreenConfig(
+  routes: WebScreenRuleMap | undefined,
+  name: string
+): WebScreenRuleMap | undefined {
+  if (!routes) return undefined;
+  for (const key of Object.keys(routes)) {
+    const route = routes[key];
+    if (key === name) {
+      if (!isRule(route)) {
+        return route?.routes;
+      }
+      return undefined;
+    }
+    if (!isRule(route)) {
+      const foundRoute = findRouteInWebScreenConfig(route?.routes, name);
+      if (foundRoute) return foundRoute;
+    }
+  }
+  return undefined;
+}
+
+export function webStackScreen(
+  Stack: StackType,
+  config: WebScreenRuleConfig,
+  key?: string
+) {
   const { routes } = config;
-  const { baseURL, webScreenComponent: defaultComponent } = config;
+  const { baseURL, webScreenComponent } = config;
+  const defaultComponent = buildWebviewComponent(baseURL, webScreenComponent);
 
-  return (
-    <Stack.Group>
-      {Object.entries(routes).map(([routeName, rule]) => {
-        if (isRule(rule)) {
-          const { urlPattern, component, options, presentation, title } = rule;
-          return (
-            <Stack.Screen
-              name={routeName}
-              //  @ts-expect-error Use proper typing for main components
-              component={component ?? defaultComponent}
-              initialParams={{ baseURL, path: urlPattern }}
-              options={{ ...options, presentation, title }}
-            />
-          );
-        }
-        return null;
-      })}
-    </Stack.Group>
-  );
+  const filteredRoutes = key ? findRouteInWebScreenConfig(routes, key) : routes;
+  if (filteredRoutes)
+    return (
+      <Stack.Group>
+        {Object.entries(filteredRoutes).map(([routeName, rule]) => {
+          if (isRule(rule)) {
+            const { urlPattern, component, options, presentation, title } =
+              rule;
+            return (
+              <Stack.Screen
+                key={routeName}
+                name={routeName}
+                //  @ts-expect-error Use proper typing for main components
+                component={component ?? defaultComponent}
+                initialParams={{ baseURL, path: urlPattern }}
+                //  @ts-expect-error Use proper typing for main components
+                options={{ ...options, presentation, title }}
+              />
+            );
+          }
+          return null;
+        })}
+      </Stack.Group>
+    );
+  return null;
 }
 
 // WIP: More intelligent type based on ScreenParams types

@@ -24,7 +24,8 @@ const BottomTabs = () => {
         tabBarActiveTintColor: '#00094a',
       }}
     >
-      <Tab.Screen {...webScreens.screens.WebviewInitial!} />
+      {webStackScreen(Tab, webScreenConfig, Routes.BottomTabs)}
+
       <Tab.Screen
         name={Routes.NestedTabNative}
         component={NativeScreen}
@@ -50,7 +51,7 @@ const App: React.FC = () => {
           name={Routes.BottomTabs}
           component={BottomTabs}
         />
-        {webStackScreen({ Stack, config: webScreenConfig })}
+        {webStackScreen(Stack, webScreenConfig)}
         <Stack.Screen
           name={Routes.NotFound}
           component={ErrorScreen}
