@@ -14,6 +14,14 @@ export const webScreenConfig: WebScreenRuleConfig = {
         },
       },
     },
+    [Routes.NestedTab]: {
+      routes: {
+        [Routes.NestedTabWeb]: {
+          urlPattern: 'nested',
+          title: 'Nested Web',
+        },
+      },
+    },
     [Routes.New]: {
       urlPattern: 'new',
       title: 'A Modal Webpage',
@@ -33,20 +41,14 @@ export const webScreenConfig: WebScreenRuleConfig = {
     },
     [Routes.SignIn]: {
       urlPattern: 'signin',
-      presentation: 'modal',
+      presentation: 'formSheet',
+      options: { gestureEnabled: false },
     },
     [Routes.Share]: {
       urlPattern: 'share',
       component: ShareScreen,
     },
-    [Routes.NestedTab]: {
-      routes: {
-        [Routes.NestedTabWeb]: {
-          urlPattern: 'nested',
-          title: 'Nested Web',
-        },
-      },
-    },
+
     [Routes.Fallback]: { urlPattern: '*', title: '' },
   },
   webScreenComponent: WebView,
