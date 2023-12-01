@@ -1,4 +1,7 @@
-import { buildWebScreen, WebScreenRuleConfig } from 'react-native-web-screen';
+import {
+  buildLinkingConfiguration,
+  WebScreenRuleConfig,
+} from 'react-native-web-screen';
 import WebView from './WebView';
 import { Routes } from './webScreenRoutes';
 import ShareScreen from './ShareScreen';
@@ -57,4 +60,4 @@ export const webScreenConfig: WebScreenRuleConfig = {
   webScreenComponent: WebView,
 };
 
-export const webScreens = buildWebScreen(webScreenConfig);
+export const linkingConfiguration = buildLinkingConfiguration(webScreenConfig);

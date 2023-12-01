@@ -1,4 +1,7 @@
-import { buildWebScreen, WebScreenRuleConfig } from '../buildWebScreen';
+import {
+  buildLinkingConfiguration,
+  WebScreenRuleConfig,
+} from '../buildWebScreen';
 
 const mockComponent = jest.fn();
 
@@ -35,56 +38,24 @@ const exampleConfig: WebScreenRuleConfig = {
 };
 
 const exampleWebScreenResult = {
-  linking: {
-    prefixes: ['http://localhost:test/'],
-    config: {
-      screens: {
-        TestRoute1: 'url1',
-        TestRoute2: 'url2',
-        TestRoute3: {
-          screens: {
-            NestedRoute: 'urlNested',
-          },
+  prefixes: ['http://localhost:test/'],
+  config: {
+    screens: {
+      TestRoute1: 'url1',
+      TestRoute2: 'url2',
+      TestRoute3: {
+        screens: {
+          NestedRoute: 'urlNested',
         },
-        Fallback: '*',
       },
-    },
-  },
-  screens: {
-    TestRoute1: {
-      name: 'TestRoute1',
-      component: () => mockComponent,
-      options: {
-        title: 'Title 1',
-      },
-    },
-    TestRoute2: {
-      name: 'TestRoute2',
-      component: () => mockComponent,
-      options: {
-        presentation: 'modal',
-      },
-    },
-    NestedRoute: {
-      name: 'NestedRoute',
-      component: () => mockComponent,
-      options: {
-        title: 'Nested',
-      },
-    },
-    Fallback: {
-      name: 'Fallback',
-      component: () => mockComponent,
-      options: {
-        title: '',
-      },
+      Fallback: '*',
     },
   },
 };
 
-describe('getLinkingAndScreens()', () => {
-  test('should return correct screens for example data', () => {
-    const result = buildWebScreen(exampleConfig);
+describe('buildLinkingConfiguration()', () => {
+  test('should return correct links for example data', () => {
+    const result = buildLinkingConfiguration(exampleConfig);
     expect(result).toEqual(exampleWebScreenResult);
   });
 });

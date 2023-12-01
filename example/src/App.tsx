@@ -6,7 +6,7 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { default as NativeScreen } from './NumbersScreen';
 import ErrorScreen from './ErrorScreen';
-import { webScreenConfig, webScreens } from 'example/src/webScreen';
+import { webScreenConfig, linkingConfiguration } from 'example/src/webScreen';
 import NestedTab from 'example/src/NestedTab';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Routes } from 'example/src/webScreenRoutes';
@@ -39,7 +39,7 @@ const App: React.FC = () => {
   const navigation = useNavigationContainerRef();
 
   return (
-    <NavigationContainer linking={webScreens.linking} ref={navigation}>
+    <NavigationContainer linking={linkingConfiguration} ref={navigation}>
       <Stack.Navigator
         screenOptions={{
           headerBackTitle: 'Back',
