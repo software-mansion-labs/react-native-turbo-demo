@@ -41,40 +41,7 @@ function isRule(obj: unknown): obj is WebScreenRule {
   return false;
 }
 
-type ScreenConfig = {
-  name: string;
-  component: React.ComponentType;
-  initialParams: {};
-  options: NativeStackNavigationOptions;
-};
-
-function getScreens(
-  baseURL: string,
-  routes: WebScreenRuleMap,
-  defaultComponent: (navProps: Record<string, unknown>) => JSX.Element
-): Record<string, ScreenConfig> {
-  let screens: Record<string, ScreenConfig> = {};
-  Object.entries(routes).forEach(([routeName, rule]) => {
-    if (isRule(rule)) {
-      const { urlPattern, component, options, presentation, title } = rule;
-      screens[routeName] = {
-        name: routeName,
-        // @ts-expect-error Use proper typing for main components
-        component: component ?? defaultComponent,
-        initialParams: { baseURL, path: urlPattern },
-        options: { ...options, presentation, title },
-      };
-    } else {
-      screens = {
-        ...screens,
-        ...getScreens(baseURL, rule.routes, defaultComponent),
-      };
-    }
-  });
-  return screens;
-}
-
-export function generateLinking<ParamList extends {}>(
+function generateLinking<ParamList extends {}>(
   rules: WebScreenRuleMap
 ): { screens: PathConfigMap<ParamList> } {
   const config: PathConfigMap<ParamList> = {};
@@ -91,19 +58,13 @@ export function generateLinking<ParamList extends {}>(
   return { screens: config };
 }
 
-export function buildWebScreen({
+export function buildLinkingConfiguration({
   routes,
   baseURL,
-  webScreenComponent,
 }: WebScreenRuleConfig) {
-  const nativeComponent = buildWebviewComponent(baseURL, webScreenComponent);
-
   return {
-    linking: {
-      prefixes: [baseURL],
-      config: generateLinking(routes),
-    },
-    screens: getScreens(baseURL, routes, nativeComponent),
+    prefixes: [baseURL],
+    config: generateLinking(routes),
   };
 }
 type StackType =
