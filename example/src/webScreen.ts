@@ -2,6 +2,7 @@ import { buildWebScreen, WebScreenRuleConfig } from 'react-native-web-screen';
 import WebView from './WebView';
 import { Routes } from './webScreenRoutes';
 import ShareScreen from './ShareScreen';
+import { NativeScreen } from 'react-native-screens';
 
 export const webScreenConfig: WebScreenRuleConfig = {
   baseURL: 'http://localhost:45678/',
@@ -38,6 +39,8 @@ export const webScreenConfig: WebScreenRuleConfig = {
     },
     [Routes.NumbersScreen]: {
       urlPattern: 'numbers',
+      title: 'A List of Numbers',
+      component: NativeScreen,
     },
     [Routes.SignIn]: {
       urlPattern: 'signin',
