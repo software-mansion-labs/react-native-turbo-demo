@@ -24,7 +24,7 @@ const BottomTabs = () => {
         tabBarActiveTintColor: '#00094a',
       }}
     >
-      <Tab.Screen {...webScreens.screens.WebviewInitial} />
+      <Tab.Screen {...webScreens.screens.WebviewInitial!} />
       <Tab.Screen
         name={Routes.NestedTabNative}
         component={NativeScreen}
@@ -55,13 +55,14 @@ const App: React.FC = () => {
           component={NativeScreen}
           options={{ title: 'A List of Numbers' }}
         />
-        <Stack.Screen {...webScreens.screens.New} />
-        <Stack.Screen {...webScreens.screens.SuccessScreen} />
-        <Stack.Screen {...webScreens.screens.One} />
-        <Stack.Screen {...webScreens.screens.Share} component={ShareScreen} />
-        <Stack.Screen {...webScreens.screens.Fallback} />
+        <Stack.Screen {...webScreens.screens.New!} />
+        <Stack.Screen {...webScreens.screens.SuccessScreen!} />
+        <Stack.Screen {...webScreens.screens.One!} />
+        {/* @ts-expect-error TODO update types for ShareScreen */}
+        <Stack.Screen {...webScreens.screens.Share!} component={ShareScreen} />
+        <Stack.Screen {...webScreens.screens.Fallback!} />
         <Stack.Screen
-          {...webScreens.screens.SignIn}
+          {...webScreens.screens.SignIn!}
           options={{
             presentation: 'formSheet',
             gestureEnabled: false,
