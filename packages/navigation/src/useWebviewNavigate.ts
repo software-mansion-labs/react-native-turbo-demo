@@ -2,6 +2,7 @@ import {
   getActionFromState,
   getStateFromPath,
   NavigationContainerRefContext,
+  StackActions,
 } from '@react-navigation/native';
 import * as React from 'react';
 import LinkingContext from '@react-navigation/native/src/LinkingContext';
@@ -99,7 +100,10 @@ export default function useWebviewNavigate<
         } else {
           const actionToDispatch =
             actionType === 'replace'
-              ? CommonActions.setParams({ path })
+              ? StackActions.replace(action.payload.name, {
+                  ...action.payload.params,
+                  __disable_animation: true,
+                })
               : CommonActions.navigate(action.payload.name, {
                   ...action.payload.params,
                 });
