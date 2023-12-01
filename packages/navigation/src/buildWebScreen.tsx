@@ -2,6 +2,7 @@ import React from 'react';
 import type { ScreenProps } from 'react-native-screens';
 import WebScreen from './WebScreen';
 import { merge } from 'lodash';
+import { PathConfigMap } from '@react-navigation/native';
 
 export interface WebScreenRule {
   urlPattern: string;
@@ -21,19 +22,23 @@ export type WebScreenRuleConfig = {
   webScreenComponent?: React.ElementType;
 };
 
-const buildWebviewComponent =
-  (baseURL: string, Component: React.ElementType = WebScreen) =>
-  (navProps: Record<string, unknown>) =>
-    <Component {...navProps} baseURL={baseURL} />;
+function buildWebviewComponent(
+  baseURL: string,
+  Component: React.ElementType = WebScreen
+) {
+  return (navProps: Record<string, unknown>) => (
+    <Component {...navProps} baseURL={baseURL} />
+  );
+}
 
-const isRule = (obj: unknown): obj is WebScreenRule => {
+function isRule(obj: unknown): obj is WebScreenRule {
   if (obj !== null && typeof obj === 'object') {
     return 'urlPattern' in obj;
   }
   return false;
-};
+}
 
-const getLinkingAndScreens = (
+function getScreens(
   baseURL: string,
   routes: WebScreenRuleMap,
   component: (navProps: Record<string, unknown>) => JSX.Element
@@ -41,8 +46,7 @@ const getLinkingAndScreens = (
   screens: {
     [key: string]: any;
   };
-  linking: Record<string, string>;
-} => {
+} {
   return Object.entries(routes).reduce(
     (prev, entry) => {
       const [routeName, route] = entry as [
@@ -62,58 +66,55 @@ const getLinkingAndScreens = (
               options: { ...options },
             },
           },
-          linking: {
-            [routeName]: urlPattern,
-          },
         });
       } else {
         const { routes: nestedRoutes } = route;
 
-        const { screens, linking } = getLinkingAndScreens(
-          baseURL,
-          nestedRoutes,
-          component
-        );
+        const { screens } = getScreens(baseURL, nestedRoutes, component);
 
         return merge(prev, {
           screens,
-          linking: {
-            [routeName]: {
-              screens: linking,
-            },
-          },
         });
       }
     },
-    { screens: {}, linking: {} }
+    { screens: {} }
   );
-};
+}
 
-export const buildWebScreen = ({
+export function generateLinking<ParamList extends {}>(
+  rules: WebScreenRuleMap
+): { screens: PathConfigMap<ParamList> } {
+  const config: PathConfigMap<ParamList> = {};
+  Object.entries(rules).forEach(([key, rule]) => {
+    const paramKey = key as keyof ParamList;
+    if (isRule(rule)) {
+      // @ts-expect-error use proper key typing
+      config[paramKey] = rule.urlPattern;
+    } else {
+      // @ts-expect-error use proper key typing
+      config[paramKey] = generateLinking<ParamList>(rule.routes);
+    }
+  });
+  return { screens: config };
+}
+
+export function buildWebScreen({
   routes,
   baseURL,
   webScreenComponent,
-}: WebScreenRuleConfig) => {
+}: WebScreenRuleConfig) {
   const nativeComponent = buildWebviewComponent(baseURL, webScreenComponent);
 
-  const { linking, screens } = getLinkingAndScreens(
-    baseURL,
-    routes,
-    nativeComponent
-  );
+  const { screens } = getScreens(baseURL, routes, nativeComponent);
 
   return {
     linking: {
       prefixes: [baseURL],
-      config: {
-        screens: {
-          ...linking,
-        },
-      },
+      config: generateLinking(routes),
     },
     screens,
   };
-};
+}
 
 // WIP: More intelligent type based on ScreenParams types
 // export type WebScreenRuleMap<ParamList> = {
