@@ -1,13 +1,14 @@
 import React from 'react';
-import type { ScreenProps } from 'react-native-screens';
 import WebScreen from './WebScreen';
 import { PathConfigMap } from '@react-navigation/native';
+import type { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 
 export interface WebScreenRule {
   urlPattern: string;
   title?: string;
-  presentation?: ScreenProps['stackPresentation'];
+  presentation?: NativeStackNavigationOptions['presentation'];
   component?: React.ElementType;
+  options?: NativeStackNavigationOptions;
 }
 
 export type WebScreenRuleMap = {
@@ -42,7 +43,7 @@ type ScreenConfig = {
   name: string;
   component: React.ComponentType;
   initialParams: {};
-  options: {};
+  options: NativeStackNavigationOptions;
 };
 
 function getScreens(
@@ -53,13 +54,13 @@ function getScreens(
   let screens: Record<string, ScreenConfig> = {};
   Object.entries(routes).forEach(([routeName, rule]) => {
     if (isRule(rule)) {
-      const { urlPattern, component, ...options } = rule;
+      const { urlPattern, component, options, presentation, title } = rule;
       screens[routeName] = {
         name: routeName,
         // @ts-expect-error Use proper typing for main components
         component: component ?? defaultComponent,
         initialParams: { baseURL, path: urlPattern },
-        options: { ...options },
+        options: { ...options, presentation, title },
       };
     } else {
       screens = {
