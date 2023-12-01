@@ -35,7 +35,7 @@ const BottomTabs = () => {
 };
 
 const App: React.FC = () => {
-  const navigation = useNavigationContainerRef<any>();
+  const navigation = useNavigationContainerRef();
 
   return (
     <NavigationContainer linking={webScreens.linking} ref={navigation}>
@@ -64,7 +64,7 @@ const App: React.FC = () => {
           {...webScreens.screens.SignIn}
           options={{
             presentation: 'formSheet',
-            gestureEnabled: 'false',
+            gestureEnabled: false,
           }}
         />
         <Stack.Screen
