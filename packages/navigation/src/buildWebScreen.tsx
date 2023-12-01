@@ -1,7 +1,6 @@
 import React from 'react';
 import type { ScreenProps } from 'react-native-screens';
 import WebScreen from './WebScreen';
-import { merge } from 'lodash';
 import { PathConfigMap } from '@react-navigation/native';
 
 export interface WebScreenRule {
@@ -38,47 +37,36 @@ function isRule(obj: unknown): obj is WebScreenRule {
   return false;
 }
 
+type ScreenConfig = {
+  name: string;
+  component: React.ComponentType;
+  initialParams: {};
+  options: {};
+};
+
 function getScreens(
   baseURL: string,
   routes: WebScreenRuleMap,
   component: (navProps: Record<string, unknown>) => JSX.Element
-): {
-  screens: {
-    [key: string]: any;
-  };
-} {
-  return Object.entries(routes).reduce(
-    (prev, entry) => {
-      const [routeName, route] = entry as [
-        string,
-        WebScreenRule | Omit<WebScreenRuleConfig, 'baseURL'>
-      ];
-
-      if (isRule(route)) {
-        const { urlPattern, ...options } = route;
-
-        return merge(prev, {
-          screens: {
-            [routeName]: {
-              name: routeName,
-              component,
-              initialParams: { baseURL, path: urlPattern },
-              options: { ...options },
-            },
-          },
-        });
-      } else {
-        const { routes: nestedRoutes } = route;
-
-        const { screens } = getScreens(baseURL, nestedRoutes, component);
-
-        return merge(prev, {
-          screens,
-        });
-      }
-    },
-    { screens: {} }
-  );
+): Record<string, ScreenConfig> {
+  let screens: Record<string, ScreenConfig> = {};
+  Object.entries(routes).forEach(([routeName, rule]) => {
+    if (isRule(rule)) {
+      const { urlPattern, ...options } = rule;
+      screens[routeName] = {
+        name: routeName,
+        component,
+        initialParams: { baseURL, path: urlPattern },
+        options: { ...options },
+      };
+    } else {
+      screens = {
+        ...screens,
+        ...getScreens(baseURL, rule.routes, component),
+      };
+    }
+  });
+  return screens;
 }
 
 export function generateLinking<ParamList extends {}>(
@@ -105,14 +93,12 @@ export function buildWebScreen({
 }: WebScreenRuleConfig) {
   const nativeComponent = buildWebviewComponent(baseURL, webScreenComponent);
 
-  const { screens } = getScreens(baseURL, routes, nativeComponent);
-
   return {
     linking: {
       prefixes: [baseURL],
       config: generateLinking(routes),
     },
-    screens,
+    screens: getScreens(baseURL, routes, nativeComponent),
   };
 }
 
