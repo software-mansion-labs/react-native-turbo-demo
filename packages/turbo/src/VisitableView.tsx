@@ -33,6 +33,8 @@ const RNVisitableViewModule = getNativeModule<VisitableViewModule>(
 
 export interface Props {
   url: string;
+  navigation: any;
+  route: any;
   sessionHandle?: string;
   applicationNameForUserAgent?: string;
   stradaComponents?: StradaComponent[];
@@ -70,6 +72,14 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           .join(' '),
       [applicationNameForUserAgent, stradaUserAgent]
     );
+
+    useEffect(() => {
+      if (props?.route?.params?.__disable_animation) {
+        props.navigation.setOptions({
+          animation: 'none',
+        });
+      }
+    }, []);
 
     useEffect(() => {
       const setSessionConfiguration = async () => {
