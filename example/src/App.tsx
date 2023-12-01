@@ -58,8 +58,7 @@ const App: React.FC = () => {
         <Stack.Screen {...webScreens.screens.New!} />
         <Stack.Screen {...webScreens.screens.SuccessScreen!} />
         <Stack.Screen {...webScreens.screens.One!} />
-        {/* @ts-expect-error TODO update types for ShareScreen */}
-        <Stack.Screen {...webScreens.screens.Share!} component={ShareScreen} />
+        <Stack.Screen {...webScreens.screens.Share!} />
         <Stack.Screen {...webScreens.screens.Fallback!} />
         <Stack.Screen
           {...webScreens.screens.SignIn!}
