@@ -10,22 +10,18 @@ import {
   NativeSyntheticEvent,
   StyleSheet,
 } from 'react-native';
-import { getNativeModule, registerMessageEventListener } from './common';
+import { registerMessageEventListener } from './common';
 import type {
   OnErrorCallback,
   OnLoadEvent,
   SessionMessageCallback,
-  VisitableViewModule,
   VisitProposal,
   VisitProposalError,
   StradaComponent,
 } from './types';
 import { useStradaBridge } from './stradaBridge';
 import RNVisitableView from './RNVisitableView';
-
-const RNVisitableViewModule = getNativeModule<VisitableViewModule>(
-  'RNVisitableViewModule'
-);
+import RNVisitableViewModule from './RNVisitableViewModule';
 
 export interface Props {
   url: string;

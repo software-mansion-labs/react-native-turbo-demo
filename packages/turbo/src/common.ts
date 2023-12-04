@@ -17,19 +17,6 @@ const eventEmitter = new NativeEventEmitter(
   NativeModules.RNVisitableViewModule
 );
 
-export function getNativeModule<T>(moduleName: string): T {
-  return NativeModules[moduleName]
-    ? NativeModules[moduleName]
-    : new Proxy(
-        {},
-        {
-          get() {
-            throw new Error(LINKING_ERROR);
-          },
-        }
-      );
-}
-
 export function registerMessageEventListener(
   eventName: string,
   onMessage: SessionMessageCallback

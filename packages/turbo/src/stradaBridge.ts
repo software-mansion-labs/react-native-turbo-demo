@@ -1,11 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { Platform } from 'react-native';
-import { getNativeModule } from './common';
-import type { VisitableViewModule, StradaComponent } from './types';
-
-const RNVisitableViewModule = getNativeModule<VisitableViewModule>(
-  'RNVisitableViewModule'
-);
+import type { StradaComponent } from './types';
+import RNVisitableViewModule from './RNVisitableViewModule';
 
 const stradaBridgeScript = `
 (() => {

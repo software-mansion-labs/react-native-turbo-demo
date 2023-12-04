@@ -1,16 +1,12 @@
 import { Component } from 'react';
 import type { EmitterSubscription } from 'react-native';
 import type {
-  VisitableViewModule,
   StradaMessage,
   StradaMessages,
   StradaComponentProps,
 } from './types';
-import { getNativeModule, registerMessageEventListener } from './common';
-
-const RNVisitableViewModule = getNativeModule<VisitableViewModule>(
-  'RNVisitableViewModule'
-);
+import { registerMessageEventListener } from './common';
+import RNVisitableViewModule from './RNVisitableViewModule';
 
 const registerStradaMessageEventListener = (component: BridgeComponent) =>
   registerMessageEventListener(component.name, (e: object) => {

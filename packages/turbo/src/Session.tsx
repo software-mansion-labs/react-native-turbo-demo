@@ -1,18 +1,14 @@
-import { getNativeModule, registerMessageEventListener } from './common';
+import { registerMessageEventListener } from './common';
 import React, { RefObject } from 'react';
 import type { EmitterSubscription, NativeSyntheticEvent } from 'react-native';
 import type {
-  VisitableViewModule,
   SessionMessageCallback,
   OnErrorCallback,
 } from 'packages/turbo/src/types';
+import RNVisitableViewModule from './RNVisitableViewModule';
 
 const deprecationMessage =
   'Session component is no longer supported. Please refer to: https://github.com/software-mansion-labs/react-native-turbo-demo/pull/53#issue-1978014350 and https://github.com/software-mansion-labs/react-native-turbo-demo/blob/main/packages/turbo/README.md for more details.';
-
-const RNVisitableViewModule = getNativeModule<VisitableViewModule>(
-  'RNVisitableViewModule'
-);
 
 interface Message {
   message: object;

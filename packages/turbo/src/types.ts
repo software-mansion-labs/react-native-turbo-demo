@@ -29,21 +29,6 @@ export type StradaMessage = {
 
 export type SessionMessageCallback = (message: object) => void;
 
-export interface VisitableViewModule {
-  setConfiguration: (
-    sessionHandle: string,
-    applicationNameForUserAgent?: string
-  ) => Promise<string>;
-  registerSession: () => Promise<string>;
-  removeSession: (sessionHandle: string) => Promise<string>;
-  injectJavaScript: (
-    sessionHandle: string | null,
-    callbackStringified: string
-  ) => Promise<unknown>;
-  registerEvent: (eventName: string) => void;
-  unregisterEvent: (eventName: string) => void;
-}
-
 export type OnErrorCallback = (error: VisitProposalError) => void;
 
 export type StradaComponentProps = {
