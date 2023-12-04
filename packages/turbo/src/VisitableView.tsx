@@ -14,25 +14,25 @@ import { registerMessageEventListener } from './common';
 import type {
   OnErrorCallback,
   OnLoadEvent,
-  SessionMessageCallback,
-  VisitProposal,
   VisitProposalError,
   StradaComponent,
+  SessionMessageCallback,
 } from './types';
 import { useStradaBridge } from './stradaBridge';
-import RNVisitableView from './RNVisitableView';
+import RNVisitableView, { RNVisitableViewProps } from './RNVisitableView';
 import RNVisitableViewModule from './RNVisitableViewModule';
 
-export interface Props {
+interface OwnProps {
   url: string;
   sessionHandle?: string;
   applicationNameForUserAgent?: string;
   stradaComponents?: StradaComponent[];
-  onVisitProposal: (proposal: NativeSyntheticEvent<VisitProposal>) => void;
-  onLoad?: (proposal: NativeSyntheticEvent<OnLoadEvent>) => void;
   onVisitError?: OnErrorCallback;
   onMessage?: SessionMessageCallback;
 }
+
+export type Props = OwnProps &
+  Pick<RNVisitableViewProps, 'onVisitProposal' | 'onLoad'>;
 
 export interface RefObject {
   injectJavaScript: (callbackStringified: string) => void;
