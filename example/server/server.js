@@ -114,6 +114,18 @@ app.get('/files', (request, response) => {
   response.render('files', { title: 'Handling Files' });
 });
 
+app.get('/flow_one', (request, response) => {
+  response.render('flow_one', { title: 'First screen of flow' });
+});
+
+app.get('/flow_two', (request, response) => {
+  response.render('flow_two', { title: 'Second screen of flow' });
+});
+
+app.get('/flow_three', (request, response) => {
+  response.render('flow_three', { title: 'Third screen of flow' });
+});
+
 app.get('/new', (request, response) => {
   response.render('new', { title: 'A Modal Webpage' });
 });
