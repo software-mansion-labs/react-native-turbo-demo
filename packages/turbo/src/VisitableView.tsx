@@ -10,7 +10,11 @@ import {
   NativeSyntheticEvent,
   StyleSheet,
 } from 'react-native';
-import { getNativeModule, registerMessageEventListener } from './common';
+import {
+  getNativeComponent,
+  getNativeModule,
+  registerMessageEventListener,
+} from './common';
 import type {
   OnErrorCallback,
   OnLoadEvent,
@@ -25,8 +29,8 @@ import {
   NavigationContainerRefContext,
   useNavigation,
 } from '@react-navigation/native';
-import RNVisitableView from './RNVisitableView';
 
+const RNVisitableView = getNativeComponent<any>('RNVisitableView');
 const RNVisitableViewModule = getNativeModule<VisitableViewModule>(
   'RNVisitableViewModule'
 );
