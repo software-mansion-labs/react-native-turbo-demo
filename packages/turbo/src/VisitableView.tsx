@@ -64,7 +64,14 @@ function useDisableNavigationAnimation() {
       navigation.setOptions({
         animation: 'none',
       });
+      const timeout = setTimeout(() => {
+        navigation.setOptions({
+          animation: undefined,
+        });
+      }, 500);
+      return () => clearTimeout(timeout);
     }
+    return undefined;
   }, [navigation, navWithRoutes]);
 }
 
