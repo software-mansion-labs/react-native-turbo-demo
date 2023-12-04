@@ -11,7 +11,7 @@ protocol RNSessionSubscriber {
   
   var id: UUID { get set }
   var controller: RNVisitableViewController { get }
-  func didBecomeTopMostView(restored: Bool)
   func handleMessage(message: WKScriptMessage)
-  
+  func didProposeVisit(proposal: VisitProposal)
+  func didVisitFailed(visitable: Visitable, error: Error)
 }

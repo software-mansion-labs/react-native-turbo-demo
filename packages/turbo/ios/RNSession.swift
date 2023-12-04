@@ -22,8 +22,11 @@ class RNSession: NSObject {
 
   public lazy var turboSession: Session = {
     webViewConfiguration.userContentController.add(self, name: "nativeApp")
-    return Session(webViewConfiguration: webViewConfiguration)
+    let session = Session(webViewConfiguration: webViewConfiguration)
+    session.delegate = self
+    return session
   }()
+  public lazy var webView: WKWebView = turboSession.webView
   
   func registerVisitableView(newView: RNSessionSubscriber) {
     if (!visitableViews.contains {
@@ -46,10 +49,45 @@ class RNSession: NSObject {
       guard let newView = visitableViews.last else {
         return
       }
-      newView.didBecomeTopMostView(restored: true)
+      visitableViewWillAppear(view: newView)
     }
   }
+    
+  func visitableViewWillAppear(view: RNSessionSubscriber) {
+    turboSession.visitableViewWillAppear(view.controller)
+  }
+    
+  func visit(_ visitable: Visitable) {
+    turboSession.visit(visitable)
+  }
+    
+  func reload() {
+    turboSession.reload()
+  }
 }
+
+
+extension RNSession: SessionDelegate {
+  
+  func sessionWebViewProcessDidTerminate(_ session: Session) {
+    
+  }
+
+  func session(_ session: Session, didProposeVisit proposal: VisitProposal) {
+    visitableViews.last?.didProposeVisit(proposal: proposal)
+  }
+
+  func session(_ session: Session, didFailRequestForVisitable visitable: Visitable, error: Error) {
+    visitableViews.last?.didVisitFailed(visitable: visitable, error: error)
+  }
+
+  func webView(_ webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> ()) {
+    decisionHandler(WKNavigationActionPolicy.cancel)
+    // Handle non-Turbo links
+  }
+  
+}
+
 
 extension RNSession: WKScriptMessageHandler {
   

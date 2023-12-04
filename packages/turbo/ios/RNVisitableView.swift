@@ -23,8 +23,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var onVisitError: RCTDirectEventBlock?
   
   private lazy var session: RNSession = RNSessionManager.shared.findOrCreateSession(sessionHandle: sessionHandle!, webViewConfiguration: webViewConfiguration)
-  private lazy var turboSession: Session = session.turboSession
-  private lazy var webView: WKWebView = turboSession.webView
+  private lazy var webView: WKWebView = session.webView
   private lazy var webViewConfiguration: WKWebViewConfiguration = {
     let configuration = WKWebViewConfiguration()
     configuration.applicationNameForUserAgent = applicationNameForUserAgent as String?
@@ -42,14 +41,6 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     controller.view.frame = bounds // Fixes incorrect size of the webview
     controller.didMove(toParent: reactViewController())
     addSubview(controller.view)
-  }
-    
-  func didBecomeTopMostView(restored: Bool) {
-    turboSession.delegate = self
-    
-    if (restored) {
-      turboSession.visitableViewWillAppear(controller)
-    }
   }
     
   public func handleMessage(message: WKScriptMessage) {
@@ -71,7 +62,31 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     
   private func performVisit() {
     controller.visitableURL = URL(string: String(url))
-    turboSession.visit(controller)
+    session.visit(controller)
+  }
+    
+  public func didProposeVisit(proposal: VisitProposal){
+    if (webView.url == proposal.url) {
+      // When reopening same URL we want to reload webview
+      session.reload()
+    } else {
+      let event: [AnyHashable: Any] = [
+        "url": proposal.url.absoluteString,
+        "action": proposal.options.action.rawValue,
+      ]
+      onVisitProposal!(event)
+    }
+  }
+
+  public func didVisitFailed(visitable: Visitable, error: Error){
+    var event: [AnyHashable: Any] = [
+      "url": visitable.visitableURL.absoluteString,
+      "error": error.localizedDescription,
+    ]
+    if let turboError = error as? TurboError, case let .http(statusCode) = turboError {
+      event["statusCode"] = statusCode
+    }
+    onVisitError?(event)
   }
 
 }
@@ -82,10 +97,6 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
     session.registerVisitableView(newView: self)
   }
     
-  func visitableDidAppear(visitable: Visitable) {
-    didBecomeTopMostView(restored: false)
-  }
-  
   func visitableDidDisappear(visitable: Visitable) {
     session.unregisterVisitableView(view: self)
   }
@@ -97,47 +108,5 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
     ]
     onLoad?(event)
   }
-  
-}
-
-extension RNVisitableView: SessionDelegate {
-  
-  func sessionWebViewProcessDidTerminate(_ session: Session) {
-    
-  }
-
-  func session(_ session: Session, didProposeVisit proposal: VisitProposal) {
-    // Handle a visit proposal
-    if (webView.url == proposal.url) {
-      // When reopening same URL we want to reload webview
-      turboSession.reload()
-    } else {
-      let event: [AnyHashable: Any] = [
-        "url": proposal.url.absoluteString,
-        "action": proposal.options.action.rawValue,
-      ]
-      onVisitProposal!(event)
-    }
-  }
-
-  func session(_ session: Session, didFailRequestForVisitable visitable: Visitable, error: Error) {
-    // Handle a visit error
-    var event: [AnyHashable: Any] = [
-      "url": visitable.visitableURL.absoluteString,
-      "error": error.localizedDescription,
-    ]
-    
-    if let turboError = error as? TurboError, case let .http(statusCode) = turboError {
-      event["statusCode"] = statusCode
-    }
-
-    onVisitError?(event)
-  }
-
-  func webView(_ webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> ()) {
-      decisionHandler(WKNavigationActionPolicy.cancel)
-      // Handle non-Turbo links
-  }
-  
   
 }
