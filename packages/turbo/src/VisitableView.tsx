@@ -10,11 +10,7 @@ import {
   NativeSyntheticEvent,
   StyleSheet,
 } from 'react-native';
-import {
-  getNativeComponent,
-  getNativeModule,
-  registerMessageEventListener,
-} from './common';
+import { getNativeModule, registerMessageEventListener } from './common';
 import type {
   OnErrorCallback,
   OnLoadEvent,
@@ -25,16 +21,18 @@ import type {
   StradaComponent,
 } from './types';
 import { useStradaBridge } from './stradaBridge';
+import {
+  NavigationContainerRefContext,
+  useNavigation,
+} from '@react-navigation/native';
+import RNVisitableView from './RNVisitableView';
 
-const RNVisitableView = getNativeComponent<any>('RNVisitableView');
 const RNVisitableViewModule = getNativeModule<VisitableViewModule>(
   'RNVisitableViewModule'
 );
 
 export interface Props {
   url: string;
-  navigation: any;
-  route: any;
   sessionHandle?: string;
   applicationNameForUserAgent?: string;
   stradaComponents?: StradaComponent[];
@@ -46,6 +44,24 @@ export interface Props {
 
 export interface RefObject {
   injectJavaScript: (callbackStringified: string) => void;
+}
+
+function useDisableNavigationAnimation() {
+  const navWithRoutes = React.useContext(NavigationContainerRefContext);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const params = navWithRoutes?.getCurrentRoute()?.params;
+    if (
+      params &&
+      '__disable_animation' in params &&
+      params.__disable_animation
+    ) {
+      navigation.setOptions({
+        animation: 'none',
+      });
+    }
+  }, [navigation, navWithRoutes]);
 }
 
 const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
@@ -72,14 +88,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           .join(' '),
       [applicationNameForUserAgent, stradaUserAgent]
     );
-
-    useEffect(() => {
-      if (props?.route?.params?.__disable_animation) {
-        props.navigation.setOptions({
-          animation: 'none',
-        });
-      }
-    }, []);
+    useDisableNavigationAnimation();
 
     useEffect(() => {
       const setSessionConfiguration = async () => {
