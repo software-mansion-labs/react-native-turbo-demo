@@ -26,6 +26,20 @@ export const webScreenConfig: WebScreenRuleConfig = {
         },
       },
     },
+    [Routes.Flow]: {
+      type: 'modalFlow',
+      routes: {
+        [Routes.FlowOne]: {
+          urlPattern: 'flow_one',
+        },
+        [Routes.FlowTwo]: {
+          urlPattern: 'flow_two',
+        },
+        [Routes.FlowThree]: {
+          urlPattern: 'flow_three',
+        },
+      },
+    },
     [Routes.New]: {
       urlPattern: 'new',
       title: 'A Modal Webpage',

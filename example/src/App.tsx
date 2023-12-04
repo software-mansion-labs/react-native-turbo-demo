@@ -62,6 +62,7 @@ const App: React.FC = () => {
           component={NestedTab}
           options={{ title: 'Nested Top Tab' }}
         />
+        {webStackScreen(Stack, webScreenConfig, Routes.Flow)}
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -13,10 +13,13 @@ export interface WebScreenRule {
   options?: NativeStackNavigationOptions;
 }
 
+interface WebScreenRuleList {
+  type?: undefined | 'modalFlow';
+  routes: WebScreenRuleMap;
+}
+
 export type WebScreenRuleMap = {
-  [key: string]:
-    | WebScreenRule
-    | Omit<WebScreenRuleConfig, 'baseURL' | 'webScreenComponent'>;
+  [key: string]: WebScreenRule | WebScreenRuleList;
 };
 
 export type WebScreenRuleConfig = {
@@ -25,7 +28,7 @@ export type WebScreenRuleConfig = {
   webScreenComponent?: React.ElementType;
 };
 
-function buildWebviewComponent(
+export function buildWebviewComponent(
   baseURL: string,
   Component: React.ElementType = WebScreen
 ) {
@@ -71,16 +74,16 @@ type StackType =
   | ReturnType<typeof createNativeStackNavigator>
   | ReturnType<typeof createBottomTabNavigator>;
 
-export function findRouteInWebScreenConfig(
+function findRouteInWebScreenConfig(
   routes: WebScreenRuleMap | undefined,
   name: string
-): WebScreenRuleMap | undefined {
+): WebScreenRuleList | undefined {
   if (!routes) return undefined;
   for (const key of Object.keys(routes)) {
     const route = routes[key];
     if (key === name) {
       if (!isRule(route)) {
-        return route?.routes;
+        return route;
       }
       return undefined;
     }
@@ -92,39 +95,85 @@ export function findRouteInWebScreenConfig(
   return undefined;
 }
 
+function stackGroup({
+  Stack,
+  routes,
+  config,
+}: {
+  Stack: StackType;
+  routes: WebScreenRuleMap;
+  config: WebScreenRuleConfig;
+}) {
+  const { baseURL, webScreenComponent } = config;
+  const defaultComponent = buildWebviewComponent(baseURL, webScreenComponent);
+
+  return (
+    <Stack.Group>
+      {Object.entries(routes).map(([routeName, rule]) => {
+        if (isRule(rule)) {
+          const { urlPattern, component, options, presentation, title } = rule;
+          return (
+            <Stack.Screen
+              key={routeName}
+              name={routeName}
+              //  @ts-expect-error Use proper typing for main components
+              component={component ?? defaultComponent}
+              initialParams={{ baseURL, path: urlPattern }}
+              //  @ts-expect-error Use proper typing for main components
+              options={{ ...options, presentation, title }}
+            />
+          );
+        }
+        return null;
+      })}
+    </Stack.Group>
+  );
+}
+
+function stackNavigator({
+  Stack,
+  routes,
+  config,
+}: {
+  Stack: StackType;
+  routes: WebScreenRuleMap;
+  config: WebScreenRuleConfig;
+}) {
+  return () => (
+    <Stack.Navigator>
+      {stackGroup({ Stack, routes: routes, config })}
+    </Stack.Navigator>
+  );
+}
+
 export function webStackScreen(
   Stack: StackType,
   config: WebScreenRuleConfig,
   key?: string
 ) {
   const { routes } = config;
-  const { baseURL, webScreenComponent } = config;
-  const defaultComponent = buildWebviewComponent(baseURL, webScreenComponent);
 
-  const filteredRoutes = key ? findRouteInWebScreenConfig(routes, key) : routes;
-  if (filteredRoutes)
-    return (
-      <Stack.Group>
-        {Object.entries(filteredRoutes).map(([routeName, rule]) => {
-          if (isRule(rule)) {
-            const { urlPattern, component, options, presentation, title } =
-              rule;
-            return (
-              <Stack.Screen
-                key={routeName}
-                name={routeName}
-                //  @ts-expect-error Use proper typing for main components
-                component={component ?? defaultComponent}
-                initialParams={{ baseURL, path: urlPattern }}
-                //  @ts-expect-error Use proper typing for main components
-                options={{ ...options, presentation, title }}
-              />
-            );
-          }
-          return null;
-        })}
-      </Stack.Group>
-    );
+  if (key) {
+    const filteredRoutes = findRouteInWebScreenConfig(routes, key);
+
+    if (filteredRoutes?.type === 'modalFlow') {
+      return (
+        <Stack.Screen
+          name={key}
+          component={stackNavigator({
+            Stack,
+            routes: filteredRoutes?.routes,
+            config,
+          })}
+          options={{ title: 'Flow screen', presentation: 'modal' }}
+        />
+      );
+    } else if (filteredRoutes?.routes) {
+      return stackGroup({ Stack, routes: filteredRoutes?.routes, config });
+    }
+  } else {
+    return stackGroup({ Stack, routes: config.routes, config });
+  }
   return null;
 }
 
