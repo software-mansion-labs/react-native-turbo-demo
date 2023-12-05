@@ -2,11 +2,8 @@ import React from 'react';
 import WebScreen from './WebScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import {
-  WebScreenRule,
-  WebScreenRuleMap,
-  WebScreenRuleConfig,
-} from './buildLinkingConfiguration';
+import type { WebScreenRuleMap, WebScreenRuleConfig } from './types';
+import { isRule } from './common';
 
 type StackType =
   | ReturnType<typeof createNativeStackNavigator>
@@ -19,13 +16,6 @@ function buildWebviewComponent(
   return (navProps: Record<string, unknown>) => (
     <Component {...navProps} baseURL={baseURL} />
   );
-}
-
-function isRule(obj: unknown): obj is WebScreenRule {
-  if (obj !== null && typeof obj === 'object') {
-    return 'urlPattern' in obj;
-  }
-  return false;
 }
 
 export function findRouteInWebScreenConfig(
@@ -49,7 +39,7 @@ export function findRouteInWebScreenConfig(
   return undefined;
 }
 
-export function webStackScreen(
+export default function webStackScreen(
   Stack: StackType,
   config: WebScreenRuleConfig,
   key?: string

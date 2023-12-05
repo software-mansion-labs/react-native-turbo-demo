@@ -1,7 +1,5 @@
-import {
-  buildLinkingConfiguration,
-  WebScreenRuleConfig,
-} from '../buildLinkingConfiguration';
+import buildLinkingConfiguration from '../buildLinkingConfiguration';
+import { WebScreenRuleConfig } from '../types';
 
 const mockComponent = jest.fn();
 

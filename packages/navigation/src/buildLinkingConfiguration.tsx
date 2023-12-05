@@ -1,33 +1,6 @@
-import React from 'react';
 import { PathConfigMap } from '@react-navigation/native';
-import type { NativeStackNavigationOptions } from '@react-navigation/native-stack';
-
-export interface WebScreenRule {
-  urlPattern: string;
-  title?: string;
-  presentation?: NativeStackNavigationOptions['presentation'];
-  component?: React.ElementType;
-  options?: NativeStackNavigationOptions;
-}
-
-export type WebScreenRuleMap = {
-  [key: string]:
-    | WebScreenRule
-    | Omit<WebScreenRuleConfig, 'baseURL' | 'webScreenComponent'>;
-};
-
-export type WebScreenRuleConfig = {
-  baseURL: string;
-  routes: WebScreenRuleMap;
-  webScreenComponent?: React.ElementType;
-};
-
-function isRule(obj: unknown): obj is WebScreenRule {
-  if (obj !== null && typeof obj === 'object') {
-    return 'urlPattern' in obj;
-  }
-  return false;
-}
+import { WebScreenRuleMap, WebScreenRuleConfig } from './types';
+import { isRule } from './common';
 
 function generateLinking<ParamList extends {}>(
   rules: WebScreenRuleMap
@@ -46,7 +19,7 @@ function generateLinking<ParamList extends {}>(
   return { screens: config };
 }
 
-export function buildLinkingConfiguration({
+export default function buildLinkingConfiguration({
   routes,
   baseURL,
 }: WebScreenRuleConfig) {

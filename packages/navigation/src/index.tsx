@@ -1,3 +1,4 @@
 export { default as useWebviewNavigate } from './useWebviewNavigate';
-export * from './buildLinkingConfiguration';
-export * from './useWebScreen';
+export { default as buildLinkingConfiguration } from './buildLinkingConfiguration';
+export { default as webStackScreen } from './useWebScreen';
+export * from './types';
