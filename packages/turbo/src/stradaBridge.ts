@@ -1,14 +1,12 @@
 import { useCallback, useMemo } from 'react';
 import { Platform } from 'react-native';
-import { getNativeModule } from './common';
-import type { VisitableViewModule, StradaComponent } from './types';
-
-const RNVisitableViewModule = getNativeModule<VisitableViewModule>(
-  'RNVisitableViewModule'
-);
+import type { StradaComponent, DispatchCommand } from './types';
 
 const stradaBridgeScript = `
 (() => {
+  if(window.nativeBridge !== undefined){
+    return;
+  }
   // This represents the adapter that is installed on the webBridge
   // All adapters implement the same interface so the web doesn't need to
   // know anything specific about the client platform
@@ -86,7 +84,7 @@ const stradaBridgeScript = `
       ${
         Platform.OS === 'android'
           ? 'StradaNative.postMessage(JSON.stringify(message))'
-          : 'webkit.messageHandlers.stradaNative.postMessage(message)'
+          : 'webkit.messageHandlers.nativeApp.postMessage(message)'
       }
     }
 
@@ -119,32 +117,24 @@ const stradaBridgeScript = `
 `;
 
 const useStradaBridge = (
-  sessionHandle: string,
+  visitableViewRef: React.RefObject<any>,
+  dispatchCommand: DispatchCommand,
   stradaComponents?: StradaComponent[]
 ) => {
-  const initializeStradaBridge = useCallback(async () => {
-    const isStradaUndefined = await RNVisitableViewModule.injectJavaScript(
-      sessionHandle,
-      `window.nativeBridge === undefined`
+  const initializeStradaBridge = useCallback(() => {
+    dispatchCommand(visitableViewRef, 'injectJavaScript', stradaBridgeScript);
+
+    const stradaComponentNames =
+      stradaComponents
+        ?.map(({ componentName }) => `'${componentName}'`)
+        .join(',') || '';
+
+    dispatchCommand(
+      visitableViewRef,
+      'injectJavaScript',
+      `[${stradaComponentNames}].forEach(componentName => window.nativeBridge.register(componentName))`
     );
-    if (isStradaUndefined) {
-      await RNVisitableViewModule.injectJavaScript(
-        sessionHandle,
-        stradaBridgeScript
-      );
-      if (!stradaComponents) {
-        return;
-      }
-      Promise.all(
-        stradaComponents.map(({ componentName }) =>
-          RNVisitableViewModule.injectJavaScript(
-            sessionHandle,
-            `window.nativeBridge.register('${componentName}')`
-          )
-        )
-      );
-    }
-  }, [sessionHandle, stradaComponents]);
+  }, [dispatchCommand, stradaComponents, visitableViewRef]);
 
   const stradaUserAgent = useMemo(() => {
     if (!stradaComponents) return '';
@@ -155,9 +145,21 @@ const useStradaBridge = (
     return `bridge-components: [${componentNames.join(' ')}]`;
   }, [stradaComponents]);
 
+  const sendToBridge = useCallback(
+    (message: any) => {
+      dispatchCommand(
+        visitableViewRef,
+        'injectJavaScript',
+        `window.nativeBridge.replyWith('${JSON.stringify(message)}')`
+      );
+    },
+    [dispatchCommand, visitableViewRef]
+  );
+
   return {
     initializeStradaBridge,
     stradaUserAgent,
+    sendToBridge,
   };
 };
 

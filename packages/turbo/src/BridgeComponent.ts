@@ -1,26 +1,19 @@
 import { Component } from 'react';
 import type { EmitterSubscription } from 'react-native';
 import type {
-  VisitableViewModule,
   StradaMessage,
   StradaMessages,
   StradaComponentProps,
 } from './types';
-import { getNativeModule, registerMessageEventListener } from './common';
 
-const RNVisitableViewModule = getNativeModule<VisitableViewModule>(
-  'RNVisitableViewModule'
-);
-
-const registerStradaMessageEventListener = (component: BridgeComponent) =>
-  registerMessageEventListener(component.name, (e: object) => {
-    const message = e as StradaMessage;
-    if (message.data.metadata.url !== component.url) {
-      return;
-    }
-    component.previousMessages[message.event] = message;
-    component.onReceive(message);
-  });
+const stradaMessageListener = (component: BridgeComponent) => (e: object) => {
+  const message = e as StradaMessage;
+  if (message?.data?.metadata?.url !== component.url) {
+    return;
+  }
+  component.previousMessages[message.event] = message;
+  component.onReceive(message);
+};
 
 class BridgeComponent extends Component<StradaComponentProps> {
   name: string;
@@ -28,6 +21,8 @@ class BridgeComponent extends Component<StradaComponentProps> {
   sessionHandle: string;
   messageEventListenerSubscription?: EmitterSubscription;
   previousMessages: StradaMessages = {};
+  registerMessageListener: (listener: (e: object) => void) => void;
+  sendToBridge: (message: StradaMessage) => void;
 
   constructor(props: StradaComponentProps) {
     super(props);
@@ -35,14 +30,15 @@ class BridgeComponent extends Component<StradaComponentProps> {
     this.url = props.url;
     this.name = props.name;
     this.sessionHandle = props.sessionHandle;
+    this.registerMessageListener = props.registerMessageListener;
+    this.sendToBridge = props.sendToBridge;
 
     this.onReceive = this.onReceive.bind(this);
     this.replyTo = this.replyTo.bind(this);
   }
 
   componentDidMount() {
-    this.messageEventListenerSubscription =
-      registerStradaMessageEventListener(this);
+    this.registerMessageListener(stradaMessageListener(this));
   }
 
   componentWillUnmount() {
@@ -73,10 +69,7 @@ class BridgeComponent extends Component<StradaComponentProps> {
             },
           },
         };
-    RNVisitableViewModule.injectJavaScript(
-      this.sessionHandle,
-      `window.nativeBridge.replyWith('${JSON.stringify(messageToSend)}')`
-    );
+    this.sendToBridge(messageToSend);
   }
 
   render() {

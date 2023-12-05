@@ -11,61 +11,90 @@ import WebKit
 
 class RNSession: NSObject {
   
-  private var registeredVisitableViews: [SessionSubscriber] = []
-  private var eventEmitter: RCTEventEmitter? = nil
-  private var sessionHandle: NSString = "defaultHandle"
-  private var applicationNameForUserAgent: String? = nil
-    
-  override init() { }
-    
-  init(eventEmitter: RCTEventEmitter, sessionHandle: NSString){
-    self.eventEmitter = eventEmitter
+  private var visitableViews: [RNSessionSubscriber] = []
+  private var sessionHandle: NSString
+  private var webViewConfiguration: WKWebViewConfiguration
+  
+  init(sessionHandle: NSString, webViewConfiguration: WKWebViewConfiguration) {
     self.sessionHandle = sessionHandle
+    self.webViewConfiguration = webViewConfiguration
   }
-    
-  convenience init(eventEmitter: RCTEventEmitter, sessionHandle: NSString, applicationNameForUserAgent: NSString?){
-    self.init(eventEmitter: eventEmitter, sessionHandle: sessionHandle)
-    self.applicationNameForUserAgent = applicationNameForUserAgent as String?
-  }
-  
+
   public lazy var turboSession: Session = {
-    let configuration = WKWebViewConfiguration()
-    configuration.userContentController.add(self, name: "nativeApp")
-    configuration.userContentController.add(RNStradaWKUserContentController(eventEmitter: eventEmitter), name: "stradaNative")
-    configuration.applicationNameForUserAgent = applicationNameForUserAgent
-    return Session(webViewConfiguration: configuration)
+    webViewConfiguration.userContentController.add(self, name: "nativeApp")
+    let session = Session(webViewConfiguration: webViewConfiguration)
+    session.delegate = self
+    return session
   }()
+  public lazy var webView: WKWebView = turboSession.webView
   
-  func registerVisitableView(newView: SessionSubscriber) {
-    if (!registeredVisitableViews.contains {
+  func registerVisitableView(newView: RNSessionSubscriber) {
+    if (!visitableViews.contains {
       $0.id == newView.id
     }) {
-      registeredVisitableViews.append(newView)
+      visitableViews.append(newView)
     }
-    newView.attachDelegateAndVisit(newView.controller!)
   }
   
-  func removeVisitableView(view: SessionSubscriber) {
-    // New view is not registered when presentation is modal
-    let isViewModal = registeredVisitableViews.last?.id == view.id
-    let viewIdx = registeredVisitableViews.lastIndex(where: {
+  func unregisterVisitableView(view: RNSessionSubscriber) {
+    let wasTopMostView = visitableViews.last?.id == view.id
+    
+    let viewIdx = visitableViews.lastIndex(where: {
       view.id == $0.id
     })
-    registeredVisitableViews.remove(at: viewIdx!)
-    guard let newView = registeredVisitableViews.last else {
-      return
+    visitableViews.remove(at: viewIdx!)
+
+    // The new top-most view is not registered when the previous top-most view is a modal
+    if (wasTopMostView) {
+      guard let newView = visitableViews.last else {
+        return
+      }
+      visitableViewWillAppear(view: newView)
     }
-    if (isViewModal) {
-      newView.attachDelegateAndVisit(newView.controller!)
-    }
+  }
+    
+  func visitableViewWillAppear(view: RNSessionSubscriber) {
+    turboSession.visitableViewWillAppear(view.controller)
+  }
+    
+  func visit(_ visitable: Visitable) {
+    turboSession.visit(visitable)
+  }
+    
+  func reload() {
+    turboSession.reload()
+  }
+}
+
+
+extension RNSession: SessionDelegate {
+  
+  func sessionWebViewProcessDidTerminate(_ session: Session) {
+    
+  }
+
+  func session(_ session: Session, didProposeVisit proposal: VisitProposal) {
+    visitableViews.last?.didProposeVisit(proposal: proposal)
+  }
+
+  func session(_ session: Session, didFailRequestForVisitable visitable: Visitable, error: Error) {
+    visitableViews.last?.didFailRequestForVisitable(visitable: visitable, error: error)
+  }
+
+  func webView(_ webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> ()) {
+    decisionHandler(WKNavigationActionPolicy.cancel)
+    // Handle non-Turbo links
   }
   
 }
 
+
 extension RNSession: WKScriptMessageHandler {
   
   func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-    eventEmitter?.sendEvent(withName: "sessionMessage" + (sessionHandle as String), body: ["message": message.body])
+    for view in visitableViews {
+      view.handleMessage(message: message)
+    }
   }
   
 }

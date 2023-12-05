@@ -1,25 +1,16 @@
 import React, {
   useCallback,
-  useEffect,
   useImperativeHandle,
   useRef,
   useMemo,
+  useEffect,
 } from 'react';
-import {
-  EmitterSubscription,
-  NativeSyntheticEvent,
-  StyleSheet,
-} from 'react-native';
-import {
-  getNativeComponent,
-  getNativeModule,
-  registerMessageEventListener,
-} from './common';
+import { NativeSyntheticEvent, StyleSheet } from 'react-native';
+import { getNativeComponent } from './common';
 import type {
   OnErrorCallback,
   OnLoadEvent,
   SessionMessageCallback,
-  VisitableViewModule,
   VisitProposal,
   VisitProposalError,
   StradaComponent,
@@ -30,10 +21,8 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 
-const RNVisitableView = getNativeComponent<any>('RNVisitableView');
-const RNVisitableViewModule = getNativeModule<VisitableViewModule>(
-  'RNVisitableViewModule'
-);
+const { RNVisitableView, dispatchCommand } =
+  getNativeComponent<any>('RNVisitableView');
 
 export interface Props {
   url: string;
@@ -49,6 +38,8 @@ export interface Props {
 export interface RefObject {
   injectJavaScript: (callbackStringified: string) => void;
 }
+
+type SessionMessageCallbackArrayElement = SessionMessageCallback | undefined;
 
 function useDisableNavigationAnimation() {
   const navWithRoutes = React.useContext(NavigationContainerRefContext);
@@ -81,16 +72,18 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       url,
       sessionHandle = 'Default',
       applicationNameForUserAgent,
-      onMessage,
       stradaComponents,
-      onVisitError: viewErrorHandler,
       onLoad,
+      onVisitError: viewErrorHandler,
+      onMessage: onMessageCallback,
     } = props;
-    const messageHandlerEventSubscription = useRef<EmitterSubscription>();
-    const { initializeStradaBridge, stradaUserAgent } = useStradaBridge(
-      sessionHandle,
-      stradaComponents
-    );
+    const visitableViewRef = useRef<typeof VisitableView>();
+    const onMessageCallbacks = useRef<SessionMessageCallbackArrayElement[]>([
+      onMessageCallback,
+    ]);
+
+    const { initializeStradaBridge, stradaUserAgent, sendToBridge } =
+      useStradaBridge(visitableViewRef, dispatchCommand, stradaComponents);
 
     const resolvedApplicationNameForUserAgent = useMemo(
       () =>
@@ -101,44 +94,32 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
     );
     useDisableNavigationAnimation();
 
-    useEffect(() => {
-      const setSessionConfiguration = async () => {
-        await RNVisitableViewModule.setConfiguration(
-          sessionHandle,
-          resolvedApplicationNameForUserAgent
-        );
-      };
-      setSessionConfiguration();
-    }, [sessionHandle, resolvedApplicationNameForUserAgent]);
-
     useImperativeHandle(
       ref,
       () => ({
         injectJavaScript: (callbackStringified) => {
-          RNVisitableViewModule.injectJavaScript(
-            sessionHandle,
+          dispatchCommand(
+            visitableViewRef,
+            'injectJavaScript',
             callbackStringified
           );
         },
       }),
-      [sessionHandle]
+      []
     );
 
-    useEffect(() => {
-      if (onMessage) {
-        messageHandlerEventSubscription.current?.remove();
-        messageHandlerEventSubscription.current = registerMessageEventListener(
-          `sessionMessage${sessionHandle}`,
-          onMessage
-        );
-      }
-    }, [sessionHandle, onMessage]);
-
-    useEffect(() => {
-      return () => {
-        messageHandlerEventSubscription.current?.remove();
-      };
+    const handleOnMessage = useCallback((e: NativeSyntheticEvent<any>) => {
+      onMessageCallbacks.current.forEach((listener) => {
+        listener?.(e.nativeEvent);
+      });
     }, []);
+
+    const registerMessageListener = useCallback(
+      (listener: SessionMessageCallback) => {
+        onMessageCallbacks.current.push(listener);
+      },
+      []
+    );
 
     const handleVisitError = useCallback(
       (e: NativeSyntheticEvent<VisitProposalError>) => {
@@ -160,14 +141,19 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
         {stradaComponents?.map((Component, i) => (
           <Component
             key={i}
+            url={url}
             sessionHandle={sessionHandle}
             name={Component.componentName}
-            url={url}
+            registerMessageListener={registerMessageListener}
+            sendToBridge={sendToBridge}
           />
         ))}
         <RNVisitableView
           {...props}
+          ref={visitableViewRef}
           sessionHandle={sessionHandle}
+          applicationNameForUserAgent={resolvedApplicationNameForUserAgent}
+          onMessage={handleOnMessage}
           onVisitError={handleVisitError}
           onLoad={handleOnLoad}
           style={styles.container}
