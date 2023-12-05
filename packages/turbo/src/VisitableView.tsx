@@ -105,11 +105,14 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       []
     );
 
-    const handleOnMessage = useCallback((e: NativeSyntheticEvent<any>) => {
-      onMessageCallbacks.current.forEach((listener) => {
-        listener?.(e.nativeEvent);
-      });
-    }, []);
+    const handleOnMessage = useCallback(
+      (e: NativeSyntheticEvent<{ message: object }>) => {
+        onMessageCallbacks.current.forEach((listener) => {
+          listener?.(e.nativeEvent);
+        });
+      },
+      []
+    );
 
     const registerMessageListener = useCallback(
       (listener: SessionMessageCallback) => {
@@ -146,9 +149,10 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           />
         ))}
         <RNVisitableView
-          {...props}
           // @ts-expect-error
           ref={visitableViewRef}
+          url={props.url}
+          onVisitProposal={props.onVisitProposal}
           sessionHandle={sessionHandle}
           applicationNameForUserAgent={resolvedApplicationNameForUserAgent}
           onMessage={handleOnMessage}
