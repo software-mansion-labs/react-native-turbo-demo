@@ -3,6 +3,7 @@ import React, {
   useImperativeHandle,
   useRef,
   useMemo,
+  useEffect,
 } from 'react';
 import { NativeSyntheticEvent, StyleSheet } from 'react-native';
 import { getNativeComponent } from './common';
