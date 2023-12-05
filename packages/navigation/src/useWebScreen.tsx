@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import type { WebScreenRuleMap, WebScreenRuleConfig } from './types';
 import { isRule } from './common';
 
-type StackType =
+type NavigatorType =
   | ReturnType<typeof createNativeStackNavigator>
   | ReturnType<typeof createBottomTabNavigator>;
 
@@ -22,7 +22,9 @@ function findRouteInWebScreenConfig(
   routes: WebScreenRuleMap | undefined,
   name: string
 ): WebScreenRuleMap | undefined {
-  if (!routes) return undefined;
+  if (!routes) {
+    return undefined;
+  }
   for (const key of Object.keys(routes)) {
     const route = routes[key];
     if (key === name) {
@@ -33,14 +35,16 @@ function findRouteInWebScreenConfig(
     }
     if (!isRule(route)) {
       const foundRoute = findRouteInWebScreenConfig(route?.routes, name);
-      if (foundRoute) return foundRoute;
+      if (foundRoute) {
+        return foundRoute;
+      }
     }
   }
   return undefined;
 }
 
-function webStackScreen(
-  Stack: StackType,
+function groupScreens(
+  Navigator: NavigatorType,
   key: string | undefined,
   config: WebScreenRuleConfig
 ) {
@@ -51,13 +55,13 @@ function webStackScreen(
   const filteredRoutes = key ? findRouteInWebScreenConfig(routes, key) : routes;
   if (filteredRoutes)
     return (
-      <Stack.Group>
+      <Navigator.Group>
         {Object.entries(filteredRoutes).map(([routeName, rule]) => {
           if (isRule(rule)) {
             const { urlPattern, component, options, presentation, title } =
               rule;
             return (
-              <Stack.Screen
+              <Navigator.Screen
                 key={routeName}
                 name={routeName}
                 //  @ts-expect-error Use proper typing for main components
@@ -70,14 +74,15 @@ function webStackScreen(
           }
           return null;
         })}
-      </Stack.Group>
+      </Navigator.Group>
     );
   return null;
 }
 
 export default function useWebScreen(config: WebScreenRuleConfig) {
   const webScreens = useCallback(
-    (Stack: StackType, key?: string) => webStackScreen(Stack, key, config),
+    (Navigator: NavigatorType, key?: string) =>
+      groupScreens(Navigator, key, config),
     [config]
   );
   return { webScreens };
