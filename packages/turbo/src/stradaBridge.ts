@@ -121,7 +121,7 @@ const useStradaBridge = (
   dispatchCommand: DispatchCommand,
   stradaComponents?: StradaComponent[]
 ) => {
-  const initializeStradaBridge = useCallback(async () => {
+  const initializeStradaBridge = useCallback(() => {
     dispatchCommand(visitableViewRef, 'injectJavaScript', stradaBridgeScript);
 
     const stradaComponentNames =
