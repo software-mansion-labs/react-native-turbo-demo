@@ -29,27 +29,14 @@ export type StradaMessage = {
 
 export type SessionMessageCallback = (message: object) => void;
 
-export interface VisitableViewModule {
-  setConfiguration: (
-    sessionHandle: string,
-    applicationNameForUserAgent?: string
-  ) => Promise<string>;
-  registerSession: () => Promise<string>;
-  removeSession: (sessionHandle: string) => Promise<string>;
-  injectJavaScript: (
-    sessionHandle: string | null,
-    callbackStringified: string
-  ) => Promise<unknown>;
-  registerEvent: (eventName: string) => void;
-  unregisterEvent: (eventName: string) => void;
-}
-
 export type OnErrorCallback = (error: VisitProposalError) => void;
 
 export type StradaComponentProps = {
   sessionHandle: string;
   url: string;
   name: string;
+  registerMessageListener: (listener: SessionMessageCallback) => void;
+  sendToBridge: (message: StradaMessage) => void;
 };
 
 export type StradaComponent = React.ComponentType<StradaComponentProps> & {
@@ -59,3 +46,9 @@ export type StradaComponent = React.ComponentType<StradaComponentProps> & {
 export type StradaMessages = {
   [event: string]: StradaMessage;
 };
+
+export type DispatchCommand = (
+  ref: React.RefObject<any>,
+  command: string,
+  ...args: any[]
+) => void;

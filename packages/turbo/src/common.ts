@@ -1,12 +1,6 @@
-import type { SessionMessageCallback } from 'packages/turbo/src/types';
-import type { EmitterSubscription } from 'react-native';
-import {
-  NativeEventEmitter,
-  Platform,
-  requireNativeComponent,
-  UIManager,
-} from 'react-native';
-import { NativeModules } from 'react-native';
+import { Platform, requireNativeComponent, UIManager } from 'react-native';
+import { NativeModules, findNodeHandle } from 'react-native';
+import type { DispatchCommand } from './types';
 
 const LINKING_ERROR =
   `The package react-native-turbo doesn't seem to be linked. Make sure: \n\n` +
@@ -18,16 +12,29 @@ export enum SessionEvents {
   MESSAGE = 'MESSAGE',
 }
 
-const eventEmitter = new NativeEventEmitter(
-  NativeModules.RNVisitableViewModule
-);
+export function getNativeComponent<T>(componentName: string): {
+  [componentName: string]: any;
+  dispatchCommand: DispatchCommand;
+} {
+  const viewConfig = UIManager.getViewManagerConfig(componentName);
 
-export function getNativeComponent<T>(componentName: string) {
-  return UIManager.getViewManagerConfig(componentName) != null
-    ? requireNativeComponent<T>(componentName)
-    : () => {
-        throw new Error(LINKING_ERROR);
-      };
+  if (!viewConfig) {
+    throw new Error(LINKING_ERROR);
+  }
+
+  return {
+    [componentName]: requireNativeComponent<T>(componentName),
+    dispatchCommand: (
+      ref: React.RefObject<any>,
+      command: string,
+      ...args: any[]
+    ) =>
+      UIManager.dispatchViewManagerCommand(
+        findNodeHandle(ref.current),
+        viewConfig.Commands[command]!,
+        args
+      ),
+  };
 }
 
 export function getNativeModule<T>(moduleName: string): T {
@@ -41,12 +48,4 @@ export function getNativeModule<T>(moduleName: string): T {
           },
         }
       );
-}
-
-export function registerMessageEventListener(
-  eventName: string,
-  onMessage: SessionMessageCallback
-): EmitterSubscription {
-  NativeModules.RNVisitableViewModule.registerEvent(eventName);
-  return eventEmitter.addListener(eventName, onMessage);
 }

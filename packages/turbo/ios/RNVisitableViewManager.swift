@@ -12,12 +12,20 @@ import RNTurboiOS
 class RNVisitableViewManager: RCTViewManager {
   
   override func view() -> UIView! {
-    return RNVisitableView(bridge: self.bridge)
+    return RNVisitableView()
   }
   
   override static func requiresMainQueueSetup() -> Bool {
     return true
   }
-  
+    
+  @objc 
+  func injectJavaScript(_ node: NSNumber, code: NSString) {
+    DispatchQueue.main.async {
+      let component = self.bridge.uiManager.view(forReactTag: node) as! RNVisitableView
+      component.injectJavaScript(code: code)
+    }
+  }
+
 }
 

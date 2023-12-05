@@ -8,115 +8,67 @@
 import RNTurboiOS
 import UIKit
 
-class RNVisitableView: UIView, SessionSubscriber {
+class RNVisitableView: UIView, RNSessionSubscriber {
   var id: UUID = UUID()
+  @objc var sessionHandle: NSString? = nil
+  @objc var applicationNameForUserAgent: NSString? = nil
   @objc var url: NSString = "" {
     didSet {
-      if (oldValue != "") {
-        self.controller?.visitableURL = URL(string: String(url))!
-        getSession()?.visit(controller!)
-      }
+      visit()
     }
   }
+  @objc var onMessage: RCTDirectEventBlock?
   @objc var onVisitProposal: RCTDirectEventBlock?
   @objc var onLoad: RCTDirectEventBlock?
   @objc var onVisitError: RCTDirectEventBlock?
-  @objc var sessionHandle: NSString?
-  var bridge: RCTBridge?
   
-  var controller: RNVisitableViewController?
-  
-  init(bridge: RCTBridge) {
-    self.bridge = bridge
-    super.init(frame: CGRect.zero)
-  }
-
-  required init?(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
-  }
-  
-  public func getRNSesssion() -> RNSession? {
-    if (!Thread.isMainThread) {
-      print("getSession accessed from incorrect thread")
-      return nil
-    }
+  private lazy var session: RNSession = RNSessionManager.shared.findOrCreateSession(sessionHandle: sessionHandle!, webViewConfiguration: webViewConfiguration)
+  private lazy var webView: WKWebView = session.webView
+  private lazy var webViewConfiguration: WKWebViewConfiguration = {
+    let configuration = WKWebViewConfiguration()
+    configuration.applicationNameForUserAgent = applicationNameForUserAgent as String?
+    return configuration
+  }()
     
-    guard let sessionModule = self.bridge?.uiManager.moduleRegistry.module(forName: "RNVisitableViewModule") as? RNVisitableViewModule else {
-        print("Couldn't find session for sessionHandle:", sessionHandle ?? "default session")
-        return nil
-    }
-    return sessionModule.getSession(sessionHandle: sessionHandle)
-  }
-  
-  public func getSession() -> Session? {
-    return getRNSesssion()?.turboSession
-  }
-  
+  lazy var controller: RNVisitableViewController = {
+    let controller = RNVisitableViewController()
+    controller.delegate = self
+    return controller
+  }()
+    
   override func didMoveToWindow() {
-
-    let url = URL(string: String(url))!
+    reactViewController().addChild(controller)
+    controller.view.frame = bounds // Fixes incorrect size of the webview
+    controller.didMove(toParent: reactViewController())
+    addSubview(controller.view)
+  }
     
-    if (self.controller == nil) {
-      print("Open new VistableView with URL passed from JS: ", url)
-      setupViewController(url: url)
-      self.addSubview((controller?.view)!)
+  public func handleMessage(message: WKScriptMessage) {
+    if let messageBody = message.body as? [AnyHashable : Any] {
+      onMessage?(messageBody)
     }
   }
   
-  func setupViewController(url: URL) {
-    self.controller = RNVisitableViewController(url: url)
-    self.controller?.delegate = self
-    self.reactViewController().addChild(self.controller!)
-    self.controller?.view.frame = bounds // Fixes incorrect size of the webview
-    self.controller?.didMove(toParent: self.reactViewController())
+  public func injectJavaScript(code: NSString) -> Void {
+    webView.evaluateJavaScript(code as String)
   }
-  
-  func attachDelegateAndVisit(_ visitable: Visitable) {
-    let session = getSession()
-    session?.delegate = self
-    // Upon initial load, the session.visit function is called
-    // to set the currentVisit private variable.
-    if(session?.webView.url == nil){
-      session?.visit(visitable)
+    
+  private func visit() {
+    if(controller.visitableURL?.absoluteString == url as String) {
       return
     }
-    session?.visitableViewWillAppear(visitable)
+    performVisit()
   }
-}
-
-extension RNVisitableView: RNVisitableViewControllerDelegate {
-  func visitableWillAppear(visitable: Visitable) {
-    getRNSesssion()?.registerVisitableView(newView: self)
-  }
-  
-  func visitableDidDisappear(visitable: RNTurboiOS.Visitable) {
-    getRNSesssion()?.removeVisitableView(view: self)
-  }
-
-  func visitableDidRender(visitable: Visitable) {
-    guard let session = getSession() else {
-      return
-    }
-    let event: [AnyHashable: Any] = [
-      "title": session.webView.title!,
-      "url": session.webView.url!
-    ]
-    onLoad?(event)
-  }
-  
-}
-
-extension RNVisitableView: SessionDelegate {
-  
-  func sessionWebViewProcessDidTerminate(_ session: Session) {
     
+  private func performVisit() {
+    controller.visitableURL = URL(string: String(url))
+    session.visit(controller)
   }
-
-  func session(_ session: Session, didProposeVisit proposal: VisitProposal) {
-    // Handle a visit proposal
-    if (session.webView.url == proposal.url) {
+    
+  public func didProposeVisit(proposal: VisitProposal){
+    if (webView.url == proposal.url) {
       // When reopening same URL we want to reload webview
-      getSession()?.reload()
+      session.reload()
     } else {
       let event: [AnyHashable: Any] = [
         "url": proposal.url.absoluteString,
@@ -126,24 +78,35 @@ extension RNVisitableView: SessionDelegate {
     }
   }
 
-  func session(_ session: Session, didFailRequestForVisitable visitable: Visitable, error: Error) {
-    // Handle a visit error
+  public func didFailRequestForVisitable(visitable: Visitable, error: Error){
     var event: [AnyHashable: Any] = [
       "url": visitable.visitableURL.absoluteString,
       "error": error.localizedDescription,
     ]
-    
     if let turboError = error as? TurboError, case let .http(statusCode) = turboError {
       event["statusCode"] = statusCode
     }
-
     onVisitError?(event)
   }
 
-  func webView(_ webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> ()) {
-      decisionHandler(WKNavigationActionPolicy.cancel)
-      // Handle non-Turbo links
-  }
+}
+
+extension RNVisitableView: RNVisitableViewControllerDelegate {
   
+  func visitableWillAppear(visitable: Visitable) {
+    session.registerVisitableView(newView: self)
+  }
+    
+  func visitableDidDisappear(visitable: Visitable) {
+    session.unregisterVisitableView(view: self)
+  }
+
+  func visitableDidRender(visitable: Visitable) {
+    let event: [AnyHashable: Any] = [
+      "title": webView.title!,
+      "url": webView.url!
+    ]
+    onLoad?(event)
+  }
   
 }
