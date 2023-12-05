@@ -25,6 +25,10 @@ import type {
   StradaComponent,
 } from './types';
 import { useStradaBridge } from './stradaBridge';
+import {
+  NavigationContainerRefContext,
+  useNavigation,
+} from '@react-navigation/native';
 
 const RNVisitableView = getNativeComponent<any>('RNVisitableView');
 const RNVisitableViewModule = getNativeModule<VisitableViewModule>(
@@ -44,6 +48,31 @@ export interface Props {
 
 export interface RefObject {
   injectJavaScript: (callbackStringified: string) => void;
+}
+
+function useDisableNavigationAnimation() {
+  const navWithRoutes = React.useContext(NavigationContainerRefContext);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const params = navWithRoutes?.getCurrentRoute()?.params;
+    if (
+      params &&
+      '__disable_animation' in params &&
+      params.__disable_animation
+    ) {
+      navigation.setOptions({
+        animation: 'none',
+      });
+      const timeout = setTimeout(() => {
+        navigation.setOptions({
+          animation: undefined,
+        });
+      }, 100);
+      return () => clearTimeout(timeout);
+    }
+    return undefined;
+  }, [navigation, navWithRoutes]);
 }
 
 const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
@@ -70,6 +99,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           .join(' '),
       [applicationNameForUserAgent, stradaUserAgent]
     );
+    useDisableNavigationAnimation();
 
     useEffect(() => {
       const setSessionConfiguration = async () => {
