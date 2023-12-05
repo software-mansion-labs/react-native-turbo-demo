@@ -1,7 +1,7 @@
 import {
   buildLinkingConfiguration,
   WebScreenRuleConfig,
-} from '../buildWebScreen';
+} from '../buildLinkingConfiguration';
 
 const mockComponent = jest.fn();
 
