@@ -10,13 +10,15 @@ import { webScreenConfig, linkingConfiguration } from 'example/src/webScreen';
 import NestedTab from 'example/src/NestedTab';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Routes } from 'example/src/webScreenRoutes';
-import { webStackScreen } from 'react-native-web-screen';
+import { useWebScreen } from 'react-native-web-screen';
 
 const Tab = createBottomTabNavigator();
 
 const Stack = createNativeStackNavigator();
 
 const BottomTabs = () => {
+  const { webScreens } = useWebScreen(webScreenConfig);
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -24,8 +26,7 @@ const BottomTabs = () => {
         tabBarActiveTintColor: '#00094a',
       }}
     >
-      {webStackScreen(Tab, webScreenConfig, Routes.BottomTabs)}
-
+      {webScreens(Tab, Routes.BottomTabs)}
       <Tab.Screen
         name={Routes.NestedTabNative}
         component={NativeScreen}
@@ -37,7 +38,7 @@ const BottomTabs = () => {
 
 const App: React.FC = () => {
   const navigation = useNavigationContainerRef();
-
+  const { webScreens } = useWebScreen(webScreenConfig);
   return (
     <NavigationContainer linking={linkingConfiguration} ref={navigation}>
       <Stack.Navigator
@@ -51,7 +52,7 @@ const App: React.FC = () => {
           name={Routes.BottomTabs}
           component={BottomTabs}
         />
-        {webStackScreen(Stack, webScreenConfig)}
+        {webScreens(Stack)}
         <Stack.Screen
           name={Routes.NotFound}
           component={ErrorScreen}

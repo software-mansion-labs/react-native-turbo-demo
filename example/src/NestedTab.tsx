@@ -3,18 +3,20 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { webScreenConfig } from 'example/src/webScreen';
 import { NativeScreen } from 'react-native-screens';
 import { Routes } from 'example/src/webScreenRoutes';
-import { webStackScreen } from 'react-native-web-screen';
+import { useWebScreen } from 'react-native-web-screen';
 
 const Tab = createMaterialTopTabNavigator();
 
 const NestedTab: React.FC = () => {
+  const { webScreens } = useWebScreen(webScreenConfig);
+
   return (
     <Tab.Navigator
       screenOptions={{
         tabBarActiveTintColor: '#00094a',
       }}
     >
-      {webStackScreen(Tab, webScreenConfig, Routes.NestedTabWeb)}
+      {webScreens(Tab, Routes.NestedTabWeb)}
       <Tab.Screen
         name={Routes.NestedTabNative}
         component={NativeScreen}

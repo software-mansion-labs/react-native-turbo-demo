@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import WebScreen from './WebScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -18,7 +18,7 @@ function buildWebviewComponent(
   );
 }
 
-export function findRouteInWebScreenConfig(
+function findRouteInWebScreenConfig(
   routes: WebScreenRuleMap | undefined,
   name: string
 ): WebScreenRuleMap | undefined {
@@ -39,10 +39,10 @@ export function findRouteInWebScreenConfig(
   return undefined;
 }
 
-export default function webStackScreen(
+function webStackScreen(
   Stack: StackType,
-  config: WebScreenRuleConfig,
-  key?: string
+  key: string | undefined,
+  config: WebScreenRuleConfig
 ) {
   const { routes } = config;
   const { baseURL, webScreenComponent } = config;
@@ -73,4 +73,12 @@ export default function webStackScreen(
       </Stack.Group>
     );
   return null;
+}
+
+export default function useWebScreen(config: WebScreenRuleConfig) {
+  const webScreens = useCallback(
+    (Stack: StackType, key?: string) => webStackScreen(Stack, key, config),
+    [config]
+  );
+  return { webScreens };
 }
