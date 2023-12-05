@@ -68,7 +68,7 @@ function useDisableNavigationAnimation() {
         navigation.setOptions({
           animation: undefined,
         });
-      }, 500);
+      }, 100);
       return () => clearTimeout(timeout);
     }
     return undefined;
