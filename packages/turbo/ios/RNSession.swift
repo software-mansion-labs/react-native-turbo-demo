@@ -78,7 +78,7 @@ extension RNSession: SessionDelegate {
   }
 
   func session(_ session: Session, didFailRequestForVisitable visitable: Visitable, error: Error) {
-    visitableViews.last?.didVisitFailed(visitable: visitable, error: error)
+    visitableViews.last?.didFailRequestForVisitable(visitable: visitable, error: error)
   }
 
   func webView(_ webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> ()) {

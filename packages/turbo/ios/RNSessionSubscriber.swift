@@ -13,5 +13,5 @@ protocol RNSessionSubscriber {
   var controller: RNVisitableViewController { get }
   func handleMessage(message: WKScriptMessage)
   func didProposeVisit(proposal: VisitProposal)
-  func didVisitFailed(visitable: Visitable, error: Error)
+  func didFailRequestForVisitable(visitable: Visitable, error: Error)
 }

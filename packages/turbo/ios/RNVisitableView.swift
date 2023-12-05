@@ -78,7 +78,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     }
   }
 
-  public func didVisitFailed(visitable: Visitable, error: Error){
+  public func didFailRequestForVisitable(visitable: Visitable, error: Error){
     var event: [AnyHashable: Any] = [
       "url": visitable.visitableURL.absoluteString,
       "error": error.localizedDescription,
