@@ -58,8 +58,7 @@ function groupScreens(
       <Navigator.Group>
         {Object.entries(filteredRoutes).map(([routeName, rule]) => {
           if (isRule(rule)) {
-            const { urlPattern, component, options, presentation, title } =
-              rule;
+            const { urlPattern, component, options } = rule;
             return (
               <Navigator.Screen
                 key={routeName}
@@ -68,7 +67,7 @@ function groupScreens(
                 component={component ?? defaultComponent}
                 initialParams={{ baseURL, path: urlPattern }}
                 //  @ts-expect-error Use proper typing for main components
-                options={{ ...options, presentation, title }}
+                options={options}
               />
             );
           }

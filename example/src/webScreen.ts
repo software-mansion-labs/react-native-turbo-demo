@@ -14,7 +14,9 @@ export const webScreenConfig: WebScreenRuleConfig = {
       routes: {
         [Routes.WebviewInitial]: {
           urlPattern: '',
-          title: 'React Native Web Screen',
+          options: {
+            title: 'React Native Web Screen',
+          },
         },
       },
     },
@@ -22,40 +24,55 @@ export const webScreenConfig: WebScreenRuleConfig = {
       routes: {
         [Routes.NestedTabWeb]: {
           urlPattern: 'nested',
-          title: 'Nested Web',
+          options: {
+            title: 'Nested Web',
+          },
         },
       },
     },
     [Routes.New]: {
       urlPattern: 'new',
-      title: 'A Modal Webpage',
-      presentation: 'modal',
+      options: {
+        title: 'A Modal Webpage',
+        presentation: 'modal',
+      },
     },
     [Routes.SuccessScreen]: {
       urlPattern: 'success',
-      title: 'It Worked!',
-      presentation: 'modal',
+      options: {
+        title: 'It Worked!',
+        presentation: 'modal',
+      },
     },
     [Routes.One]: {
       urlPattern: 'one',
-      title: "How'd You Get Here?",
+      options: {
+        title: "How'd You Get Here?",
+      },
     },
     [Routes.NumbersScreen]: {
       urlPattern: 'numbers',
-      title: 'A List of Numbers',
+      options: {
+        title: 'A List of Numbers',
+      },
       component: NativeScreen,
     },
     [Routes.SignIn]: {
       urlPattern: 'signin',
-      presentation: 'formSheet',
-      options: { gestureEnabled: false },
+      options: {
+        gestureEnabled: false,
+        presentation: 'formSheet',
+      },
     },
     [Routes.Share]: {
       urlPattern: 'share',
       component: ShareScreen,
     },
 
-    [Routes.Fallback]: { urlPattern: '*', title: '' },
+    [Routes.Fallback]: {
+      urlPattern: '*',
+      options: { title: '' },
+    },
   },
   webScreenComponent: WebView,
 };

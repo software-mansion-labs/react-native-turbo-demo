@@ -2,8 +2,6 @@ import type { NativeStackNavigationOptions } from '@react-navigation/native-stac
 
 export interface WebScreenRule {
   urlPattern: string;
-  title?: string;
-  presentation?: NativeStackNavigationOptions['presentation'];
   component?: React.ElementType;
   options?: NativeStackNavigationOptions;
 }

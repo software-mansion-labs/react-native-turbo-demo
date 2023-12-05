@@ -17,21 +17,21 @@ const exampleConfig: WebScreenRuleConfig = {
   routes: {
     TestRoute1: {
       urlPattern: 'url1',
-      title: 'Title 1',
+      options: { title: 'Title 1' },
     },
     TestRoute2: {
       urlPattern: 'url2',
-      presentation: 'modal',
+      options: { presentation: 'modal' },
     },
     TestRoute3: {
       routes: {
         NestedRoute: {
           urlPattern: 'urlNested',
-          title: 'Nested',
+          options: { title: 'Nested' },
         },
       },
     },
-    Fallback: { urlPattern: '*', title: '' },
+    Fallback: { urlPattern: '*', options: { title: '' } },
   },
 };
 
