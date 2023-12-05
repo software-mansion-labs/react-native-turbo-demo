@@ -47,8 +47,10 @@ export type StradaMessages = {
   [event: string]: StradaMessage;
 };
 
+export type DispatchCommandTypes = 'injectJavaScript';
+
 export type DispatchCommand = (
   ref: React.RefObject<any>,
-  command: string,
-  ...args: any[]
+  command: DispatchCommandTypes,
+  args: string
 ) => void;

@@ -1,5 +1,6 @@
 import { Platform, requireNativeComponent, UIManager } from 'react-native';
 import { findNodeHandle } from 'react-native';
+import { DispatchCommandTypes } from './types';
 
 const LINKING_ERROR =
   `The package react-native-turbo doesn't seem to be linked. Make sure: \n\n` +
@@ -9,8 +10,8 @@ const LINKING_ERROR =
 
 export function dispatchCommand(
   ref: React.RefObject<any>,
-  command: string,
-  ...args: any[]
+  command: DispatchCommandTypes,
+  code: string
 ) {
   const viewConfig = UIManager.getViewManagerConfig('RNVisitableView');
 
@@ -21,7 +22,7 @@ export function dispatchCommand(
   UIManager.dispatchViewManagerCommand(
     findNodeHandle(ref.current),
     viewConfig.Commands[command]!,
-    args
+    [code]
   );
 }
 

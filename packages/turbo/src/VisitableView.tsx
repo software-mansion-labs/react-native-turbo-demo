@@ -147,6 +147,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
         ))}
         <RNVisitableView
           {...props}
+          // @ts-expect-error
           ref={visitableViewRef}
           sessionHandle={sessionHandle}
           applicationNameForUserAgent={resolvedApplicationNameForUserAgent}
