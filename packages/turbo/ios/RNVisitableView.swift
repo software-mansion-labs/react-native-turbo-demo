@@ -12,11 +12,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   var id: UUID = UUID()
   @objc var sessionHandle: NSString? = nil
   @objc var applicationNameForUserAgent: NSString? = nil
-  @objc var url: NSString = "" {
-    didSet {
-      visit()
-    }
-  }
+  @objc var url: NSString = ""
   @objc var onMessage: RCTDirectEventBlock?
   @objc var onVisitProposal: RCTDirectEventBlock?
   @objc var onLoad: RCTDirectEventBlock?
@@ -95,6 +91,7 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
   
   func visitableWillAppear(visitable: Visitable) {
     session.registerVisitableView(newView: self)
+    visit()
   }
     
   func visitableDidDisappear(visitable: Visitable) {

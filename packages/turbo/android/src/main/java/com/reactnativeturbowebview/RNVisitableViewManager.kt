@@ -68,9 +68,8 @@ class RNVisitableViewManager : SimpleViewManager<RNVisitableView>() {
     )
 
   override fun onDropViewInstance(view: RNVisitableView) {
-    view.detachWebView {
-      super.onDropViewInstance(view)
-    }
+    super.onDropViewInstance(view)
+    view.detachWebView()
   }
 
 }

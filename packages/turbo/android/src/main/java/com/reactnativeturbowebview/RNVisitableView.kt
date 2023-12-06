@@ -6,23 +6,15 @@ import android.view.ViewGroup
 import android.webkit.CookieManager
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.findViewTreeLifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.whenStateAtLeast
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.events.RCTEventEmitter
-import dev.hotwire.turbo.session.TurboSession
 import dev.hotwire.turbo.views.TurboView
 import dev.hotwire.turbo.views.TurboWebView
-import dev.hotwire.turbo.visit.TurboVisit
 import dev.hotwire.turbo.visit.TurboVisitAction
 import dev.hotwire.turbo.visit.TurboVisitOptions
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscriber {
 
@@ -34,15 +26,14 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   var applicationNameForUserAgent: String? = null
 
   // Session
-  private val sessionContainer: RNSession by lazy {
+  private val session: RNSession by lazy {
     RNSessionManager.findOrCreateSession(
       reactContext,
       sessionHandle,
       applicationNameForUserAgent
     )
   }
-  private val webView: TurboWebView get() = sessionContainer.turboSession.webView
-  private val session: TurboSession get() = sessionContainer.turboSession
+  private val webView: TurboWebView get() = session.webView
 
   // State
   private var isInitialVisit = true
@@ -72,49 +63,27 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     }
   }
 
-  private fun visit(restoreWithCachedSnapshot: Boolean, reload: Boolean) {
-    val restore = restoreWithCachedSnapshot && !reload
-
-    val options = when {
-      restore -> TurboVisitOptions(action = TurboVisitAction.RESTORE)
-      else -> TurboVisitOptions()
-    }
-
-    viewTreeLifecycleOwner?.lifecycleScope?.launch {
-      val snapshot = when (options.action) {
-        TurboVisitAction.ADVANCE -> fetchCachedSnapshot()
-        else -> null
-      }
-
-      viewTreeLifecycleOwner?.lifecycle?.whenStateAtLeast(Lifecycle.State.STARTED) {
-        session.visit(
-          TurboVisit(
-            location = url,
-            destinationIdentifier = url.hashCode(),
-            restoreWithCachedSnapshot = restoreWithCachedSnapshot,
-            reload = reload,
-            callback = sessionContainer,
-            options = options.copy(snapshotHTML = snapshot)
-          )
-        )
-      }
-    }
+  private fun performVisit(restoreWithCachedSnapshot: Boolean, reload: Boolean) {
+    session.visit(
+      url = url,
+      restoreWithCachedSnapshot = restoreWithCachedSnapshot,
+      reload = reload,
+      viewTreeLifecycleOwner = viewTreeLifecycleOwner,
+    )
   }
 
-  override fun attachWebViewAndVisit() {
+  private fun visit() {
     attachWebView {
       isWebViewAttachedToNewDestination = it
 
       // Visit every time the WebView is reattached to the current Fragment.
       if (isWebViewAttachedToNewDestination) {
         val currentSessionVisitRestored =
-          !isInitialVisit && session.currentVisit?.destinationIdentifier == url.hashCode() && session.restoreCurrentVisit(
-            callback = sessionContainer
-          )
+          !isInitialVisit && session.currentVisit?.destinationIdentifier == url.hashCode() && session.restoreCurrentVisit()
 
         if (!currentSessionVisitRestored) {
           showProgressView()
-          visit(restoreWithCachedSnapshot = !isInitialVisit, reload = false)
+          performVisit(restoreWithCachedSnapshot = !isInitialVisit, reload = false)
           isInitialVisit = false
         }
       }
@@ -131,7 +100,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     }
 
     isWebViewAttachedToNewDestination = false
-    visit(restoreWithCachedSnapshot = false, reload = true)
+    performVisit(restoreWithCachedSnapshot = false, reload = true)
   }
 
   private fun initializePullToRefresh(turboView: TurboView) {
@@ -150,18 +119,6 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     }
   }
 
-  private suspend fun fetchCachedSnapshot(): String? {
-    return withContext(Dispatchers.IO) {
-      val response = session.offlineRequestHandler?.getCachedSnapshot(
-        url = url
-      )
-
-      response?.data?.use {
-        String(it.readBytes())
-      }
-    }
-  }
-
   private fun showScreenshotIfAvailable(turboView: TurboView) {
     if (screenshotOrientation == turboView.screenshotOrientation() && screenshotZoomed == currentlyZoomed) {
       screenshot?.let { turboView.addScreenshot(it) }
@@ -173,12 +130,13 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
-    sessionContainer.registerVisitableView(this)
+    session.registerVisitableView(this)
+    visit()
   }
 
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
-    sessionContainer.removeVisitableView(this)
+    session.removeVisitableView(this)
   }
 
   private fun attachWebView(onReady: (Boolean) -> Unit) {
@@ -197,15 +155,10 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     }
   }
 
-  override fun detachWebView(callback: () -> Unit) {
+  override fun detachWebView() {
     screenshotView()
-
-    (session.webView.parent as ViewGroup?)?.endViewTransition(session.webView)
-
-    webViewContainer.post {
-      webViewContainer.removeAllViews()
-      callback()
-    }
+    (webView.parent as ViewGroup?)?.endViewTransition(webView)
+    webViewContainer.removeAllViews()
   }
 
   /*
@@ -264,6 +217,8 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     reactContext.getJSModule(RCTEventEmitter::class.java).receiveEvent(id, event.name, params)
   }
 
+  // region SessionSubscriber
+
   override fun injectJavaScript(script: String) {
     webView.evaluateJavascript(script, null)
   }
@@ -271,8 +226,6 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   override fun handleMessage(message: WritableMap) {
     sendEvent(RNVisitableViewEvent.MESSAGE, message)
   }
-
-  // region TurboSessionCallback
 
   override fun onReceivedError(errorCode: Int) {
     sendEvent(RNVisitableViewEvent.VISIT_ERROR, Arguments.createMap().apply {

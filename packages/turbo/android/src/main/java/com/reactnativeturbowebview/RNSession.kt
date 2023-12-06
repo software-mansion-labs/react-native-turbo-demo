@@ -3,22 +3,31 @@ package com.reactnativeturbowebview
 import android.webkit.JavascriptInterface
 import android.webkit.WebSettings
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenStateAtLeast
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
 import dev.hotwire.turbo.session.TurboSession
 import dev.hotwire.turbo.views.TurboWebView
+import dev.hotwire.turbo.visit.TurboVisit
+import dev.hotwire.turbo.visit.TurboVisitAction
 import dev.hotwire.turbo.visit.TurboVisitOptions
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 class RNSession(
   private val reactContext: ReactContext,
   private val sessionHandle: String,
   private val applicationNameForUserAgent: String?,
-): SessionCallbackAdapter {
+) : SessionCallbackAdapter {
 
   private val visitableViews: LinkedHashSet<SessionSubscriber> = linkedSetOf()
 
-  val turboSession: TurboSession = run {
+  private val turboSession: TurboSession = run {
     val activity = reactContext.currentActivity as AppCompatActivity
     val webView = TurboWebView(reactContext, null)
     val session = TurboSession(sessionHandle, activity, webView)
@@ -30,42 +39,70 @@ class RNSession(
     session.isRunningInAndroidNavigation = false
     session
   }
+  val webView: TurboWebView get() = turboSession.webView
+  val currentVisit: TurboVisit? get() = turboSession.currentVisit
 
   internal fun registerVisitableView(newView: SessionSubscriber) {
-    var callbacksCount = visitableViews.size
-
-    if (callbacksCount == 0) {
-      newView.attachWebViewAndVisit()
-    } else {
-      fun onDetached() = synchronized(this) {
-        callbacksCount--
-        if (callbacksCount == 0) {
-          newView.attachWebViewAndVisit()
-        }
-      }
-
-      for (view in visitableViews) {
-        view.detachWebView() {
-          onDetached()
-        }
-      }
+    for (view in visitableViews) {
+      view.detachWebView()
     }
-
-    if (!visitableViews.contains(newView)) {
-      visitableViews.add(newView)
-    }
+    visitableViews.add(newView)
   }
 
   internal fun removeVisitableView(view: SessionSubscriber) {
     visitableViews.remove(view)
   }
 
-  private fun setUserAgentString(webView: TurboWebView, applicationNameForUserAgent: String?){
+  private fun setUserAgentString(webView: TurboWebView, applicationNameForUserAgent: String?) {
     var userAgentString = WebSettings.getDefaultUserAgent(webView.context)
     if (applicationNameForUserAgent != null) {
       userAgentString = "$userAgentString $applicationNameForUserAgent"
     }
     webView.settings.userAgentString = userAgentString
+  }
+
+  fun visit(url: String, restoreWithCachedSnapshot: Boolean, reload: Boolean, viewTreeLifecycleOwner: LifecycleOwner?) {
+    val restore = restoreWithCachedSnapshot && !reload
+
+    val options = when {
+      restore -> TurboVisitOptions(action = TurboVisitAction.RESTORE)
+      else -> TurboVisitOptions()
+    }
+
+    viewTreeLifecycleOwner?.lifecycleScope?.launch {
+      val snapshot = when (options.action) {
+        TurboVisitAction.ADVANCE -> fetchCachedSnapshot(url)
+        else -> null
+      }
+
+      viewTreeLifecycleOwner.lifecycle.whenStateAtLeast(Lifecycle.State.STARTED) {
+        turboSession.visit(
+          TurboVisit(
+            location = url,
+            destinationIdentifier = url.hashCode(),
+            restoreWithCachedSnapshot = restoreWithCachedSnapshot,
+            reload = reload,
+            callback = this@RNSession,
+            options = options.copy(snapshotHTML = snapshot)
+          )
+        )
+      }
+    }
+  }
+
+  private suspend fun fetchCachedSnapshot(url: String): String? {
+    return withContext(Dispatchers.IO) {
+      val response = turboSession.offlineRequestHandler?.getCachedSnapshot(
+        url = url
+      )
+      response?.data?.use {
+        String(it.readBytes())
+      }
+    }
+  }
+
+  fun restoreCurrentVisit(): Boolean {
+    return turboSession.restoreCurrentVisit(callback = this)
   }
 
   inner class JavaScriptInterface {
@@ -79,6 +116,8 @@ class RNSession(
       }
     }
   }
+
+  // region SessionCallbackAdapter
 
   override fun onReceivedError(errorCode: Int) {
     visitableViews.last().onReceivedError(errorCode)
@@ -111,4 +150,7 @@ class RNSession(
   override fun visitRendered() {
     visitableViews.last().visitRendered()
   }
+
+  // end region
+
 }
