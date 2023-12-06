@@ -47,6 +47,7 @@ export type StradaMessages = {
   [event: string]: StradaMessage;
 };
 
+// list of methods available for RNVisitableView module
 export type DispatchCommandTypes = 'injectJavaScript';
 
 export type DispatchCommand = (

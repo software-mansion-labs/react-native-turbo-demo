@@ -14,6 +14,18 @@ import {
   VisitProposalError,
 } from './types';
 
+// interface should match RNVisitableView exported properties in native code
+interface RNVisitableViewProps {
+  url: string;
+  sessionHandle?: string;
+  applicationNameForUserAgent?: string;
+  onLoad?: (proposal: NativeSyntheticEvent<OnLoadEvent>) => void;
+  onMessage?: (proposal: NativeSyntheticEvent<{ message: object }>) => void;
+  onVisitError?: (e: NativeSyntheticEvent<VisitProposalError>) => void;
+  onVisitProposal?: (e: NativeSyntheticEvent<VisitProposal>) => void;
+  style?: StyleProp<ViewStyle>;
+}
+
 const LINKING_ERROR =
   `The package react-native-turbo doesn't seem to be linked. Make sure: \n\n` +
   Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
@@ -36,17 +48,6 @@ export function dispatchCommand(
     viewConfig.Commands[command]!,
     [code]
   );
-}
-
-interface RNVisitableViewProps {
-  url: string;
-  sessionHandle?: string;
-  applicationNameForUserAgent?: string;
-  onLoad?: (proposal: NativeSyntheticEvent<OnLoadEvent>) => void;
-  onMessage?: (proposal: NativeSyntheticEvent<{ message: object }>) => void;
-  onVisitError?: (e: NativeSyntheticEvent<VisitProposalError>) => void;
-  onVisitProposal?: (e: NativeSyntheticEvent<VisitProposal>) => void;
-  style?: StyleProp<ViewStyle>;
 }
 
 const RNVisitableView =
