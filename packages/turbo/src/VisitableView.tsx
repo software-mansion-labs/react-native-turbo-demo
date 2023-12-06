@@ -3,7 +3,6 @@ import React, {
   useImperativeHandle,
   useRef,
   useMemo,
-  useEffect,
 } from 'react';
 import { NativeSyntheticEvent, StyleSheet } from 'react-native';
 import RNVisitableView, { dispatchCommand } from './RNVisitableView';
@@ -17,10 +16,7 @@ import type {
   MessageEvent,
 } from './types';
 import { useStradaBridge } from './stradaBridge';
-import {
-  NavigationContainerRefContext,
-  useNavigation,
-} from '@react-navigation/native';
+import { useDisableNavigationAnimation } from './hooks/useDisableNavigationAnimation';
 
 export interface Props {
   url: string;
@@ -38,31 +34,6 @@ export interface RefObject {
 }
 
 type SessionMessageCallbackArrayElement = SessionMessageCallback | undefined;
-
-function useDisableNavigationAnimation() {
-  const navWithRoutes = React.useContext(NavigationContainerRefContext);
-  const navigation = useNavigation();
-
-  useEffect(() => {
-    const params = navWithRoutes?.getCurrentRoute()?.params;
-    if (
-      params &&
-      '__disable_animation' in params &&
-      params.__disable_animation
-    ) {
-      navigation.setOptions({
-        animation: 'none',
-      });
-      const timeout = setTimeout(() => {
-        navigation.setOptions({
-          animation: undefined,
-        });
-      }, 100);
-      return () => clearTimeout(timeout);
-    }
-    return undefined;
-  }, [navigation, navWithRoutes]);
-}
 
 function useMessageQueue(
   onMessageCallback: SessionMessageCallback | undefined
@@ -117,6 +88,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           .join(' '),
       [applicationNameForUserAgent, stradaUserAgent]
     );
+
     useDisableNavigationAnimation();
 
     useImperativeHandle(
