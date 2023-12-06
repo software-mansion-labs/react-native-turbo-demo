@@ -20,8 +20,8 @@ interface RNVisitableViewProps {
   url: string;
   sessionHandle?: string;
   applicationNameForUserAgent?: string;
-  onLoad?: (proposal: NativeSyntheticEvent<LoadEvent>) => void;
-  onMessage?: (proposal: NativeSyntheticEvent<MessageEvent>) => void;
+  onLoad?: (e: NativeSyntheticEvent<LoadEvent>) => void;
+  onMessage?: (e: NativeSyntheticEvent<MessageEvent>) => void;
   onVisitError?: (e: NativeSyntheticEvent<VisitProposalError>) => void;
   onVisitProposal?: (e: NativeSyntheticEvent<VisitProposal>) => void;
   style?: StyleProp<ViewStyle>;

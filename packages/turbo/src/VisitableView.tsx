@@ -24,7 +24,7 @@ export interface Props {
   applicationNameForUserAgent?: string;
   stradaComponents?: StradaComponent[];
   onVisitProposal: (proposal: VisitProposal) => void;
-  onLoad?: (proposal: LoadEvent) => void;
+  onLoad?: (params: LoadEvent) => void;
   onVisitError?: OnErrorCallback;
   onMessage?: SessionMessageCallback;
 }
