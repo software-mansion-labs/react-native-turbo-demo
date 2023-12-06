@@ -54,7 +54,7 @@ const parseQueryStringFromPath = (path: string) => {
 /*
  * Its like useLinkTo with some custom tweaks
  */
-export default function useWebviewNavigate<
+export function useWebviewNavigate<
   ParamList extends ReactNavigation.RootParamList
 >() {
   const navigation: any = React.useContext(NavigationContainerRefContext);

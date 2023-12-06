@@ -1,6 +1,6 @@
 import React from 'react';
 import { LoadEvent, VisitableView, VisitProposal } from 'react-native-turbo';
-import useWebviewNavigate from './useWebviewNavigate';
+import { useWebviewNavigate } from './hooks/useWebviewNavigate';
 
 interface Props {
   navigation: any;
