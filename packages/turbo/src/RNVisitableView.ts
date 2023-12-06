@@ -33,6 +33,13 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
 
+function transformCommandToAcceptableType(command: number): number | string {
+  if (Platform.OS === 'ios') {
+    return command;
+  }
+  return command.toString();
+}
+
 export function dispatchCommand(
   ref: React.RefObject<any>,
   command: DispatchCommandTypes,
@@ -46,7 +53,7 @@ export function dispatchCommand(
 
   UIManager.dispatchViewManagerCommand(
     findNodeHandle(ref.current),
-    viewConfig.Commands[command]!,
+    transformCommandToAcceptableType(viewConfig.Commands[command]!),
     [code]
   );
 }

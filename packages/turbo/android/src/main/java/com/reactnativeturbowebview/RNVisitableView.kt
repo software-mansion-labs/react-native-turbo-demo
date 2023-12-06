@@ -24,40 +24,45 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class RNVisitableView(context: Context, sessionModule: RNVisitableViewModule) : LinearLayout(context),
-  SessionCallbackAdapter,
-  SessionSubscriber {
+class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscriber {
 
-  private var visitableView = inflate(context, R.layout.turbo_view, null) as ViewGroup
-  private var turboView: TurboView
-  private var screenshotView: AppCompatImageView
-  private val webViewContainer: ViewGroup get() = findViewById(R.id.turbo_webView_container)
-  private val viewTreeLifecycleOwner
-    get() = turboView?.findViewTreeLifecycleOwner()
   private val reactContext = context as ReactContext
-  private var isInitialVisit = true
-  var sessionHandle: String? = null
-  private val sessionContainer: RNSession by lazy {
-    sessionModule.getSession(sessionHandle)
-  }
+
+  // Props
   lateinit var url: String
+  lateinit var sessionHandle: String
+  var applicationNameForUserAgent: String? = null
+
+  // Session
+  private val sessionContainer: RNSession by lazy {
+    RNSessionManager.findOrCreateSession(
+      reactContext,
+      sessionHandle,
+      applicationNameForUserAgent
+    )
+  }
+  private val webView: TurboWebView get() = sessionContainer.turboSession.webView
+  private val session: TurboSession get() = sessionContainer.turboSession
+
+  // State
+  private var isInitialVisit = true
   private var currentlyZoomed = false
   private var isWebViewAttachedToNewDestination = false
   private var screenshotOrientation = 0
   private var screenshotZoomed = false
   private var screenshot: Bitmap? = null
-  private val webView: TurboWebView
-    get() = sessionContainer.turboSession.webView
-  private val session: TurboSession
-    get() = sessionContainer.turboSession
+
+  // Views
+  private val visitableView = inflate(context, R.layout.turbo_view, null) as ViewGroup
+  private val turboView: TurboView by lazy { visitableView.findViewById(R.id.turbo_view) }
+  private val screenshotView: AppCompatImageView by lazy { visitableView.findViewById(R.id.turbo_screenshot) }
+  private val webViewContainer: ViewGroup by lazy { findViewById(R.id.turbo_webView_container) }
+  private val viewTreeLifecycleOwner get() = turboView.findViewTreeLifecycleOwner()
 
   init {
     addView(visitableView)
-    turboView = visitableView.findViewById(R.id.turbo_view)
-    screenshotView = visitableView.findViewById(R.id.turbo_screenshot)
 
-    currentlyZoomed = false
-    turboView?.apply {
+    turboView.apply {
       initializePullToRefresh(this)
       initializeErrorPullToRefresh(this)
       showScreenshotIfAvailable(this)
@@ -67,7 +72,7 @@ class RNVisitableView(context: Context, sessionModule: RNVisitableViewModule) : 
     }
   }
 
-  fun visit(restoreWithCachedSnapshot: Boolean, reload: Boolean) {
+  private fun visit(restoreWithCachedSnapshot: Boolean, reload: Boolean) {
     val restore = restoreWithCachedSnapshot && !reload
 
     val options = when {
@@ -88,7 +93,7 @@ class RNVisitableView(context: Context, sessionModule: RNVisitableViewModule) : 
             destinationIdentifier = url.hashCode(),
             restoreWithCachedSnapshot = restoreWithCachedSnapshot,
             reload = reload,
-            callback = this@RNVisitableView,
+            callback = sessionContainer,
             options = options.copy(snapshotHTML = snapshot)
           )
         )
@@ -104,7 +109,7 @@ class RNVisitableView(context: Context, sessionModule: RNVisitableViewModule) : 
       if (isWebViewAttachedToNewDestination) {
         val currentSessionVisitRestored =
           !isInitialVisit && session.currentVisit?.destinationIdentifier == url.hashCode() && session.restoreCurrentVisit(
-            this
+            callback = sessionContainer
           )
 
         if (!currentSessionVisitRestored) {
@@ -116,22 +121,10 @@ class RNVisitableView(context: Context, sessionModule: RNVisitableViewModule) : 
     }
   }
 
-  private suspend fun fetchCachedSnapshot(): String? {
-    return withContext(Dispatchers.IO) {
-      val response = session.offlineRequestHandler?.getCachedSnapshot(
-        url = url
-      )
-
-      response?.data?.use {
-        String(it.readBytes())
-      }
-    }
-  }
-
-  fun refresh(displayProgress: Boolean) {
+  private fun refresh(displayProgress: Boolean) {
     if (webView.url == null) return
 
-    turboView?.webViewRefresh?.apply {
+    turboView.webViewRefresh?.apply {
       if (displayProgress && !isRefreshing) {
         isRefreshing = true
       }
@@ -157,6 +150,18 @@ class RNVisitableView(context: Context, sessionModule: RNVisitableViewModule) : 
     }
   }
 
+  private suspend fun fetchCachedSnapshot(): String? {
+    return withContext(Dispatchers.IO) {
+      val response = session.offlineRequestHandler?.getCachedSnapshot(
+        url = url
+      )
+
+      response?.data?.use {
+        String(it.readBytes())
+      }
+    }
+  }
+
   private fun showScreenshotIfAvailable(turboView: TurboView) {
     if (screenshotOrientation == turboView.screenshotOrientation() && screenshotZoomed == currentlyZoomed) {
       screenshot?.let { turboView.addScreenshot(it) }
@@ -176,24 +181,8 @@ class RNVisitableView(context: Context, sessionModule: RNVisitableViewModule) : 
     sessionContainer.removeVisitableView(this)
   }
 
-  override fun detachWebView(onReady: () -> Unit) {
-    screenshotView()
-
-    (session.webView.parent as ViewGroup?)?.endViewTransition(session.webView)
-
-    webViewContainer.post {
-      webViewContainer.removeAllViews()
-      onReady()
-    }
-  }
-
   private fun attachWebView(onReady: (Boolean) -> Unit) {
     val view = turboView
-
-    if (view == null) {
-      onReady(false)
-      return
-    }
 
     // Sometimes detachWebView is not called before attachWebView.
     // This can happen when the user uses one session for different
@@ -205,6 +194,17 @@ class RNVisitableView(context: Context, sessionModule: RNVisitableViewModule) : 
 
     view.attachWebView(webView) { attachedToNewDestination ->
       onReady(attachedToNewDestination)
+    }
+  }
+
+  override fun detachWebView(callback: () -> Unit) {
+    screenshotView()
+
+    (session.webView.parent as ViewGroup?)?.endViewTransition(session.webView)
+
+    webViewContainer.post {
+      webViewContainer.removeAllViews()
+      callback()
     }
   }
 
@@ -236,7 +236,7 @@ class RNVisitableView(context: Context, sessionModule: RNVisitableViewModule) : 
   }
 
   private fun screenshotView() {
-    turboView?.let {
+    turboView.let {
       screenshot = it.createScreenshot()
       screenshotOrientation = it.screenshotOrientation()
       screenshotZoomed = currentlyZoomed
@@ -244,24 +244,32 @@ class RNVisitableView(context: Context, sessionModule: RNVisitableViewModule) : 
     }
   }
 
+  private fun showProgressView() {
+    turboView.addProgressView(inflate(context, R.layout.turbo_progress, null))
+  }
+
+  private fun removeTransitionalViews() {
+    turboView.webViewRefresh?.isRefreshing = false
+    turboView.errorRefresh?.isRefreshing = false
+    turboView.removeProgressView()
+    turboView.removeScreenshot()
+    turboView.removeErrorView()
+  }
+
+  private fun pullToRefreshEnabled(enabled: Boolean) {
+    turboView.webViewRefresh?.isEnabled = enabled
+  }
+
   private fun sendEvent(event: RNVisitableViewEvent, params: WritableMap) {
     reactContext.getJSModule(RCTEventEmitter::class.java).receiveEvent(id, event.name, params)
   }
 
-  private fun showProgressView() {
-    turboView?.addProgressView(inflate(context, R.layout.turbo_progress, null))
+  override fun injectJavaScript(script: String) {
+    webView.evaluateJavascript(script, null)
   }
 
-  private fun removeTransitionalViews() {
-    turboView?.webViewRefresh?.isRefreshing = false
-    turboView?.errorRefresh?.isRefreshing = false
-    turboView?.removeProgressView()
-    turboView?.removeScreenshot()
-    turboView?.removeErrorView()
-  }
-
-  private fun pullToRefreshEnabled(enabled: Boolean) {
-    turboView?.webViewRefresh?.isEnabled = enabled
+  override fun handleMessage(message: WritableMap) {
+    sendEvent(RNVisitableViewEvent.MESSAGE, message)
   }
 
   // region TurboSessionCallback
@@ -322,7 +330,6 @@ class RNVisitableView(context: Context, sessionModule: RNVisitableViewModule) : 
   }
 
   override fun requestFailedWithStatusCode(visitHasCachedSnapshot: Boolean, statusCode: Int) {
-    super.requestFailedWithStatusCode(visitHasCachedSnapshot, statusCode)
     sendEvent(RNVisitableViewEvent.VISIT_ERROR, Arguments.createMap().apply {
       putInt("statusCode", statusCode)
       putString("url", webView.url)

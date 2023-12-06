@@ -1,50 +1,38 @@
 package com.reactnativeturbowebview
 
-import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebSettings
 import androidx.appcompat.app.AppCompatActivity
 import com.facebook.react.bridge.Arguments
-import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.WritableMap
-import com.facebook.react.modules.core.DeviceEventManagerModule
+import com.facebook.react.bridge.ReactContext
 import dev.hotwire.turbo.session.TurboSession
 import dev.hotwire.turbo.views.TurboWebView
-import java.util.*
+import dev.hotwire.turbo.visit.TurboVisitOptions
 import org.json.JSONObject
 
 class RNSession(
-  private val reactContext: ReactApplicationContext,
-  private val sessionHandle: String = "Default",
-  private val applicationNameForUserAgent: String? = "",
-  private val registeredVisitableViews: MutableList<SessionSubscriber> = mutableListOf()
-) {
+  private val reactContext: ReactContext,
+  private val sessionHandle: String,
+  private val applicationNameForUserAgent: String?,
+): SessionCallbackAdapter {
+
+  private val visitableViews: LinkedHashSet<SessionSubscriber> = linkedSetOf()
 
   val turboSession: TurboSession = run {
     val activity = reactContext.currentActivity as AppCompatActivity
     val webView = TurboWebView(reactContext, null)
+    val session = TurboSession(sessionHandle, activity, webView)
 
-    val sessionName = UUID.randomUUID().toString()
-    webView.getSettings().setJavaScriptEnabled(true)
+    webView.settings.setJavaScriptEnabled(true)
     webView.addJavascriptInterface(JavaScriptInterface(), "AndroidInterface")
-    webView.addJavascriptInterface(StradaJavaScriptInterface(), "StradaNative")
     setUserAgentString(webView, applicationNameForUserAgent)
-    val session = TurboSession(sessionName, activity, webView)
     webView.webChromeClient = RNWebChromeClient(reactContext)
     session.isRunningInAndroidNavigation = false
     session
   }
 
-  /**
-   * Sends message from web view js runtime to the RN runtime
-   */
-  fun sendMessage(eventName: String, params: WritableMap) {
-    reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-      .emit(eventName, params)
-  }
-
   internal fun registerVisitableView(newView: SessionSubscriber) {
-    var callbacksCount = registeredVisitableViews.size
+    var callbacksCount = visitableViews.size
 
     if (callbacksCount == 0) {
       newView.attachWebViewAndVisit()
@@ -56,20 +44,20 @@ class RNSession(
         }
       }
 
-      for (view in registeredVisitableViews) {
+      for (view in visitableViews) {
         view.detachWebView() {
           onDetached()
         }
       }
     }
 
-    if (!registeredVisitableViews.contains(newView)) {
-      registeredVisitableViews.add(newView)
+    if (!visitableViews.contains(newView)) {
+      visitableViews.add(newView)
     }
   }
 
   internal fun removeVisitableView(view: SessionSubscriber) {
-    registeredVisitableViews.remove(view)
+    visitableViews.remove(view)
   }
 
   private fun setUserAgentString(webView: TurboWebView, applicationNameForUserAgent: String?){
@@ -85,18 +73,42 @@ class RNSession(
     fun postMessage(messageStr: String) {
       // Android interface works only with primitive types, that's why we need to use JSON
       val messageObj =
-        Utils.convertJsonToBundle(JSONObject(messageStr)) // TODO remove double conversion
-      sendMessage("sessionMessage${sessionHandle}", Arguments.fromBundle(messageObj))
+        Arguments.fromBundle(Utils.convertJsonToBundle(JSONObject(messageStr)))
+      for (view in visitableViews) {
+        view.handleMessage(messageObj)
+      }
     }
   }
 
-  inner class StradaJavaScriptInterface {
-    @JavascriptInterface
-    fun postMessage(messageStr: String) {
-      val messageJSONObj = JSONObject(messageStr)
-      val messageObj = Utils.convertJsonToBundle(messageJSONObj)
-      val eventName = messageJSONObj.getString("component")
-      sendMessage(eventName, Arguments.fromBundle(messageObj))
-    }
+  override fun onReceivedError(errorCode: Int) {
+    visitableViews.last().onReceivedError(errorCode)
+  }
+
+  override fun onRenderProcessGone() {
+    visitableViews.last().onRenderProcessGone()
+  }
+
+  override fun onZoomReset(newScale: Float) {
+    visitableViews.last().onZoomReset(newScale)
+  }
+
+  override fun onZoomed(newScale: Float) {
+    visitableViews.last().onZoomed(newScale)
+  }
+
+  override fun visitCompleted(completedOffline: Boolean) {
+    visitableViews.last().visitCompleted(completedOffline)
+  }
+
+  override fun visitLocationStarted(location: String) {
+    visitableViews.last().visitLocationStarted(location)
+  }
+
+  override fun visitProposedToLocation(location: String, options: TurboVisitOptions) {
+    visitableViews.last().visitProposedToLocation(location, options)
+  }
+
+  override fun visitRendered() {
+    visitableViews.last().visitRendered()
   }
 }

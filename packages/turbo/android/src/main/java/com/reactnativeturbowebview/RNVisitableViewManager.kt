@@ -1,6 +1,6 @@
 package com.reactnativeturbowebview
 
-import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
@@ -8,21 +8,23 @@ import com.facebook.react.uimanager.annotations.ReactProp
 enum class RNVisitableViewEvent(val jsCallbackName: String) {
   VISIT_PROPOSED("onVisitProposal"),
   VISIT_ERROR("onVisitError"),
-  PAGE_LOADED("onLoad")
+  PAGE_LOADED("onLoad"),
+  MESSAGE("onMessage")
+}
+
+enum class RNVisitableViewCommand(val jsCallbackName: String) {
+  INJECT_JAVASCRIPT("injectJavaScript")
 }
 
 private const val REACT_CLASS = "RNVisitableView"
 
-class RNVisitableViewManager(
-  private val callerContext: ReactApplicationContext
-) : SimpleViewManager<RNVisitableView>() {
+class RNVisitableViewManager : SimpleViewManager<RNVisitableView>() {
 
   override fun getName() = REACT_CLASS
 
   @ReactProp(name = "url")
   fun setUrl(view: RNVisitableView, url: String) {
     view.url = url
-    view.visit(restoreWithCachedSnapshot = false, reload = false)
   }
 
   @ReactProp(name = "sessionHandle")
@@ -30,20 +32,39 @@ class RNVisitableViewManager(
     view.sessionHandle = sessionHandle
   }
 
-  override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any> {
-    return RNVisitableViewEvent.values().map {
+  @ReactProp(name = "applicationNameForUserAgent")
+  fun setApplicationNameForUserAgent(view: RNVisitableView, applicationNameForUserAgent: String?) {
+    view.applicationNameForUserAgent = applicationNameForUserAgent
+  }
+
+  override fun getCommandsMap(): MutableMap<String, Int> = RNVisitableViewCommand.values()
+    .associate {
+      it.jsCallbackName to it.ordinal
+    }.toMutableMap()
+
+  override fun receiveCommand(root: RNVisitableView, commandId: String, args: ReadableArray?) {
+    super.receiveCommand(root, commandId, args)
+    when (RNVisitableViewCommand.values()[commandId.toInt()]) {
+      RNVisitableViewCommand.INJECT_JAVASCRIPT -> {
+        args?.getString(0)?.let {
+          root.injectJavaScript(it)
+        }
+      }
+    }
+  }
+
+  override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any> =
+    RNVisitableViewEvent.values().associate {
       it.name to mapOf(
         "phasedRegistrationNames" to mapOf(
           "bubbled" to it.jsCallbackName
         )
       )
-    }.toMap()
-  }
+    }
 
   override fun createViewInstance(reactContext: ThemedReactContext) =
     RNVisitableView(
-      reactContext,
-      sessionModule = reactContext.getNativeModule(RNVisitableViewModule::class.java)!!
+      reactContext
     )
 
   override fun onDropViewInstance(view: RNVisitableView) {

@@ -83,7 +83,7 @@ const stradaBridgeScript = `
     postMessage(message) {
       ${
         Platform.OS === 'android'
-          ? 'StradaNative.postMessage(JSON.stringify(message))'
+          ? 'AndroidInterface.postMessage(JSON.stringify(message))'
           : 'webkit.messageHandlers.nativeApp.postMessage(message)'
       }
     }

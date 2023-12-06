@@ -7,9 +7,8 @@ import com.facebook.react.bridge.ReactApplicationContext
 class ReactAppPackage : ReactPackage {
 
   override fun createViewManagers(reactContext: ReactApplicationContext) =
-    listOf(RNVisitableViewManager(reactContext)).toMutableList()
+    listOf(RNVisitableViewManager()).toMutableList()
 
-  override fun createNativeModules(reactContext: ReactApplicationContext): MutableList<NativeModule> =
-    mutableListOf(RNVisitableViewModule(reactContext))
+  override fun createNativeModules(reactContext: ReactApplicationContext): MutableList<NativeModule> = mutableListOf()
 
 }
