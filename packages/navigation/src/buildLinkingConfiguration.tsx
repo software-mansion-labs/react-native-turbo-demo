@@ -28,27 +28,3 @@ export default function buildLinkingConfiguration({
     config: generateLinking(routes),
   };
 }
-
-// WIP: More intelligent type based on ScreenParams types
-// export type WebScreenRuleMap<ParamList> = {
-//   [RouteName in keyof ParamList]?: NonNullable<
-//     ParamList[RouteName]
-//   > extends NavigatorScreenParams<infer T>
-//     ? Omit<WebScreenRuleConfig<T>, 'baseURL'>
-//     : WebScreenRule;
-// };
-// type NestedTabParamsList = {
-//   [Routes.NestedTabNative]: undefined;
-//   [Routes.NestedTabWeb]: undefined;
-// };
-// type ParamsList = {
-//   [Routes.New]: undefined;
-//   [Routes.WebviewInitial]: undefined;
-//   [Routes.NumbersScreen]: undefined;
-//   [Routes.NotFound]: undefined;
-//   [Routes.SuccessScreen]: undefined;
-//   [Routes.NonExistentScreen]: undefined;
-//   [Routes.SignIn]: undefined;
-//   [Routes.Fallback]: undefined;
-//   [Routes.NestedTab]: NavigatorScreenParams<NestedTabParamsList>;
-// };
