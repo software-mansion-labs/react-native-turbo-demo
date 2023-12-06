@@ -115,13 +115,8 @@ const webScreens = buildWebScreen(webScreenConfig, {
 });
 ```
 
-To obtain `url` for current screen, use this code in the custom component:
+To obtain `url` for current screen, use `useCurrentUrl` hook function
 
-```tsx
-const path = route?.params?.path || route?.path || '';
-const baseURL = route?.params?.baseURL || props?.baseURL;
-const currentUrl = `${baseURL}${path}`;
-```
 
 ## Contributing
 

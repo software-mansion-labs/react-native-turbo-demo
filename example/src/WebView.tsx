@@ -6,25 +6,22 @@ import {
   OnErrorCallback,
   VisitableViewProps,
 } from 'react-native-turbo';
-import { useWebviewNavigate } from 'react-native-web-screen';
+import { useCurrentUrl, useWebviewNavigate } from 'react-native-web-screen';
 import { Routes } from './webScreenRoutes';
 import Form from './Strada/Form';
 
 export type Props = {
   navigation: any;
-  route: any;
-  baseURL: string;
+  baseURL?: string;
 } & VisitableViewProps;
 
 const sessionHandle = 'TurboWebviewExample';
 const stradaComponents = [Form];
 
-const WebView: React.FC<Props> = (props) => {
-  const { navigation, route } = props;
+const WebView: React.FC<Props> = ({ baseURL, navigation, ...props }) => {
   const navigateTo = useWebviewNavigate();
-  const path = route?.params?.path || route?.path || '';
-  const baseURL = route?.params?.baseURL || props?.baseURL;
-  const currentUrl = `${baseURL}${path}`;
+
+  const currentUrl = useCurrentUrl(baseURL);
 
   const onVisitProposal = ({ action: actionType, url }: VisitProposal) => {
     navigateTo(url, actionType);
