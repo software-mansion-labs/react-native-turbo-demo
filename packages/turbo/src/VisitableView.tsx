@@ -6,7 +6,7 @@ import React, {
   useEffect,
 } from 'react';
 import { NativeSyntheticEvent, StyleSheet } from 'react-native';
-import { getNativeComponent } from './common';
+import RNVisitableView, { dispatchCommand } from './RNVisitableView';
 import type {
   OnErrorCallback,
   OnLoadEvent,
@@ -20,9 +20,6 @@ import {
   NavigationContainerRefContext,
   useNavigation,
 } from '@react-navigation/native';
-
-const { RNVisitableView, dispatchCommand } =
-  getNativeComponent<any>('RNVisitableView');
 
 export interface Props {
   url: string;
@@ -77,7 +74,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       onVisitError: viewErrorHandler,
       onMessage: onMessageCallback,
     } = props;
-    const visitableViewRef = useRef<typeof VisitableView>();
+    const visitableViewRef = useRef<typeof RNVisitableView>();
     const onMessageCallbacks = useRef<SessionMessageCallbackArrayElement[]>([
       onMessageCallback,
     ]);
@@ -108,11 +105,14 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       []
     );
 
-    const handleOnMessage = useCallback((e: NativeSyntheticEvent<any>) => {
-      onMessageCallbacks.current.forEach((listener) => {
-        listener?.(e.nativeEvent);
-      });
-    }, []);
+    const handleOnMessage = useCallback(
+      (e: NativeSyntheticEvent<{ message: object }>) => {
+        onMessageCallbacks.current.forEach((listener) => {
+          listener?.(e.nativeEvent);
+        });
+      },
+      []
+    );
 
     const registerMessageListener = useCallback(
       (listener: SessionMessageCallback) => {
@@ -149,8 +149,10 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           />
         ))}
         <RNVisitableView
-          {...props}
+          // @ts-expect-error
           ref={visitableViewRef}
+          url={props.url}
+          onVisitProposal={props.onVisitProposal}
           sessionHandle={sessionHandle}
           applicationNameForUserAgent={resolvedApplicationNameForUserAgent}
           onMessage={handleOnMessage}

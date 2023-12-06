@@ -37,7 +37,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   }()
     
   override func didMoveToWindow() {
-    reactViewController().addChild(controller)
+    reactViewController()?.addChild(controller)
     controller.view.frame = bounds // Fixes incorrect size of the webview
     controller.didMove(toParent: reactViewController())
     addSubview(controller.view)
