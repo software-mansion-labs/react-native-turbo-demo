@@ -4,17 +4,22 @@ import {
   useNavigationContainerRef,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { default as NativeScreen } from './NumbersScreen';
+import NativeScreen from './NumbersScreen';
 import ErrorScreen from './ErrorScreen';
-import { webScreenConfig, linkingConfiguration } from 'example/src/webScreen';
+import { webScreenConfig } from 'example/src/webScreen';
 import NestedTab from 'example/src/NestedTab';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Routes } from 'example/src/webScreenRoutes';
-import { useWebScreen } from 'react-native-web-screen';
+import {
+  buildLinkingConfiguration,
+  useWebScreen,
+} from 'react-native-web-screen';
 
 const Tab = createBottomTabNavigator();
 
 const Stack = createNativeStackNavigator();
+
+const linkingConfiguration = buildLinkingConfiguration(webScreenConfig);
 
 const BottomTabs = () => {
   const { webScreens } = useWebScreen(webScreenConfig);
