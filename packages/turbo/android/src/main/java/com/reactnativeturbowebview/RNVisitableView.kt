@@ -8,7 +8,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.facebook.react.bridge.Arguments
-import com.facebook.react.bridge.ReactContext
+import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.events.RCTEventEmitter
 import dev.hotwire.turbo.views.TurboView
@@ -18,7 +18,7 @@ import dev.hotwire.turbo.visit.TurboVisitOptions
 
 class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscriber {
 
-  private val reactContext = context as ReactContext
+  private val reactContext = context as ReactApplicationContext
 
   // Props
   lateinit var url: String

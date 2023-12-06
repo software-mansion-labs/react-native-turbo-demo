@@ -14,7 +14,7 @@ import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import com.facebook.react.bridge.ReactContext
+import com.facebook.react.bridge.ReactApplicationContext
 import java.io.File
 import java.io.IOException
 
@@ -25,7 +25,7 @@ const val INPUT_FILE_REQUEST_CODE = 1
 *
 * See https://github.com/react-native-webview/react-native-webview/blob/master/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewModuleImpl.java
 * */
-class RNFileChooserDelegate(private val reactContext: ReactContext) {
+class RNFileChooserDelegate(private val reactContext: ReactApplicationContext) {
   private var mFilePathCallback: ValueCallback<Array<Uri>>? = null
   private var outputImage: File? = null
   private var outputVideo: File? = null

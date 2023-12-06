@@ -1,13 +1,13 @@
 package com.reactnativeturbowebview
 
-import com.facebook.react.bridge.ReactContext
+import com.facebook.react.bridge.ReactApplicationContext
 
 object RNSessionManager {
 
   private val sessions: MutableMap<String, RNSession> = mutableMapOf()
 
   fun findOrCreateSession(
-    reactContext: ReactContext,
+    reactContext: ReactApplicationContext,
     sessionHandle: String,
     applicationNameForUserAgent: String? = null
   ): RNSession = sessions.getOrPut(sessionHandle) {

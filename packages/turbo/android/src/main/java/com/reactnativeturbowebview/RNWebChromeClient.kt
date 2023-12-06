@@ -8,11 +8,11 @@ import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import com.facebook.react.bridge.ActivityEventListener
-import com.facebook.react.bridge.ReactContext
+import com.facebook.react.bridge.ReactApplicationContext
 
 
 class RNWebChromeClient(
-  private val reactContext: ReactContext
+  private val reactContext: ReactApplicationContext
 ) : ActivityEventListener, WebChromeClient() {
 
   private val fileChooserDelegate = RNFileChooserDelegate(reactContext)

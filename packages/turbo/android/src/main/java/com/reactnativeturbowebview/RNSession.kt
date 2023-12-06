@@ -8,7 +8,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenStateAtLeast
 import com.facebook.react.bridge.Arguments
-import com.facebook.react.bridge.ReactContext
+import com.facebook.react.bridge.ReactApplicationContext
 import dev.hotwire.turbo.session.TurboSession
 import dev.hotwire.turbo.views.TurboWebView
 import dev.hotwire.turbo.visit.TurboVisit
@@ -20,7 +20,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 class RNSession(
-  private val reactContext: ReactContext,
+  private val reactContext: ReactApplicationContext,
   private val sessionHandle: String,
   private val applicationNameForUserAgent: String?,
 ) : SessionCallbackAdapter {

@@ -1,5 +1,6 @@
 package com.reactnativeturbowebview
 
+import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
@@ -18,7 +19,9 @@ enum class RNVisitableViewCommand(val jsCallbackName: String) {
 
 private const val REACT_CLASS = "RNVisitableView"
 
-class RNVisitableViewManager : SimpleViewManager<RNVisitableView>() {
+class RNVisitableViewManager(
+  private val callerContext: ReactApplicationContext
+) : SimpleViewManager<RNVisitableView>() {
 
   override fun getName() = REACT_CLASS
 
@@ -64,7 +67,7 @@ class RNVisitableViewManager : SimpleViewManager<RNVisitableView>() {
 
   override fun createViewInstance(reactContext: ThemedReactContext) =
     RNVisitableView(
-      reactContext
+      callerContext
     )
 
   override fun onDropViewInstance(view: RNVisitableView) {
