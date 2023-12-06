@@ -7,9 +7,10 @@ import {
   ViewStyle,
 } from 'react-native';
 import { findNodeHandle } from 'react-native';
-import {
+import type {
   DispatchCommandTypes,
-  OnLoadEvent,
+  LoadEvent,
+  MessageEvent,
   VisitProposal,
   VisitProposalError,
 } from './types';
@@ -19,8 +20,8 @@ interface RNVisitableViewProps {
   url: string;
   sessionHandle?: string;
   applicationNameForUserAgent?: string;
-  onLoad?: (proposal: NativeSyntheticEvent<OnLoadEvent>) => void;
-  onMessage?: (proposal: NativeSyntheticEvent<{ message: object }>) => void;
+  onLoad?: (proposal: NativeSyntheticEvent<LoadEvent>) => void;
+  onMessage?: (proposal: NativeSyntheticEvent<MessageEvent>) => void;
   onVisitError?: (e: NativeSyntheticEvent<VisitProposalError>) => void;
   onVisitProposal?: (e: NativeSyntheticEvent<VisitProposal>) => void;
   style?: StyleProp<ViewStyle>;

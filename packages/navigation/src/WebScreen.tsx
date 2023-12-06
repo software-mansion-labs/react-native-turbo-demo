@@ -1,6 +1,5 @@
 import React from 'react';
-import type { NativeSyntheticEvent } from 'react-native';
-import { OnLoadEvent, VisitableView, VisitProposal } from 'react-native-turbo';
+import { LoadEvent, VisitableView, VisitProposal } from 'react-native-turbo';
 import useWebviewNavigate from './useWebviewNavigate';
 
 interface Props {
@@ -17,15 +16,11 @@ const WebScreen: React.FC<Props> = (props) => {
   const baseURL = route?.params?.baseURL || props?.baseURL;
   const currentUrl = `${baseURL}${path}`;
 
-  const onVisitProposal = ({
-    nativeEvent: { action: actionType, url },
-  }: NativeSyntheticEvent<VisitProposal>) => {
+  const onVisitProposal = ({ action: actionType, url }: VisitProposal) => {
     navigateTo(url, actionType);
   };
 
-  const onLoad = ({
-    nativeEvent: { title },
-  }: NativeSyntheticEvent<OnLoadEvent>) => {
+  const onLoad = ({ title }: LoadEvent) => {
     navigation.setOptions({ title });
   };
 

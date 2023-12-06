@@ -5,9 +5,13 @@ export interface VisitProposal {
   action: Action;
 }
 
-export interface OnLoadEvent {
+export interface LoadEvent {
   title: string;
   url: string;
+}
+
+export interface MessageEvent {
+  message: object;
 }
 
 export interface VisitProposalError {
