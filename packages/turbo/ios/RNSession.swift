@@ -24,6 +24,7 @@ class RNSession: NSObject {
     webViewConfiguration.userContentController.add(self, name: "nativeApp")
     let session = Session(webViewConfiguration: webViewConfiguration)
     session.delegate = self
+    session.webView.allowsLinkPreview = false
     return session
   }()
   public lazy var webView: WKWebView = turboSession.webView
