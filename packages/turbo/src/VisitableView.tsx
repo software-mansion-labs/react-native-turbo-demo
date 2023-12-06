@@ -15,7 +15,7 @@ import type {
   StradaComponent,
   MessageEvent,
 } from './types';
-import { useStradaBridge } from './stradaBridge';
+import { useStradaBridge } from './hooks/useStradaBridge';
 import { useDisableNavigationAnimation } from './hooks/useDisableNavigationAnimation';
 
 export interface Props {

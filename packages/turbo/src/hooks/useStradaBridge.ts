@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { Platform } from 'react-native';
-import type { StradaComponent, DispatchCommand } from './types';
+import type { StradaComponent, DispatchCommand } from '../types';
 
 const stradaBridgeScript = `
 (() => {
@@ -116,7 +116,7 @@ const stradaBridgeScript = `
 })();
 `;
 
-const useStradaBridge = (
+export const useStradaBridge = (
   visitableViewRef: React.RefObject<any>,
   dispatchCommand: DispatchCommand,
   stradaComponents?: StradaComponent[]
@@ -162,5 +162,3 @@ const useStradaBridge = (
     sendToBridge,
   };
 };
-
-export { useStradaBridge };
