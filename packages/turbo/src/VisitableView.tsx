@@ -13,10 +13,10 @@ import type {
   VisitProposal,
   VisitProposalError,
   StradaComponent,
-  MessageEvent,
 } from './types';
 import { useStradaBridge } from './hooks/useStradaBridge';
 import { useDisableNavigationAnimation } from './hooks/useDisableNavigationAnimation';
+import { useMessageQueue } from './hooks/useMessageQueue';
 
 export interface Props {
   url: string;
@@ -31,34 +31,6 @@ export interface Props {
 
 export interface RefObject {
   injectJavaScript: (callbackStringified: string) => void;
-}
-
-type SessionMessageCallbackArrayElement = SessionMessageCallback | undefined;
-
-function useMessageQueue(
-  onMessageCallback: SessionMessageCallback | undefined
-) {
-  const onMessageCallbacks = useRef<SessionMessageCallbackArrayElement[]>([
-    onMessageCallback,
-  ]);
-
-  const registerMessageListener = useCallback(
-    (listener: SessionMessageCallback) => {
-      onMessageCallbacks.current.push(listener);
-    },
-    []
-  );
-
-  const handleOnMessage = useCallback(
-    (e: NativeSyntheticEvent<MessageEvent>) => {
-      onMessageCallbacks.current.forEach((listener) => {
-        listener?.(e.nativeEvent);
-      });
-    },
-    []
-  );
-
-  return { registerMessageListener, handleOnMessage };
 }
 
 const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
