@@ -31,7 +31,10 @@ const BottomTabs = () => {
         tabBarActiveTintColor: '#00094a',
       }}
     >
-      {webScreens(Tab, Routes.BottomTabs)}
+      {webScreens({
+        navigator: Tab,
+        route: Routes.BottomTabs,
+      })}
       <Tab.Screen
         name={Routes.NestedTabNative}
         component={NativeScreen}
@@ -57,7 +60,10 @@ const App: React.FC = () => {
           name={Routes.BottomTabs}
           component={BottomTabs}
         />
-        {webScreens(Stack)}
+        {webScreens({
+          navigator: Stack,
+          fallback: true,
+        })}
         <Stack.Screen
           name={Routes.NotFound}
           component={ErrorScreen}

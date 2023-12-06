@@ -78,10 +78,16 @@ function groupScreens(
   return null;
 }
 
+type UseWebScreensParams = { navigator: NavigatorType } & (
+  | { route: string; fallback?: never }
+  | { route?: never; fallback: boolean }
+);
+
 export default function useWebScreen(config: WebScreenRuleConfig) {
   const webScreens = useCallback(
-    (Navigator: NavigatorType, key?: string) =>
-      groupScreens(Navigator, key, config),
+    ({ navigator, route, fallback }: UseWebScreensParams) => {
+      return groupScreens(navigator, fallback ? undefined : route, config);
+    },
     [config]
   );
   return { webScreens };
