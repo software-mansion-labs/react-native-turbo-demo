@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   NavigationContainer,
-  getStateFromPath,
   useNavigationContainerRef,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -13,6 +12,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Routes } from 'example/src/webScreenRoutes';
 import ShareScreen from 'example/src/ShareScreen';
 import WebView from './WebView';
+import { getLinkingObject } from 'react-native-web-screen';
 
 const Tab = createBottomTabNavigator();
 
@@ -46,16 +46,7 @@ const App: React.FC = () => {
 
   return (
     <NavigationContainer
-      linking={{
-        prefixes: [baseURL],
-        config: linking,
-        getStateFromPath(a, b) {
-          const state = getStateFromPath(a, b);
-          if (state?.routes[0]?.params)
-            state.routes[0].params.baseURL = baseURL;
-          return state;
-        },
-      }}
+      linking={getLinkingObject(baseURL, linking)}
       ref={navigation}
     >
       <Stack.Navigator
