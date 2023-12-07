@@ -1,8 +1,8 @@
 import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { webScreens } from 'example/src/webScreen';
 import { NativeScreen } from 'react-native-screens';
 import { Routes } from 'example/src/webScreenRoutes';
+import WebView from './WebView';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -13,7 +13,7 @@ const NestedTab: React.FC = () => {
         tabBarActiveTintColor: '#00094a',
       }}
     >
-      <Tab.Screen {...webScreens.screens.NestedTabWeb} />
+      <Tab.Screen name={Routes.NestedTab} component={WebView} />
       <Tab.Screen
         name={Routes.NestedTabNative}
         component={NativeScreen}

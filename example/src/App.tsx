@@ -1,16 +1,18 @@
 import React from 'react';
 import {
   NavigationContainer,
+  getStateFromPath,
   useNavigationContainerRef,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { default as NativeScreen } from './NumbersScreen';
 import ErrorScreen from './ErrorScreen';
-import { webScreens } from 'example/src/webScreen';
+import { baseURL, linking } from 'example/src/webScreen';
 import NestedTab from 'example/src/NestedTab';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Routes } from 'example/src/webScreenRoutes';
 import ShareScreen from 'example/src/ShareScreen';
+import WebView from './WebView';
 
 const Tab = createBottomTabNavigator();
 
@@ -24,7 +26,11 @@ const BottomTabs = () => {
         tabBarActiveTintColor: '#00094a',
       }}
     >
-      <Tab.Screen {...webScreens.screens.WebviewInitial} />
+      <Tab.Screen
+        name={Routes.WebviewInitial}
+        component={WebView}
+        initialParams={{ baseURL }}
+      />
       <Tab.Screen
         name={Routes.NestedTabNative}
         component={NativeScreen}
@@ -38,7 +44,19 @@ const App: React.FC = () => {
   const navigation = useNavigationContainerRef();
 
   return (
-    <NavigationContainer linking={webScreens.linking} ref={navigation}>
+    <NavigationContainer
+      linking={{
+        prefixes: [baseURL],
+        config: linking,
+        getStateFromPath(a, b) {
+          const state = getStateFromPath(a, b);
+          if (state?.routes[0]?.params)
+            state.routes[0].params.baseURL = baseURL;
+          return state;
+        },
+      }}
+      ref={navigation}
+    >
       <Stack.Navigator
         screenOptions={{
           headerBackTitle: 'Back',
@@ -55,13 +73,14 @@ const App: React.FC = () => {
           component={NativeScreen}
           options={{ title: 'A List of Numbers' }}
         />
-        <Stack.Screen {...webScreens.screens.New} />
-        <Stack.Screen {...webScreens.screens.SuccessScreen} />
-        <Stack.Screen {...webScreens.screens.One} />
-        <Stack.Screen {...webScreens.screens.Share} component={ShareScreen} />
-        <Stack.Screen {...webScreens.screens.Fallback} />
+        <Stack.Screen name={Routes.New} component={WebView} />
+        <Stack.Screen name={Routes.SuccessScreen} component={WebView} />
+        <Stack.Screen name={Routes.One} component={WebView} />
+        <Stack.Screen name={Routes.Share} component={ShareScreen} />
+        <Stack.Screen name={Routes.Fallback} component={WebView} />
         <Stack.Screen
-          {...webScreens.screens.SignIn}
+          name={Routes.SignIn}
+          component={WebView}
           options={{
             presentation: 'formSheet',
             gestureEnabled: false,
