@@ -120,35 +120,35 @@ class RNSession(
   // region SessionCallbackAdapter
 
   override fun onReceivedError(errorCode: Int) {
-    visitableViews.last().onReceivedError(errorCode)
+    visitableViews.lastOrNull()?.onReceivedError(errorCode)
   }
 
   override fun onRenderProcessGone() {
-    visitableViews.last().onRenderProcessGone()
+    visitableViews.lastOrNull()?.onRenderProcessGone()
   }
 
   override fun onZoomReset(newScale: Float) {
-    visitableViews.last().onZoomReset(newScale)
+    visitableViews.lastOrNull()?.onZoomReset(newScale)
   }
 
   override fun onZoomed(newScale: Float) {
-    visitableViews.last().onZoomed(newScale)
+    visitableViews.lastOrNull()?.onZoomed(newScale)
   }
 
   override fun visitCompleted(completedOffline: Boolean) {
-    visitableViews.last().visitCompleted(completedOffline)
+    visitableViews.lastOrNull()?.visitCompleted(completedOffline)
   }
 
   override fun visitLocationStarted(location: String) {
-    visitableViews.last().visitLocationStarted(location)
+    visitableViews.lastOrNull()?.visitLocationStarted(location)
   }
 
   override fun visitProposedToLocation(location: String, options: TurboVisitOptions) {
-    visitableViews.last().visitProposedToLocation(location, options)
+    visitableViews.lastOrNull()?.visitProposedToLocation(location, options)
   }
 
   override fun visitRendered() {
-    visitableViews.last().visitRendered()
+    visitableViews.lastOrNull()?.visitRendered()
   }
 
   // end region
