@@ -10,9 +10,7 @@ export interface LoadEvent {
   url: string;
 }
 
-export interface MessageEvent {
-  message: object;
-}
+export type MessageEvent = object;
 
 export interface VisitProposalError {
   statusCode: number;
