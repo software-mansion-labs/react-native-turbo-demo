@@ -1,7 +1,8 @@
+import { getLinkingObject } from 'react-native-web-screen';
 import { Routes } from './webScreenRoutes';
 import { LinkingOptions } from '@react-navigation/native';
 
-export const linking: LinkingOptions<{}>['config'] = {
+const config: LinkingOptions<{}>['config'] = {
   screens: {
     [Routes.BottomTabs]: {
       screens: {
@@ -24,3 +25,5 @@ export const linking: LinkingOptions<{}>['config'] = {
 };
 
 export const baseURL = 'http://localhost:45678/';
+
+export const linking = getLinkingObject(baseURL, config);

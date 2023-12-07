@@ -14,7 +14,7 @@ const NestedTab: React.FC = () => {
       }}
     >
       <Tab.Screen
-        name={Routes.NestedTab}
+        name={Routes.NestedTabWeb}
         component={WebView}
         options={{ title: 'Nested Web' }}
       />
