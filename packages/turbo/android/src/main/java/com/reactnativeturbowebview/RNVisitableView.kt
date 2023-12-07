@@ -227,6 +227,12 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     sendEvent(RNVisitableViewEvent.MESSAGE, message)
   }
 
+  override fun didOpenExternalUrl(url: String) {
+    sendEvent(RNVisitableViewEvent.OPEN_EXTERNAL_URL, Arguments.createMap().apply {
+      putString("url", url)
+    })
+  }
+
   override fun onReceivedError(errorCode: Int) {
     sendEvent(RNVisitableViewEvent.VISIT_ERROR, Arguments.createMap().apply {
       putInt("statusCode", errorCode)

@@ -15,6 +15,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var url: NSString = ""
   @objc var onMessage: RCTDirectEventBlock?
   @objc var onVisitProposal: RCTDirectEventBlock?
+  @objc var onOpenExternalUrl: RCTDirectEventBlock?
   @objc var onLoad: RCTDirectEventBlock?
   @objc var onVisitError: RCTDirectEventBlock?
   
@@ -83,6 +84,10 @@ class RNVisitableView: UIView, RNSessionSubscriber {
       event["statusCode"] = statusCode
     }
     onVisitError?(event)
+  }
+    
+  public func didOpenExternalUrl(url: URL) {
+    onOpenExternalUrl?(["url": url.absoluteString])
   }
 
 }

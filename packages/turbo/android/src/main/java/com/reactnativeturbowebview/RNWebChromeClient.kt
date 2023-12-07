@@ -12,7 +12,8 @@ import com.facebook.react.bridge.ReactApplicationContext
 
 
 class RNWebChromeClient(
-  private val reactContext: ReactApplicationContext
+  private val reactContext: ReactApplicationContext,
+  private val visitableViews: LinkedHashSet<SessionSubscriber>
 ) : ActivityEventListener, WebChromeClient() {
 
   private val fileChooserDelegate = RNFileChooserDelegate(reactContext)
@@ -29,8 +30,8 @@ class RNWebChromeClient(
   ): Boolean {
     val result = view!!.hitTestResult
     val data = result.extra
-    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(data))
-    reactContext.startActivityForResult(browserIntent, 0, null)
+    val uri = Uri.parse(data)
+    visitableViews.lastOrNull()?.didOpenExternalUrl(uri.toString())
     return false
   }
 

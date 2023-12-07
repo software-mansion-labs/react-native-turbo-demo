@@ -36,7 +36,7 @@ class RNSession(
     webView.settings.setJavaScriptEnabled(true)
     webView.addJavascriptInterface(JavaScriptInterface(), "AndroidInterface")
     setUserAgentString(webView, applicationNameForUserAgent)
-    webView.webChromeClient = RNWebChromeClient(reactContext)
+    webView.webChromeClient = RNWebChromeClient(reactContext, visitableViews)
     session.isRunningInAndroidNavigation = false
     session
   }

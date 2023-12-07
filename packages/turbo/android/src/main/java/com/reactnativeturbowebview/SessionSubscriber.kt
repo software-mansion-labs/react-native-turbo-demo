@@ -6,4 +6,5 @@ interface SessionSubscriber: SessionCallbackAdapter {
   fun detachWebView()
   fun handleMessage(message: WritableMap)
   fun injectJavaScript(script: String)
+  fun didOpenExternalUrl(url: String)
 }

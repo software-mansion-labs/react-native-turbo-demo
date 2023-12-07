@@ -5,13 +5,17 @@ import React, {
   useMemo,
 } from 'react';
 import { NativeSyntheticEvent, StyleSheet } from 'react-native';
-import RNVisitableView, { dispatchCommand } from './RNVisitableView';
+import RNVisitableView, {
+  dispatchCommand,
+  openExternalURL,
+} from './RNVisitableView';
 import type {
   OnErrorCallback,
   LoadEvent,
   SessionMessageCallback,
   VisitProposal,
   VisitProposalError,
+  OpenExternalUrlEvent,
   StradaComponent,
 } from './types';
 import { useStradaBridge } from './hooks/useStradaBridge';
@@ -25,6 +29,7 @@ export interface Props {
   stradaComponents?: StradaComponent[];
   onVisitProposal: (proposal: VisitProposal) => void;
   onLoad?: (params: LoadEvent) => void;
+  onOpenExternalUrl?: (proposal: OpenExternalUrlEvent) => void;
   onVisitError?: OnErrorCallback;
   onMessage?: SessionMessageCallback;
 }
@@ -44,6 +49,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       onVisitError: viewErrorHandler,
       onMessage,
       onVisitProposal,
+      onOpenExternalUrl: onOpenExternalUrlCallback = openExternalURL,
     } = props;
     const visitableViewRef = useRef<typeof RNVisitableView>();
 
@@ -99,6 +105,12 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       [onVisitProposal]
     );
 
+    const handleOnOpenExternalUrl = useCallback(
+      (e: NativeSyntheticEvent<OpenExternalUrlEvent>) =>
+        onOpenExternalUrlCallback(e.nativeEvent),
+      [onOpenExternalUrlCallback]
+    );
+
     return (
       <>
         {stradaComponents?.map((Component, i) => (
@@ -120,6 +132,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           onVisitProposal={handleVisitProposal}
           onMessage={handleOnMessage}
           onVisitError={handleVisitError}
+          onOpenExternalUrl={handleOnOpenExternalUrl}
           onLoad={handleOnLoad}
           style={styles.container}
         />
