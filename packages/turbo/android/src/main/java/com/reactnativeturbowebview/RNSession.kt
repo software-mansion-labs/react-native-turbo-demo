@@ -1,78 +1,60 @@
 package com.reactnativeturbowebview
 
-import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebSettings
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenStateAtLeast
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.WritableMap
-import com.facebook.react.modules.core.DeviceEventManagerModule
 import dev.hotwire.turbo.session.TurboSession
 import dev.hotwire.turbo.views.TurboWebView
-import java.util.*
+import dev.hotwire.turbo.visit.TurboVisit
+import dev.hotwire.turbo.visit.TurboVisitAction
+import dev.hotwire.turbo.visit.TurboVisitOptions
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 class RNSession(
   private val reactContext: ReactApplicationContext,
-  private val sessionHandle: String = "Default",
-  private val applicationNameForUserAgent: String? = "",
-  private val registeredVisitableViews: MutableList<SessionSubscriber> = mutableListOf()
-) {
+  private val sessionHandle: String,
+  private val applicationNameForUserAgent: String?,
+) : SessionCallbackAdapter {
 
-  val turboSession: TurboSession = run {
+  private val visitableViews: LinkedHashSet<SessionSubscriber> = linkedSetOf()
+  private val topmostView: SessionSubscriber? get() = visitableViews.lastOrNull()
+
+  private val turboSession: TurboSession = run {
     val activity = reactContext.currentActivity as AppCompatActivity
     val webView = TurboWebView(reactContext, null)
+    val session = TurboSession(sessionHandle, activity, webView)
 
-    val sessionName = UUID.randomUUID().toString()
-    webView.getSettings().setJavaScriptEnabled(true)
+    webView.settings.setJavaScriptEnabled(true)
     webView.addJavascriptInterface(JavaScriptInterface(), "AndroidInterface")
-    webView.addJavascriptInterface(StradaJavaScriptInterface(), "StradaNative")
     setUserAgentString(webView, applicationNameForUserAgent)
-    val session = TurboSession(sessionName, activity, webView)
     webView.webChromeClient = RNWebChromeClient(reactContext)
     session.isRunningInAndroidNavigation = false
     session
   }
-
-  /**
-   * Sends message from web view js runtime to the RN runtime
-   */
-  fun sendMessage(eventName: String, params: WritableMap) {
-    reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-      .emit(eventName, params)
-  }
+  val webView: TurboWebView get() = turboSession.webView
+  val currentVisit: TurboVisit? get() = turboSession.currentVisit
 
   internal fun registerVisitableView(newView: SessionSubscriber) {
-    var callbacksCount = registeredVisitableViews.size
-
-    if (callbacksCount == 0) {
-      newView.attachWebViewAndVisit()
-    } else {
-      fun onDetached() = synchronized(this) {
-        callbacksCount--
-        if (callbacksCount == 0) {
-          newView.attachWebViewAndVisit()
-        }
-      }
-
-      for (view in registeredVisitableViews) {
-        view.detachWebView() {
-          onDetached()
-        }
-      }
+    for (view in visitableViews) {
+      view.detachWebView()
     }
-
-    if (!registeredVisitableViews.contains(newView)) {
-      registeredVisitableViews.add(newView)
-    }
+    visitableViews.add(newView)
   }
 
   internal fun removeVisitableView(view: SessionSubscriber) {
-    registeredVisitableViews.remove(view)
+    visitableViews.remove(view)
   }
 
-  private fun setUserAgentString(webView: TurboWebView, applicationNameForUserAgent: String?){
+  private fun setUserAgentString(webView: TurboWebView, applicationNameForUserAgent: String?) {
     var userAgentString = WebSettings.getDefaultUserAgent(webView.context)
     if (applicationNameForUserAgent != null) {
       userAgentString = "$userAgentString $applicationNameForUserAgent"
@@ -80,23 +62,96 @@ class RNSession(
     webView.settings.userAgentString = userAgentString
   }
 
+  fun visit(url: String, restoreWithCachedSnapshot: Boolean, reload: Boolean, viewTreeLifecycleOwner: LifecycleOwner?) {
+    val restore = restoreWithCachedSnapshot && !reload
+
+    val options = when {
+      restore -> TurboVisitOptions(action = TurboVisitAction.RESTORE)
+      else -> TurboVisitOptions()
+    }
+
+    viewTreeLifecycleOwner?.lifecycleScope?.launch {
+      val snapshot = when (options.action) {
+        TurboVisitAction.ADVANCE -> fetchCachedSnapshot(url)
+        else -> null
+      }
+
+      viewTreeLifecycleOwner.lifecycle.whenStateAtLeast(Lifecycle.State.STARTED) {
+        turboSession.visit(
+          TurboVisit(
+            location = url,
+            destinationIdentifier = url.hashCode(),
+            restoreWithCachedSnapshot = restoreWithCachedSnapshot,
+            reload = reload,
+            callback = this@RNSession,
+            options = options.copy(snapshotHTML = snapshot)
+          )
+        )
+      }
+    }
+  }
+
+  private suspend fun fetchCachedSnapshot(url: String): String? {
+    return withContext(Dispatchers.IO) {
+      val response = turboSession.offlineRequestHandler?.getCachedSnapshot(
+        url = url
+      )
+      response?.data?.use {
+        String(it.readBytes())
+      }
+    }
+  }
+
+  fun restoreCurrentVisit(): Boolean {
+    return turboSession.restoreCurrentVisit(callback = this)
+  }
+
   inner class JavaScriptInterface {
     @JavascriptInterface
     fun postMessage(messageStr: String) {
       // Android interface works only with primitive types, that's why we need to use JSON
       val messageObj =
-        Utils.convertJsonToBundle(JSONObject(messageStr)) // TODO remove double conversion
-      sendMessage("sessionMessage${sessionHandle}", Arguments.fromBundle(messageObj))
+        Arguments.fromBundle(Utils.convertJsonToBundle(JSONObject(messageStr)))
+      for (view in visitableViews) {
+        view.handleMessage(messageObj)
+      }
     }
   }
 
-  inner class StradaJavaScriptInterface {
-    @JavascriptInterface
-    fun postMessage(messageStr: String) {
-      val messageJSONObj = JSONObject(messageStr)
-      val messageObj = Utils.convertJsonToBundle(messageJSONObj)
-      val eventName = messageJSONObj.getString("component")
-      sendMessage(eventName, Arguments.fromBundle(messageObj))
-    }
+  // region SessionCallbackAdapter
+
+  override fun onReceivedError(errorCode: Int) {
+    topmostView?.onReceivedError(errorCode)
   }
+
+  override fun onRenderProcessGone() {
+    topmostView?.onRenderProcessGone()
+  }
+
+  override fun onZoomReset(newScale: Float) {
+    topmostView?.onZoomReset(newScale)
+  }
+
+  override fun onZoomed(newScale: Float) {
+    topmostView?.onZoomed(newScale)
+  }
+
+  override fun visitCompleted(completedOffline: Boolean) {
+    topmostView?.visitCompleted(completedOffline)
+  }
+
+  override fun visitLocationStarted(location: String) {
+    topmostView?.visitLocationStarted(location)
+  }
+
+  override fun visitProposedToLocation(location: String, options: TurboVisitOptions) {
+    topmostView?.visitProposedToLocation(location, options)
+  }
+
+  override fun visitRendered() {
+    topmostView?.visitRendered()
+  }
+
+  // end region
+
 }

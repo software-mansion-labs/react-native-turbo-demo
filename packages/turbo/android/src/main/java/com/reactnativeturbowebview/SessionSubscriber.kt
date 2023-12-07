@@ -1,8 +1,9 @@
 package com.reactnativeturbowebview
 
-import dev.hotwire.turbo.visit.TurboVisit
+import com.facebook.react.bridge.WritableMap
 
-interface SessionSubscriber {
-  fun detachWebView(callback: () -> Unit)
-  fun attachWebViewAndVisit()
+interface SessionSubscriber: SessionCallbackAdapter {
+  fun detachWebView()
+  fun handleMessage(message: WritableMap)
+  fun injectJavaScript(script: String)
 }
