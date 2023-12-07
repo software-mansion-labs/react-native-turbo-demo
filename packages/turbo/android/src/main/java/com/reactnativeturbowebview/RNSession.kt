@@ -26,6 +26,7 @@ class RNSession(
 ) : SessionCallbackAdapter {
 
   private val visitableViews: LinkedHashSet<SessionSubscriber> = linkedSetOf()
+  private val topmostView: SessionSubscriber? get() = visitableViews.lastOrNull()
 
   private val turboSession: TurboSession = run {
     val activity = reactContext.currentActivity as AppCompatActivity
@@ -120,35 +121,35 @@ class RNSession(
   // region SessionCallbackAdapter
 
   override fun onReceivedError(errorCode: Int) {
-    visitableViews.lastOrNull()?.onReceivedError(errorCode)
+    topmostView?.onReceivedError(errorCode)
   }
 
   override fun onRenderProcessGone() {
-    visitableViews.lastOrNull()?.onRenderProcessGone()
+    topmostView?.onRenderProcessGone()
   }
 
   override fun onZoomReset(newScale: Float) {
-    visitableViews.lastOrNull()?.onZoomReset(newScale)
+    topmostView?.onZoomReset(newScale)
   }
 
   override fun onZoomed(newScale: Float) {
-    visitableViews.lastOrNull()?.onZoomed(newScale)
+    topmostView?.onZoomed(newScale)
   }
 
   override fun visitCompleted(completedOffline: Boolean) {
-    visitableViews.lastOrNull()?.visitCompleted(completedOffline)
+    topmostView?.visitCompleted(completedOffline)
   }
 
   override fun visitLocationStarted(location: String) {
-    visitableViews.lastOrNull()?.visitLocationStarted(location)
+    topmostView?.visitLocationStarted(location)
   }
 
   override fun visitProposedToLocation(location: String, options: TurboVisitOptions) {
-    visitableViews.lastOrNull()?.visitProposedToLocation(location, options)
+    topmostView?.visitProposedToLocation(location, options)
   }
 
   override fun visitRendered() {
-    visitableViews.lastOrNull()?.visitRendered()
+    topmostView?.visitRendered()
   }
 
   // end region
