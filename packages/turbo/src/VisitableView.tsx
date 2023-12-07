@@ -3,64 +3,34 @@ import React, {
   useImperativeHandle,
   useRef,
   useMemo,
-  useEffect,
 } from 'react';
 import { NativeSyntheticEvent, StyleSheet } from 'react-native';
 import RNVisitableView, { dispatchCommand } from './RNVisitableView';
 import type {
   OnErrorCallback,
-  OnLoadEvent,
+  LoadEvent,
   SessionMessageCallback,
   VisitProposal,
   VisitProposalError,
   StradaComponent,
 } from './types';
-import { useStradaBridge } from './stradaBridge';
-import {
-  NavigationContainerRefContext,
-  useNavigation,
-} from '@react-navigation/native';
+import { useStradaBridge } from './hooks/useStradaBridge';
+import { useDisableNavigationAnimation } from './hooks/useDisableNavigationAnimation';
+import { useMessageQueue } from './hooks/useMessageQueue';
 
 export interface Props {
   url: string;
   sessionHandle?: string;
   applicationNameForUserAgent?: string;
   stradaComponents?: StradaComponent[];
-  onVisitProposal: (proposal: NativeSyntheticEvent<VisitProposal>) => void;
-  onLoad?: (proposal: NativeSyntheticEvent<OnLoadEvent>) => void;
+  onVisitProposal: (proposal: VisitProposal) => void;
+  onLoad?: (params: LoadEvent) => void;
   onVisitError?: OnErrorCallback;
   onMessage?: SessionMessageCallback;
 }
 
 export interface RefObject {
   injectJavaScript: (callbackStringified: string) => void;
-}
-
-type SessionMessageCallbackArrayElement = SessionMessageCallback | undefined;
-
-function useDisableNavigationAnimation() {
-  const navWithRoutes = React.useContext(NavigationContainerRefContext);
-  const navigation = useNavigation();
-
-  useEffect(() => {
-    const params = navWithRoutes?.getCurrentRoute()?.params;
-    if (
-      params &&
-      '__disable_animation' in params &&
-      params.__disable_animation
-    ) {
-      navigation.setOptions({
-        animation: 'none',
-      });
-      const timeout = setTimeout(() => {
-        navigation.setOptions({
-          animation: undefined,
-        });
-      }, 100);
-      return () => clearTimeout(timeout);
-    }
-    return undefined;
-  }, [navigation, navWithRoutes]);
 }
 
 const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
@@ -72,12 +42,13 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       stradaComponents,
       onLoad,
       onVisitError: viewErrorHandler,
-      onMessage: onMessageCallback,
+      onMessage,
+      onVisitProposal,
     } = props;
     const visitableViewRef = useRef<typeof RNVisitableView>();
-    const onMessageCallbacks = useRef<SessionMessageCallbackArrayElement[]>([
-      onMessageCallback,
-    ]);
+
+    const { registerMessageListener, handleOnMessage } =
+      useMessageQueue(onMessage);
 
     const { initializeStradaBridge, stradaUserAgent, sendToBridge } =
       useStradaBridge(visitableViewRef, dispatchCommand, stradaComponents);
@@ -89,6 +60,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           .join(' '),
       [applicationNameForUserAgent, stradaUserAgent]
     );
+
     useDisableNavigationAnimation();
 
     useImperativeHandle(
@@ -105,35 +77,26 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       []
     );
 
-    const handleOnMessage = useCallback(
-      (e: NativeSyntheticEvent<{ message: object }>) => {
-        onMessageCallbacks.current.forEach((listener) => {
-          listener?.(e.nativeEvent);
-        });
-      },
-      []
-    );
-
-    const registerMessageListener = useCallback(
-      (listener: SessionMessageCallback) => {
-        onMessageCallbacks.current.push(listener);
-      },
-      []
-    );
-
     const handleVisitError = useCallback(
-      (e: NativeSyntheticEvent<VisitProposalError>) => {
-        viewErrorHandler?.(e.nativeEvent);
+      ({ nativeEvent }: NativeSyntheticEvent<VisitProposalError>) => {
+        viewErrorHandler?.(nativeEvent);
       },
       [viewErrorHandler]
     );
 
     const handleOnLoad = useCallback(
-      (e: NativeSyntheticEvent<OnLoadEvent>) => {
+      ({ nativeEvent }: NativeSyntheticEvent<LoadEvent>) => {
         initializeStradaBridge();
-        onLoad?.(e);
+        onLoad?.(nativeEvent);
       },
       [initializeStradaBridge, onLoad]
+    );
+
+    const handleVisitProposal = useCallback(
+      ({ nativeEvent }: NativeSyntheticEvent<VisitProposal>) => {
+        onVisitProposal(nativeEvent);
+      },
+      [onVisitProposal]
     );
 
     return (
@@ -152,9 +115,9 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           // @ts-expect-error
           ref={visitableViewRef}
           url={props.url}
-          onVisitProposal={props.onVisitProposal}
           sessionHandle={sessionHandle}
           applicationNameForUserAgent={resolvedApplicationNameForUserAgent}
+          onVisitProposal={handleVisitProposal}
           onMessage={handleOnMessage}
           onVisitError={handleVisitError}
           onLoad={handleOnLoad}

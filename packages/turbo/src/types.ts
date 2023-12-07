@@ -5,10 +5,12 @@ export interface VisitProposal {
   action: Action;
 }
 
-export interface OnLoadEvent {
+export interface LoadEvent {
   title: string;
   url: string;
 }
+
+export type MessageEvent = object;
 
 export interface VisitProposalError {
   statusCode: number;
