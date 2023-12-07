@@ -13,7 +13,11 @@ const NestedTab: React.FC = () => {
         tabBarActiveTintColor: '#00094a',
       }}
     >
-      <Tab.Screen name={Routes.NestedTab} component={WebView} />
+      <Tab.Screen
+        name={Routes.NestedTab}
+        component={WebView}
+        options={{ title: 'Nested Web' }}
+      />
       <Tab.Screen
         name={Routes.NestedTabNative}
         component={NativeScreen}

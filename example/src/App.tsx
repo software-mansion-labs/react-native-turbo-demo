@@ -29,6 +29,7 @@ const BottomTabs = () => {
       <Tab.Screen
         name={Routes.WebviewInitial}
         component={WebView}
+        options={{ title: 'React Native Web Screen' }}
         initialParams={{ baseURL }}
       />
       <Tab.Screen
@@ -73,9 +74,29 @@ const App: React.FC = () => {
           component={NativeScreen}
           options={{ title: 'A List of Numbers' }}
         />
-        <Stack.Screen name={Routes.New} component={WebView} />
-        <Stack.Screen name={Routes.SuccessScreen} component={WebView} />
-        <Stack.Screen name={Routes.One} component={WebView} />
+        <Stack.Screen
+          name={Routes.New}
+          component={WebView}
+          options={{
+            title: 'A Modal Webpage',
+            presentation: 'modal',
+          }}
+        />
+        <Stack.Screen
+          name={Routes.SuccessScreen}
+          component={WebView}
+          options={{
+            title: 'It Worked!',
+            presentation: 'modal',
+          }}
+        />
+        <Stack.Screen
+          name={Routes.One}
+          component={WebView}
+          options={{
+            title: "How'd You Get Here?",
+          }}
+        />
         <Stack.Screen name={Routes.Share} component={ShareScreen} />
         <Stack.Screen name={Routes.Fallback} component={WebView} />
         <Stack.Screen
