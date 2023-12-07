@@ -5,7 +5,10 @@ import React, {
   useMemo,
 } from 'react';
 import { NativeSyntheticEvent, StyleSheet } from 'react-native';
-import RNVisitableView, { dispatchCommand } from './RNVisitableView';
+import RNVisitableView, {
+  dispatchCommand,
+  openExternalURL,
+} from './RNVisitableView';
 import type {
   OnErrorCallback,
   LoadEvent,
@@ -26,9 +29,7 @@ export interface Props {
   stradaComponents?: StradaComponent[];
   onVisitProposal: (proposal: VisitProposal) => void;
   onLoad?: (params: LoadEvent) => void;
-  onOpenExternalUrl?: (
-    proposal: NativeSyntheticEvent<OpenExternalUrlEvent>
-  ) => void;
+  onOpenExternalUrl?: (proposal: OpenExternalUrlEvent) => void;
   onVisitError?: OnErrorCallback;
   onMessage?: SessionMessageCallback;
 }
@@ -48,7 +49,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       onVisitError: viewErrorHandler,
       onMessage,
       onVisitProposal,
-      onOpenExternalUrl: onOpenExternalUrlCallback,
+      onOpenExternalUrl: onOpenExternalUrlCallback = openExternalURL,
     } = props;
     const visitableViewRef = useRef<typeof RNVisitableView>();
 

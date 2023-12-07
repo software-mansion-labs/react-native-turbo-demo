@@ -5,6 +5,7 @@ import {
   StyleProp,
   UIManager,
   ViewStyle,
+  Linking,
 } from 'react-native';
 import { findNodeHandle } from 'react-native';
 import type {
@@ -13,6 +14,7 @@ import type {
   MessageEvent,
   VisitProposal,
   VisitProposalError,
+  OpenExternalUrlEvent,
 } from './types';
 
 // interface should match RNVisitableView exported properties in native code
@@ -56,6 +58,18 @@ export function dispatchCommand(
     transformCommandToAcceptableType(viewConfig.Commands[command]!),
     [code]
   );
+}
+
+export async function openExternalURL({
+  url,
+}: OpenExternalUrlEvent): Promise<any> {
+  const supported = await Linking.canOpenURL(url);
+
+  if (supported) {
+    return await Linking.openURL(url);
+  } else {
+    console.error(`Don't know how to open this URL: ${url}`);
+  }
 }
 
 const RNVisitableView =
