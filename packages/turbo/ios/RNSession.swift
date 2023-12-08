@@ -9,15 +9,25 @@ import RNTurboiOS
 import UIKit
 import WebKit
 
+protocol WKUIDelegateHandler{
+  func alertHandler(message: String)
+  func confirmHandler(message: String)
+}
+
 class TurboUIDelegate: NSObject, WKUIDelegate{
-  private var alertDelegate:  (String) -> Void
-  init(alertDelegate: @escaping (String) -> Void) {
-    self.alertDelegate = alertDelegate
+  private var uiHandler:WKUIDelegateHandler
+  init(uiHandler: WKUIDelegateHandler) {
+    self.uiHandler = uiHandler
   }
   
   func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
-    self.alertDelegate(message)
+    self.uiHandler.alertHandler(message: message)
     completionHandler()
+  }
+  
+  func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void){
+    self.uiHandler.confirmHandler(message: message)
+    completionHandler(true)
   }
 }
 
@@ -35,7 +45,7 @@ class RNSession: NSObject {
 
   public lazy var turboSession: Session = {
     webViewConfiguration.userContentController.add(self, name: "nativeApp")
-    self.wkUiDelegate = TurboUIDelegate(alertDelegate: self.alertHandler)
+    self.wkUiDelegate = TurboUIDelegate(uiHandler: self)
     let session = Session(webViewConfiguration: webViewConfiguration)
     session.delegate = self
     session.webView.allowsLinkPreview = false
@@ -81,12 +91,6 @@ class RNSession: NSObject {
     turboSession.reload()
   }
   
-  func alertHandler(message: String) {
-    guard let newView = visitableViews.last else {
-      return
-    }
-    newView.handleAlert(message: message)
-  }
 }
 
 
@@ -111,7 +115,6 @@ extension RNSession: SessionDelegate {
   
 }
 
-
 extension RNSession: WKScriptMessageHandler {
   
   func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -120,4 +123,21 @@ extension RNSession: WKScriptMessageHandler {
     }
   }
   
+}
+
+extension RNSession : WKUIDelegateHandler{
+
+  func alertHandler(message: String) {
+    guard let visitableView = visitableViews.last else {
+      return
+    }
+    visitableView.handleAlert(message: message)
+  }
+
+  func confirmHandler(message: String) {
+    guard let visitableView = visitableViews.last else {
+      return
+    }
+    visitableView.handleConfirm(message: message)
+  }
 }

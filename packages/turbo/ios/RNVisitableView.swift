@@ -22,6 +22,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var onLoad: RCTDirectEventBlock?
   @objc var onVisitError: RCTDirectEventBlock?
   @objc var onAlert: RCTDirectEventBlock?
+  @objc var onConfirm: RCTDirectEventBlock?
   
   private lazy var session: RNSession = RNSessionManager.shared.findOrCreateSession(sessionHandle: sessionHandle!, webViewConfiguration: webViewConfiguration)
   private lazy var webView: WKWebView = session.webView
@@ -96,7 +97,13 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     ]
     onAlert?(event)
   }
-
+  
+  func handleConfirm(message: String) {
+    var event: [AnyHashable: Any] = [
+      "message": message,
+    ]
+    onConfirm?(event)
+  }
 }
 
 extension RNVisitableView: RNVisitableViewControllerDelegate {
