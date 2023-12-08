@@ -21,6 +21,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var onVisitProposal: RCTDirectEventBlock?
   @objc var onLoad: RCTDirectEventBlock?
   @objc var onVisitError: RCTDirectEventBlock?
+  @objc var onAlert: RCTDirectEventBlock?
   
   private lazy var session: RNSession = RNSessionManager.shared.findOrCreateSession(sessionHandle: sessionHandle!, webViewConfiguration: webViewConfiguration)
   private lazy var webView: WKWebView = session.webView
@@ -87,6 +88,13 @@ class RNVisitableView: UIView, RNSessionSubscriber {
       event["statusCode"] = statusCode
     }
     onVisitError?(event)
+  }
+
+  func handleAlert(message: String) {
+    var event: [AnyHashable: Any] = [
+      "message": message,
+    ]
+    onAlert?(event)
   }
 
 }

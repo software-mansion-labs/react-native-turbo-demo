@@ -9,11 +9,24 @@ import RNTurboiOS
 import UIKit
 import WebKit
 
+class TurboUIDelegate: NSObject, WKUIDelegate{
+  private var alertDelegate:  (String) -> Void
+  init(alertDelegate: @escaping (String) -> Void) {
+    self.alertDelegate = alertDelegate
+  }
+  
+  func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
+    self.alertDelegate(message)
+    completionHandler()
+  }
+}
+
 class RNSession: NSObject {
   
   private var visitableViews: [RNSessionSubscriber] = []
   private var sessionHandle: NSString
   private var webViewConfiguration: WKWebViewConfiguration
+  private var wkUiDelegate: WKUIDelegate?
   
   init(sessionHandle: NSString, webViewConfiguration: WKWebViewConfiguration) {
     self.sessionHandle = sessionHandle
@@ -22,9 +35,11 @@ class RNSession: NSObject {
 
   public lazy var turboSession: Session = {
     webViewConfiguration.userContentController.add(self, name: "nativeApp")
+    self.wkUiDelegate = TurboUIDelegate(alertDelegate: self.alertHandler)
     let session = Session(webViewConfiguration: webViewConfiguration)
     session.delegate = self
     session.webView.allowsLinkPreview = false
+    session.webView.uiDelegate = self.wkUiDelegate
     return session
   }()
   public lazy var webView: WKWebView = turboSession.webView
@@ -64,6 +79,13 @@ class RNSession: NSObject {
     
   func reload() {
     turboSession.reload()
+  }
+  
+  func alertHandler(message: String) {
+    guard let newView = visitableViews.last else {
+      return
+    }
+    newView.handleAlert(message: message)
   }
 }
 

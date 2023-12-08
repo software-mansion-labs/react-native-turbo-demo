@@ -12,6 +12,9 @@ export interface LoadEvent {
 
 export type MessageEvent = object;
 
+export interface AlertHandler {
+  message: string;
+}
 export interface VisitProposalError {
   statusCode: number;
   url: string;

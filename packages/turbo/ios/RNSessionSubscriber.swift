@@ -14,4 +14,5 @@ protocol RNSessionSubscriber {
   func handleMessage(message: WKScriptMessage)
   func didProposeVisit(proposal: VisitProposal)
   func didFailRequestForVisitable(visitable: Visitable, error: Error)
+  func handleAlert(message: String)
 }
