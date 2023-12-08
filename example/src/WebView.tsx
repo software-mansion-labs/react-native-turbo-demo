@@ -9,7 +9,7 @@ import {
 import { useCurrentUrl, useWebviewNavigate } from 'react-native-web-screen';
 import { Routes } from './webScreenRoutes';
 import Form from './Strada/Form';
-import { baseURL } from './webScreen';
+import { baseURL, linkingConfig } from './webScreen';
 
 export type Props = { navigation: any } & Pick<VisitableViewProps, 'onMessage'>;
 
@@ -19,7 +19,7 @@ const stradaComponents = [Form];
 const WebView: React.FC<Props> = ({ navigation, ...props }) => {
   const navigateTo = useWebviewNavigate();
 
-  const currentUrl = useCurrentUrl(baseURL);
+  const currentUrl = useCurrentUrl(baseURL, linkingConfig);
 
   const onVisitProposal = ({ action: actionType, url }: VisitProposal) => {
     navigateTo(url, actionType);
