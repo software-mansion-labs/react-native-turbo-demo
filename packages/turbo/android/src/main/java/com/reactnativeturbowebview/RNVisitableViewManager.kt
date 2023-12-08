@@ -15,7 +15,8 @@ enum class RNVisitableViewEvent(val jsCallbackName: String) {
 }
 
 enum class RNVisitableViewCommand(val jsCallbackName: String) {
-  INJECT_JAVASCRIPT("injectJavaScript")
+  INJECT_JAVASCRIPT("injectJavaScript"),
+  RELOAD_PAGE("reload")
 }
 
 private const val REACT_CLASS = "RNVisitableView"
@@ -54,6 +55,7 @@ class RNVisitableViewManager(
           root.injectJavaScript(it)
         }
       }
+      RNVisitableViewCommand.RELOAD_PAGE -> root.refresh(true)
     }
   }
 

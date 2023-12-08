@@ -173,6 +173,10 @@ const jsCode = "console.warn('foo')";
 injectJavaScript(jsCode);
 ```
 
+### `reload()`
+
+Reloads the webview.
+
 ## Session Component
 
 Session component has been deprecated. To use multiple [sessions](https://github.com/hotwired/turbo-ios/blob/main/Docs/Overview.md#session), you can use `sessionHandle` prop on `VisitableView` component.

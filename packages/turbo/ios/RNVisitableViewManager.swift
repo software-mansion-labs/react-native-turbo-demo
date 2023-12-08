@@ -26,6 +26,14 @@ class RNVisitableViewManager: RCTViewManager {
       component.injectJavaScript(code: code)
     }
   }
+    
+  @objc
+  func reload(_ node: NSNumber) {
+    DispatchQueue.main.async {
+      let component = self.bridge.uiManager.view(forReactTag: node) as! RNVisitableView
+      component.reload()
+    }
+  }
 
 }
 
