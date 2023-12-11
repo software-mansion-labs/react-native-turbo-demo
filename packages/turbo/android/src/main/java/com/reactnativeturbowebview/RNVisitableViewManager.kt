@@ -59,8 +59,7 @@ class RNVisitableViewManager(
         }
       }
       RNVisitableViewCommand.RELOAD_PAGE -> root.refresh(true)
-      RNVisitableViewCommand.SEND_CONFIRM_RESULT ->
-      {
+      RNVisitableViewCommand.SEND_CONFIRM_RESULT -> {
         args?.getString(0)?.let {
           root.sendConfirmResult(it)
         }

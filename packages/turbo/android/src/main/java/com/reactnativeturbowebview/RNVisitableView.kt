@@ -35,7 +35,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   }
   private val webView: TurboWebView get() = session.webView
 
-  private var onConfirmHandler: ((r:Boolean) ->Unit)? = null
+  private var onConfirmHandler: ((result: Boolean) -> Unit)? = null
 
   // State
   private var isInitialVisit = true
@@ -145,7 +145,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     // This can happen when the user uses one session for different
     // bottom tabs. In this case, we need to remove the webview from
     // the parent before attaching it to the new one.
-    if(webView.parent != null){
+    if (webView.parent != null) {
       (webView.parent as ViewGroup).removeView(webView)
     }
 
@@ -302,7 +302,6 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   }
 
 
-
   override fun handleConfirm(message: String, callback: (result: Boolean) -> Unit) {
     sendEvent(RNVisitableViewEvent.ON_CONFIRM, Arguments.createMap().apply {
       putString("message", message)
@@ -310,7 +309,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     onConfirmHandler = callback
   }
 
-  fun sendConfirmResult(result: String){
+  fun sendConfirmResult(result: String) {
     var confirmResult = result == "true"
     onConfirmHandler?.invoke(confirmResult)
     onConfirmHandler = null

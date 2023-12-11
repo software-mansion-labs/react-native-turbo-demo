@@ -75,7 +75,10 @@ class RNWebChromeClient(
     message: String?,
     result: JsResult?
   ): Boolean {
-    visitableViews.lastOrNull()?.handleConfirm(message ?: "", {x -> if (x) result?.confirm() else result?.cancel()})
+    visitableViews.lastOrNull()
+      ?.handleConfirm(
+        message ?: "",
+        { confirmed -> if (confirmed) result?.confirm() else result?.cancel() })
     return true;
   }
 }

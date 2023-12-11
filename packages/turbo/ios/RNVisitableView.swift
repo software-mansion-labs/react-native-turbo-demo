@@ -55,7 +55,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   }
   
   public func sendConfirmResult(result: NSString) -> Void {
-    let confirmResult = result=="true"
+    let confirmResult = result == "true"
     self.onConfirmHandler?(confirmResult)
     self.onConfirmHandler = nil
   }
