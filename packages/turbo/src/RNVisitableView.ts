@@ -25,8 +25,8 @@ interface RNVisitableViewProps {
   onMessage?: (e: NativeSyntheticEvent<MessageEvent>) => void;
   onVisitError?: (e: NativeSyntheticEvent<VisitProposalError>) => void;
   onVisitProposal?: (e: NativeSyntheticEvent<VisitProposal>) => void;
-  onAlert?: (e: NativeSyntheticEvent<AlertHandler>) => void;
-  onConfirm?: (e: NativeSyntheticEvent<AlertHandler>) => void;
+  onWebAlert?: (e: NativeSyntheticEvent<AlertHandler>) => void;
+  onWebConfirm?: (e: NativeSyntheticEvent<AlertHandler>) => void;
   style?: StyleProp<ViewStyle>;
 }
 

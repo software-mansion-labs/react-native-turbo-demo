@@ -53,7 +53,7 @@ export type StradaMessages = {
 };
 
 // list of methods available for RNVisitableView module
-export type DispatchCommandTypes = 'injectJavaScript';
+export type DispatchCommandTypes = 'injectJavaScript' | 'sendConfirmResult';
 
 export type DispatchCommand = (
   ref: React.RefObject<any>,

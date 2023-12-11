@@ -4,7 +4,7 @@ import React, {
   useRef,
   useMemo,
 } from 'react';
-import { NativeSyntheticEvent, StyleSheet } from 'react-native';
+import { Alert, NativeSyntheticEvent, StyleSheet } from 'react-native';
 import RNVisitableView, { dispatchCommand } from './RNVisitableView';
 import type {
   OnErrorCallback,
@@ -13,6 +13,7 @@ import type {
   VisitProposal,
   VisitProposalError,
   StradaComponent,
+  AlertHandler,
 } from './types';
 import { useStradaBridge } from './hooks/useStradaBridge';
 import { useDisableNavigationAnimation } from './hooks/useDisableNavigationAnimation';
@@ -27,6 +28,11 @@ export interface Props {
   onLoad?: (params: LoadEvent) => void;
   onVisitError?: OnErrorCallback;
   onMessage?: SessionMessageCallback;
+  onAlert?: (message: string) => void;
+  onConfirm?: (
+    message: string,
+    confirmCallback: (value: boolean) => void
+  ) => void;
 }
 
 export interface RefObject {
@@ -44,6 +50,8 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       onVisitError: viewErrorHandler,
       onMessage,
       onVisitProposal,
+      onAlert,
+      onConfirm,
     } = props;
     const visitableViewRef = useRef<typeof RNVisitableView>();
 
@@ -99,6 +107,35 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       [onVisitProposal]
     );
 
+    const handleAlert = useCallback(
+      ({ nativeEvent: { message } }: NativeSyntheticEvent<AlertHandler>) => {
+        if (onAlert) {
+          onAlert(message);
+        } else {
+          Alert.alert(message);
+        }
+      },
+      [onAlert]
+    );
+
+    const handleConfirm = useCallback(
+      ({ nativeEvent: { message } }: NativeSyntheticEvent<AlertHandler>) => {
+        const dispatch = (value: boolean) =>
+          dispatchCommand(
+            visitableViewRef,
+            'sendConfirmResult',
+            value.toString()
+          );
+        if (onConfirm) {
+          onConfirm(message, (value) => dispatch(value));
+        } else {
+          Alert.alert('Confirm dialog', message);
+          dispatch(true);
+        }
+      },
+      [onConfirm]
+    );
+
     return (
       <>
         {stradaComponents?.map((Component, i) => (
@@ -122,6 +159,8 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           onVisitError={handleVisitError}
           onLoad={handleOnLoad}
           style={styles.container}
+          onWebAlert={handleAlert}
+          onWebConfirm={handleConfirm}
         />
       </>
     );
