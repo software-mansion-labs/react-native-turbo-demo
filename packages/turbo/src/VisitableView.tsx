@@ -36,6 +36,7 @@ export interface Props {
 
 export interface RefObject {
   injectJavaScript: (callbackStringified: string) => void;
+  reload: () => void;
 }
 
 const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
@@ -72,13 +73,13 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
     useImperativeHandle(
       ref,
       () => ({
-        injectJavaScript: (callbackStringified) => {
+        injectJavaScript: (callbackStringified) =>
           dispatchCommand(
             visitableViewRef,
             'injectJavaScript',
             callbackStringified
-          );
-        },
+          ),
+        reload: () => dispatchCommand(visitableViewRef, 'reload'),
       }),
       []
     );

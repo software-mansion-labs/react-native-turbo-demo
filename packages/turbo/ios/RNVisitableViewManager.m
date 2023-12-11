@@ -22,6 +22,8 @@
 
   RCT_EXTERN_METHOD(injectJavaScript: (nonnull NSNumber) node
                     code: (nonnull NSString) code)
+  RCT_EXTERN_METHOD(reload: (nonnull NSNumber) node)
+
 
 @end
 

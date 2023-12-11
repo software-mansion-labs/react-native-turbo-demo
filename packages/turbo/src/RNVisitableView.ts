@@ -45,7 +45,7 @@ function transformCommandToAcceptableType(command: number): number | string {
 export function dispatchCommand(
   ref: React.RefObject<any>,
   command: DispatchCommandTypes,
-  code: string
+  ...args: any[]
 ) {
   const viewConfig = UIManager.getViewManagerConfig('RNVisitableView');
 
@@ -56,7 +56,7 @@ export function dispatchCommand(
   UIManager.dispatchViewManagerCommand(
     findNodeHandle(ref.current),
     transformCommandToAcceptableType(viewConfig.Commands[command]!),
-    [code]
+    args
   );
 }
 

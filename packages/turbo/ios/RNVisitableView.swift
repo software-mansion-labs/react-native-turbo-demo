@@ -50,6 +50,10 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     webView.evaluateJavaScript(code as String)
   }
     
+  public func reload(){
+    session.reload()
+  }
+    
   private func visit() {
     if(controller.visitableURL?.absoluteString == url as String) {
       return
@@ -65,7 +69,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   public func didProposeVisit(proposal: VisitProposal){
     if (webView.url == proposal.url) {
       // When reopening same URL we want to reload webview
-      session.reload()
+      reload()
     } else {
       let event: [AnyHashable: Any] = [
         "url": proposal.url.absoluteString,
