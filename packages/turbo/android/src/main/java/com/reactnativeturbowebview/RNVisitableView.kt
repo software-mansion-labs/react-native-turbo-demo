@@ -293,6 +293,12 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     }
   }
 
+  override fun handleAlert(message: String) {
+    sendEvent(RNVisitableViewEvent.ON_ALERT, Arguments.createMap().apply {
+      putString("message", message)
+    })
+  }
+
   override fun requestFailedWithStatusCode(visitHasCachedSnapshot: Boolean, statusCode: Int) {
     sendEvent(RNVisitableViewEvent.VISIT_ERROR, Arguments.createMap().apply {
       putInt("statusCode", statusCode)

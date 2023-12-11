@@ -11,7 +11,8 @@ enum class RNVisitableViewEvent(val jsCallbackName: String) {
   VISIT_ERROR("onVisitError"),
   PAGE_LOADED("onLoad"),
   MESSAGE("onMessage"),
-  OPEN_EXTERNAL_URL("onOpenExternalUrl")
+  OPEN_EXTERNAL_URL("onOpenExternalUrl"),
+  ON_ALERT("onWebAlert")
 }
 
 enum class RNVisitableViewCommand(val jsCallbackName: String) {

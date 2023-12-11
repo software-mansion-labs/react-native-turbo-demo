@@ -7,4 +7,5 @@ interface SessionSubscriber: SessionCallbackAdapter {
   fun handleMessage(message: WritableMap)
   fun injectJavaScript(script: String)
   fun didOpenExternalUrl(url: String)
+  fun handleAlert(message: String)
 }
