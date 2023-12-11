@@ -15,5 +15,5 @@ protocol RNSessionSubscriber {
   func didProposeVisit(proposal: VisitProposal)
   func didFailRequestForVisitable(visitable: Visitable, error: Error)
   func handleAlert(message: String)
-  func handleConfirm(message: String)
+  func handleConfirm(message: String, completionHandler: @escaping (Bool) -> Void)
 }

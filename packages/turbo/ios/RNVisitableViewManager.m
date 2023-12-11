@@ -18,11 +18,13 @@
   RCT_EXPORT_VIEW_PROPERTY(onMessage, RCTDirectEventBlock)
   RCT_EXPORT_VIEW_PROPERTY(onLoad, RCTDirectEventBlock)
   RCT_EXPORT_VIEW_PROPERTY(onVisitError, RCTDirectEventBlock)
-  RCT_EXPORT_VIEW_PROPERTY(onAlert, RCTDirectEventBlock)
-  RCT_EXPORT_VIEW_PROPERTY(onConfirm, RCTDirectEventBlock)
+  RCT_EXPORT_VIEW_PROPERTY(onWebAlert, RCTDirectEventBlock)
+  RCT_EXPORT_VIEW_PROPERTY(onWebConfirm, RCTDirectEventBlock)
 
   RCT_EXTERN_METHOD(injectJavaScript: (nonnull NSNumber) node
                     code: (nonnull NSString) code)
+  RCT_EXTERN_METHOD(sendConfirmResult: (nonnull NSNumber) node
+                    result: (nonnull NSString) code)
 
 @end
 
