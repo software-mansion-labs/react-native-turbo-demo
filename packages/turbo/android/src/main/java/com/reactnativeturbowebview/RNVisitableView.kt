@@ -35,6 +35,8 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   }
   private val webView: TurboWebView get() = session.webView
 
+  private var onConfirmHandler: ((r:Boolean) ->Unit)? = null
+
   // State
   private var isInitialVisit = true
   private var currentlyZoomed = false
@@ -297,6 +299,21 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     sendEvent(RNVisitableViewEvent.ON_ALERT, Arguments.createMap().apply {
       putString("message", message)
     })
+  }
+
+
+
+  override fun handleConfirm(message: String, callback: (result: Boolean) -> Unit) {
+    sendEvent(RNVisitableViewEvent.ON_CONFIRM, Arguments.createMap().apply {
+      putString("message", message)
+    })
+    onConfirmHandler = callback
+  }
+
+  fun sendConfirmResult(result: String){
+    var confirmResult = result == "true"
+    onConfirmHandler?.invoke(confirmResult)
+    onConfirmHandler = null
   }
 
   override fun requestFailedWithStatusCode(visitHasCachedSnapshot: Boolean, statusCode: Int) {

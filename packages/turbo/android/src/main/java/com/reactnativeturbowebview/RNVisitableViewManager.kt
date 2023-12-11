@@ -12,12 +12,14 @@ enum class RNVisitableViewEvent(val jsCallbackName: String) {
   PAGE_LOADED("onLoad"),
   MESSAGE("onMessage"),
   OPEN_EXTERNAL_URL("onOpenExternalUrl"),
-  ON_ALERT("onWebAlert")
+  ON_ALERT("onWebAlert"),
+  ON_CONFIRM("onWebConfirm")
 }
 
 enum class RNVisitableViewCommand(val jsCallbackName: String) {
   INJECT_JAVASCRIPT("injectJavaScript"),
-  RELOAD_PAGE("reload")
+  RELOAD_PAGE("reload"),
+  SEND_CONFIRM_RESULT("sendConfirmResult")
 }
 
 private const val REACT_CLASS = "RNVisitableView"
@@ -57,6 +59,12 @@ class RNVisitableViewManager(
         }
       }
       RNVisitableViewCommand.RELOAD_PAGE -> root.refresh(true)
+      RNVisitableViewCommand.SEND_CONFIRM_RESULT ->
+      {
+        args?.getString(0)?.let {
+          root.sendConfirmResult(it)
+        }
+      }
     }
   }
 

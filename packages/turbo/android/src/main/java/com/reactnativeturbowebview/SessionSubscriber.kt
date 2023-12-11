@@ -8,4 +8,5 @@ interface SessionSubscriber: SessionCallbackAdapter {
   fun injectJavaScript(script: String)
   fun didOpenExternalUrl(url: String)
   fun handleAlert(message: String)
+  fun handleConfirm(message: String, callback: (result: Boolean) -> Unit)
 }
