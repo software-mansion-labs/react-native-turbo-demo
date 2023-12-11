@@ -47,7 +47,6 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   private val visitableView = inflate(context, R.layout.turbo_view, null) as ViewGroup
   private val turboView: TurboView by lazy { visitableView.findViewById(R.id.turbo_view) }
   private val screenshotView: AppCompatImageView by lazy { visitableView.findViewById(R.id.turbo_screenshot) }
-  private val webViewContainer: ViewGroup by lazy { findViewById(R.id.turbo_webView_container) }
   private val viewTreeLifecycleOwner get() = turboView.findViewTreeLifecycleOwner()
 
   init {
@@ -140,8 +139,6 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   }
 
   private fun attachWebView(onReady: (Boolean) -> Unit) {
-    val view = turboView
-
     // Sometimes detachWebView is not called before attachWebView.
     // This can happen when the user uses one session for different
     // bottom tabs. In this case, we need to remove the webview from
@@ -150,15 +147,23 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
       (webView.parent as ViewGroup).removeView(webView)
     }
 
-    view.attachWebView(webView) { attachedToNewDestination ->
+    // Re-layout the TurboView before attaching to make page restorations work correctly.
+    requestLayout()
+
+    turboView.attachWebView(webView) { attachedToNewDestination ->
       onReady(attachedToNewDestination)
     }
   }
 
   override fun detachWebView() {
     screenshotView()
+
     (webView.parent as ViewGroup?)?.endViewTransition(webView)
-    webViewContainer.removeAllViews()
+
+    turboView.detachWebView(webView) {
+      // Force layout to fix improper layout of the TurboWebView.
+      forceLayout()
+    }
   }
 
   /*
