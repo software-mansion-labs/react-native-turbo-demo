@@ -12,13 +12,10 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   var id: UUID = UUID()
   @objc var sessionHandle: NSString? = nil
   @objc var applicationNameForUserAgent: NSString? = nil
-  @objc var url: NSString = "" {
-    didSet {
-      visit()
-    }
-  }
+  @objc var url: NSString = ""
   @objc var onMessage: RCTDirectEventBlock?
   @objc var onVisitProposal: RCTDirectEventBlock?
+  @objc var onOpenExternalUrl: RCTDirectEventBlock?
   @objc var onLoad: RCTDirectEventBlock?
   @objc var onVisitError: RCTDirectEventBlock?
   @objc var onWebAlert: RCTDirectEventBlock?
@@ -63,6 +60,10 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     self.onConfirmHandler = nil
   }
     
+  public func reload(){
+    session.reload()
+  }
+    
   private func visit() {
     if(controller.visitableURL?.absoluteString == url as String) {
       return
@@ -78,7 +79,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   public func didProposeVisit(proposal: VisitProposal){
     if (webView.url == proposal.url) {
       // When reopening same URL we want to reload webview
-      session.reload()
+      reload()
     } else {
       let event: [AnyHashable: Any] = [
         "url": proposal.url.absoluteString,
@@ -97,6 +98,10 @@ class RNVisitableView: UIView, RNSessionSubscriber {
       event["statusCode"] = statusCode
     }
     onVisitError?(event)
+  }
+    
+  public func didOpenExternalUrl(url: URL) {
+    onOpenExternalUrl?(["url": url.absoluteString])
   }
 
   func handleAlert(message: String) {
@@ -119,6 +124,7 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
   
   func visitableWillAppear(visitable: Visitable) {
     session.registerVisitableView(newView: self)
+    visit()
   }
     
   func visitableDidDisappear(visitable: Visitable) {

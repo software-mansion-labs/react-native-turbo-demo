@@ -246,7 +246,7 @@ class RNFileChooserDelegate(private val reactContext: ReactApplicationContext) {
     }
 
     // we have one file selected
-    return if (data.data != null && resultCode == Activity.RESULT_OK && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    return if (data.data != null && resultCode == Activity.RESULT_OK) {
       WebChromeClient.FileChooserParams.parseResult(resultCode, data)
     } else null
   }

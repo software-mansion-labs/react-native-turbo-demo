@@ -107,11 +107,9 @@ extension RNSession: SessionDelegate {
     visitableViews.last?.didFailRequestForVisitable(visitable: visitable, error: error)
   }
 
-  func webView(_ webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> ()) {
-    decisionHandler(WKNavigationActionPolicy.cancel)
-    // Handle non-Turbo links
+  func session(_ session: Session, openExternalURL url: URL) {
+    visitableViews.last?.didOpenExternalUrl(url: url)
   }
-  
 }
 
 extension RNSession: WKScriptMessageHandler {

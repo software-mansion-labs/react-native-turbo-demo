@@ -5,6 +5,7 @@ import {
   StyleProp,
   UIManager,
   ViewStyle,
+  Linking,
 } from 'react-native';
 import { findNodeHandle } from 'react-native';
 import type {
@@ -14,6 +15,7 @@ import type {
   MessageEvent,
   VisitProposal,
   VisitProposalError,
+  OpenExternalUrlEvent,
 } from './types';
 
 // interface should match RNVisitableView exported properties in native code
@@ -36,10 +38,17 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
 
+function transformCommandToAcceptableType(command: number): number | string {
+  if (Platform.OS === 'ios') {
+    return command;
+  }
+  return command.toString();
+}
+
 export function dispatchCommand(
   ref: React.RefObject<any>,
   command: DispatchCommandTypes,
-  code: string
+  ...args: any[]
 ) {
   const viewConfig = UIManager.getViewManagerConfig('RNVisitableView');
 
@@ -49,9 +58,21 @@ export function dispatchCommand(
 
   UIManager.dispatchViewManagerCommand(
     findNodeHandle(ref.current),
-    viewConfig.Commands[command]!,
-    [code]
+    transformCommandToAcceptableType(viewConfig.Commands[command]!),
+    args
   );
+}
+
+export async function openExternalURL({
+  url,
+}: OpenExternalUrlEvent): Promise<any> {
+  const supported = await Linking.canOpenURL(url);
+
+  if (supported) {
+    return await Linking.openURL(url);
+  } else {
+    console.error(`Don't know how to open this URL: ${url}`);
+  }
 }
 
 const RNVisitableView =
