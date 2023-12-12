@@ -10,7 +10,7 @@ import UIKit
 import WebKit
 
 protocol WKUIDelegateHandler{
-  func alertHandler(message: String)
+  func alertHandler(message: String, completionHandler: @escaping () -> Void)
   func confirmHandler(message: String, completionHandler: @escaping (Bool) -> Void)
 }
 
@@ -21,8 +21,7 @@ class TurboUIDelegate: NSObject, WKUIDelegate{
   }
   
   func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
-    self.uiHandler.alertHandler(message: message)
-    completionHandler()
+    self.uiHandler.alertHandler(message: message, completionHandler: completionHandler)
   }
   
   func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void){
@@ -124,11 +123,11 @@ extension RNSession: WKScriptMessageHandler {
 
 extension RNSession : WKUIDelegateHandler{
 
-  func alertHandler(message: String) {
+  func alertHandler(message: String, completionHandler: @escaping () -> Void) {
     guard let visitableView = visitableViews.last else {
       return
     }
-    visitableView.handleAlert(message: message)
+    visitableView.handleAlert(message: message, completionHandler: completionHandler)
   }
 
   func confirmHandler(message: String, completionHandler: @escaping (Bool) -> Void) {
