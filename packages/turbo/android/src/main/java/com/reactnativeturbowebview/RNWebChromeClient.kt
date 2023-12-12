@@ -64,8 +64,7 @@ class RNWebChromeClient(
     message: String?,
     result: JsResult?
   ): Boolean {
-    visitableViews.lastOrNull()?.handleAlert(message ?: "")
-    result?.confirm()
+    visitableViews.lastOrNull()?.handleAlert(message ?: "", {result?.confirm()})
     return true
   }
 

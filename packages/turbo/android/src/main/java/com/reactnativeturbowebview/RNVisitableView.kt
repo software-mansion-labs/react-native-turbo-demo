@@ -36,6 +36,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   private val webView: TurboWebView get() = session.webView
 
   private var onConfirmHandler: ((result: Boolean) -> Unit)? = null
+  private var onAlertHandler: (() -> Unit)? = null
 
   // State
   private var isInitialVisit = true
@@ -295,10 +296,11 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     }
   }
 
-  override fun handleAlert(message: String) {
+  override fun handleAlert(message: String,callback: () -> Unit) {
     sendEvent(RNVisitableViewEvent.ON_ALERT, Arguments.createMap().apply {
       putString("message", message)
     })
+    onAlertHandler = callback
   }
 
 
@@ -307,6 +309,11 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
       putString("message", message)
     })
     onConfirmHandler = callback
+  }
+
+  fun sendAlertResult() {
+    onAlertHandler?.invoke()
+    onAlertHandler = null
   }
 
   fun sendConfirmResult(result: String) {
