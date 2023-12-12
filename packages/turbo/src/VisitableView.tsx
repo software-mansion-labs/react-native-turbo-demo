@@ -4,7 +4,7 @@ import React, {
   useRef,
   useMemo,
 } from 'react';
-import { Alert, NativeSyntheticEvent, StyleSheet } from 'react-native';
+import { NativeSyntheticEvent, StyleSheet } from 'react-native';
 import RNVisitableView, {
   dispatchCommand,
   openExternalURL,
@@ -17,11 +17,15 @@ import type {
   VisitProposalError,
   OpenExternalUrlEvent,
   StradaComponent,
-  AlertHandler,
 } from './types';
 import { useStradaBridge } from './hooks/useStradaBridge';
 import { useDisableNavigationAnimation } from './hooks/useDisableNavigationAnimation';
 import { useMessageQueue } from './hooks/useMessageQueue';
+import {
+  type OnAlert,
+  type OnConfirm,
+  useWebViewDialogs,
+} from './hooks/useWebViewDialogs';
 
 export interface Props {
   url: string;
@@ -33,11 +37,8 @@ export interface Props {
   onOpenExternalUrl?: (proposal: OpenExternalUrlEvent) => void;
   onVisitError?: OnErrorCallback;
   onMessage?: SessionMessageCallback;
-  onAlert?: (message: string) => void;
-  onConfirm?: (
-    message: string,
-    confirmCallback: (value: boolean) => void
-  ) => void;
+  onAlert?: OnAlert;
+  onConfirm?: OnConfirm;
 }
 
 export interface RefObject {
@@ -120,33 +121,10 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       [onOpenExternalUrlCallback]
     );
 
-    const handleAlert = useCallback(
-      ({ nativeEvent: { message } }: NativeSyntheticEvent<AlertHandler>) => {
-        if (onAlert) {
-          onAlert(message);
-        } else {
-          Alert.alert(message);
-        }
-      },
-      [onAlert]
-    );
-
-    const handleConfirm = useCallback(
-      ({ nativeEvent: { message } }: NativeSyntheticEvent<AlertHandler>) => {
-        const dispatch = (value: boolean) =>
-          dispatchCommand(
-            visitableViewRef,
-            'sendConfirmResult',
-            value.toString()
-          );
-        if (onConfirm) {
-          onConfirm(message, (value) => dispatch(value));
-        } else {
-          Alert.alert('Confirm dialog', message);
-          dispatch(true);
-        }
-      },
-      [onConfirm]
+    const { handleAlert, handleConfirm } = useWebViewDialogs(
+      visitableViewRef,
+      onAlert,
+      onConfirm
     );
 
     return (

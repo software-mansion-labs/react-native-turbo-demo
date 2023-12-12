@@ -60,6 +60,7 @@ export type StradaMessages = {
 export type DispatchCommandTypes =
   | 'injectJavaScript'
   | 'reload'
+  | 'sendAlertResult'
   | 'sendConfirmResult';
 
 export type DispatchCommand = (
