@@ -12,13 +12,10 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   var id: UUID = UUID()
   @objc var sessionHandle: NSString? = nil
   @objc var applicationNameForUserAgent: NSString? = nil
-  @objc var url: NSString = "" {
-    didSet {
-      visit()
-    }
-  }
+  @objc var url: NSString = ""
   @objc var onMessage: RCTDirectEventBlock?
   @objc var onVisitProposal: RCTDirectEventBlock?
+  @objc var onOpenExternalUrl: RCTDirectEventBlock?
   @objc var onLoad: RCTDirectEventBlock?
   @objc var onVisitError: RCTDirectEventBlock?
   
@@ -53,6 +50,10 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     webView.evaluateJavaScript(code as String)
   }
     
+  public func reload(){
+    session.reload()
+  }
+    
   private func visit() {
     if(controller.visitableURL?.absoluteString == url as String) {
       return
@@ -68,7 +69,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   public func didProposeVisit(proposal: VisitProposal){
     if (webView.url == proposal.url) {
       // When reopening same URL we want to reload webview
-      session.reload()
+      reload()
     } else {
       let event: [AnyHashable: Any] = [
         "url": proposal.url.absoluteString,
@@ -88,6 +89,10 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     }
     onVisitError?(event)
   }
+    
+  public func didOpenExternalUrl(url: URL) {
+    onOpenExternalUrl?(["url": url.absoluteString])
+  }
 
 }
 
@@ -95,6 +100,7 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
   
   func visitableWillAppear(visitable: Visitable) {
     session.registerVisitableView(newView: self)
+    visit()
   }
     
   func visitableDidDisappear(visitable: Visitable) {

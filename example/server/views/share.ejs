@@ -5,7 +5,7 @@
       shareText: 'Hello from the webview 👋',
     };
     if (typeof AndroidInterface !== 'undefined') {
-      AndroidInterface.postMessage(JSON.stringify({ message }));
+      AndroidInterface.postMessage(JSON.stringify(message));
     }
     if (typeof webkit !== 'undefined') {
       webkit.messageHandlers.nativeApp.postMessage(message);

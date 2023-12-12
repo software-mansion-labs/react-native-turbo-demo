@@ -125,6 +125,12 @@ Callback called when the webview detects turbo visit action.
 - url
 - action – e.g "replace"
 
+### `onOpenExternalUrl`
+
+Callback called when the webview detects non-turbo visit action (e.g. opening external link).
+
+- url
+
 ### `onLoad`
 
 Callback called with screen title and URL when the webview successfully loads.
@@ -166,6 +172,10 @@ const jsCode = "console.warn('foo')";
 
 injectJavaScript(jsCode);
 ```
+
+### `reload()`
+
+Reloads the webview.
 
 ## Session Component
 
