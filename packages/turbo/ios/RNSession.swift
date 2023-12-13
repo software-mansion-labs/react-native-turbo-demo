@@ -14,18 +14,19 @@ protocol WKUIDelegateHandler{
   func confirmHandler(message: String, completionHandler: @escaping (Bool) -> Void)
 }
 
-class TurboUIDelegate: NSObject, WKUIDelegate{
+class TurboUIDelegate: NSObject, WKUIDelegate {
   private var uiHandler:WKUIDelegateHandler
+  
   init(uiHandler: WKUIDelegateHandler) {
     self.uiHandler = uiHandler
   }
   
   func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
-    self.uiHandler.alertHandler(message: message, completionHandler: completionHandler)
+    uiHandler.alertHandler(message: message, completionHandler: completionHandler)
   }
   
-  func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void){
-    self.uiHandler.confirmHandler(message: message, completionHandler: completionHandler)
+  func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
+    uiHandler.confirmHandler(message: message, completionHandler: completionHandler)
   }
 }
 
