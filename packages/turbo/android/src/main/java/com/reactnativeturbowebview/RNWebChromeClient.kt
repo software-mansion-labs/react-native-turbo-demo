@@ -29,10 +29,7 @@ class RNWebChromeClient(
   }
 
   override fun onCreateWindow(
-    view: WebView?,
-    isDialog: Boolean,
-    isUserGesture: Boolean,
-    resultMsg: Message?
+    view: WebView?, isDialog: Boolean, isUserGesture: Boolean, resultMsg: Message?
   ): Boolean {
     val result = view!!.hitTestResult
     val data = result.extra
@@ -59,25 +56,18 @@ class RNWebChromeClient(
   }
 
   override fun onJsAlert(
-    view: WebView?,
-    url: String?,
-    message: String?,
-    result: JsResult?
+    view: WebView?, url: String?, message: String?, result: JsResult?
   ): Boolean {
-    visitableViews.lastOrNull()?.handleAlert(message ?: "", {result?.confirm()})
+    visitableViews.lastOrNull()?.handleAlert(message ?: "") { result?.confirm() }
     return true
   }
 
   override fun onJsConfirm(
-    view: WebView?,
-    url: String?,
-    message: String?,
-    result: JsResult?
+    view: WebView?, url: String?, message: String?, result: JsResult?
   ): Boolean {
-    visitableViews.lastOrNull()
-      ?.handleConfirm(
-        message ?: "",
-        { confirmed -> if (confirmed) result?.confirm() else result?.cancel() })
-    return true;
+    visitableViews.lastOrNull()?.handleConfirm(
+      message ?: ""
+    ) { confirmed -> if (confirmed) result?.confirm() else result?.cancel() }
+    return true
   }
 }

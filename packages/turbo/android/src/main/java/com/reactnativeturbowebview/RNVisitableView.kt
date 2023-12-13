@@ -317,7 +317,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   }
 
   fun sendConfirmResult(result: String) {
-    var confirmResult = result == "true"
+    val confirmResult = result == "true"
     onConfirmHandler?.invoke(confirmResult)
     onConfirmHandler = null
   }
