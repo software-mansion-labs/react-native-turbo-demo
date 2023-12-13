@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { findNodeHandle } from 'react-native';
 import type {
+  AlertHandler,
   DispatchCommandTypes,
   LoadEvent,
   MessageEvent,
@@ -26,6 +27,8 @@ interface RNVisitableViewProps {
   onMessage?: (e: NativeSyntheticEvent<MessageEvent>) => void;
   onVisitError?: (e: NativeSyntheticEvent<VisitProposalError>) => void;
   onVisitProposal?: (e: NativeSyntheticEvent<VisitProposal>) => void;
+  onWebAlert?: (e: NativeSyntheticEvent<AlertHandler>) => void;
+  onWebConfirm?: (e: NativeSyntheticEvent<AlertHandler>) => void;
   style?: StyleProp<ViewStyle>;
 }
 

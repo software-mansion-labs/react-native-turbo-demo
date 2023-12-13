@@ -35,6 +35,9 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   }
   private val webView: TurboWebView get() = session.webView
 
+  private var onConfirmHandler: ((result: Boolean) -> Unit)? = null
+  private var onAlertHandler: (() -> Unit)? = null
+
   // State
   private var isInitialVisit = true
   private var currentlyZoomed = false
@@ -143,7 +146,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     // This can happen when the user uses one session for different
     // bottom tabs. In this case, we need to remove the webview from
     // the parent before attaching it to the new one.
-    if(webView.parent != null){
+    if (webView.parent != null) {
       (webView.parent as ViewGroup).removeView(webView)
     }
 
@@ -291,6 +294,32 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     if (isWebViewAttachedToNewDestination) {
       showProgressView()
     }
+  }
+
+  override fun handleAlert(message: String,callback: () -> Unit) {
+    sendEvent(RNVisitableViewEvent.ON_ALERT, Arguments.createMap().apply {
+      putString("message", message)
+    })
+    onAlertHandler = callback
+  }
+
+
+  override fun handleConfirm(message: String, callback: (result: Boolean) -> Unit) {
+    sendEvent(RNVisitableViewEvent.ON_CONFIRM, Arguments.createMap().apply {
+      putString("message", message)
+    })
+    onConfirmHandler = callback
+  }
+
+  fun sendAlertResult() {
+    onAlertHandler?.invoke()
+    onAlertHandler = null
+  }
+
+  fun sendConfirmResult(result: String) {
+    val confirmResult = result == "true"
+    onConfirmHandler?.invoke(confirmResult)
+    onConfirmHandler = null
   }
 
   override fun requestFailedWithStatusCode(visitHasCachedSnapshot: Boolean, statusCode: Int) {

@@ -16,6 +16,9 @@ export interface OpenExternalUrlEvent {
 
 export type MessageEvent = object;
 
+export interface AlertHandler {
+  message: string;
+}
 export interface VisitProposalError {
   statusCode: number;
   url: string;
@@ -54,7 +57,11 @@ export type StradaMessages = {
 };
 
 // list of methods available for RNVisitableView module
-export type DispatchCommandTypes = 'injectJavaScript' | 'reload';
+export type DispatchCommandTypes =
+  | 'injectJavaScript'
+  | 'reload'
+  | 'sendAlertResult'
+  | 'sendConfirmResult';
 
 export type DispatchCommand = (
   ref: React.RefObject<any>,

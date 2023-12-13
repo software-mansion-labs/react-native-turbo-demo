@@ -18,7 +18,13 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var onOpenExternalUrl: RCTDirectEventBlock?
   @objc var onLoad: RCTDirectEventBlock?
   @objc var onVisitError: RCTDirectEventBlock?
-  
+  @objc var onWebAlert: RCTDirectEventBlock?
+  @objc var onWebConfirm: RCTDirectEventBlock?
+
+  private var onConfirmHandler: ((Bool) -> Void)?
+  private var onAlertHandler: (() -> Void)?
+
+
   private lazy var session: RNSession = RNSessionManager.shared.findOrCreateSession(sessionHandle: sessionHandle!, webViewConfiguration: webViewConfiguration)
   private lazy var webView: WKWebView = session.webView
   private lazy var webViewConfiguration: WKWebViewConfiguration = {
@@ -48,6 +54,17 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   
   public func injectJavaScript(code: NSString) -> Void {
     webView.evaluateJavaScript(code as String)
+  }
+  
+  public func sendAlertResult() -> Void {
+    self.onAlertHandler?()
+    self.onAlertHandler = nil
+  }
+  
+  public func sendConfirmResult(result: NSString) -> Void {
+    let confirmResult = result == "true"
+    self.onConfirmHandler?(confirmResult)
+    self.onConfirmHandler = nil
   }
     
   public func reload(){
@@ -94,6 +111,21 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     onOpenExternalUrl?(["url": url.absoluteString])
   }
 
+  func handleAlert(message: String, completionHandler: @escaping () -> Void) {
+    let event: [AnyHashable: Any] = [
+      "message": message,
+    ]
+    self.onWebAlert?(event)
+    self.onAlertHandler = completionHandler
+  }
+  
+  func handleConfirm(message: String, completionHandler: @escaping (Bool) -> Void) {
+    let event: [AnyHashable: Any] = [
+      "message": message,
+    ]
+    self.onWebConfirm?(event)
+    self.onConfirmHandler = completionHandler
+  }
 }
 
 extension RNVisitableView: RNVisitableViewControllerDelegate {

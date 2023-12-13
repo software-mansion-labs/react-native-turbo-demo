@@ -21,6 +21,11 @@ import type {
 import { useStradaBridge } from './hooks/useStradaBridge';
 import { useDisableNavigationAnimation } from './hooks/useDisableNavigationAnimation';
 import { useMessageQueue } from './hooks/useMessageQueue';
+import {
+  type OnAlert,
+  type OnConfirm,
+  useWebViewDialogs,
+} from './hooks/useWebViewDialogs';
 
 export interface Props {
   url: string;
@@ -32,6 +37,8 @@ export interface Props {
   onOpenExternalUrl?: (proposal: OpenExternalUrlEvent) => void;
   onVisitError?: OnErrorCallback;
   onMessage?: SessionMessageCallback;
+  onAlert?: OnAlert;
+  onConfirm?: OnConfirm;
 }
 
 export interface RefObject {
@@ -51,6 +58,8 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       onMessage,
       onVisitProposal,
       onOpenExternalUrl: onOpenExternalUrlCallback = openExternalURL,
+      onAlert,
+      onConfirm,
     } = props;
     const visitableViewRef = useRef<typeof RNVisitableView>();
 
@@ -107,9 +116,15 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
     );
 
     const handleOnOpenExternalUrl = useCallback(
-      (e: NativeSyntheticEvent<OpenExternalUrlEvent>) =>
-        onOpenExternalUrlCallback(e.nativeEvent),
+      ({ nativeEvent }: NativeSyntheticEvent<OpenExternalUrlEvent>) =>
+        onOpenExternalUrlCallback(nativeEvent),
       [onOpenExternalUrlCallback]
+    );
+
+    const { handleAlert, handleConfirm } = useWebViewDialogs(
+      visitableViewRef,
+      onAlert,
+      onConfirm
     );
 
     return (
@@ -136,6 +151,8 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           onOpenExternalUrl={handleOnOpenExternalUrl}
           onLoad={handleOnLoad}
           style={styles.container}
+          onWebAlert={handleAlert}
+          onWebConfirm={handleConfirm}
         />
       </>
     );
