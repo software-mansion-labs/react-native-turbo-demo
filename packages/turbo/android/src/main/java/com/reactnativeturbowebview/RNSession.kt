@@ -2,6 +2,7 @@ package com.reactnativeturbowebview
 
 import android.webkit.JavascriptInterface
 import android.webkit.WebSettings
+import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -33,6 +34,7 @@ class RNSession(
     val webView = TurboWebView(reactContext, null)
     val session = TurboSession(sessionHandle, activity, webView)
 
+    WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
     webView.settings.setJavaScriptEnabled(true)
     webView.addJavascriptInterface(JavaScriptInterface(), "AndroidInterface")
     setUserAgentString(webView, applicationNameForUserAgent)

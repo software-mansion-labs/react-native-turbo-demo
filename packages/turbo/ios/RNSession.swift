@@ -45,10 +45,18 @@ class RNSession: NSObject {
   public lazy var turboSession: Session = {
     webViewConfiguration.userContentController.add(self, name: "nativeApp")
     self.wkUiDelegate = TurboUIDelegate(uiHandler: self)
+    
     let session = Session(webViewConfiguration: webViewConfiguration)
     session.delegate = self
     session.webView.allowsLinkPreview = false
     session.webView.uiDelegate = self.wkUiDelegate
+
+    #if DEBUG
+    if #available(iOS 16.4, *) {
+      session.webView.isInspectable = true
+    }
+    #endif
+    
     return session
   }()
   public lazy var webView: WKWebView = turboSession.webView
