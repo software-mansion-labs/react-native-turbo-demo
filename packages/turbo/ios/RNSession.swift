@@ -9,11 +9,33 @@ import RNTurboiOS
 import UIKit
 import WebKit
 
+protocol WKUIDelegateHandler{
+  func alertHandler(message: String, completionHandler: @escaping () -> Void)
+  func confirmHandler(message: String, completionHandler: @escaping (Bool) -> Void)
+}
+
+class TurboUIDelegate: NSObject, WKUIDelegate {
+  private var uiHandler:WKUIDelegateHandler
+  
+  init(uiHandler: WKUIDelegateHandler) {
+    self.uiHandler = uiHandler
+  }
+  
+  func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
+    uiHandler.alertHandler(message: message, completionHandler: completionHandler)
+  }
+  
+  func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
+    uiHandler.confirmHandler(message: message, completionHandler: completionHandler)
+  }
+}
+
 class RNSession: NSObject {
   
   private var visitableViews: [RNSessionSubscriber] = []
   private var sessionHandle: NSString
   private var webViewConfiguration: WKWebViewConfiguration
+  private var wkUiDelegate: WKUIDelegate?
   
   init(sessionHandle: NSString, webViewConfiguration: WKWebViewConfiguration) {
     self.sessionHandle = sessionHandle
@@ -22,10 +44,12 @@ class RNSession: NSObject {
 
   public lazy var turboSession: Session = {
     webViewConfiguration.userContentController.add(self, name: "nativeApp")
+    self.wkUiDelegate = TurboUIDelegate(uiHandler: self)
     
     let session = Session(webViewConfiguration: webViewConfiguration)
     session.delegate = self
     session.webView.allowsLinkPreview = false
+    session.webView.uiDelegate = self.wkUiDelegate
 
     #if DEBUG
     if #available(iOS 16.4, *) {
@@ -73,6 +97,7 @@ class RNSession: NSObject {
   func reload() {
     turboSession.reload()
   }
+  
 }
 
 
@@ -95,7 +120,6 @@ extension RNSession: SessionDelegate {
   }
 }
 
-
 extension RNSession: WKScriptMessageHandler {
   
   func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -104,4 +128,21 @@ extension RNSession: WKScriptMessageHandler {
     }
   }
   
+}
+
+extension RNSession : WKUIDelegateHandler{
+
+  func alertHandler(message: String, completionHandler: @escaping () -> Void) {
+    guard let visitableView = visitableViews.last else {
+      return
+    }
+    visitableView.handleAlert(message: message, completionHandler: completionHandler)
+  }
+
+  func confirmHandler(message: String, completionHandler: @escaping (Bool) -> Void) {
+    guard let visitableView = visitableViews.last else {
+      return
+    }
+    visitableView.handleConfirm(message: message, completionHandler: completionHandler)
+  }
 }

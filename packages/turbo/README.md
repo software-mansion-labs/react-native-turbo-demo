@@ -159,6 +159,24 @@ webkit.messageHandlers.nativeApp.postMessage(message);
 
 ```
 
+### `onWebAlert`
+
+Function called when website inside WebView is calling `alert` function. By default React Native's `Alert` is displayed. 
+
+Note that after handling alert display, `callback` function must be called.
+
+- message
+- callback
+
+### `onWebConfirm`
+
+Function called when website inside WebView is calling `confirm` function. By default React Native's `Alert` is displayed (with two buttons).
+
+Note that after handling confirm dialog display, `callback` function must be called with result (`true`/`false`)
+
+- message
+- callback
+
 ### Methods:
 
 ### `injectJavaScript(jsCode)`
