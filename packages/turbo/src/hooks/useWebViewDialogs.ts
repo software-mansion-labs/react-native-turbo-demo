@@ -21,7 +21,7 @@ export function useWebViewDialogs(
       if (onAlert) {
         onAlert(message, () => dispatch());
       } else {
-        Alert.alert(message, undefined, [{ text: 'Ok', onPress: dispatch }]);
+        Alert.alert(message, undefined, [{ text: 'OK', onPress: dispatch }]);
       }
     },
     [onAlert, visitableViewRef]
@@ -39,7 +39,7 @@ export function useWebViewDialogs(
         onConfirm(message, (value) => dispatch(value));
       } else {
         Alert.alert(message, undefined, [
-          { text: 'Ok', onPress: () => dispatch(true) },
+          { text: 'OK', onPress: () => dispatch(true) },
           { text: 'Cancel', onPress: () => dispatch(false) },
         ]);
         dispatch(true);
