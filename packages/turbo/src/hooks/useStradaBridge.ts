@@ -123,7 +123,8 @@ export const useStradaBridge = (
   const initializeStradaBridge = useCallback(() => {
     dispatchCommand(visitableViewRef, 'injectJavaScript', stradaBridgeScript);
 
-    const stradaComponentNames = stradaComponents?.map(({ componentName }) => componentName) || []
+    const stradaComponentNames =
+      stradaComponents?.map(({ componentName }) => componentName) || [];
 
     dispatchCommand(
       visitableViewRef,
