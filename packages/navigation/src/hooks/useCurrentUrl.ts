@@ -26,8 +26,8 @@ function findPath(
 }
 
 function getPath(params: unknown) {
-  if (params && typeof params === 'object' && 'path' in params) {
-    return params.path;
+  if (params && typeof params === 'object' && 'fullPath' in params) {
+    return params.fullPath;
   }
   return undefined;
 }

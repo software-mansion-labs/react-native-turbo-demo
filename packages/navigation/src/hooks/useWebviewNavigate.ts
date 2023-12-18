@@ -51,6 +51,34 @@ const parseQueryStringFromPath = (path: string) => {
   return { pathWithoutQueryString, queryString };
 };
 
+function isNavigateAction(
+  action: ReturnType<typeof getActionFromState>
+): action is NavigateAction<NavigationState> {
+  return !!action && action.type === 'NAVIGATE';
+}
+
+function getAction(
+  action: NavigateAction<NavigationState>,
+  actionType: Action | undefined
+) {
+  if (actionType === 'replace') {
+    return StackActions.replace(action.payload.name, {
+      ...action.payload.params,
+      __disable_animation: true,
+    });
+  } else {
+    const { name, params } = action.payload;
+    const key =
+      (params && 'fullPath' in params && (params.fullPath as string)) ||
+      undefined;
+    return CommonActions.navigate({
+      name,
+      key,
+      params,
+    });
+  }
+}
+
 /*
  * Its like useLinkTo with some custom tweaks
  */
@@ -91,24 +119,14 @@ export function useWebviewNavigate<
         : getStateFromPath(pathWithScreenParams, options?.config);
 
       if (state) {
-        const action = <NavigateAction<NavigationState>>(
-          getActionFromState(state, options?.config)
-        );
+        const action = getActionFromState(state, options?.config);
 
-        if (action === undefined) {
-          navigation.reset(state);
-        } else {
-          const actionToDispatch =
-            actionType === 'replace'
-              ? StackActions.replace(action.payload.name, {
-                  ...action.payload.params,
-                  __disable_animation: true,
-                })
-              : CommonActions.navigate(action.payload.name, {
-                  ...action.payload.params,
-                });
+        if (isNavigateAction(action)) {
+          const actionToDispatch = getAction(action, actionType);
 
           navigation.dispatch(actionToDispatch);
+        } else if (action === undefined) {
+          navigation.reset(state);
         }
       } else {
         throw new Error('Failed to parse the path to a navigation state.');
