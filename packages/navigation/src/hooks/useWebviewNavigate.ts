@@ -85,8 +85,8 @@ function getAction(
 export function useWebviewNavigate<
   ParamList extends ReactNavigation.RootParamList
 >() {
-  const navigation: any = React.useContext(NavigationContainerRefContext);
-  const linking: any = React.useContext(LinkingContext);
+  const navigation = React.useContext(NavigationContainerRefContext);
+  const linking = React.useContext(LinkingContext);
 
   const linkTo = React.useCallback(
     (to: To<ParamList>, actionType?: Action) => {
@@ -96,7 +96,8 @@ export function useWebviewNavigate<
         );
       }
 
-      if (typeof to !== 'string') {
+      if (to && typeof to !== 'string') {
+        // @ts-expect-error
         navigation.navigate(to.screen, to.params);
         return;
       }
@@ -104,8 +105,8 @@ export function useWebviewNavigate<
       const { options } = linking;
 
       let path = to;
-      if (to.match(/^https?:\/\//)) {
-        path = extractPathFromURL(options?.prefixes, to) ?? '';
+      if (options?.prefixes && to.match(/^https?:\/\//)) {
+        path = extractPathFromURL(options.prefixes, to) ?? '';
       }
 
       /* We need to send the path name as screen param
