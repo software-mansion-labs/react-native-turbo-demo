@@ -22,7 +22,7 @@ export function useDisableNavigationAnimation() {
         navigation.setOptions({
           animation: undefined,
         });
-      }, 100);
+      }, 250);
       return () => clearTimeout(timeout);
     }
     return undefined;
