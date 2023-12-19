@@ -59,9 +59,14 @@ function isNavigateAction(
 
 function getAction(
   action: NavigateAction<NavigationState>,
-  actionType: Action | undefined
+  actionType: Action | undefined,
+  path: string,
+  isModal: boolean
 ) {
   if (actionType === 'replace') {
+    if (isModal) {
+      return CommonActions.setParams({ path });
+    }
     return StackActions.replace(action.payload.name, {
       ...action.payload.params,
       __disable_animation: true,
@@ -123,7 +128,13 @@ export function useWebviewNavigate<
         const action = getActionFromState(state, options?.config);
 
         if (isNavigateAction(action)) {
-          const actionToDispatch = getAction(action, actionType);
+          const currentOptions = navigation.getCurrentOptions();
+          const isModal =
+            !!currentOptions &&
+            'presentation' in currentOptions &&
+            currentOptions.presentation === 'modal';
+
+          const actionToDispatch = getAction(action, actionType, path, isModal);
 
           navigation.dispatch(actionToDispatch);
         } else if (action === undefined) {
