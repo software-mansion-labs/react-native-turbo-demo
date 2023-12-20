@@ -72,10 +72,12 @@ class RNSession: NSObject {
   func unregisterVisitableView(view: RNSessionSubscriber) {
     let wasTopMostView = visitableViews.last?.id == view.id
     
-    let viewIdx = visitableViews.lastIndex(where: {
-      view.id == $0.id
-    })
-    visitableViews.remove(at: viewIdx!)
+    if (!visitableViews.isEmpty) {
+      let viewIdx = visitableViews.lastIndex(where: {
+        view.id == $0.id
+      })
+      visitableViews.remove(at: viewIdx!)
+    }
 
     // The new top-most view is not registered when the previous top-most view is a modal
     if (wasTopMostView) {
