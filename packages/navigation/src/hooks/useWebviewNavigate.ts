@@ -38,19 +38,6 @@ type To<
           params: ParamList[RouteName];
         });
 
-const parseQueryStringFromPath = (path: string) => {
-  let pathWithoutQueryString = path;
-  let queryString = '';
-  const queryStringIndex = path.indexOf('?');
-
-  if (queryStringIndex !== -1) {
-    pathWithoutQueryString = path.slice(0, queryStringIndex);
-    queryString = path.slice(queryStringIndex + 1);
-  }
-
-  return { pathWithoutQueryString, queryString };
-};
-
 function isNavigateAction(
   action: ReturnType<typeof getActionFromState>
 ): action is NavigateAction<NavigationState> {
@@ -113,16 +100,9 @@ export function useWebviewNavigate<
       if (options?.prefixes && to.match(/^https?:\/\//)) {
         path = extractPathFromURL(options.prefixes, to) ?? '';
       }
-
-      /* We need to send the path name as screen param
-      to the screen this way cause it works also for nested navigators */
-      const { pathWithoutQueryString, queryString } =
-        parseQueryStringFromPath(path);
-      const pathWithScreenParams = `${pathWithoutQueryString}?${queryString}&path=${pathWithoutQueryString}`;
-
       const state = options?.getStateFromPath
-        ? options.getStateFromPath(pathWithScreenParams, options.config)
-        : getStateFromPath(pathWithScreenParams, options?.config);
+        ? options.getStateFromPath(path, options.config)
+        : getStateFromPath(path, options?.config);
 
       if (state) {
         const action = getActionFromState(state, options?.config);

@@ -7,15 +7,26 @@ import {
 
 type Options = Parameters<typeof getStateFromPath>[1];
 
-type LinkedParams = { baseURL: string; fullPath: string };
+type LinkedParams = { baseURL?: string; fullPath?: string };
 
 function getParams(
   routes: PartialRoute<Route<string, object | undefined>>[] | undefined
-) {
-  if (routes?.[0]?.state?.routes) {
-    return getParams(routes[0].state.routes);
+): LinkedParams | undefined {
+  const firstRoute = routes?.[0];
+  if (firstRoute) {
+    if (firstRoute.state?.routes) {
+      return getParams(firstRoute.state.routes);
+    }
+    if (firstRoute.params) {
+      return firstRoute.params;
+    } else {
+      // route is readonly object (in types). But we need to hack it be non-empty
+      // @ts-expect-error
+      firstRoute.params = {};
+      return firstRoute.params;
+    }
   }
-  return routes?.[0]?.params as LinkedParams | undefined;
+  return undefined;
 }
 
 export function getLinkingObject(
