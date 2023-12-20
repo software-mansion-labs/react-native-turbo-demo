@@ -4,6 +4,7 @@ import {
   Route,
   getStateFromPath,
 } from '@react-navigation/native';
+import { unpackState } from './utils/unpackState';
 
 type Options = Parameters<typeof getStateFromPath>[1];
 
@@ -14,9 +15,6 @@ function getParams(
 ): LinkedParams | undefined {
   const firstRoute = routes?.[0];
   if (firstRoute) {
-    if (firstRoute.state?.routes) {
-      return getParams(firstRoute.state.routes);
-    }
     if (firstRoute.params) {
       return firstRoute.params;
     } else {
@@ -38,10 +36,12 @@ export function getLinkingObject(
     config: linking,
     getStateFromPath(path: string, options?: Options) {
       const state = getStateFromPath(path, options);
-      const params = getParams(state?.routes);
-      if (params) {
-        params.baseURL = baseURL;
-        params.fullPath = path;
+      if (state) {
+        const params = getParams(unpackState(state)?.routes);
+        if (params) {
+          params.baseURL = baseURL;
+          params.fullPath = path;
+        }
       }
       return state;
     },

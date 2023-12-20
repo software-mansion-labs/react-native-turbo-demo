@@ -1,8 +1,8 @@
 import {
   getActionFromState,
   getStateFromPath,
-  NavigationContainerRefContext,
   StackActions,
+  useNavigation,
 } from '@react-navigation/native';
 import * as React from 'react';
 import LinkingContext from '@react-navigation/native/src/LinkingContext';
@@ -13,6 +13,7 @@ import type {
   NavigatorScreenParams,
 } from '@react-navigation/core';
 import type { Action } from 'react-native-turbo';
+import { unpackState } from '../utils/unpackState';
 
 type NavigateAction<State extends NavigationState> = {
   type: 'NAVIGATE';
@@ -46,14 +47,9 @@ function isNavigateAction(
 
 function getAction(
   action: NavigateAction<NavigationState>,
-  actionType: Action | undefined,
-  path: string,
-  isModal: boolean
+  actionType: Action | undefined
 ) {
   if (actionType === 'replace') {
-    if (isModal) {
-      return CommonActions.setParams({ path });
-    }
     return StackActions.replace(action.payload.name, {
       ...action.payload.params,
       __disable_animation: true,
@@ -77,7 +73,7 @@ function getAction(
 export function useWebviewNavigate<
   ParamList extends ReactNavigation.RootParamList
 >() {
-  const navigation = React.useContext(NavigationContainerRefContext);
+  const navigation = useNavigation();
   const linking = React.useContext(LinkingContext);
 
   const linkTo = React.useCallback(
@@ -105,19 +101,15 @@ export function useWebviewNavigate<
         : getStateFromPath(path, options?.config);
 
       if (state) {
-        const action = getActionFromState(state, options?.config);
-
+        const actionState =
+          actionType === 'replace' ? unpackState(state) : state;
+        const action = getActionFromState(actionState, options?.config);
         if (isNavigateAction(action)) {
-          const currentOptions = navigation.getCurrentOptions();
-          const isModal =
-            !!currentOptions &&
-            'presentation' in currentOptions &&
-            currentOptions.presentation === 'modal';
-
-          const actionToDispatch = getAction(action, actionType, path, isModal);
+          const actionToDispatch = getAction(action, actionType);
 
           navigation.dispatch(actionToDispatch);
         } else if (action === undefined) {
+          // @ts-expect-error
           navigation.reset(state);
         }
       } else {
