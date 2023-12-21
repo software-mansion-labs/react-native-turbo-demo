@@ -45,6 +45,10 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     controller.didMove(toParent: reactViewController())
     addSubview(controller.view)
   }
+  
+  override func willMove(toWindow newWindow: UIWindow?) {
+    controller.viewWillAppear(false)
+  }
     
   public func handleMessage(message: WKScriptMessage) {
     if let messageBody = message.body as? [AnyHashable : Any] {
