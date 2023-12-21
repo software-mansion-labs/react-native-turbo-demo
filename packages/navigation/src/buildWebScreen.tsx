@@ -29,20 +29,28 @@ function getParams(
   return undefined;
 }
 
+export function getWebScreenStateFromPath(
+  path: string,
+  options: Options,
+  baseURL: string
+) {
+  const state = getStateFromPath(path, options);
+  if (state) {
+    const params = getParams(unpackState(state)?.routes);
+    if (params) {
+      params.baseURL = baseURL;
+      params.fullPath = path;
+    }
+  }
+  return state;
+}
+
 export function getLinkingObject(baseURL: string, linking: LinkingConfig) {
   return {
     prefixes: [baseURL],
     config: linking,
     getStateFromPath(path: string, options?: Options) {
-      const state = getStateFromPath(path, options);
-      if (state) {
-        const params = getParams(unpackState(state)?.routes);
-        if (params) {
-          params.baseURL = baseURL;
-          params.fullPath = path;
-        }
-      }
-      return state;
+      return getWebScreenStateFromPath(path, options, baseURL);
     },
   };
 }

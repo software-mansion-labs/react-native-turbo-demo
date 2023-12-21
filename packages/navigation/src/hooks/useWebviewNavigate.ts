@@ -1,11 +1,8 @@
 import {
   getActionFromState,
-  getStateFromPath,
   StackActions,
   useNavigation,
 } from '@react-navigation/native';
-import * as React from 'react';
-import LinkingContext from '@react-navigation/native/src/LinkingContext';
 import extractPathFromURL from '@react-navigation/native/src/extractPathFromURL';
 import { CommonActions } from '@react-navigation/native';
 import type {
@@ -14,6 +11,9 @@ import type {
 } from '@react-navigation/core';
 import type { Action } from 'react-native-turbo';
 import { unpackState } from '../utils/unpackState';
+import { ConfigurationContext } from '../WebScreenNavigation';
+import { useCallback, useContext } from 'react';
+import { getWebScreenStateFromPath } from '../buildWebScreen';
 
 type NavigateAction<State extends NavigationState> = {
   type: 'NAVIGATE';
@@ -73,10 +73,10 @@ function getAction(
 export function useWebviewNavigate<
   ParamList extends ReactNavigation.RootParamList
 >() {
+  const { baseURL, linkingConfig } = useContext(ConfigurationContext);
   const navigation = useNavigation();
-  const linking = React.useContext(LinkingContext);
 
-  const linkTo = React.useCallback(
+  const linkTo = useCallback(
     (to: To<ParamList>, actionType?: Action) => {
       if (navigation === undefined) {
         throw new Error(
@@ -90,21 +90,18 @@ export function useWebviewNavigate<
         return;
       }
 
-      const { options } = linking;
-
       let path = to;
-      if (options?.prefixes && to.match(/^https?:\/\//)) {
-        path = extractPathFromURL(options.prefixes, to) ?? '';
+
+      if (to.startsWith(baseURL)) {
+        path = extractPathFromURL([baseURL], to) ?? '';
       }
-      const state = options?.getStateFromPath
-        ? options.getStateFromPath(path, options.config)
-        : getStateFromPath(path, options?.config);
+      const state = getWebScreenStateFromPath(path, linkingConfig, baseURL);
 
       if (state) {
         // for REPLACE action we need to pass only top of navigation state.
         const actionState =
           actionType === 'replace' ? unpackState(state) : state;
-        const action = getActionFromState(actionState, options?.config);
+        const action = getActionFromState(actionState, linkingConfig);
         if (isNavigateAction(action)) {
           const actionToDispatch = getAction(action, actionType);
 
@@ -117,7 +114,7 @@ export function useWebviewNavigate<
         throw new Error('Failed to parse the path to a navigation state.');
       }
     },
-    [linking, navigation]
+    [baseURL, linkingConfig, navigation]
   );
 
   return linkTo;
