@@ -1,8 +1,8 @@
 import {
   getActionFromState,
   getStateFromPath,
-  NavigationContainerRefContext,
   StackActions,
+  useNavigation,
 } from '@react-navigation/native';
 import * as React from 'react';
 import LinkingContext from '@react-navigation/native/src/LinkingContext';
@@ -13,6 +13,7 @@ import type {
   NavigatorScreenParams,
 } from '@react-navigation/core';
 import type { Action } from 'react-native-turbo';
+import { unpackState } from '../utils/unpackState';
 
 type NavigateAction<State extends NavigationState> = {
   type: 'NAVIGATE';
@@ -38,18 +39,33 @@ type To<
           params: ParamList[RouteName];
         });
 
-const parseQueryStringFromPath = (path: string) => {
-  let pathWithoutQueryString = path;
-  let queryString = '';
-  const queryStringIndex = path.indexOf('?');
+function isNavigateAction(
+  action: ReturnType<typeof getActionFromState>
+): action is NavigateAction<NavigationState> {
+  return !!action && action.type === 'NAVIGATE';
+}
 
-  if (queryStringIndex !== -1) {
-    pathWithoutQueryString = path.slice(0, queryStringIndex);
-    queryString = path.slice(queryStringIndex + 1);
+function getAction(
+  action: NavigateAction<NavigationState>,
+  actionType: Action | undefined
+) {
+  if (actionType === 'replace') {
+    return StackActions.replace(action.payload.name, {
+      ...action.payload.params,
+      __disable_animation: true,
+    });
+  } else {
+    const { name, params } = action.payload;
+    const key =
+      (params && 'fullPath' in params && (params.fullPath as string)) ||
+      undefined;
+    return CommonActions.navigate({
+      name,
+      key,
+      params,
+    });
   }
-
-  return { pathWithoutQueryString, queryString };
-};
+}
 
 /*
  * Its like useLinkTo with some custom tweaks
@@ -57,8 +73,8 @@ const parseQueryStringFromPath = (path: string) => {
 export function useWebviewNavigate<
   ParamList extends ReactNavigation.RootParamList
 >() {
-  const navigation: any = React.useContext(NavigationContainerRefContext);
-  const linking: any = React.useContext(LinkingContext);
+  const navigation = useNavigation();
+  const linking = React.useContext(LinkingContext);
 
   const linkTo = React.useCallback(
     (to: To<ParamList>, actionType?: Action) => {
@@ -68,7 +84,8 @@ export function useWebviewNavigate<
         );
       }
 
-      if (typeof to !== 'string') {
+      if (to && typeof to !== 'string') {
+        // @ts-expect-error
         navigation.navigate(to.screen, to.params);
         return;
       }
@@ -76,39 +93,25 @@ export function useWebviewNavigate<
       const { options } = linking;
 
       let path = to;
-      if (to.match(/^https?:\/\//)) {
-        path = extractPathFromURL(options?.prefixes, to) ?? '';
+      if (options?.prefixes && to.match(/^https?:\/\//)) {
+        path = extractPathFromURL(options.prefixes, to) ?? '';
       }
-
-      /* We need to send the path name as screen param
-      to the screen this way cause it works also for nested navigators */
-      const { pathWithoutQueryString, queryString } =
-        parseQueryStringFromPath(path);
-      const pathWithScreenParams = `${pathWithoutQueryString}?${queryString}&path=${pathWithoutQueryString}`;
-
       const state = options?.getStateFromPath
-        ? options.getStateFromPath(pathWithScreenParams, options.config)
-        : getStateFromPath(pathWithScreenParams, options?.config);
+        ? options.getStateFromPath(path, options.config)
+        : getStateFromPath(path, options?.config);
 
       if (state) {
-        const action = <NavigateAction<NavigationState>>(
-          getActionFromState(state, options?.config)
-        );
-
-        if (action === undefined) {
-          navigation.reset(state);
-        } else {
-          const actionToDispatch =
-            actionType === 'replace'
-              ? StackActions.replace(action.payload.name, {
-                  ...action.payload.params,
-                  __disable_animation: true,
-                })
-              : CommonActions.navigate(action.payload.name, {
-                  ...action.payload.params,
-                });
+        // for REPLACE action we need to pass only top of navigation state.
+        const actionState =
+          actionType === 'replace' ? unpackState(state) : state;
+        const action = getActionFromState(actionState, options?.config);
+        if (isNavigateAction(action)) {
+          const actionToDispatch = getAction(action, actionType);
 
           navigation.dispatch(actionToDispatch);
+        } else if (action === undefined) {
+          // @ts-expect-error
+          navigation.reset(state);
         }
       } else {
         throw new Error('Failed to parse the path to a navigation state.');

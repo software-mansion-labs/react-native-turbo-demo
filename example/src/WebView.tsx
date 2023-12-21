@@ -9,24 +9,24 @@ import {
 import { useCurrentUrl, useWebviewNavigate } from 'react-native-web-screen';
 import { Routes } from './webScreenRoutes';
 import Form from './Strada/Form';
+import { RootStackParamList, baseURL, linkingConfig } from './webScreen';
+import { NavigationProp } from '@react-navigation/native';
 
 export type Props = {
-  navigation: any;
-  baseURL?: string;
-} & VisitableViewProps;
+  navigation: NavigationProp<RootStackParamList>;
+} & Pick<VisitableViewProps, 'onMessage'>;
 
 const sessionHandle = 'TurboWebviewExample';
 const stradaComponents = [Form];
 
-const WebView: React.FC<Props> = ({ baseURL, navigation, ...props }) => {
+const WebView: React.FC<Props> = ({ navigation, ...props }) => {
   const navigateTo = useWebviewNavigate();
 
-  const currentUrl = useCurrentUrl(baseURL);
+  const currentUrl = useCurrentUrl(baseURL, linkingConfig);
 
   const onVisitProposal = ({ action: actionType, url }: VisitProposal) => {
     navigateTo(url, actionType);
   };
-
   const onLoad = ({ title }: LoadEvent) => {
     navigation.setOptions({ title });
   };

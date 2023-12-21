@@ -1,140 +1,48 @@
-import React from 'react';
-import type { ScreenProps } from 'react-native-screens';
-import WebScreen from './WebScreen';
-import { merge } from 'lodash';
+import {
+  PartialRoute,
+  Route,
+  getStateFromPath,
+} from '@react-navigation/native';
+import { unpackState } from './utils/unpackState';
+import { LinkingConfig } from './hooks/useCurrentUrl';
 
-export interface WebScreenRule {
-  urlPattern: string;
-  title?: string;
-  presentation?: ScreenProps['stackPresentation'];
+type Options = Parameters<typeof getStateFromPath>[1];
+type LinkedParams = { baseURL?: string; fullPath?: string };
+type PartialRoutes = ReadonlyArray<
+  PartialRoute<Route<string, object | undefined>>
+>;
+
+function getParams(
+  routes: PartialRoutes | undefined
+): LinkedParams | undefined {
+  const firstRoute = routes?.[0];
+  if (firstRoute) {
+    if (firstRoute.params) {
+      return firstRoute.params;
+    } else {
+      // route is readonly object (in types). But we need to hack it be non-empty
+      // @ts-expect-error
+      firstRoute.params = {};
+      return firstRoute.params;
+    }
+  }
+  return undefined;
 }
 
-export type WebScreenRuleMap = {
-  [key: string]:
-    | WebScreenRule
-    | Omit<WebScreenRuleConfig, 'baseURL' | 'webScreenComponent'>;
-};
-
-export type WebScreenRuleConfig = {
-  baseURL: string;
-  routes: WebScreenRuleMap;
-  webScreenComponent?: React.ElementType;
-};
-
-const buildWebviewComponent =
-  (baseURL: string, Component: React.ElementType = WebScreen) =>
-  (navProps: Record<string, unknown>) =>
-    <Component {...navProps} baseURL={baseURL} />;
-
-const isRule = (obj: unknown): obj is WebScreenRule => {
-  if (obj !== null && typeof obj === 'object') {
-    return 'urlPattern' in obj;
-  }
-  return false;
-};
-
-const getLinkingAndScreens = (
-  baseURL: string,
-  routes: WebScreenRuleMap,
-  component: (navProps: Record<string, unknown>) => JSX.Element
-): {
-  screens: {
-    [key: string]: any;
-  };
-  linking: Record<string, string>;
-} => {
-  return Object.entries(routes).reduce(
-    (prev, entry) => {
-      const [routeName, route] = entry as [
-        string,
-        WebScreenRule | Omit<WebScreenRuleConfig, 'baseURL'>
-      ];
-
-      if (isRule(route)) {
-        const { urlPattern, ...options } = route;
-
-        return merge(prev, {
-          screens: {
-            [routeName]: {
-              name: routeName,
-              component,
-              initialParams: { baseURL, path: urlPattern },
-              options: { ...options },
-            },
-          },
-          linking: {
-            [routeName]: urlPattern,
-          },
-        });
-      } else {
-        const { routes: nestedRoutes } = route;
-
-        const { screens, linking } = getLinkingAndScreens(
-          baseURL,
-          nestedRoutes,
-          component
-        );
-
-        return merge(prev, {
-          screens,
-          linking: {
-            [routeName]: {
-              screens: linking,
-            },
-          },
-        });
-      }
-    },
-    { screens: {}, linking: {} }
-  );
-};
-
-export const buildWebScreen = ({
-  routes,
-  baseURL,
-  webScreenComponent,
-}: WebScreenRuleConfig) => {
-  const nativeComponent = buildWebviewComponent(baseURL, webScreenComponent);
-
-  const { linking, screens } = getLinkingAndScreens(
-    baseURL,
-    routes,
-    nativeComponent
-  );
-
+export function getLinkingObject(baseURL: string, linking: LinkingConfig) {
   return {
-    linking: {
-      prefixes: [baseURL],
-      config: {
-        screens: {
-          ...linking,
-        },
-      },
+    prefixes: [baseURL],
+    config: linking,
+    getStateFromPath(path: string, options?: Options) {
+      const state = getStateFromPath(path, options);
+      if (state) {
+        const params = getParams(unpackState(state)?.routes);
+        if (params) {
+          params.baseURL = baseURL;
+          params.fullPath = path;
+        }
+      }
+      return state;
     },
-    screens,
   };
-};
-
-// WIP: More intelligent type based on ScreenParams types
-// export type WebScreenRuleMap<ParamList> = {
-//   [RouteName in keyof ParamList]?: NonNullable<
-//     ParamList[RouteName]
-//   > extends NavigatorScreenParams<infer T>
-//     ? Omit<WebScreenRuleConfig<T>, 'baseURL'>
-//     : WebScreenRule;
-// };
-// type NestedTabParamsList = {
-//   [Routes.NestedTabNative]: undefined;
-//   [Routes.NestedTabWeb]: undefined;
-// };
-// type ParamsList = {
-//   [Routes.New]: undefined;
-//   [Routes.WebviewInitial]: undefined;
-//   [Routes.NumbersScreen]: undefined;
-//   [Routes.NotFound]: undefined;
-//   [Routes.SuccessScreen]: undefined;
-//   [Routes.NonExistentScreen]: undefined;
-//   [Routes.SignIn]: undefined;
-//   [Routes.Fallback]: undefined;
-//   [Routes.NestedTab]: NavigatorScreenParams<NestedTabParamsList>;
-// };
+}

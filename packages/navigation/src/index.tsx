@@ -1,3 +1,3 @@
 export { useWebviewNavigate } from './hooks/useWebviewNavigate';
-export { useCurrentUrl } from './hooks/useCurrentUrl';
+export { useCurrentUrl, LinkingConfig } from './hooks/useCurrentUrl';
 export * from './buildWebScreen';
