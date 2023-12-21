@@ -9,7 +9,7 @@ import {
 import { useCurrentUrl, useWebviewNavigate } from 'react-native-web-screen';
 import { Routes } from './webScreenRoutes';
 import Form from './Strada/Form';
-import { RootStackParamList, baseURL, linkingConfig } from './webScreen';
+import { RootStackParamList } from './webScreen';
 import { NavigationProp } from '@react-navigation/native';
 
 export type Props = {
@@ -22,7 +22,7 @@ const stradaComponents = [Form];
 const WebView: React.FC<Props> = ({ navigation, ...props }) => {
   const navigateTo = useWebviewNavigate();
 
-  const currentUrl = useCurrentUrl(baseURL, linkingConfig);
+  const currentUrl = useCurrentUrl();
 
   const onVisitProposal = ({ action: actionType, url }: VisitProposal) => {
     navigateTo(url, actionType);

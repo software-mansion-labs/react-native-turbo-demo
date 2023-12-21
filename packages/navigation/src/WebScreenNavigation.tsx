@@ -2,16 +2,21 @@ import {
   NavigationContainer,
   useNavigationContainerRef,
 } from '@react-navigation/native';
-import React, { useMemo } from 'react';
+import React, { createContext, useMemo } from 'react';
 import { LinkingConfig } from './hooks/useCurrentUrl';
 import { getLinkingObject } from './buildWebScreen';
 
-interface Props {
+interface ConfigurationProps {
   linkingConfig: LinkingConfig;
   baseURL: string;
 }
 
-const WebScreenNavigation: React.FC<Props> = ({
+export const ConfigurationContext = createContext<ConfigurationProps>({
+  baseURL: '',
+  linkingConfig: { screens: {} },
+});
+
+const WebScreenNavigation: React.FC<ConfigurationProps> = ({
   children,
   linkingConfig,
   baseURL,
@@ -24,9 +29,11 @@ const WebScreenNavigation: React.FC<Props> = ({
   const navigation = useNavigationContainerRef();
 
   return (
-    <NavigationContainer linking={linking} ref={navigation}>
-      {children}
-    </NavigationContainer>
+    <ConfigurationContext.Provider value={{ baseURL, linkingConfig }}>
+      <NavigationContainer linking={linking} ref={navigation}>
+        {children}
+      </NavigationContainer>
+    </ConfigurationContext.Provider>
   );
 };
 
