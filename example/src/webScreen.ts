@@ -1,6 +1,9 @@
-import { getLinkingObject } from 'react-native-web-screen';
+import { LinkingConfig, getLinkingObject } from 'react-native-web-screen';
 import { Routes } from './webScreenRoutes';
-import { LinkingConfig } from 'packages/navigation/src/hooks/useCurrentUrl';
+
+export type RootStackParamList = {
+  [Routes.SignIn]: { path: string };
+};
 
 export const linkingConfig: LinkingConfig = {
   screens: {

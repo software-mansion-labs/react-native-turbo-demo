@@ -25,9 +25,9 @@ function findPath(
   return undefined;
 }
 
-function getPath(params: unknown) {
+function getPath(params: unknown): string | undefined {
   if (params && typeof params === 'object' && 'fullPath' in params) {
-    return params.fullPath;
+    return params.fullPath as string;
   }
   return undefined;
 }
@@ -40,5 +40,5 @@ export function useCurrentUrl(baseUrl: string, config: LinkingConfig) {
   const path =
     getPath(currentRoute?.params) ?? findPath(currentRoute?.name, config) ?? '';
 
-  return `${baseUrl}${path}`;
+  return new URL(path, baseUrl).toString();
 }
