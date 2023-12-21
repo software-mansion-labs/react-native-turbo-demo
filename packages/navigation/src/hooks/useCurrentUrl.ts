@@ -1,16 +1,44 @@
-import { useNavigation } from '@react-navigation/native';
+import { LinkingOptions, useNavigation } from '@react-navigation/native';
 
-export function useCurrentUrl(defaultBaseUrl?: string) {
+export type LinkingConfig = LinkingOptions<{}>['config'];
+
+function findPath(
+  name: string | undefined,
+  config: LinkingConfig
+): string | undefined {
+  if (!config || !name) return undefined;
+  const screens = config.screens;
+  for (const key of Object.keys(screens)) {
+    // @ts-expect-error
+    const pathOrScreen: string | LinkingConfig = screens[key];
+    if (typeof pathOrScreen === 'string') {
+      if (key === name) {
+        return pathOrScreen;
+      }
+    } else {
+      const path = findPath(name, pathOrScreen);
+      if (path) {
+        return path;
+      }
+    }
+  }
+  return undefined;
+}
+
+function getPath(params: unknown): string | undefined {
+  if (params && typeof params === 'object' && 'fullPath' in params) {
+    return params.fullPath as string;
+  }
+  return undefined;
+}
+
+export function useCurrentUrl(baseUrl: string, config: LinkingConfig) {
   const navigation = useNavigation();
   const state = navigation.getState();
 
   const currentRoute = state.routes[state.index];
-  const params = currentRoute?.params as
-    | { path?: string; baseURL?: string }
-    | undefined;
+  const path =
+    getPath(currentRoute?.params) ?? findPath(currentRoute?.name, config) ?? '';
 
-  const path = params?.path ?? '';
-  const baseURL = params?.baseURL ?? defaultBaseUrl ?? '';
-
-  return `${baseURL}${path}`;
+  return new URL(path, baseUrl).toString();
 }

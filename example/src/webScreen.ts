@@ -1,53 +1,32 @@
-import { buildWebScreen, WebScreenRuleConfig } from 'react-native-web-screen';
-import WebView from './WebView';
+import { LinkingConfig, getLinkingObject } from 'react-native-web-screen';
 import { Routes } from './webScreenRoutes';
 
-export const webScreenConfig: WebScreenRuleConfig = {
-  baseURL: 'http://localhost:45678/',
-  routes: {
-    [Routes.BottomTabs]: {
-      routes: {
-        [Routes.WebviewInitial]: {
-          urlPattern: '',
-          title: 'React Native Web Screen',
-        },
-      },
-    },
-    [Routes.New]: {
-      urlPattern: 'new',
-      title: 'A Modal Webpage',
-      presentation: 'modal',
-    },
-    [Routes.SuccessScreen]: {
-      urlPattern: 'success',
-      title: 'It Worked!',
-      presentation: 'modal',
-    },
-    [Routes.One]: {
-      urlPattern: 'one',
-      title: "How'd You Get Here?",
-    },
-    [Routes.NumbersScreen]: {
-      urlPattern: 'numbers',
-    },
-    [Routes.SignIn]: {
-      urlPattern: 'signin',
-      presentation: 'modal',
-    },
-    [Routes.Share]: {
-      urlPattern: 'share',
-    },
-    [Routes.NestedTab]: {
-      routes: {
-        [Routes.NestedTabWeb]: {
-          urlPattern: 'nested',
-          title: 'Nested Web',
-        },
-      },
-    },
-    [Routes.Fallback]: { urlPattern: '*', title: '' },
-  },
-  webScreenComponent: WebView,
+export type RootStackParamList = {
+  [Routes.SignIn]: { path: string };
 };
 
-export const webScreens = buildWebScreen(webScreenConfig);
+export const linkingConfig: LinkingConfig = {
+  screens: {
+    [Routes.BottomTabs]: {
+      screens: {
+        [Routes.WebviewInitial]: '',
+      },
+    },
+    [Routes.New]: 'new',
+    [Routes.SuccessScreen]: 'success',
+    [Routes.One]: 'one',
+    [Routes.NumbersScreen]: 'numbers',
+    [Routes.SignIn]: 'signin',
+    [Routes.Share]: 'share',
+    [Routes.NestedTab]: {
+      screens: {
+        [Routes.NestedTabWeb]: 'nested',
+      },
+    },
+    [Routes.Fallback]: '*',
+  },
+};
+
+export const baseURL = 'http://localhost:45678/';
+
+export const linking = getLinkingObject(baseURL, linkingConfig);
