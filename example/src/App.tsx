@@ -1,17 +1,14 @@
 import React from 'react';
-import {
-  NavigationContainer,
-  useNavigationContainerRef,
-} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { default as NativeScreen } from './NumbersScreen';
 import ErrorScreen from './ErrorScreen';
-import { linking } from 'example/src/webScreen';
 import NestedTab from 'example/src/NestedTab';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Routes } from 'example/src/webScreenRoutes';
 import ShareScreen from 'example/src/ShareScreen';
 import WebView from './WebView';
+import { WebScreenNavigation } from 'react-native-web-screen';
+import { baseURL, linkingConfig } from './webScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -40,10 +37,8 @@ const BottomTabs = () => {
 };
 
 const App: React.FC = () => {
-  const navigation = useNavigationContainerRef();
-
   return (
-    <NavigationContainer linking={linking} ref={navigation}>
+    <WebScreenNavigation baseURL={baseURL} linkingConfig={linkingConfig}>
       <Stack.Navigator
         screenOptions={{
           headerBackTitle: 'Back',
@@ -104,7 +99,7 @@ const App: React.FC = () => {
           options={{ title: 'Nested Top Tab' }}
         />
       </Stack.Navigator>
-    </NavigationContainer>
+    </WebScreenNavigation>
   );
 };
 

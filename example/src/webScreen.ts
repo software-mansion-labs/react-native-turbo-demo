@@ -1,4 +1,4 @@
-import { LinkingConfig, getLinkingObject } from 'react-native-web-screen';
+import { LinkingConfig } from 'react-native-web-screen';
 import { Routes } from './webScreenRoutes';
 
 export type RootStackParamList = {
@@ -28,5 +28,3 @@ export const linkingConfig: LinkingConfig = {
 };
 
 export const baseURL = 'http://localhost:45678/';
-
-export const linking = getLinkingObject(baseURL, linkingConfig);
