@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   LoadEvent,
   VisitableView,
@@ -24,19 +24,29 @@ const WebView: React.FC<Props> = ({ navigation, ...props }) => {
 
   const currentUrl = useCurrentUrl(baseURL, linkingConfig);
 
-  const onVisitProposal = ({ action: actionType, url }: VisitProposal) => {
-    navigateTo(url, actionType);
-  };
-  const onLoad = ({ title }: LoadEvent) => {
-    navigation.setOptions({ title });
-  };
+  const onVisitProposal = useCallback(
+    ({ action: actionType, url }: VisitProposal) => {
+      navigateTo(url, actionType);
+    },
+    [navigateTo]
+  );
 
-  const onVisitError: OnErrorCallback = (error) => {
-    const notLoggedIn = error.statusCode === 401;
-    if (notLoggedIn) {
-      navigation.navigate(Routes.SignIn, { path: 'signin' });
-    }
-  };
+  const onLoad = useCallback(
+    ({ title }: LoadEvent) => {
+      navigation.setOptions({ title });
+    },
+    [navigation]
+  );
+
+  const onVisitError: OnErrorCallback = useCallback(
+    (error) => {
+      const notLoggedIn = error.statusCode === 401;
+      if (notLoggedIn) {
+        navigation.navigate(Routes.SignIn, { path: 'signin' });
+      }
+    },
+    [navigation]
+  );
 
   return (
     <VisitableView

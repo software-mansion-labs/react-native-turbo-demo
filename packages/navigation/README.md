@@ -20,69 +20,85 @@ The library should be used alongside React Navigation library, follow [these ste
 
 ## Basic example
 
-The library provides you with simple API to define the relationship between the web and native screens. The `react-native-web-screen` uses React Navigation [configurable links](https://reactnavigation.org/docs/configuring-links/) to handle navigation within the app. To generate the desired linking configuration you can use the `buildWebScreen(webScreenConfig)` function. After that, all you need to do is to pass the generated objects to the [Navigation Container](https://reactnavigation.org/docs/navigation-container/) and to the corresponding screens in the navigator tree.
+The library provides you with simple API to define the relationship between the web and native screens. The `react-native-web-screen` uses React Navigation [configurable links](https://reactnavigation.org/docs/configuring-links/) to handle navigation within the app. 
+You can follow react-navigation documentation to create your navigation stack and provide mapping between URLs in app and screens. You must define only those paths that are important for your app and use matchers for fallback.
+
+You should also define your custom WebView component that will be using `VisitableView` hood, to be able to customize its behavior.
 
 Let's say you want to add a web `Welcome` screen to your React Native app.
 
 ```tsx
 import { NavigationContainer } from '@react-navigation/native';
-import { buildWebScreen, WebScreenRuleConfig } from 'react-native-web-screen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { useCallback } from 'react';
+import { VisitProposal, VisitableView } from 'react-native-turbo';
+import {
+  LinkingConfig,
+  getLinkingObject,
+  useCurrentUrl,
+  useWebviewNavigate,
+} from 'react-native-web-screen';
 
 const Stack = createNativeStackNavigator();
 
-const webScreenConfig: WebScreenRuleConfig = {
-  baseURL: 'http://your-web-app-base-url/',
-  routes: {
-    Initial: {
-      urlPattern: '',
-    },
-    Welcome: {
-      urlPattern: 'welcome',
-      title: 'Welcome!',
-    },
+const baseURL = 'http://your-web-app-base-url/';
+
+// see https://reactnavigation.org/docs/navigation-container/#linking
+const linkingConfig: LinkingConfig = {
+  screens: {
+    Initial: '',
+    Welcome: 'welcome',
+    Fallback: '*'
   },
 };
 
-const webScreens = buildWebScreen(webScreenConfig);
+const linking = getLinkingObject(baseURL, linkingConfig);
+// see https://github.com/hotwired/turbo-ios/blob/c476bac66f260adbfe930ed9a151e7637973ff99/Source/Session/Session.swift#L4-L7
+const sessionHandle = 'app-dynamic-session-handle';
+
+const WebView: React.FC = () => {
+  const currentUrl = useCurrentUrl(baseURL, linkingConfig);
+  const navigateTo = useWebviewNavigate();
+
+  const onVisitProposal = useCallback(
+    ({ action: actionType, url }: VisitProposal) => {
+      navigateTo(url, actionType);
+    },
+    [navigateTo]
+  );
+
+  return (
+    <VisitableView
+      onVisitProposal={onVisitProposal}
+      sessionHandle={sessionHandle}
+      url={currentUrl}
+      applicationNameForUserAgent="Turbo Native"
+    />
+  );
+};
 
 const App: React.FC = () => {
   return (
-    <NavigationContainer linking={webScreens.linking}>
+    <NavigationContainer linking={linking}>
       <Stack.Navigator>
         <Stack.Screen name="Initial" component={YourNativeComponent} />
-        <Stack.Screen {...webScreens.screens.Welcome} />
+        <Stack.Screen name="Welcome" component={WebView} options={{ title: 'Welcome' }} />
+        <Stack.Screen name="Fallback" component={WebView} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
+
+export default App;
+
 ```
 
 Now you can easily navigate to the `Welcome` web screen using react navigation API. Navigating `http://your-web-app-base-url` in the webview will result in opening react native screen `Initial`.
 
 ## Nested navigators
 
-You are also able to use [complex navigator](https://reactnavigation.org/docs/configuring-links#handling-nested-navigators) structures inside your app. You can define the `react-native-web-screen` config with nested navigators.
+You are also able to use [complex navigator](https://reactnavigation.org/docs/configuring-links#handling-nested-navigators) structures inside your app. Just make sure that your navigation definition and linking object match.
 
-```tsx
-const webScreenConfig: WebScreenRuleConfig = {
-  baseURL: 'http://your-web-app-base-url/',
-  routes: {
-    Welcome: {
-      urlPattern: 'welcome',
-      title: 'Welcome!',
-    },
-    NestedStack: {
-      routes: {
-        NestedStackScreen: {
-          urlPattern: 'nested',
-          title: 'Nested Screen',
-        },
-      },
-    },
-  },
-};
-```
 
 ## Example app
 
@@ -115,8 +131,7 @@ const webScreens = buildWebScreen(webScreenConfig, {
 });
 ```
 
-To obtain `url` for current screen, use `useCurrentUrl` hook function
-
+To obtain `url` for current screen, use `useCurrentUrl` hook function.
 
 ## Contributing
 
