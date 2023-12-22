@@ -39,6 +39,8 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     return controller
   }()
     
+  private var viewIsRegistered = false
+    
   override func didMoveToWindow() {
     reactViewController()?.addChild(controller)
     controller.view.frame = bounds // Fixes incorrect size of the webview
@@ -47,10 +49,12 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   }
   
   override func willMove(toWindow newWindow: UIWindow?) {
+    super.willMove(toWindow: newWindow)
     // visitableWillAppear is not called automatically sometimes. So it has to be called
     // manually to make sure that visitableViews list is not empty
     // see https://github.com/software-mansion-labs/react-native-turbo-demo/pull/81
-    controller.viewWillAppear(false)
+    // and https://github.com/software-mansion-labs/react-native-turbo-demo/pull/86
+    handleVisitableWillAppear()
   }
     
   public func handleMessage(message: WKScriptMessage) {
@@ -133,17 +137,26 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     self.onWebConfirm?(event)
     self.onConfirmHandler = completionHandler
   }
+    
+  func handleVisitableWillAppear(){
+    if(viewIsRegistered){
+      return
+    }
+    session.registerVisitableView(newView: self)
+    viewIsRegistered = true
+    visit()
+  }
 }
 
 extension RNVisitableView: RNVisitableViewControllerDelegate {
   
   func visitableWillAppear(visitable: Visitable) {
-    session.registerVisitableView(newView: self)
-    visit()
+    handleVisitableWillAppear()
   }
     
   func visitableDidDisappear(visitable: Visitable) {
     session.unregisterVisitableView(view: self)
+    viewIsRegistered = false
   }
 
   func visitableDidRender(visitable: Visitable) {
