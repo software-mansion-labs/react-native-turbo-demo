@@ -49,9 +49,11 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   }
   
   override func willMove(toWindow newWindow: UIWindow?) {
+    super.willMove(toWindow: newWindow)
     // visitableWillAppear is not called automatically sometimes. So it has to be called
     // manually to make sure that visitableViews list is not empty
     // see https://github.com/software-mansion-labs/react-native-turbo-demo/pull/81
+    // and https://github.com/software-mansion-labs/react-native-turbo-demo/pull/86
     handleVisitableWillAppear()
   }
     
