@@ -21,9 +21,9 @@ The library should be used alongside React Navigation library, follow [these ste
 ## Basic example
 
 The library provides you with simple API to define the relationship between the web and native screens. The `react-native-web-screen` uses React Navigation [configurable links](https://reactnavigation.org/docs/configuring-links/) to handle navigation within the app. 
-You can follow react-navigation documentation to create your navigation stack and provide mapping between urls in app and screens. You have to define only paths that are important for your app and use matchers for fallback.
+You can follow react-navigation documentation to create your navigation stack and provide mapping between URLs in app and screens. You must define only those paths that are important for your app and use matchers for fallback.
 
-You should also define your custom WebView component that will be using `VisitableView` hood, to be able ot customize it's behavior.
+You should also define your custom WebView component that will be using `VisitableView` hood, to be able to customize its behavior.
 
 Let's say you want to add a web `Welcome` screen to your React Native app.
 
@@ -97,7 +97,7 @@ Now you can easily navigate to the `Welcome` web screen using react navigation A
 
 ## Nested navigators
 
-You are also able to use [complex navigator](https://reactnavigation.org/docs/configuring-links#handling-nested-navigators) structures inside your app. Just make sure that your navigation definition and linking object matches.
+You are also able to use [complex navigator](https://reactnavigation.org/docs/configuring-links#handling-nested-navigators) structures inside your app. Just make sure that your navigation definition and linking object match.
 
 
 ## Example app
@@ -131,7 +131,7 @@ const webScreens = buildWebScreen(webScreenConfig, {
 });
 ```
 
-To obtain `url` for current screen, use `useCurrentUrl` hook function
+To obtain `url` for current screen, use `useCurrentUrl` hook function.
 
 ## Contributing
 
