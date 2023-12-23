@@ -57,8 +57,11 @@ function getAction(
   } else {
     const { name, params } = action.payload;
     const key =
-      (params && 'fullPath' in params && (params.fullPath as string)) ||
-      undefined;
+      (
+        params && 'params' in params && params.params &&
+        'fullPath' in params.params && (params.params.fullPath as string)
+      ) || undefined;
+    
     return CommonActions.navigate({
       name,
       key,
