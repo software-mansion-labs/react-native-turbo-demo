@@ -19,7 +19,6 @@ import type {
   StradaComponent,
 } from './types';
 import { useStradaBridge } from './hooks/useStradaBridge';
-import { useDisableNavigationAnimation } from './hooks/useDisableNavigationAnimation';
 import { useMessageQueue } from './hooks/useMessageQueue';
 import {
   type OnAlert,
@@ -76,8 +75,6 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           .join(' '),
       [applicationNameForUserAgent, stradaUserAgent]
     );
-
-    useDisableNavigationAnimation();
 
     useImperativeHandle(
       ref,
