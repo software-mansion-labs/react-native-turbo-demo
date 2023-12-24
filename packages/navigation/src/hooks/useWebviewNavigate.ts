@@ -8,9 +8,10 @@ import * as React from 'react';
 import LinkingContext from '@react-navigation/native/src/LinkingContext';
 import extractPathFromURL from '@react-navigation/native/src/extractPathFromURL';
 import { CommonActions } from '@react-navigation/native';
-import type {
-  NavigationState,
-  NavigatorScreenParams,
+import {
+  useRoute,
+  type NavigationState,
+  type NavigatorScreenParams,
 } from '@react-navigation/core';
 import type { Action } from 'react-native-turbo';
 import { unpackState } from '../utils/unpackState';
@@ -50,10 +51,7 @@ function getAction(
   actionType: Action | undefined
 ) {
   if (actionType === 'replace') {
-    return StackActions.replace(action.payload.name, {
-      ...action.payload.params,
-      __disable_animation: true,
-    });
+    return StackActions.replace(action.payload.name, action.payload.params);
   } else {
     const { name, params } = action.payload;
     const key =
@@ -75,6 +73,7 @@ export function useWebviewNavigate<
 >() {
   const navigation = useNavigation();
   const linking = React.useContext(LinkingContext);
+  const route = useRoute();
 
   const linkTo = React.useCallback(
     (to: To<ParamList>, actionType?: Action) => {
@@ -105,7 +104,15 @@ export function useWebviewNavigate<
         const actionState =
           actionType === 'replace' ? unpackState(state) : state;
         const action = getActionFromState(actionState, options?.config);
+
         if (isNavigateAction(action)) {
+          if (actionType === 'replace' && action.payload.name === route.name) {
+            // If replacing and the route name is the same as the current route,
+            // update the params instead of pushing the route again skipping animations.
+            navigation.setParams(action.payload.params as any);
+            return;
+          }
+
           const actionToDispatch = getAction(action, actionType);
 
           navigation.dispatch(actionToDispatch);
@@ -117,7 +124,7 @@ export function useWebviewNavigate<
         throw new Error('Failed to parse the path to a navigation state.');
       }
     },
-    [linking, navigation]
+    [linking, navigation, route]
   );
 
   return linkTo;
