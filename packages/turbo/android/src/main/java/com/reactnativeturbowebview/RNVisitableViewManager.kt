@@ -69,7 +69,7 @@ class RNVisitableViewManager(
           root.sendConfirmResult(it)
         }
       }
-      RNVisitableViewCommand.CLEAR_SNAPSHOT_CACHE -> {}
+      RNVisitableViewCommand.CLEAR_SNAPSHOT_CACHE -> root.clearSnapshotCache()
     }
   }
 
