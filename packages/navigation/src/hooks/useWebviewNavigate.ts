@@ -3,15 +3,15 @@ import {
   getStateFromPath,
   StackActions,
   useNavigation,
+  useRoute,
 } from '@react-navigation/native';
 import * as React from 'react';
 import LinkingContext from '@react-navigation/native/src/LinkingContext';
 import extractPathFromURL from '@react-navigation/native/src/extractPathFromURL';
 import { CommonActions } from '@react-navigation/native';
-import {
-  useRoute,
-  type NavigationState,
-  type NavigatorScreenParams,
+import type {
+  NavigationState,
+  NavigatorScreenParams,
 } from '@react-navigation/core';
 import type { Action } from 'react-native-turbo';
 import { unpackState } from '../utils/unpackState';
@@ -48,9 +48,15 @@ function isNavigateAction(
 
 function getAction(
   action: NavigateAction<NavigationState>,
-  actionType: Action | undefined
+  actionType: Action | undefined,
+  routeName: string
 ) {
   if (actionType === 'replace') {
+    if (action.payload.name === routeName && action.payload.params) {
+      // If replacing and the route name is the same as the current route,
+      // update the params instead of pushing the route again skipping animations.
+      return CommonActions.setParams(action.payload.params);
+    }
     return StackActions.replace(action.payload.name, action.payload.params);
   } else {
     const { name, params } = action.payload;
@@ -106,14 +112,7 @@ export function useWebviewNavigate<
         const action = getActionFromState(actionState, options?.config);
 
         if (isNavigateAction(action)) {
-          if (actionType === 'replace' && action.payload.name === route.name) {
-            // If replacing and the route name is the same as the current route,
-            // update the params instead of pushing the route again skipping animations.
-            navigation.setParams(action.payload.params as any);
-            return;
-          }
-
-          const actionToDispatch = getAction(action, actionType);
+          const actionToDispatch = getAction(action, actionType, route.name);
 
           navigation.dispatch(actionToDispatch);
         } else if (action === undefined) {
@@ -124,7 +123,7 @@ export function useWebviewNavigate<
         throw new Error('Failed to parse the path to a navigation state.');
       }
     },
-    [linking, navigation, route]
+    [linking, navigation, route.name]
   );
 
   return linkTo;
