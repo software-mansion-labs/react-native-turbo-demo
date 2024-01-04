@@ -14,6 +14,10 @@ export interface OpenExternalUrlEvent {
   url: string;
 }
 
+export interface FormSubmissionEvent {
+  url: string;
+}
+
 export type MessageEvent = object;
 
 export interface AlertHandler {
@@ -59,6 +63,7 @@ export type StradaMessages = {
 // list of methods available for RNVisitableView module
 export type DispatchCommandTypes =
   | 'injectJavaScript'
+  | 'clearSnapshotCache'
   | 'reload'
   | 'sendAlertResult'
   | 'sendConfirmResult';

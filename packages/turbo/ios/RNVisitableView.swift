@@ -27,7 +27,9 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var onVisitError: RCTDirectEventBlock?
   @objc var onWebAlert: RCTDirectEventBlock?
   @objc var onWebConfirm: RCTDirectEventBlock?
-
+  @objc var onFormSubmissionStarted: RCTDirectEventBlock?
+  @objc var onFormSubmissionFinished: RCTDirectEventBlock?
+  
   private var onConfirmHandler: ((Bool) -> Void)?
   private var onAlertHandler: (() -> Void)?
 
@@ -127,6 +129,18 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     
   public func didOpenExternalUrl(url: URL) {
     onOpenExternalUrl?(["url": url.absoluteString])
+  }
+    
+  public func didStartFormSubmission() {
+    onFormSubmissionStarted?(["url": url])
+  }
+    
+  public func didFinishFormSubmission() {
+    onFormSubmissionFinished?(["url": url])
+  }
+    
+  func clearSessionSnapshotCache(){
+    session.clearSnapshotCache()
   }
 
   func handleAlert(message: String, completionHandler: @escaping () -> Void) {

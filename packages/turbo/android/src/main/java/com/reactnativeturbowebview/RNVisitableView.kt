@@ -252,6 +252,18 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     })
   }
 
+  override fun didStartFormSubmission(url: String) {
+    sendEvent(RNVisitableViewEvent.FORM_SUBMISSION_START, Arguments.createMap().apply {
+      putString("url", url)
+    })
+  }
+
+  override fun didFinishFormSubmission(url: String) {
+    sendEvent(RNVisitableViewEvent.FORM_SUBMISSION_FINISH, Arguments.createMap().apply {
+      putString("url", url)
+    })
+  }
+
   override fun onReceivedError(errorCode: Int) {
     sendEvent(RNVisitableViewEvent.VISIT_ERROR, Arguments.createMap().apply {
       putInt("statusCode", errorCode)

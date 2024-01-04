@@ -15,6 +15,8 @@ protocol RNSessionSubscriber {
   func didProposeVisit(proposal: VisitProposal)
   func didFailRequestForVisitable(visitable: Visitable, error: Error)
   func didOpenExternalUrl(url: URL)
+  func didStartFormSubmission()
+  func didFinishFormSubmission()
   func handleAlert(message: String, completionHandler: @escaping () -> Void)
   func handleConfirm(message: String, completionHandler: @escaping (Bool) -> Void)
 }

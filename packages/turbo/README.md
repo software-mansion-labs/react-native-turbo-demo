@@ -197,6 +197,10 @@ injectJavaScript(jsCode);
 
 Reloads the webview.
 
+### `clearSnapshotCache`
+
+Clears the snapshot cache. It might be useful in a form submission scenario where different session handles are used for modals: when a form submission is completed in the modal session, we need to manually clear the snapshot cache in the default session to avoid using potentially outdated cached snapshots.
+
 ## Session Component
 
 Session component has been deprecated. To use multiple [sessions](https://github.com/hotwired/turbo-ios/blob/main/Docs/Overview.md#session), you can use `sessionHandle` prop on `VisitableView` component.

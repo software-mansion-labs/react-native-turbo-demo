@@ -97,6 +97,10 @@ class RNSession: NSObject {
   func reload() {
     turboSession.reload()
   }
+    
+  func clearSnapshotCache() {
+    turboSession.clearSnapshotCache()
+  }
   
 }
 
@@ -117,6 +121,14 @@ extension RNSession: SessionDelegate {
 
   func session(_ session: Session, openExternalURL url: URL) {
     visitableViews.last?.didOpenExternalUrl(url: url)
+  }
+    
+  func sessionDidStartFormSubmission(_ session: Session) {
+    visitableViews.last?.didStartFormSubmission()
+  }
+    
+  func sessionDidFinishFormSubmission(_ session: Session) {
+    visitableViews.last?.didFinishFormSubmission()
   }
 }
 

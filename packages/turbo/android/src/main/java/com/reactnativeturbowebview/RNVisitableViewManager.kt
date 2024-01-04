@@ -13,12 +13,15 @@ enum class RNVisitableViewEvent(val jsCallbackName: String) {
   MESSAGE("onMessage"),
   OPEN_EXTERNAL_URL("onOpenExternalUrl"),
   ON_ALERT("onWebAlert"),
-  ON_CONFIRM("onWebConfirm")
+  ON_CONFIRM("onWebConfirm"),
+  FORM_SUBMISSION_START("onFormSubmissionStarted"),
+  FORM_SUBMISSION_FINISH("onFormSubmissionFinished")
 }
 
 enum class RNVisitableViewCommand(val jsCallbackName: String) {
   INJECT_JAVASCRIPT("injectJavaScript"),
   RELOAD_PAGE("reload"),
+  CLEAR_SNAPSHOT_CACHE("clearSnapshotCache"),
   SEND_ALERT_RESULT("sendAlertResult"),
   SEND_CONFIRM_RESULT("sendConfirmResult")
 }
@@ -66,6 +69,7 @@ class RNVisitableViewManager(
           root.sendConfirmResult(it)
         }
       }
+      RNVisitableViewCommand.CLEAR_SNAPSHOT_CACHE -> {}
     }
   }
 

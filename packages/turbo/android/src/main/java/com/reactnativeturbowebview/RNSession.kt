@@ -154,6 +154,14 @@ class RNSession(
     topmostView?.visitRendered()
   }
 
+  override fun formSubmissionStarted(location: String) {
+    topmostView?.didStartFormSubmission(location)
+  }
+
+  override fun formSubmissionFinished(location: String) {
+    topmostView?.didFinishFormSubmission(location)
+  }
+
   // end region
 
 }

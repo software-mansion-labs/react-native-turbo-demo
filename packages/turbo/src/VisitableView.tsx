@@ -17,6 +17,7 @@ import type {
   VisitProposalError,
   OpenExternalUrlEvent,
   StradaComponent,
+  FormSubmissionEvent,
 } from './types';
 import { useStradaBridge } from './hooks/useStradaBridge';
 import { useMessageQueue } from './hooks/useMessageQueue';
@@ -34,6 +35,8 @@ export interface Props {
   onVisitProposal: (proposal: VisitProposal) => void;
   onLoad?: (params: LoadEvent) => void;
   onOpenExternalUrl?: (proposal: OpenExternalUrlEvent) => void;
+  onFormSubmissionStarted?: (e: FormSubmissionEvent) => void;
+  onFormSubmissionFinished?: (e: FormSubmissionEvent) => void;
   onVisitError?: OnErrorCallback;
   onMessage?: SessionMessageCallback;
   onAlert?: OnAlert;
@@ -42,6 +45,7 @@ export interface Props {
 
 export interface RefObject {
   injectJavaScript: (callbackStringified: string) => void;
+  clearSnapshotCache: () => void;
   reload: () => void;
 }
 
@@ -59,6 +63,8 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       onOpenExternalUrl: onOpenExternalUrlCallback = openExternalURL,
       onAlert,
       onConfirm,
+      onFormSubmissionStarted,
+      onFormSubmissionFinished,
     } = props;
     const visitableViewRef = useRef<typeof RNVisitableView>();
 
@@ -86,6 +92,8 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
             callbackStringified
           ),
         reload: () => dispatchCommand(visitableViewRef, 'reload'),
+        clearSnapshotCache: () =>
+          dispatchCommand(visitableViewRef, 'clearSnapshotCache'),
       }),
       []
     );
@@ -116,6 +124,20 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       ({ nativeEvent }: NativeSyntheticEvent<OpenExternalUrlEvent>) =>
         onOpenExternalUrlCallback(nativeEvent),
       [onOpenExternalUrlCallback]
+    );
+
+    const handleOnFormSubmissionStarted = useCallback(
+      ({ nativeEvent }: NativeSyntheticEvent<FormSubmissionEvent>) => {
+        onFormSubmissionStarted?.(nativeEvent);
+      },
+      [onFormSubmissionStarted]
+    );
+
+    const handleOnFormSubmissionFinished = useCallback(
+      ({ nativeEvent }: NativeSyntheticEvent<FormSubmissionEvent>) => {
+        onFormSubmissionFinished?.(nativeEvent);
+      },
+      [onFormSubmissionFinished]
     );
 
     const { handleAlert, handleConfirm } = useWebViewDialogs(
@@ -150,6 +172,8 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           style={styles.container}
           onWebAlert={handleAlert}
           onWebConfirm={handleConfirm}
+          onFormSubmissionStarted={handleOnFormSubmissionStarted}
+          onFormSubmissionFinished={handleOnFormSubmissionFinished}
         />
       </>
     );
