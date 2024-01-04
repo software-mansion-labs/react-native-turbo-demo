@@ -5,7 +5,7 @@
 //  Created by Bartłomiej Fryz on 23/01/2023.
 //
 
-import RNTurboiOS
+import ReactNativeHotwiredTurboiOS
 
 protocol RNSessionSubscriber {
   

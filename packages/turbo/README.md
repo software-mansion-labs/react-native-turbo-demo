@@ -27,6 +27,8 @@ For Android you need to adjust your SDK version in your `build.gradle`.
 >
 > Android SDK 24+ is required as the minSdkVersion in your build.gradle.
 
+For iOS, you need to set the deployment target to 14.0 or higher.
+
 ## Example
 
 Turbo `webview` can be rendered using native view `VisitableView`.
@@ -161,7 +163,7 @@ webkit.messageHandlers.nativeApp.postMessage(message);
 
 ### `onWebAlert`
 
-Function called when website inside WebView is calling `alert` function. By default React Native's `Alert` is displayed. 
+Function called when website inside WebView is calling `alert` function. By default React Native's `Alert` is displayed.
 
 Note that after handling alert display, `callback` function must be called.
 
