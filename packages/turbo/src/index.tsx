@@ -10,6 +10,8 @@ export {
   RefObject as VisitableViewRefObject,
 } from './VisitableView';
 
+export * from './RNSessionManager';
+
 export * from './BridgeComponent';
 
 export * from './types';

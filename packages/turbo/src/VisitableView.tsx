@@ -45,7 +45,6 @@ export interface Props {
 
 export interface RefObject {
   injectJavaScript: (callbackStringified: string) => void;
-  clearSnapshotCache: () => void;
   reload: () => void;
 }
 
@@ -92,8 +91,6 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
             callbackStringified
           ),
         reload: () => dispatchCommand(visitableViewRef, 'reload'),
-        clearSnapshotCache: () =>
-          dispatchCommand(visitableViewRef, 'clearSnapshotCache'),
       }),
       []
     );

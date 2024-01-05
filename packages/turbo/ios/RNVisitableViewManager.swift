@@ -51,12 +51,5 @@ class RNVisitableViewManager: RCTViewManager {
     }
   }
     
-  @objc
-  func clearSnapshotCache(_ node: NSNumber) {
-    DispatchQueue.main.async {
-      let component = self.bridge.uiManager.view(forReactTag: node) as! RNVisitableView
-      component.clearSessionSnapshotCache()
-    }
-  }
 }
 

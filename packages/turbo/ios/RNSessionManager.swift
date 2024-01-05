@@ -7,13 +7,12 @@
 
 import Foundation
 
-class RNSessionManager {
+@objc(RNSessionManager)
+class RNSessionManager: NSObject {
 
   private var sessions: [NSString: RNSession] = [:]
   private var processPool = WKProcessPool()
   static var shared: RNSessionManager = RNSessionManager()
-
-  private init() {}
 
   func findOrCreateSession(sessionHandle: NSString, webViewConfiguration: WKWebViewConfiguration) -> RNSession {
     if(sessions[sessionHandle] == nil) {
@@ -21,6 +20,18 @@ class RNSessionManager {
       sessions[sessionHandle] = RNSession(sessionHandle: sessionHandle, webViewConfiguration: webViewConfiguration)
     }
     return sessions[sessionHandle]!
+  }
+    
+  @objc
+  func clearSnapshotCacheForAllSessions() {
+    for (sessionHandle, session) in sessions {
+      session.clearSnapshotCache()
+    }
+  }
+    
+  @objc
+  static func requiresMainQueueSetup() -> Bool {
+    return true
   }
 
 }
