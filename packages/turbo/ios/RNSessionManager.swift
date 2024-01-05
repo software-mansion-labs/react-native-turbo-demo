@@ -22,11 +22,15 @@ class RNSessionManager: NSObject {
     return sessions[sessionHandle]!
   }
     
-  @objc
-  func clearSnapshotCacheForAllSessions() {
+  func clearSnapshotCaches() {
     for (sessionHandle, session) in sessions {
       session.clearSnapshotCache()
     }
+  }
+    
+  @objc
+  func clearSnapshotCacheForAllSessions() {
+    RNSessionManager.shared.clearSnapshotCaches()
   }
     
   @objc

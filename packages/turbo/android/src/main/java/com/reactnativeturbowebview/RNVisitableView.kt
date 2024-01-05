@@ -345,10 +345,6 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     onConfirmHandler = null
   }
 
-  fun clearSnapshotCache() {
-    session.clearSnapshotCache()
-  }
-
   override fun requestFailedWithStatusCode(visitHasCachedSnapshot: Boolean, statusCode: Int) {
     sendEvent(RNVisitableViewEvent.VISIT_ERROR, Arguments.createMap().apply {
       putInt("statusCode", statusCode)

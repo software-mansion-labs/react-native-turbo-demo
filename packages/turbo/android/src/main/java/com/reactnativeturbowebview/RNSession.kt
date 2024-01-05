@@ -122,7 +122,9 @@ class RNSession(
 
   fun clearSnapshotCache() {
     // turbo-android doesn't expose a way to clear the snapshot cache, so we have to do it manually
-    webView.evaluateJavascript("window.Turbo.session.clearCache();", null)
+    webView.post {
+      webView.evaluateJavascript("window.Turbo.session.clearCache();", null)
+    }
   }
 
   // region SessionCallbackAdapter
