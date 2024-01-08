@@ -179,6 +179,20 @@ Note that after handling confirm dialog display, `callback` function must be cal
 - message
 - callback
 
+### `onFormSubmissionStarted`
+
+Callback called when website inside WebView started submitting form.
+
+- url
+
+### `onFormSubmissionFinished`
+
+Callback called when website inside WebView finished submitting form.
+
+- url
+
+Note: The form submission handlers are triggered for the _session_ in which the form was submitted. A URL argument is available in these handlers, which can be used for granular control over the cache clearing process. For example, you might choose to clear the cache only for the specific URL that the form was submitted from.
+
 ### Methods:
 
 ### `injectJavaScript(jsCode)`
