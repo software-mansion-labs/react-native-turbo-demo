@@ -3,6 +3,7 @@ import {
   getStateFromPath,
   StackActions,
   useNavigation,
+  useRoute,
 } from '@react-navigation/native';
 import * as React from 'react';
 import LinkingContext from '@react-navigation/native/src/LinkingContext';
@@ -47,13 +48,16 @@ function isNavigateAction(
 
 function getAction(
   action: NavigateAction<NavigationState>,
-  actionType: Action | undefined
+  actionType: Action | undefined,
+  routeName: string
 ) {
   if (actionType === 'replace') {
-    return StackActions.replace(action.payload.name, {
-      ...action.payload.params,
-      __disable_animation: true,
-    });
+    if (action.payload.name === routeName && action.payload.params) {
+      // If replacing and the route name is the same as the current route,
+      // update the params instead of pushing the route again skipping animations.
+      return CommonActions.setParams(action.payload.params);
+    }
+    return StackActions.replace(action.payload.name, action.payload.params);
   } else {
     const { name, params } = action.payload;
     const key =
@@ -75,6 +79,7 @@ export function useWebviewNavigate<
 >() {
   const navigation = useNavigation();
   const linking = React.useContext(LinkingContext);
+  const route = useRoute();
 
   const linkTo = React.useCallback(
     (to: To<ParamList>, actionType?: Action) => {
@@ -105,8 +110,9 @@ export function useWebviewNavigate<
         const actionState =
           actionType === 'replace' ? unpackState(state) : state;
         const action = getActionFromState(actionState, options?.config);
+
         if (isNavigateAction(action)) {
-          const actionToDispatch = getAction(action, actionType);
+          const actionToDispatch = getAction(action, actionType, route.name);
 
           navigation.dispatch(actionToDispatch);
         } else if (action === undefined) {
@@ -117,7 +123,7 @@ export function useWebviewNavigate<
         throw new Error('Failed to parse the path to a navigation state.');
       }
     },
-    [linking, navigation]
+    [linking, navigation, route.name]
   );
 
   return linkTo;

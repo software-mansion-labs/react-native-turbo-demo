@@ -12,7 +12,14 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   var id: UUID = UUID()
   @objc var sessionHandle: NSString? = nil
   @objc var applicationNameForUserAgent: NSString? = nil
-  @objc var url: NSString = ""
+  @objc var url: NSString = "" {
+    didSet {
+      let didSetAfterFirstVisit = oldValue != "" && url != oldValue
+      if(didSetAfterFirstVisit){
+        visit()
+      }
+    }
+  }
   @objc var onMessage: RCTDirectEventBlock?
   @objc var onVisitProposal: RCTDirectEventBlock?
   @objc var onOpenExternalUrl: RCTDirectEventBlock?

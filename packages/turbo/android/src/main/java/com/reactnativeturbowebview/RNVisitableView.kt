@@ -21,7 +21,18 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   private val reactContext = context as ReactApplicationContext
 
   // Props
-  lateinit var url: String
+  private var _url: String? = null
+  var url: String
+    get() = _url
+      ?: throw UninitializedPropertyAccessException("\"url\" was queried before being initialized")
+    set(value) {
+      val didSetAfterFirstVisit = _url != null && _url != value
+      _url = value;
+      if (didSetAfterFirstVisit) {
+        visit()
+      }
+    }
+
   lateinit var sessionHandle: String
   var applicationNameForUserAgent: String? = null
 
@@ -296,7 +307,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     }
   }
 
-  override fun handleAlert(message: String,callback: () -> Unit) {
+  override fun handleAlert(message: String, callback: () -> Unit) {
     sendEvent(RNVisitableViewEvent.ON_ALERT, Arguments.createMap().apply {
       putString("message", message)
     })
