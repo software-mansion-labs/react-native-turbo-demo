@@ -26,9 +26,9 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     get() = _url
       ?: throw UninitializedPropertyAccessException("\"url\" was queried before being initialized")
     set(value) {
-      val shouldVisit = _url != null && _url != value
+      val didSetAfterFirstVisit = _url != null && _url != value
       _url = value;
-      if (shouldVisit) {
+      if (didSetAfterFirstVisit) {
         visit()
       }
     }

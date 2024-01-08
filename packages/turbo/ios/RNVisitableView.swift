@@ -14,7 +14,8 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var applicationNameForUserAgent: NSString? = nil
   @objc var url: NSString = "" {
     didSet {
-      if(oldValue != "" && url != oldValue){
+      let didSetAfterFirstVisit = oldValue != "" && url != oldValue
+      if(didSetAfterFirstVisit){
         visit()
       }
     }
