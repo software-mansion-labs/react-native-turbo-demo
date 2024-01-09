@@ -15,6 +15,10 @@ public protocol RNVisitableViewControllerDelegate {
   func visitableDidRender(visitable: Visitable)
   
   func visitableDidDisappear(visitable: Visitable)
+    
+  func showVisitableActivityIndicator()
+    
+  func hideVisitableActivityIndicator()
   
 }
 
@@ -37,6 +41,14 @@ class RNVisitableViewController: VisitableViewController {
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
     delegate?.visitableDidDisappear(visitable: self)
+  }
+    
+  override func showVisitableActivityIndicator(){
+    delegate?.showVisitableActivityIndicator()
+  }
+    
+  override func hideVisitableActivityIndicator(){
+    delegate?.hideVisitableActivityIndicator()
   }
   
 }

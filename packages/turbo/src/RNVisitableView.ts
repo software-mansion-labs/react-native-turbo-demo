@@ -31,12 +31,15 @@ interface RNVisitableViewProps {
   onVisitProposal?: (e: NativeSyntheticEvent<VisitProposal>) => void;
   onWebAlert?: (e: NativeSyntheticEvent<AlertHandler>) => void;
   onWebConfirm?: (e: NativeSyntheticEvent<AlertHandler>) => void;
+  onOpenExternalUrl?: (e: NativeSyntheticEvent<OpenExternalUrlEvent>) => void;
   onFormSubmissionStarted?: (
     e: NativeSyntheticEvent<FormSubmissionEvent>
   ) => void;
   onFormSubmissionFinished?: (
     e: NativeSyntheticEvent<FormSubmissionEvent>
   ) => void;
+  onShowVisitableActivityIndicator: () => void;
+  onHideVisitableActivityIndicator: () => void;
   style?: StyleProp<ViewStyle>;
 }
 

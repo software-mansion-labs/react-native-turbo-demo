@@ -34,6 +34,8 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var onWebConfirm: RCTDirectEventBlock?
   @objc var onFormSubmissionStarted: RCTDirectEventBlock?
   @objc var onFormSubmissionFinished: RCTDirectEventBlock?
+  @objc var onShowVisitableActivityIndicator: RCTDirectEventBlock?
+  @objc var onHideVisitableActivityIndicator: RCTDirectEventBlock?
   
   private var onConfirmHandler: ((Bool) -> Void)?
   private var onAlertHandler: (() -> Void)?
@@ -54,6 +56,9 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   }()
     
   private var viewIsRegistered = false
+  private var isRefreshing: Bool {
+    controller.visitableView.isRefreshing
+  }
     
   override func didMoveToWindow() {
     reactViewController()?.addChild(controller)
@@ -191,6 +196,15 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
       "url": webView.url!
     ]
     onLoad?(event)
+  }
+    
+  func showVisitableActivityIndicator() {
+    guard !isRefreshing else { return }
+    onShowVisitableActivityIndicator?([:])
+  }
+      
+  func hideVisitableActivityIndicator() {
+    onHideVisitableActivityIndicator?([:])
   }
   
 }
