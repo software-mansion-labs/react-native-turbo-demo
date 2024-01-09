@@ -291,9 +291,8 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   }
 
   override fun onRenderProcessGone() {
-    sendEvent(RNVisitableViewEvent.VISIT_PROPOSAL, Arguments.createMap().apply {
+    sendEvent(RNVisitableViewEvent.CONTENT_PROCESS_DID_TERMINATE, Arguments.createMap().apply {
       putString("url", url)
-      putString("action", TurboVisitAction.REPLACE.name.lowercase())
     })
   }
 

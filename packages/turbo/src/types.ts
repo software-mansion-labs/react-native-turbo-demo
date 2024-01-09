@@ -18,6 +18,10 @@ export interface FormSubmissionEvent {
   url: string;
 }
 
+export interface ContentProcessDidTerminateEvent {
+  url: string;
+}
+
 export type MessageEvent = object;
 
 export interface AlertHandler {

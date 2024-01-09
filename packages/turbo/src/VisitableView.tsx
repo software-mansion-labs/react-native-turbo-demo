@@ -18,6 +18,7 @@ import type {
   OpenExternalUrlEvent,
   StradaComponent,
   FormSubmissionEvent,
+  ContentProcessDidTerminateEvent,
 } from './types';
 import { useStradaBridge } from './hooks/useStradaBridge';
 import { useMessageQueue } from './hooks/useMessageQueue';
@@ -40,6 +41,7 @@ export interface Props {
   onOpenExternalUrl?: (proposal: OpenExternalUrlEvent) => void;
   onFormSubmissionStarted?: (e: FormSubmissionEvent) => void;
   onFormSubmissionFinished?: (e: FormSubmissionEvent) => void;
+  onContentProcessDidTerminate?: (e: ContentProcessDidTerminateEvent) => void;
   onVisitError?: OnErrorCallback;
   onMessage?: SessionMessageCallback;
   onAlert?: OnAlert;
@@ -69,6 +71,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       onFormSubmissionFinished,
       pullToRefreshEnabled = true,
       renderLoading,
+      onContentProcessDidTerminate,
     } = props;
     const visitableViewRef = useRef<typeof RNVisitableView>();
 
@@ -151,6 +154,19 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
     const { loadingComponent, handleShowLoading, handleHideLoading } =
       useRenderLoading(renderLoading);
 
+    const handleOnContentProcessDidTerminate = useCallback(
+      ({
+        nativeEvent,
+      }: NativeSyntheticEvent<ContentProcessDidTerminateEvent>) => {
+        if (!onContentProcessDidTerminate) {
+          dispatchCommand(visitableViewRef, 'reload');
+          return;
+        }
+        onContentProcessDidTerminate(nativeEvent);
+      },
+      [onContentProcessDidTerminate]
+    );
+
     return (
       <>
         {loadingComponent}
@@ -183,6 +199,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           onFormSubmissionFinished={handleOnFormSubmissionFinished}
           onShowLoading={handleShowLoading}
           onHideLoading={handleHideLoading}
+          onContentProcessDidTerminate={handleOnContentProcessDidTerminate}
         />
       </>
     );
