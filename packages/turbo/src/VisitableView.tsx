@@ -32,6 +32,7 @@ export interface Props {
   sessionHandle?: string;
   applicationNameForUserAgent?: string;
   stradaComponents?: StradaComponent[];
+  pullToRefreshEnabled?: boolean;
   onVisitProposal: (proposal: VisitProposal) => void;
   onLoad?: (params: LoadEvent) => void;
   onOpenExternalUrl?: (proposal: OpenExternalUrlEvent) => void;
@@ -64,6 +65,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       onConfirm,
       onFormSubmissionStarted,
       onFormSubmissionFinished,
+      pullToRefreshEnabled = true,
     } = props;
     const visitableViewRef = useRef<typeof RNVisitableView>();
 
@@ -161,6 +163,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           url={props.url}
           sessionHandle={sessionHandle}
           applicationNameForUserAgent={resolvedApplicationNameForUserAgent}
+          pullToRefreshEnabled={pullToRefreshEnabled}
           onVisitProposal={handleVisitProposal}
           onMessage={handleOnMessage}
           onVisitError={handleVisitError}

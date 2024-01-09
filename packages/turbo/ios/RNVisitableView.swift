@@ -20,6 +20,11 @@ class RNVisitableView: UIView, RNSessionSubscriber {
       }
     }
   }
+  @objc var pullToRefreshEnabled: Bool = true {
+    didSet {
+      controller.visitableView.allowsPullToRefresh = pullToRefreshEnabled
+    }
+  }
   @objc var onMessage: RCTDirectEventBlock?
   @objc var onVisitProposal: RCTDirectEventBlock?
   @objc var onOpenExternalUrl: RCTDirectEventBlock?
