@@ -3,10 +3,12 @@ import { ActivityIndicator, View, StyleSheet, Platform } from 'react-native';
 
 export type RenderLoading = () => React.ReactNode;
 
-const SIZE = Platform.select({
+type ActivityIndicatorSize = 'small' | 'large';
+
+const SIZE: ActivityIndicatorSize = Platform.select({
   ios: 'small',
   android: 'large',
-});
+})!;
 
 const defaultRenderLoading = () => (
   <View style={styles.wrapper}>
