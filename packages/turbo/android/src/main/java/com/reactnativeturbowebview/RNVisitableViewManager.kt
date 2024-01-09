@@ -48,6 +48,12 @@ class RNVisitableViewManager(
     view.applicationNameForUserAgent = applicationNameForUserAgent
   }
 
+  @ReactProp(name = "pullToRefreshEnabled")
+  fun pullToRefreshEnabled(view: RNVisitableView, pullToRefreshEnabled: Boolean) {
+    view.pullToRefreshEnabled = pullToRefreshEnabled
+  }
+
+
   override fun getCommandsMap(): MutableMap<String, Int> = RNVisitableViewCommand.values()
     .associate {
       it.jsCallbackName to it.ordinal

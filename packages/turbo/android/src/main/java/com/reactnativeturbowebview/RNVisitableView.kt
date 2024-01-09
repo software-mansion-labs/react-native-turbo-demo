@@ -35,6 +35,11 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
 
   lateinit var sessionHandle: String
   var applicationNameForUserAgent: String? = null
+  var pullToRefreshEnabled: Boolean = true
+    set(value) {
+      field = value
+      setPullToRefresh(value)
+    }
 
   // Session
   private val session: RNSession by lazy {
@@ -228,7 +233,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     turboView.removeErrorView()
   }
 
-  private fun pullToRefreshEnabled(enabled: Boolean) {
+  private fun setPullToRefresh(enabled: Boolean) {
     turboView.webViewRefresh?.isEnabled = enabled
   }
 
@@ -287,12 +292,12 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
 
   override fun onZoomed(newScale: Float) {
     currentlyZoomed = true
-    pullToRefreshEnabled(false)
+    setPullToRefresh(false)
   }
 
   override fun onZoomReset(newScale: Float) {
     currentlyZoomed = false
-    pullToRefreshEnabled(true)
+    setPullToRefresh(pullToRefreshEnabled)
   }
 
   override fun visitRendered() {

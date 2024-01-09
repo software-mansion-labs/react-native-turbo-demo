@@ -24,6 +24,7 @@ interface RNVisitableViewProps {
   url: string;
   sessionHandle?: string;
   applicationNameForUserAgent?: string;
+  pullToRefreshEnabled: boolean;
   onLoad?: (e: NativeSyntheticEvent<LoadEvent>) => void;
   onMessage?: (e: NativeSyntheticEvent<MessageEvent>) => void;
   onVisitError?: (e: NativeSyntheticEvent<VisitProposalError>) => void;

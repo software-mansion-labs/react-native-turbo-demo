@@ -84,6 +84,10 @@ Session handle for the webview. If not provided, the default session will be use
 
 The name of the application as used in the user agent string. Please note that changing this value after the session initialization will not change the user agent string.
 
+### `pullToRefreshEnabled`
+
+Enables pull to refresh functionality. Default value is `true`.
+
 ### `stradaComponents`
 
 `VisitableView` supports defining [Strada components](https://strada.hotwired.dev/) that receive and reply to messages from web components that are present on the page within one session. This prop accepts an array of Strada components that will be registered in the webview.
