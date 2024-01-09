@@ -16,6 +16,7 @@ import type {
   VisitProposal,
   VisitProposalError,
   OpenExternalUrlEvent,
+  FormSubmissionEvent,
 } from './types';
 
 // interface should match RNVisitableView exported properties in native code
@@ -29,6 +30,12 @@ interface RNVisitableViewProps {
   onVisitProposal?: (e: NativeSyntheticEvent<VisitProposal>) => void;
   onWebAlert?: (e: NativeSyntheticEvent<AlertHandler>) => void;
   onWebConfirm?: (e: NativeSyntheticEvent<AlertHandler>) => void;
+  onFormSubmissionStarted?: (
+    e: NativeSyntheticEvent<FormSubmissionEvent>
+  ) => void;
+  onFormSubmissionFinished?: (
+    e: NativeSyntheticEvent<FormSubmissionEvent>
+  ) => void;
   style?: StyleProp<ViewStyle>;
 }
 
@@ -56,9 +63,17 @@ export function dispatchCommand(
     throw new Error(LINKING_ERROR);
   }
 
+  const transformedCommand = transformCommandToAcceptableType(
+    viewConfig.Commands[command]!
+  );
+
+  if (transformedCommand === undefined) {
+    return;
+  }
+
   UIManager.dispatchViewManagerCommand(
     findNodeHandle(ref.current),
-    transformCommandToAcceptableType(viewConfig.Commands[command]!),
+    transformedCommand,
     args
   );
 }

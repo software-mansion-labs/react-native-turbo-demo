@@ -27,6 +27,8 @@ For Android you need to adjust your SDK version in your `build.gradle`.
 >
 > Android SDK 24+ is required as the minSdkVersion in your build.gradle.
 
+For iOS, you need to set the deployment target to 14.0 or higher.
+
 ## Example
 
 Turbo `webview` can be rendered using native view `VisitableView`.
@@ -161,7 +163,7 @@ webkit.messageHandlers.nativeApp.postMessage(message);
 
 ### `onWebAlert`
 
-Function called when website inside WebView is calling `alert` function. By default React Native's `Alert` is displayed. 
+Function called when website inside WebView is calling `alert` function. By default React Native's `Alert` is displayed.
 
 Note that after handling alert display, `callback` function must be called.
 
@@ -176,6 +178,20 @@ Note that after handling confirm dialog display, `callback` function must be cal
 
 - message
 - callback
+
+### `onFormSubmissionStarted`
+
+Callback called when website inside WebView started submitting form.
+
+- url
+
+### `onFormSubmissionFinished`
+
+Callback called when website inside WebView finished submitting form.
+
+- url
+
+Note: The form submission handlers are triggered for the _session_ in which the form was submitted. A URL argument is available in these handlers, which can be used for granular control over the cache clearing process. For example, you might choose to clear the cache only for the specific URL that the form was submitted from.
 
 ### Methods:
 
@@ -198,3 +214,9 @@ Reloads the webview.
 ## Session Component
 
 Session component has been deprecated. To use multiple [sessions](https://github.com/hotwired/turbo-ios/blob/main/Docs/Overview.md#session), you can use `sessionHandle` prop on `VisitableView` component.
+
+## Other utilities
+
+### `clearSnapshotCacheForAllSessions`
+
+Clears the snapshot cache for all sessions. This might be useful in a scenario where different session handles are used for modals. When a form submission is completed in the modal session, we need to manually clear the snapshot cache in the default session to avoid the use of potentially outdated cached snapshots.

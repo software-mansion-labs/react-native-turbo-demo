@@ -252,6 +252,18 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     })
   }
 
+  override fun didStartFormSubmission(url: String) {
+    sendEvent(RNVisitableViewEvent.FORM_SUBMISSION_STARTED, Arguments.createMap().apply {
+      putString("url", url)
+    })
+  }
+
+  override fun didFinishFormSubmission(url: String) {
+    sendEvent(RNVisitableViewEvent.FORM_SUBMISSION_FINISHED, Arguments.createMap().apply {
+      putString("url", url)
+    })
+  }
+
   override fun onReceivedError(errorCode: Int) {
     sendEvent(RNVisitableViewEvent.VISIT_ERROR, Arguments.createMap().apply {
       putInt("statusCode", errorCode)
@@ -260,14 +272,14 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   }
 
   override fun visitProposedToLocation(location: String, options: TurboVisitOptions) {
-    sendEvent(RNVisitableViewEvent.VISIT_PROPOSED, Arguments.createMap().apply {
+    sendEvent(RNVisitableViewEvent.VISIT_PROPOSAL, Arguments.createMap().apply {
       putString("url", location)
       putString("action", options.action.name.lowercase())
     })
   }
 
   override fun onRenderProcessGone() {
-    sendEvent(RNVisitableViewEvent.VISIT_PROPOSED, Arguments.createMap().apply {
+    sendEvent(RNVisitableViewEvent.VISIT_PROPOSAL, Arguments.createMap().apply {
       putString("url", url)
       putString("action", TurboVisitAction.REPLACE.name.lowercase())
     })
@@ -284,7 +296,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   }
 
   override fun visitRendered() {
-    sendEvent(RNVisitableViewEvent.PAGE_LOADED, Arguments.createMap().apply {
+    sendEvent(RNVisitableViewEvent.LOAD, Arguments.createMap().apply {
       putString("title", webView.title)
       putString("url", webView.url)
     })
@@ -292,7 +304,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   }
 
   override fun visitCompleted(completedOffline: Boolean) {
-    sendEvent(RNVisitableViewEvent.PAGE_LOADED, Arguments.createMap().apply {
+    sendEvent(RNVisitableViewEvent.LOAD, Arguments.createMap().apply {
       putString("title", webView.title)
       putString("url", webView.url)
     })
@@ -307,8 +319,8 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     }
   }
 
-  override fun handleAlert(message: String, callback: () -> Unit) {
-    sendEvent(RNVisitableViewEvent.ON_ALERT, Arguments.createMap().apply {
+  override fun handleAlert(message: String,callback: () -> Unit) {
+    sendEvent(RNVisitableViewEvent.WEB_ALERT, Arguments.createMap().apply {
       putString("message", message)
     })
     onAlertHandler = callback
@@ -316,7 +328,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
 
 
   override fun handleConfirm(message: String, callback: (result: Boolean) -> Unit) {
-    sendEvent(RNVisitableViewEvent.ON_CONFIRM, Arguments.createMap().apply {
+    sendEvent(RNVisitableViewEvent.WEB_CONFIRM, Arguments.createMap().apply {
       putString("message", message)
     })
     onConfirmHandler = callback

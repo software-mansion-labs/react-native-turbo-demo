@@ -11,13 +11,13 @@ Pod::Spec.new do |s|
   s.license      = package["license"]
   s.authors      = package["author"]
 
-  s.platforms    = { :ios => "12.0" }
+  s.platforms    = { :ios => "14.0" }
   s.source       = { :git => "https://github.com/software-mansion-labs/react-native-turbo-demo.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm,swift}"
 
   s.dependency "React-Core"
-  s.dependency "RNTurboiOS", "7.0.0-beta.1"
+  s.dependency "ReactNativeHotwiredTurboiOS", "7.0.1"
 
   # Don't install the dependencies when we run `pod install` in the old architecture.
   if ENV['RCT_NEW_ARCH_ENABLED'] == '1' then

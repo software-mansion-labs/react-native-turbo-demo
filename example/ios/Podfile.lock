@@ -376,13 +376,13 @@ PODS:
     - React-jsi (= 0.70.13)
     - React-logger (= 0.70.13)
     - React-perflogger (= 0.70.13)
+  - ReactNativeHotwiredTurboiOS (7.0.1)
   - RNScreens (3.18.2):
     - React-Core
     - React-RCTImage
   - RNTurbo (0.2.4):
     - React-Core
-    - RNTurboiOS (= 7.0.0-beta.1)
-  - RNTurboiOS (7.0.0-beta.1)
+    - ReactNativeHotwiredTurboiOS (= 7.0.1)
   - SocketRocket (0.6.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -468,7 +468,7 @@ SPEC REPOS:
     - fmt
     - libevent
     - OpenSSL-Universal
-    - RNTurboiOS
+    - ReactNativeHotwiredTurboiOS
     - SocketRocket
     - YogaKit
 
@@ -599,13 +599,13 @@ SPEC CHECKSUMS:
   React-RCTVibration: 3b0e5f51cf2e6a1f8a7f36d50157bad0bfa4b984
   React-runtimeexecutor: 9ea931b43e2c2eb3c66ccdefcba8ff00cb523e09
   ReactCommon: a24276ab12f11099c91af00f7cf2c89d5f55313f
+  ReactNativeHotwiredTurboiOS: e6e8dd914b26db07487176c256e75c3ead5e7fb2
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
-  RNTurbo: 26bac3c0ab088899cceb9a1e03692d5246e3fce2
-  RNTurboiOS: 22091eb5d7be50050c694443a32a34b3069dd229
+  RNTurbo: bb86b9344e8d72206a4c482f5a2d5ab296566dbc
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 445485143df46a9d5d4ef61cbbc629fec40fb9a0
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 85b06d0ed137749e786ec852f3aa1ff84759e876
+PODFILE CHECKSUM: eb847012ad8e98e01a83cf4f002eb25e234cbe26
 
 COCOAPODS: 1.13.0

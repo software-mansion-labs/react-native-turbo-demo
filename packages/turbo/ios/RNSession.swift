@@ -5,7 +5,7 @@
 //  Created by Bartłomiej Fryz on 24/06/2022.
 //
 
-import RNTurboiOS
+import ReactNativeHotwiredTurboiOS
 import UIKit
 import WebKit
 
@@ -97,6 +97,10 @@ class RNSession: NSObject {
   func reload() {
     turboSession.reload()
   }
+    
+  func clearSnapshotCache() {
+    turboSession.clearSnapshotCache()
+  }
   
 }
 
@@ -117,6 +121,14 @@ extension RNSession: SessionDelegate {
 
   func session(_ session: Session, openExternalURL url: URL) {
     visitableViews.last?.didOpenExternalUrl(url: url)
+  }
+    
+  func sessionDidStartFormSubmission(_ session: Session) {
+    visitableViews.last?.didStartFormSubmission()
+  }
+    
+  func sessionDidFinishFormSubmission(_ session: Session) {
+    visitableViews.last?.didFinishFormSubmission()
   }
 }
 

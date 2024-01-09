@@ -120,6 +120,13 @@ class RNSession(
     }
   }
 
+  fun clearSnapshotCache() {
+    // turbo-android doesn't expose a way to clear the snapshot cache, so we have to do it manually
+    webView.post {
+      webView.evaluateJavascript("window.Turbo.session.clearCache();", null)
+    }
+  }
+
   // region SessionCallbackAdapter
 
   override fun onReceivedError(errorCode: Int) {
@@ -152,6 +159,14 @@ class RNSession(
 
   override fun visitRendered() {
     topmostView?.visitRendered()
+  }
+
+  override fun formSubmissionStarted(location: String) {
+    topmostView?.didStartFormSubmission(location)
+  }
+
+  override fun formSubmissionFinished(location: String) {
+    topmostView?.didFinishFormSubmission(location)
   }
 
   // end region

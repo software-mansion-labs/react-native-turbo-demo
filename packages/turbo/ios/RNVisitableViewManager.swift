@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RNTurboiOS
+import ReactNativeHotwiredTurboiOS
 
 @objc(RNVisitableViewManager)
 class RNVisitableViewManager: RCTViewManager {
@@ -50,5 +50,6 @@ class RNVisitableViewManager: RCTViewManager {
       component.sendConfirmResult(result: result)
     }
   }
+    
 }
 

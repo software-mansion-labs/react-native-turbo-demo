@@ -7,13 +7,15 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
 
 enum class RNVisitableViewEvent(val jsCallbackName: String) {
-  VISIT_PROPOSED("onVisitProposal"),
+  VISIT_PROPOSAL("onVisitProposal"),
   VISIT_ERROR("onVisitError"),
-  PAGE_LOADED("onLoad"),
+  LOAD("onLoad"),
   MESSAGE("onMessage"),
   OPEN_EXTERNAL_URL("onOpenExternalUrl"),
-  ON_ALERT("onWebAlert"),
-  ON_CONFIRM("onWebConfirm")
+  WEB_ALERT("onWebAlert"),
+  WEB_CONFIRM("onWebConfirm"),
+  FORM_SUBMISSION_STARTED("onFormSubmissionStarted"),
+  FORM_SUBMISSION_FINISHED("onFormSubmissionFinished")
 }
 
 enum class RNVisitableViewCommand(val jsCallbackName: String) {

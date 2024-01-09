@@ -14,6 +14,10 @@ export interface OpenExternalUrlEvent {
   url: string;
 }
 
+export interface FormSubmissionEvent {
+  url: string;
+}
+
 export type MessageEvent = object;
 
 export interface AlertHandler {
