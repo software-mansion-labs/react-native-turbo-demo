@@ -16,8 +16,8 @@ enum class RNVisitableViewEvent(val jsCallbackName: String) {
   WEB_CONFIRM("onWebConfirm"),
   FORM_SUBMISSION_STARTED("onFormSubmissionStarted"),
   FORM_SUBMISSION_FINISHED("onFormSubmissionFinished"),
-  SHOW_VISITABLE_ACTIVITY_INDICATOR("onShowVisitableActivityIndicator"),
-  HIDE_VISITABLE_ACTIVITY_INDICATOR("onHideVisitableActivityIndicator")
+  SHOW_LOADING("onShowLoading"),
+  HIDE_LOADING("onHideLoading")
 }
 
 enum class RNVisitableViewCommand(val jsCallbackName: String) {

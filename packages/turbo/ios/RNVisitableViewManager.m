@@ -24,8 +24,8 @@
   RCT_EXPORT_VIEW_PROPERTY(onWebConfirm, RCTDirectEventBlock)
   RCT_EXPORT_VIEW_PROPERTY(onFormSubmissionStarted, RCTDirectEventBlock)
   RCT_EXPORT_VIEW_PROPERTY(onFormSubmissionFinished, RCTDirectEventBlock)
-  RCT_EXPORT_VIEW_PROPERTY(onShowVisitableActivityIndicator, RCTDirectEventBlock)
-  RCT_EXPORT_VIEW_PROPERTY(onHideVisitableActivityIndicator, RCTDirectEventBlock)
+  RCT_EXPORT_VIEW_PROPERTY(onShowLoading, RCTDirectEventBlock)
+  RCT_EXPORT_VIEW_PROPERTY(onHideLoading, RCTDirectEventBlock)
 
   RCT_EXTERN_METHOD(injectJavaScript: (nonnull NSNumber) node
                     code: (nonnull NSString) code)

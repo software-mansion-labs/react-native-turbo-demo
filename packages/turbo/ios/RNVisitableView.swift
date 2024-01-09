@@ -34,8 +34,8 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var onWebConfirm: RCTDirectEventBlock?
   @objc var onFormSubmissionStarted: RCTDirectEventBlock?
   @objc var onFormSubmissionFinished: RCTDirectEventBlock?
-  @objc var onShowVisitableActivityIndicator: RCTDirectEventBlock?
-  @objc var onHideVisitableActivityIndicator: RCTDirectEventBlock?
+  @objc var onShowLoading: RCTDirectEventBlock?
+  @objc var onHideLoading: RCTDirectEventBlock?
   
   private var onConfirmHandler: ((Bool) -> Void)?
   private var onAlertHandler: (() -> Void)?
@@ -200,11 +200,11 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
     
   func showVisitableActivityIndicator() {
     guard !isRefreshing else { return }
-    onShowVisitableActivityIndicator?([:])
+    onShowLoading?([:])
   }
       
   func hideVisitableActivityIndicator() {
-    onHideVisitableActivityIndicator?([:])
+    onHideLoading?([:])
   }
   
 }

@@ -225,11 +225,11 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   private fun showProgressView() {
     // Don't show the progress view if a screenshot is available
     if (screenshotView.isVisible) return
-    sendEvent(RNVisitableViewEvent.SHOW_VISITABLE_ACTIVITY_INDICATOR, Arguments.createMap())
+    sendEvent(RNVisitableViewEvent.SHOW_LOADING, Arguments.createMap())
   }
 
   private fun hideProgressView() {
-    sendEvent(RNVisitableViewEvent.HIDE_VISITABLE_ACTIVITY_INDICATOR, Arguments.createMap())
+    sendEvent(RNVisitableViewEvent.HIDE_LOADING, Arguments.createMap())
   }
 
   private fun removeTransitionalViews() {

@@ -126,7 +126,7 @@ const stradaComponents = [FormComponent];
 
 ### `renderLoading`
 
-Function that returns a loading indicator.
+Function that returns a loading indicator, which will be shown when the webview is loading.
 
 Example:
 

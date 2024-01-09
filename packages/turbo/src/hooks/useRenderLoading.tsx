@@ -3,18 +3,18 @@ import { ActivityIndicator, View, StyleSheet, Platform } from 'react-native';
 
 export type RenderLoading = () => React.ReactNode;
 
+const SIZE = Platform.select({
+  ios: 'small',
+  android: 'large',
+});
+
 const defaultRenderLoading = () => (
   <View style={styles.wrapper}>
-    <ActivityIndicator
-      size={Platform.select({
-        ios: 'small',
-        android: 'large',
-      })}
-    />
+    <ActivityIndicator size={SIZE} />
   </View>
 );
 
-export function useActivityIndicator(renderLoading?: RenderLoading) {
+export function useRenderLoading(renderLoading?: RenderLoading) {
   const [isVisible, setIsVisible] = React.useState(false);
 
   const activityIndicator = useMemo(() => {
@@ -24,18 +24,18 @@ export function useActivityIndicator(renderLoading?: RenderLoading) {
     return isVisible && <>{activityIndicatorComponent}</>;
   }, [isVisible, renderLoading]);
 
-  const handleShowActivityIndicator = useCallback(() => {
+  const handleShowLoading = useCallback(() => {
     setIsVisible(true);
   }, []);
 
-  const handleHideActivityIndicator = useCallback(() => {
+  const handleHideLoading = useCallback(() => {
     setIsVisible(false);
   }, []);
 
   return {
     activityIndicator,
-    handleShowActivityIndicator,
-    handleHideActivityIndicator,
+    handleShowLoading,
+    handleHideLoading,
   };
 }
 

@@ -38,8 +38,8 @@ interface RNVisitableViewProps {
   onFormSubmissionFinished?: (
     e: NativeSyntheticEvent<FormSubmissionEvent>
   ) => void;
-  onShowVisitableActivityIndicator: () => void;
-  onHideVisitableActivityIndicator: () => void;
+  onShowLoading: () => void;
+  onHideLoading: () => void;
   style?: StyleProp<ViewStyle>;
 }
 

@@ -26,10 +26,7 @@ import {
   type OnConfirm,
   useWebViewDialogs,
 } from './hooks/useWebViewDialogs';
-import {
-  type RenderLoading,
-  useActivityIndicator,
-} from './hooks/useActivityIndicator';
+import { type RenderLoading, useRenderLoading } from './hooks/useRenderLoading';
 
 export interface Props {
   url: string;
@@ -151,11 +148,8 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       onConfirm
     );
 
-    const {
-      activityIndicator,
-      handleShowActivityIndicator,
-      handleHideActivityIndicator,
-    } = useActivityIndicator(renderLoading);
+    const { activityIndicator, handleShowLoading, handleHideLoading } =
+      useRenderLoading(renderLoading);
 
     return (
       <>
@@ -187,8 +181,8 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           onWebConfirm={handleConfirm}
           onFormSubmissionStarted={handleOnFormSubmissionStarted}
           onFormSubmissionFinished={handleOnFormSubmissionFinished}
-          onShowVisitableActivityIndicator={handleShowActivityIndicator}
-          onHideVisitableActivityIndicator={handleHideActivityIndicator}
+          onShowLoading={handleShowLoading}
+          onHideLoading={handleHideLoading}
         />
       </>
     );
