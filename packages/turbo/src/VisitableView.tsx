@@ -4,7 +4,7 @@ import React, {
   useRef,
   useMemo,
 } from 'react';
-import { NativeSyntheticEvent, StyleSheet } from 'react-native';
+import { NativeSyntheticEvent, StyleSheet, Platform } from 'react-native';
 import RNVisitableView, {
   dispatchCommand,
   openExternalURL,
@@ -71,7 +71,10 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       onFormSubmissionFinished,
       pullToRefreshEnabled = true,
       renderLoading,
-      onContentProcessDidTerminate,
+      onContentProcessDidTerminate = Platform.select({
+        ios: () => dispatchCommand(visitableViewRef, 'reload'),
+        android: () => onVisitProposal({ url, action: 'replace' }),
+      })!,
     } = props;
     const visitableViewRef = useRef<typeof RNVisitableView>();
 
@@ -158,10 +161,6 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       ({
         nativeEvent,
       }: NativeSyntheticEvent<ContentProcessDidTerminateEvent>) => {
-        if (!onContentProcessDidTerminate) {
-          dispatchCommand(visitableViewRef, 'reload');
-          return;
-        }
         onContentProcessDidTerminate(nativeEvent);
       },
       [onContentProcessDidTerminate]
