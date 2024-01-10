@@ -124,6 +124,19 @@ const stradaComponents = [FormComponent];
 />
 ```
 
+### `renderLoading`
+
+Function that returns a loading indicator, which will be shown when the webview is loading.
+
+Example:
+
+```jsx
+<VisitableView
+  ...
+  renderLoading={() => <Loading />}
+/>
+```
+
 ### `onVisitProposal`
 
 Callback called when the webview detects turbo visit action.

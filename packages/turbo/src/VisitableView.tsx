@@ -26,6 +26,7 @@ import {
   type OnConfirm,
   useWebViewDialogs,
 } from './hooks/useWebViewDialogs';
+import { type RenderLoading, useRenderLoading } from './hooks/useRenderLoading';
 
 export interface Props {
   url: string;
@@ -33,6 +34,7 @@ export interface Props {
   applicationNameForUserAgent?: string;
   stradaComponents?: StradaComponent[];
   pullToRefreshEnabled?: boolean;
+  renderLoading?: RenderLoading;
   onVisitProposal: (proposal: VisitProposal) => void;
   onLoad?: (params: LoadEvent) => void;
   onOpenExternalUrl?: (proposal: OpenExternalUrlEvent) => void;
@@ -66,6 +68,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       onFormSubmissionStarted,
       onFormSubmissionFinished,
       pullToRefreshEnabled = true,
+      renderLoading,
     } = props;
     const visitableViewRef = useRef<typeof RNVisitableView>();
 
@@ -145,8 +148,12 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       onConfirm
     );
 
+    const { loadingComponent, handleShowLoading, handleHideLoading } =
+      useRenderLoading(renderLoading);
+
     return (
       <>
+        {loadingComponent}
         {stradaComponents?.map((Component, i) => (
           <Component
             key={i}
@@ -174,6 +181,8 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           onWebConfirm={handleConfirm}
           onFormSubmissionStarted={handleOnFormSubmissionStarted}
           onFormSubmissionFinished={handleOnFormSubmissionFinished}
+          onShowLoading={handleShowLoading}
+          onHideLoading={handleHideLoading}
         />
       </>
     );

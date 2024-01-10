@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.webkit.CookieManager
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.view.isVisible
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactApplicationContext
@@ -222,13 +223,19 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   }
 
   private fun showProgressView() {
-    turboView.addProgressView(inflate(context, R.layout.turbo_progress, null))
+    // Don't show the progress view if a screenshot is available
+    if (screenshotView.isVisible) return
+    sendEvent(RNVisitableViewEvent.SHOW_LOADING, Arguments.createMap())
+  }
+
+  private fun hideProgressView() {
+    sendEvent(RNVisitableViewEvent.HIDE_LOADING, Arguments.createMap())
   }
 
   private fun removeTransitionalViews() {
     turboView.webViewRefresh?.isRefreshing = false
     turboView.errorRefresh?.isRefreshing = false
-    turboView.removeProgressView()
+    hideProgressView()
     turboView.removeScreenshot()
     turboView.removeErrorView()
   }
@@ -324,7 +331,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     }
   }
 
-  override fun handleAlert(message: String,callback: () -> Unit) {
+  override fun handleAlert(message: String, callback: () -> Unit) {
     sendEvent(RNVisitableViewEvent.WEB_ALERT, Arguments.createMap().apply {
       putString("message", message)
     })
