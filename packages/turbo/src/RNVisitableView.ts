@@ -17,6 +17,7 @@ import type {
   VisitProposalError,
   OpenExternalUrlEvent,
   FormSubmissionEvent,
+  ContentProcessDidTerminateEvent,
 } from './types';
 
 // interface should match RNVisitableView exported properties in native code
@@ -40,6 +41,9 @@ interface RNVisitableViewProps {
   ) => void;
   onShowLoading: () => void;
   onHideLoading: () => void;
+  onContentProcessDidTerminate?: (
+    e: NativeSyntheticEvent<ContentProcessDidTerminateEvent>
+  ) => void;
   style?: StyleProp<ViewStyle>;
 }
 

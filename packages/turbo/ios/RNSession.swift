@@ -108,7 +108,7 @@ class RNSession: NSObject {
 extension RNSession: SessionDelegate {
   
   func sessionWebViewProcessDidTerminate(_ session: Session) {
-    
+    visitableViews.last?.processDidTerminate()
   }
 
   func session(_ session: Session, didProposeVisit proposal: VisitProposal) {

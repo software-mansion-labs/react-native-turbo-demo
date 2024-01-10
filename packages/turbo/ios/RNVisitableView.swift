@@ -36,6 +36,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var onFormSubmissionFinished: RCTDirectEventBlock?
   @objc var onShowLoading: RCTDirectEventBlock?
   @objc var onHideLoading: RCTDirectEventBlock?
+  @objc var onContentProcessDidTerminate: RCTDirectEventBlock?
   
   private var onConfirmHandler: ((Bool) -> Void)?
   private var onAlertHandler: (() -> Void)?
@@ -149,6 +150,10 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     onFormSubmissionFinished?(["url": url])
   }
     
+  public func processDidTerminate() {
+    onContentProcessDidTerminate?(["url": url])
+  }
+
   func clearSessionSnapshotCache(){
     session.clearSnapshotCache()
   }
