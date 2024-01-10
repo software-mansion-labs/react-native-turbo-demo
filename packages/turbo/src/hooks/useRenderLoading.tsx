@@ -19,11 +19,9 @@ const defaultRenderLoading = () => (
 export function useRenderLoading(renderLoading?: RenderLoading) {
   const [isVisible, setIsVisible] = React.useState(false);
 
-  const activityIndicator = useMemo(() => {
-    const activityIndicatorComponent = (
-      renderLoading || defaultRenderLoading
-    )();
-    return isVisible && <>{activityIndicatorComponent}</>;
+  const loadingComponent = useMemo(() => {
+    const component = (renderLoading || defaultRenderLoading)();
+    return isVisible && <>{component}</>;
   }, [isVisible, renderLoading]);
 
   const handleShowLoading = useCallback(() => {
@@ -35,7 +33,7 @@ export function useRenderLoading(renderLoading?: RenderLoading) {
   }, []);
 
   return {
-    activityIndicator,
+    loadingComponent,
     handleShowLoading,
     handleHideLoading,
   };

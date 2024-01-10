@@ -148,12 +148,12 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       onConfirm
     );
 
-    const { activityIndicator, handleShowLoading, handleHideLoading } =
+    const { loadingComponent, handleShowLoading, handleHideLoading } =
       useRenderLoading(renderLoading);
 
     return (
       <>
-        {activityIndicator}
+        {loadingComponent}
         {stradaComponents?.map((Component, i) => (
           <Component
             key={i}
