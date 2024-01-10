@@ -8,7 +8,7 @@ import com.facebook.react.uimanager.annotations.ReactProp
 
 enum class RNVisitableViewEvent(val jsCallbackName: String) {
   VISIT_PROPOSAL("onVisitProposal"),
-  VISIT_ERROR("onVisitError"),
+  ERROR("onError"),
   LOAD("onLoad"),
   MESSAGE("onMessage"),
   OPEN_EXTERNAL_URL("onOpenExternalUrl"),

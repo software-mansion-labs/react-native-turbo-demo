@@ -14,7 +14,7 @@ import { NavigationProp } from '@react-navigation/native';
 
 export type Props = {
   navigation: NavigationProp<RootStackParamList>;
-} & Pick<VisitableViewProps, 'onMessage'>;
+} & Pick<VisitableViewProps, 'onMessage' | 'renderError'>;
 
 const sessionHandle = 'TurboWebviewExample';
 const stradaComponents = [Form];
@@ -38,9 +38,9 @@ const WebView: React.FC<Props> = ({ navigation, ...props }) => {
     [navigation]
   );
 
-  const onVisitError: OnErrorCallback = useCallback(
+  const onError: OnErrorCallback = useCallback(
     (error) => {
-      const notLoggedIn = error.statusCode === 401;
+      const notLoggedIn = error?.statusCode === 401;
       if (notLoggedIn) {
         navigation.navigate(Routes.SignIn, { path: 'signin' });
       }
@@ -57,7 +57,7 @@ const WebView: React.FC<Props> = ({ navigation, ...props }) => {
       stradaComponents={stradaComponents}
       onVisitProposal={onVisitProposal}
       onLoad={onLoad}
-      onVisitError={onVisitError}
+      onError={onError}
     />
   );
 };

@@ -14,7 +14,7 @@ import type {
   LoadEvent,
   MessageEvent,
   VisitProposal,
-  VisitProposalError,
+  ErrorEvent,
   OpenExternalUrlEvent,
   FormSubmissionEvent,
   ContentProcessDidTerminateEvent,
@@ -28,7 +28,7 @@ interface RNVisitableViewProps {
   pullToRefreshEnabled: boolean;
   onLoad?: (e: NativeSyntheticEvent<LoadEvent>) => void;
   onMessage?: (e: NativeSyntheticEvent<MessageEvent>) => void;
-  onVisitError?: (e: NativeSyntheticEvent<VisitProposalError>) => void;
+  onError?: (e: NativeSyntheticEvent<ErrorEvent>) => void;
   onVisitProposal?: (e: NativeSyntheticEvent<VisitProposal>) => void;
   onWebAlert?: (e: NativeSyntheticEvent<AlertHandler>) => void;
   onWebConfirm?: (e: NativeSyntheticEvent<AlertHandler>) => void;

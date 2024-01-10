@@ -38,7 +38,6 @@ import {
   VisitableView,
   OnLoadEvent,
   VisitProposal,
-  VisitProposalError,
   Session,
 } from 'react-native-turbo';
 import { useNavigation } from '@react-navigation/native';
@@ -46,7 +45,7 @@ import { useNavigation } from '@react-navigation/native';
 const TurboScreen = () => {
   const navigation = useNavigation();
 
-  const onVisitProposal = ({ nativeEvent: { action: actionType, url } }) => {
+  const onVisitProposal = ({ action: actionType, url }) => {
     // Handle opening new screen e.g. using react-navigation
     navigation.push('TurboScreen', { url });
   };
@@ -137,6 +136,19 @@ Example:
 />
 ```
 
+### `renderError`
+
+Function that returns a view, which will be shown when error occurs.
+
+Example:
+
+```jsx
+<VisitableView
+  ...
+  renderError={(errorObject, reloadFunction) => <Error error={errorObject} reload={reloadFunction} />}
+/>
+```
+
 ### `onVisitProposal`
 
 Callback called when the webview detects turbo visit action.
@@ -157,13 +169,13 @@ Callback called with screen title and URL when the webview successfully loads.
 - url
 - title – web page title
 
-### `onVisitError`
+### `onError`
 
 Callback called when the webview fails to load.
 
 - statusCode
 - url
-- error
+- description
 
 ### `onMessage`
 
@@ -209,6 +221,10 @@ Callback called when website inside WebView finished submitting form.
 - url
 
 Note: The form submission handlers are triggered for the _session_ in which the form was submitted. A URL argument is available in these handlers, which can be used for granular control over the cache clearing process. For example, you might choose to clear the cache only for the specific URL that the form was submitted from.
+
+### `onContentProcessDidTerminate`
+
+Callback called when the webview content process is terminated.
 
 ### Methods:
 

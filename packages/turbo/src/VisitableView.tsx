@@ -14,7 +14,7 @@ import type {
   LoadEvent,
   SessionMessageCallback,
   VisitProposal,
-  VisitProposalError,
+  ErrorEvent,
   OpenExternalUrlEvent,
   StradaComponent,
   FormSubmissionEvent,
@@ -28,6 +28,7 @@ import {
   useWebViewDialogs,
 } from './hooks/useWebViewDialogs';
 import { type RenderLoading, useRenderLoading } from './hooks/useRenderLoading';
+import { type RenderError, useRenderError } from './hooks/useRenderError';
 
 export interface Props {
   url: string;
@@ -36,13 +37,14 @@ export interface Props {
   stradaComponents?: StradaComponent[];
   pullToRefreshEnabled?: boolean;
   renderLoading?: RenderLoading;
+  renderError?: RenderError;
   onVisitProposal: (proposal: VisitProposal) => void;
   onLoad?: (params: LoadEvent) => void;
   onOpenExternalUrl?: (proposal: OpenExternalUrlEvent) => void;
   onFormSubmissionStarted?: (e: FormSubmissionEvent) => void;
   onFormSubmissionFinished?: (e: FormSubmissionEvent) => void;
   onContentProcessDidTerminate?: (e: ContentProcessDidTerminateEvent) => void;
-  onVisitError?: OnErrorCallback;
+  onError?: OnErrorCallback;
   onMessage?: SessionMessageCallback;
   onAlert?: OnAlert;
   onConfirm?: OnConfirm;
@@ -60,8 +62,11 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       sessionHandle = 'Default',
       applicationNameForUserAgent,
       stradaComponents,
+      pullToRefreshEnabled = true,
+      renderLoading,
+      renderError,
       onLoad,
-      onVisitError: viewErrorHandler,
+      onError: viewErrorHandler,
       onMessage,
       onVisitProposal,
       onOpenExternalUrl: onOpenExternalUrlCallback = openExternalURL,
@@ -69,8 +74,6 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       onConfirm,
       onFormSubmissionStarted,
       onFormSubmissionFinished,
-      pullToRefreshEnabled = true,
-      renderLoading,
       onContentProcessDidTerminate,
     } = props;
     const visitableViewRef = useRef<typeof RNVisitableView>();
@@ -89,6 +92,10 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       [applicationNameForUserAgent, stradaUserAgent]
     );
 
+    const reloadVisitableView = useCallback(() => {
+      dispatchCommand(visitableViewRef, 'reload');
+    }, []);
+
     useImperativeHandle(
       ref,
       () => ({
@@ -98,16 +105,20 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
             'injectJavaScript',
             callbackStringified
           ),
-        reload: () => dispatchCommand(visitableViewRef, 'reload'),
+        reload: reloadVisitableView,
       }),
-      []
+      [reloadVisitableView]
     );
 
-    const handleVisitError = useCallback(
-      ({ nativeEvent }: NativeSyntheticEvent<VisitProposalError>) => {
+    const { errorComponent, handleRenderError, hideErrorComponent } =
+      useRenderError(reloadVisitableView, renderError);
+
+    const handleOnError = useCallback(
+      ({ nativeEvent }: NativeSyntheticEvent<ErrorEvent>) => {
         viewErrorHandler?.(nativeEvent);
+        handleRenderError(nativeEvent);
       },
-      [viewErrorHandler]
+      [handleRenderError, viewErrorHandler]
     );
 
     const handleOnLoad = useCallback(
@@ -151,8 +162,16 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       onConfirm
     );
 
-    const { loadingComponent, handleShowLoading, handleHideLoading } =
-      useRenderLoading(renderLoading);
+    const {
+      loadingComponent,
+      handleShowLoading: handleShowLoadingCallback,
+      handleHideLoading,
+    } = useRenderLoading(renderLoading);
+
+    const handleShowLoading = useCallback(() => {
+      hideErrorComponent();
+      handleShowLoadingCallback();
+    }, [handleShowLoadingCallback, hideErrorComponent]);
 
     const handleOnContentProcessDidTerminate = useCallback(
       ({
@@ -169,6 +188,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
 
     return (
       <>
+        {errorComponent}
         {loadingComponent}
         {stradaComponents?.map((Component, i) => (
           <Component
@@ -187,9 +207,9 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           sessionHandle={sessionHandle}
           applicationNameForUserAgent={resolvedApplicationNameForUserAgent}
           pullToRefreshEnabled={pullToRefreshEnabled}
+          onError={handleOnError}
           onVisitProposal={handleVisitProposal}
           onMessage={handleOnMessage}
-          onVisitError={handleVisitError}
           onOpenExternalUrl={handleOnOpenExternalUrl}
           onLoad={handleOnLoad}
           style={styles.container}

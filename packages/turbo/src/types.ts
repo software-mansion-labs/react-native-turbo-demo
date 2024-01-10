@@ -27,10 +27,11 @@ export type MessageEvent = object;
 export interface AlertHandler {
   message: string;
 }
-export interface VisitProposalError {
-  statusCode: number;
+
+export interface ErrorEvent {
   url: string;
-  error?: string;
+  statusCode?: number;
+  description?: string;
 }
 
 export type StradaMessage = {
@@ -46,7 +47,7 @@ export type StradaMessage = {
 
 export type SessionMessageCallback = (message: object) => void;
 
-export type OnErrorCallback = (error: VisitProposalError) => void;
+export type OnErrorCallback = (error: ErrorEvent) => void;
 
 export type StradaComponentProps = {
   sessionHandle: string;

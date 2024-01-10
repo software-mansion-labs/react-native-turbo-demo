@@ -29,7 +29,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var onVisitProposal: RCTDirectEventBlock?
   @objc var onOpenExternalUrl: RCTDirectEventBlock?
   @objc var onLoad: RCTDirectEventBlock?
-  @objc var onVisitError: RCTDirectEventBlock?
+  @objc var onError: RCTDirectEventBlock?
   @objc var onWebAlert: RCTDirectEventBlock?
   @objc var onWebConfirm: RCTDirectEventBlock?
   @objc var onFormSubmissionStarted: RCTDirectEventBlock?
@@ -130,12 +130,12 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   public func didFailRequestForVisitable(visitable: Visitable, error: Error){
     var event: [AnyHashable: Any] = [
       "url": visitable.visitableURL.absoluteString,
-      "error": error.localizedDescription,
+      "description": error.localizedDescription,
     ]
     if let turboError = error as? TurboError, case let .http(statusCode) = turboError {
       event["statusCode"] = statusCode
     }
-    onVisitError?(event)
+    onError?(event)
   }
     
   public func didOpenExternalUrl(url: URL) {

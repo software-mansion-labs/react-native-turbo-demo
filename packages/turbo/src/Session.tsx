@@ -6,7 +6,7 @@ const deprecationMessage =
 
 export interface Props {
   onMessage?: SessionMessageCallback;
-  onVisitError?: OnErrorCallback;
+  onError?: OnErrorCallback;
 }
 
 interface State {

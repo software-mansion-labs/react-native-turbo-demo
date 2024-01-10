@@ -12,6 +12,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Routes } from 'example/src/webScreenRoutes';
 import ShareScreen from 'example/src/ShareScreen';
 import WebView from './WebView';
+import MainScreen from './MainScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -27,7 +28,7 @@ const BottomTabs = () => {
     >
       <Tab.Screen
         name={Routes.WebviewInitial}
-        component={WebView}
+        component={MainScreen}
         options={{ title: 'React Native Web Screen' }}
       />
       <Tab.Screen

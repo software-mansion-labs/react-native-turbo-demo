@@ -277,9 +277,10 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   }
 
   override fun onReceivedError(errorCode: Int) {
-    sendEvent(RNVisitableViewEvent.VISIT_ERROR, Arguments.createMap().apply {
+    sendEvent(RNVisitableViewEvent.ERROR, Arguments.createMap().apply {
       putInt("statusCode", errorCode)
       putString("url", webView.url)
+      putString("description", "There was an Error (error code: $errorCode).")
     })
   }
 
@@ -357,9 +358,10 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   }
 
   override fun requestFailedWithStatusCode(visitHasCachedSnapshot: Boolean, statusCode: Int) {
-    sendEvent(RNVisitableViewEvent.VISIT_ERROR, Arguments.createMap().apply {
+    sendEvent(RNVisitableViewEvent.ERROR, Arguments.createMap().apply {
       putInt("statusCode", statusCode)
       putString("url", webView.url)
+      putString("description", "There was an HTTP Error ($statusCode).")
     })
   }
 
