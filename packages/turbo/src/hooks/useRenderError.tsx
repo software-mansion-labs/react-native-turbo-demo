@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
     backgroundColor: 'white',
-    zIndex: 1,
+    zIndex: 2,
   },
   title: {
     fontSize: 36,

@@ -66,7 +66,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       renderLoading,
       renderError,
       onLoad,
-      onError: viewErrorHandler,
+      onError: onErrorHandler,
       onMessage,
       onVisitProposal,
       onOpenExternalUrl: onOpenExternalUrlCallback = openExternalURL,
@@ -115,10 +115,10 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
 
     const handleOnError = useCallback(
       ({ nativeEvent }: NativeSyntheticEvent<ErrorEvent>) => {
-        viewErrorHandler?.(nativeEvent);
+        onErrorHandler?.(nativeEvent);
         handleRenderError(nativeEvent);
       },
-      [handleRenderError, viewErrorHandler]
+      [handleRenderError, onErrorHandler]
     );
 
     const handleOnLoad = useCallback(
