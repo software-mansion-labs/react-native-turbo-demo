@@ -58,16 +58,24 @@ class RNWebChromeClient(
   override fun onJsAlert(
     view: WebView?, url: String?, message: String?, result: JsResult?
   ): Boolean {
-    visitableViews.lastOrNull()?.handleAlert(message ?: "") { result?.confirm() }
+    visitableViews.lastOrNull()?.let {
+      it.handleAlert(message ?: "") { result?.confirm() }
+    } ?: run {
+      result?.confirm()
+    }
     return true
   }
 
   override fun onJsConfirm(
     view: WebView?, url: String?, message: String?, result: JsResult?
   ): Boolean {
-    visitableViews.lastOrNull()?.handleConfirm(
-      message ?: ""
-    ) { confirmed -> if (confirmed) result?.confirm() else result?.cancel() }
+    visitableViews.lastOrNull()?.let {
+      it.handleConfirm(
+        message ?: ""
+      ) { confirmed -> if (confirmed) result?.confirm() else result?.cancel() }
+    } ?: run {
+      result?.cancel()
+    }
     return true
   }
 }
