@@ -23,11 +23,12 @@ enum class RNTurboError(val code: Int) {
           return it
         }
       }
-      return if (code > 0) {
-        HTTP
-      } else {
-        UNKNOWN
+
+      if (code > 0) {
+        return HTTP
       }
+
+      return UNKNOWN
     }
 
     fun errorDescription(errorCode: Int): String {
