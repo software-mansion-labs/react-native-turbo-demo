@@ -24,6 +24,12 @@
     <main id="content" class="grid pad --bottom-soft">
       <%- body %>
       
+      <script>
+        setTimeout(() => {
+          alert("Alert on page from <%= title %>")
+        }, 1000)
+      </script>
+
       <footer class="text --size-s --color-subtle space --top-xxl">
         Rendered <%- new Date() %>
 
