@@ -30,8 +30,18 @@ export interface AlertHandler {
 
 export interface ErrorEvent {
   url: string;
-  statusCode?: number;
+  statusCode: SystemStatusCode | HTTPStatusCode;
   description?: string;
+}
+
+export type HTTPStatusCode = number;
+
+export enum SystemStatusCode {
+  NETWORK_FAILURE = 0,
+  TIMEOUT_FAILURE = -1,
+  CONTENT_TYPE_MISMATCH = -2,
+  PAGE_LOAD_FAILURE = -3,
+  UNKNOWN = -4,
 }
 
 export type StradaMessage = {

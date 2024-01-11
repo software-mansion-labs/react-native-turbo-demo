@@ -27,8 +27,11 @@ import {
   type OnConfirm,
   useWebViewDialogs,
 } from './hooks/useWebViewDialogs';
-import { type RenderLoading, useRenderLoading } from './hooks/useRenderLoading';
-import { type RenderError, useRenderError } from './hooks/useRenderError';
+import {
+  type RenderLoading,
+  type RenderError,
+  useWebViewState,
+} from './hooks/useWebViewState';
 
 export interface Props {
   url: string;
@@ -84,6 +87,17 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
     const { initializeStradaBridge, stradaUserAgent, sendToBridge } =
       useStradaBridge(visitableViewRef, dispatchCommand, stradaComponents);
 
+    const reloadVisitableView = useCallback(() => {
+      dispatchCommand(visitableViewRef, 'reload');
+    }, []);
+
+    const {
+      webViewStateComponent,
+      handleShowLoading,
+      handleHideLoading,
+      handleRenderError,
+    } = useWebViewState(reloadVisitableView, renderLoading, renderError);
+
     const resolvedApplicationNameForUserAgent = useMemo(
       () =>
         [applicationNameForUserAgent, stradaUserAgent]
@@ -91,10 +105,6 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           .join(' '),
       [applicationNameForUserAgent, stradaUserAgent]
     );
-
-    const reloadVisitableView = useCallback(() => {
-      dispatchCommand(visitableViewRef, 'reload');
-    }, []);
 
     useImperativeHandle(
       ref,
@@ -109,9 +119,6 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       }),
       [reloadVisitableView]
     );
-
-    const { errorComponent, handleRenderError, hideErrorComponent } =
-      useRenderError(reloadVisitableView, renderError);
 
     const handleOnError = useCallback(
       ({ nativeEvent }: NativeSyntheticEvent<ErrorEvent>) => {
@@ -162,17 +169,6 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       onConfirm
     );
 
-    const {
-      loadingComponent,
-      handleShowLoading: handleShowLoadingCallback,
-      handleHideLoading,
-    } = useRenderLoading(renderLoading);
-
-    const handleShowLoading = useCallback(() => {
-      hideErrorComponent();
-      handleShowLoadingCallback();
-    }, [handleShowLoadingCallback, hideErrorComponent]);
-
     const handleOnContentProcessDidTerminate = useCallback(
       ({
         nativeEvent,
@@ -188,8 +184,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
 
     return (
       <>
-        {errorComponent}
-        {loadingComponent}
+        {webViewStateComponent}
         {stradaComponents?.map((Component, i) => (
           <Component
             key={i}

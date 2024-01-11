@@ -126,15 +126,30 @@ class RNVisitableView: UIView, RNSessionSubscriber {
       onVisitProposal!(event)
     }
   }
+    
+  func getStatusCodeFromError(error: TurboError?) -> Int {
+    switch error {
+      case .networkFailure:
+        return 0
+      case .timeoutFailure:
+        return -1
+      case .contentTypeMismatch:
+        return -2
+      case .pageLoadFailure:
+        return -3
+      case .http(let statusCode):
+        return statusCode
+      case .none:
+        return -4
+    }
+  }
 
   public func didFailRequestForVisitable(visitable: Visitable, error: Error){
     var event: [AnyHashable: Any] = [
       "url": visitable.visitableURL.absoluteString,
       "description": error.localizedDescription,
+      "statusCode": getStatusCodeFromError(error: error as? TurboError)
     ]
-    if let turboError = error as? TurboError, case let .http(statusCode) = turboError {
-      event["statusCode"] = statusCode
-    }
     onError?(event)
   }
     

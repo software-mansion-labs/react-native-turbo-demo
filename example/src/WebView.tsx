@@ -40,7 +40,7 @@ const WebView: React.FC<Props> = ({ navigation, ...props }) => {
 
   const onError: OnErrorCallback = useCallback(
     (error) => {
-      const notLoggedIn = error?.statusCode === 401;
+      const notLoggedIn = error.statusCode === 401;
       if (notLoggedIn) {
         navigation.navigate(Routes.SignIn, { path: 'signin' });
       }

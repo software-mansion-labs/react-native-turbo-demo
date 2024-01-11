@@ -277,9 +277,9 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
 
   override fun onReceivedError(errorCode: Int) {
     sendEvent(RNVisitableViewEvent.ERROR, Arguments.createMap().apply {
-      putInt("statusCode", errorCode)
+      putInt("statusCode", RNTurboError.transformCode(errorCode))
       putString("url", webView.url)
-      putString("description", "There was an Error (error code: $errorCode).")
+      putString("description", RNTurboError.errorDescription(errorCode))
     })
   }
 
