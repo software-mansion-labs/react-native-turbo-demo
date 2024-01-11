@@ -146,6 +146,7 @@ extension RNSession : WKUIDelegateHandler{
 
   func alertHandler(message: String, completionHandler: @escaping () -> Void) {
     guard let visitableView = visitableViews.last else {
+      completionHandler()
       return
     }
     visitableView.handleAlert(message: message, completionHandler: completionHandler)
@@ -153,6 +154,7 @@ extension RNSession : WKUIDelegateHandler{
 
   func confirmHandler(message: String, completionHandler: @escaping (Bool) -> Void) {
     guard let visitableView = visitableViews.last else {
+      completionHandler(false)
       return
     }
     visitableView.handleConfirm(message: message, completionHandler: completionHandler)
