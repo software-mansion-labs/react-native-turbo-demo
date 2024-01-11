@@ -46,6 +46,17 @@ function isNavigateAction(
   return !!action && action.type === 'NAVIGATE';
 }
 
+function getKeyFromParams(params: unknown) {
+  if (params && typeof params === 'object') {
+    if ('fullPath' in params && params.fullPath) {
+      return params.fullPath as string;
+    } else if ('params' in params) {
+      return getKeyFromParams(params.params);
+    }
+  }
+  return undefined;
+}
+
 function getAction(
   action: NavigateAction<NavigationState>,
   actionType: Action | undefined,
@@ -60,9 +71,7 @@ function getAction(
     return StackActions.replace(action.payload.name, action.payload.params);
   } else {
     const { name, params } = action.payload;
-    const key =
-      (params && 'fullPath' in params && (params.fullPath as string)) ||
-      undefined;
+    const key = getKeyFromParams(params);
     return CommonActions.navigate({
       name,
       key,
