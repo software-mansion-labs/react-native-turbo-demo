@@ -1,5 +1,7 @@
 package com.reactnativeturbowebview
 
+import android.webkit.WebViewClient
+
 enum class RNTurboError(val code: Int) {
   HTTP(1),
   NETWORK_FAILURE(0),
@@ -11,9 +13,10 @@ enum class RNTurboError(val code: Int) {
   companion object {
     fun transformCode(code: Int): Int {
       return when (code) {
-        -6 -> 0
-        -8 -> -1
-        -1 -> -3
+        WebViewClient.ERROR_CONNECT -> 0
+        WebViewClient.ERROR_TIMEOUT -> -1
+        // turbo-android returns ERROR_UNKNOWN on SSL error and on turboFailedToLoad
+        WebViewClient.ERROR_UNKNOWN -> -3
         else -> if (code > 0) code else -4
       }
     }
