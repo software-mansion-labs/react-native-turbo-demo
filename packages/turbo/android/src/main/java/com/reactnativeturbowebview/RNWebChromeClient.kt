@@ -63,7 +63,6 @@ class RNWebChromeClient(
     } ?: run {
       result?.confirm()
     }
-
     return true
   }
 
