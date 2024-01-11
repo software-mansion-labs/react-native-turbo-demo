@@ -11,8 +11,9 @@ enum class RNTurboError(val code: Int) {
   companion object {
     fun transformCode(code: Int): Int {
       return when (code) {
-        -6, -1 -> 0
+        -6 -> 0
         -8 -> -1
+        -1 -> -3
         else -> if (code > 0) code else -4
       }
     }
