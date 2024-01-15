@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   Text,
   Button,
@@ -41,9 +41,9 @@ export function useWebViewState(
   renderLoading?: RenderLoading,
   renderError?: RenderError
 ) {
-  const [loadingVisible, setLoadingVisible] = React.useState(false);
-  const [errorVisible, setErrorVisible] = React.useState(false);
-  const [error, setError] = React.useState<ErrorEvent>({} as ErrorEvent);
+  const [loadingVisible, setLoadingVisible] = useState(false);
+  const [errorVisible, setErrorVisible] = useState(false);
+  const [error, setError] = useState<ErrorEvent>({} as ErrorEvent);
 
   const webViewStateComponent = useMemo(() => {
     const loadingComponent = (renderLoading || defaultRenderLoading)();

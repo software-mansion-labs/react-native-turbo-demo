@@ -177,6 +177,8 @@ Callback called when the webview fails to load.
 - url
 - description
 
+`SystemStatusCode` enum is exported to help you interpret the status code. Every status code that is a positive number is an HTTP Error.
+
 ### `onMessage`
 
 Function that is invoked when the webview calls `postMessage`. Setting this property will inject this global into your webview.
