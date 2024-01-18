@@ -58,6 +58,7 @@ function FocusedFlow() {
       <Stack.Screen name={Routes.PhoneActivation} component={WebView} />
       <Stack.Screen name={Routes.New} component={WebView} />
       <Stack.Screen name={Routes.SuccessScreen} component={WebView} />
+      <Stack.Screen name={Routes.Fallback} component={WebView} />
     </Stack.Navigator>
   );
 }
