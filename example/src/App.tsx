@@ -35,9 +35,32 @@ const BottomTabs = () => {
         component={NativeScreen}
         options={{ title: 'Native Tab' }}
       />
+      <Tab.Screen
+        name={Routes.AccountSettings}
+        component={Account}
+        options={{ title: 'Account' }}
+      />
     </Tab.Navigator>
   );
 };
+
+function Account() {
+  return (
+    <Stack.Navigator screenOptions={{ title: '' }}>
+      <Stack.Screen name={Routes.Account} component={WebView} />
+    </Stack.Navigator>
+  );
+}
+
+function FocusedFlow() {
+  return (
+    <Stack.Navigator screenOptions={{ title: '' }}>
+      <Stack.Screen name={Routes.PhoneActivation} component={WebView} />
+      <Stack.Screen name={Routes.New} component={WebView} />
+      <Stack.Screen name={Routes.SuccessScreen} component={WebView} />
+    </Stack.Navigator>
+  );
+}
 
 const App: React.FC = () => {
   const navigation = useNavigationContainerRef();
@@ -61,22 +84,6 @@ const App: React.FC = () => {
           options={{ title: 'A List of Numbers' }}
         />
         <Stack.Screen
-          name={Routes.New}
-          component={WebView}
-          options={{
-            title: 'A Modal Webpage',
-            presentation: 'modal',
-          }}
-        />
-        <Stack.Screen
-          name={Routes.SuccessScreen}
-          component={WebView}
-          options={{
-            title: 'It Worked!',
-            presentation: 'modal',
-          }}
-        />
-        <Stack.Screen
           name={Routes.One}
           component={WebView}
           options={{
@@ -84,7 +91,6 @@ const App: React.FC = () => {
           }}
         />
         <Stack.Screen name={Routes.Share} component={ShareScreen} />
-        <Stack.Screen name={Routes.Fallback} component={WebView} />
         <Stack.Screen
           name={Routes.SignIn}
           component={WebView}
@@ -103,6 +109,12 @@ const App: React.FC = () => {
           component={NestedTab}
           options={{ title: 'Nested Top Tab' }}
         />
+        <Stack.Screen
+          name={Routes.FocusedFlow}
+          component={FocusedFlow}
+          options={{ title: '', presentation: 'modal', headerShown: false }}
+        />
+        <Stack.Screen name={Routes.Fallback} component={WebView} />
       </Stack.Navigator>
     </NavigationContainer>
   );

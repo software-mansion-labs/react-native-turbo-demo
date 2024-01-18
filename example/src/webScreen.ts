@@ -10,10 +10,13 @@ export const linkingConfig: LinkingConfig = {
     [Routes.BottomTabs]: {
       screens: {
         [Routes.WebviewInitial]: '',
+        [Routes.AccountSettings]: {
+          screens: {
+            [Routes.Account]: 'account',
+          },
+        },
       },
     },
-    [Routes.New]: 'new',
-    [Routes.SuccessScreen]: 'success',
     [Routes.One]: 'one',
     [Routes.NumbersScreen]: 'numbers',
     [Routes.SignIn]: 'signin',
@@ -21,6 +24,14 @@ export const linkingConfig: LinkingConfig = {
     [Routes.NestedTab]: {
       screens: {
         [Routes.NestedTabWeb]: 'nested',
+      },
+    },
+
+    [Routes.FocusedFlow]: {
+      screens: {
+        [Routes.PhoneActivation]: 'phone_activation/:step?',
+        [Routes.New]: 'new',
+        [Routes.SuccessScreen]: 'success',
       },
     },
     [Routes.Fallback]: '*',

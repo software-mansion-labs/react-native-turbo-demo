@@ -122,7 +122,7 @@ export function useWebviewNavigate<
 
         if (isNavigateAction(action)) {
           const actionToDispatch = getAction(action, actionType, route.name);
-
+          console.log(JSON.stringify(actionToDispatch, null, 2));
           navigation.dispatch(actionToDispatch);
         } else if (action === undefined) {
           // @ts-expect-error

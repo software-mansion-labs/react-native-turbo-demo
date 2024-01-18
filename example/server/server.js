@@ -138,6 +138,24 @@ app.get('/share', (request, response) => {
   response.render('share', { title: 'Try Sharing' });
 });
 
+app.get('/account', (request, response) => {
+  response.render('account', { title: 'Account setup' });
+});
+
+app.get('/phone-setup', (request, response) => {
+  response.render('phone-setup', { title: 'Phone setup' });
+});
+
+app.get('/phone_activation', (request, response) => {
+  response.render('phone-eof', { title: 'Telephone details' });
+});
+
+app.get('/phone_activation/:step', (request, response) => {
+  response.render('phone', {
+    title: 'Telephone details, step ' + request.params.step,
+  });
+});
+
 app.get('/nested', (request, response) => {
   response.render('nested', { title: 'Nested Navigator' });
 });
