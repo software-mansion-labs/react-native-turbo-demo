@@ -10,7 +10,10 @@ import {
 import { ErrorEvent } from '../types';
 
 export type RenderLoading = () => React.ReactNode;
-export type RenderError = () => React.ReactNode;
+export type RenderError = (
+  error: ErrorEvent,
+  reloadHandler: () => void
+) => React.ReactNode;
 
 type ActivityIndicatorSize = 'small' | 'large';
 

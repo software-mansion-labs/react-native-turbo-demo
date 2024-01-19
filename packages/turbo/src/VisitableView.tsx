@@ -69,7 +69,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       renderLoading,
       renderError,
       onLoad,
-      onError: onErrorHandler,
+      onError: onErrorCustomHandler,
       onMessage,
       onVisitProposal,
       onOpenExternalUrl: onOpenExternalUrlCallback = openExternalURL,
@@ -120,12 +120,12 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       [reloadVisitableView]
     );
 
-    const handleOnError = useCallback(
+    const onErrorCombinedHandlers = useCallback(
       ({ nativeEvent }: NativeSyntheticEvent<ErrorEvent>) => {
-        onErrorHandler?.(nativeEvent);
+        onErrorCustomHandler?.(nativeEvent);
         handleRenderError(nativeEvent);
       },
-      [handleRenderError, onErrorHandler]
+      [handleRenderError, onErrorCustomHandler]
     );
 
     const handleOnLoad = useCallback(
@@ -202,7 +202,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           sessionHandle={sessionHandle}
           applicationNameForUserAgent={resolvedApplicationNameForUserAgent}
           pullToRefreshEnabled={pullToRefreshEnabled}
-          onError={handleOnError}
+          onError={onErrorCombinedHandlers}
           onVisitProposal={handleVisitProposal}
           onMessage={handleOnMessage}
           onOpenExternalUrl={handleOnOpenExternalUrl}
