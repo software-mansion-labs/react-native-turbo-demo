@@ -169,6 +169,10 @@ class RNSession(
     topmostView?.didFinishFormSubmission(location)
   }
 
+  override fun requestFailedWithStatusCode(visitHasCachedSnapshot: Boolean, statusCode: Int) {
+    topmostView?.requestFailedWithStatusCode(visitHasCachedSnapshot, statusCode)
+  }
+
   // end region
 
 }

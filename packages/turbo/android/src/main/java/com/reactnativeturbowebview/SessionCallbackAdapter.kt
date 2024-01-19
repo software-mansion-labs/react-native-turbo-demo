@@ -18,8 +18,6 @@ interface SessionCallbackAdapter : TurboSessionCallback {
 
   override fun pageInvalidated() {}
 
-  override fun requestFailedWithStatusCode(visitHasCachedSnapshot: Boolean, statusCode: Int) {}
-
   override fun onReceivedHttpAuthRequest(handler: HttpAuthHandler, host: String, realm: String) {}
 
   override fun onPageStarted(location: String) {}

@@ -27,10 +27,21 @@ export type MessageEvent = object;
 export interface AlertHandler {
   message: string;
 }
-export interface VisitProposalError {
-  statusCode: number;
+
+export interface ErrorEvent {
   url: string;
-  error?: string;
+  statusCode: SystemStatusCode | HTTPStatusCode;
+  description?: string;
+}
+
+export type HTTPStatusCode = number;
+
+export enum SystemStatusCode {
+  NETWORK_FAILURE = 0,
+  TIMEOUT_FAILURE = -1,
+  CONTENT_TYPE_MISMATCH = -2,
+  PAGE_LOAD_FAILURE = -3,
+  UNKNOWN = -4,
 }
 
 export type StradaMessage = {
@@ -46,7 +57,7 @@ export type StradaMessage = {
 
 export type SessionMessageCallback = (message: object) => void;
 
-export type OnErrorCallback = (error: VisitProposalError) => void;
+export type OnErrorCallback = (error: ErrorEvent) => void;
 
 export type StradaComponentProps = {
   sessionHandle: string;

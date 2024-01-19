@@ -3,18 +3,16 @@ import {
   LoadEvent,
   VisitableView,
   VisitProposal,
-  OnErrorCallback,
   VisitableViewProps,
 } from 'react-native-turbo';
 import { useCurrentUrl, useWebviewNavigate } from 'react-native-web-screen';
-import { Routes } from './webScreenRoutes';
 import Form from './Strada/Form';
 import { RootStackParamList, baseURL, linkingConfig } from './webScreen';
 import { NavigationProp } from '@react-navigation/native';
 
 export type Props = {
   navigation: NavigationProp<RootStackParamList>;
-} & Pick<VisitableViewProps, 'onMessage'>;
+} & Pick<VisitableViewProps, 'onMessage' | 'renderError' | 'onError'>;
 
 const sessionHandle = 'TurboWebviewExample';
 const stradaComponents = [Form];
@@ -38,16 +36,6 @@ const WebView: React.FC<Props> = ({ navigation, ...props }) => {
     [navigation]
   );
 
-  const onVisitError: OnErrorCallback = useCallback(
-    (error) => {
-      const notLoggedIn = error.statusCode === 401;
-      if (notLoggedIn) {
-        navigation.navigate(Routes.SignIn, { path: 'signin' });
-      }
-    },
-    [navigation]
-  );
-
   return (
     <VisitableView
       {...props}
@@ -57,7 +45,6 @@ const WebView: React.FC<Props> = ({ navigation, ...props }) => {
       stradaComponents={stradaComponents}
       onVisitProposal={onVisitProposal}
       onLoad={onLoad}
-      onVisitError={onVisitError}
     />
   );
 };

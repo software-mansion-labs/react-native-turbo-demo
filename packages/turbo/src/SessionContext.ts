@@ -3,10 +3,10 @@ import React from 'react';
 
 interface SessionContextValue {
   sessionHandle?: string | null;
-  onVisitError?: OnErrorCallback;
+  onError?: OnErrorCallback;
 }
 
 export const SessionContext = React.createContext<SessionContextValue>({
   sessionHandle: undefined,
-  onVisitError: undefined,
+  onError: undefined,
 });
