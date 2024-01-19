@@ -21,7 +21,7 @@ import type {
 } from './types';
 
 // interface should match RNVisitableView exported properties in native code
-interface RNVisitableViewProps {
+export interface RNVisitableViewProps {
   url: string;
   sessionHandle?: string;
   applicationNameForUserAgent?: string;

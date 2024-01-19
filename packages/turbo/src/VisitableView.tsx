@@ -3,9 +3,11 @@ import React, {
   useImperativeHandle,
   useRef,
   useMemo,
+  Component,
 } from 'react';
-import { NativeSyntheticEvent, StyleSheet } from 'react-native';
+import { NativeMethods, NativeSyntheticEvent, StyleSheet } from 'react-native';
 import RNVisitableView, {
+  RNVisitableViewProps,
   dispatchCommand,
   openExternalURL,
 } from './RNVisitableView';
@@ -79,7 +81,9 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       onFormSubmissionFinished,
       onContentProcessDidTerminate,
     } = props;
-    const visitableViewRef = useRef<typeof RNVisitableView>();
+    const visitableViewRef = useRef<
+      Component<RNVisitableViewProps> & NativeMethods
+    >(null);
 
     const { registerMessageListener, handleOnMessage } =
       useMessageQueue(onMessage);
@@ -185,18 +189,17 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
     return (
       <>
         {webViewStateComponent}
-        {stradaComponents?.map((Component, i) => (
-          <Component
+        {stradaComponents?.map((StradaComponent, i) => (
+          <StradaComponent
             key={i}
             url={url}
             sessionHandle={sessionHandle}
-            name={Component.componentName}
+            name={StradaComponent.componentName}
             registerMessageListener={registerMessageListener}
             sendToBridge={sendToBridge}
           />
         ))}
         <RNVisitableView
-          // @ts-expect-error
           ref={visitableViewRef}
           url={props.url}
           sessionHandle={sessionHandle}
