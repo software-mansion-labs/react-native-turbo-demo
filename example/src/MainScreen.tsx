@@ -1,10 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import WebView, { type Props } from './WebView';
-import { type OnErrorCallback } from 'react-native-turbo';
+import type { OnErrorCallback, RenderError } from 'react-native-turbo';
 import { Routes } from './webScreenRoutes';
 
 const MainScreen: React.FC<Props> = (props) => {
-  const [renderError, setRenderError] = useState<any>(() => () => null);
+  const [renderError, setRenderError] = useState<RenderError | undefined>(
+    () => () => null
+  );
 
   const onError: OnErrorCallback = useCallback(
     (error) => {
