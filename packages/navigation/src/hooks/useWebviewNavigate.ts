@@ -1,6 +1,9 @@
 import {
   getActionFromState,
   getStateFromPath,
+  NavigationAction,
+  NavigationProp,
+  PartialState,
   StackActions,
   useNavigation,
   useRoute,
@@ -16,8 +19,27 @@ import type {
 import type { Action } from 'react-native-turbo';
 import { unpackState } from '../utils/unpackState';
 
+type ActionPayloadParams = {
+  screen?: string;
+  params?: unknown;
+  path?: string;
+};
+
+type ActionPayload = {
+  params?: ActionPayloadParams;
+};
+
 type NavigateAction<State extends NavigationState> = {
   type: 'NAVIGATE';
+  payload: {
+    name: string;
+    params?: NavigatorScreenParams<State>;
+    path?: string;
+  };
+};
+
+type PushAction<State extends NavigationState> = {
+  type: 'PUSH';
   payload: {
     name: string;
     params?: NavigatorScreenParams<State>;
@@ -58,7 +80,7 @@ function getKeyFromParams(params: unknown) {
 }
 
 function getAction(
-  action: NavigateAction<NavigationState>,
+  action: NavigateAction<NavigationState> | PushAction<NavigationState>,
   actionType: Action | undefined,
   routeName: string
 ) {
@@ -71,13 +93,49 @@ function getAction(
     return StackActions.replace(action.payload.name, action.payload.params);
   } else {
     const { name, params } = action.payload;
-    const key = getKeyFromParams(params);
-    return CommonActions.navigate({
-      name,
-      key,
-      params,
-    });
+    if (action.type === 'NAVIGATE') {
+      const key = getKeyFromParams(params);
+      return CommonActions.navigate({
+        name,
+        key,
+        params,
+      });
+    }
+    return StackActions.push(name, params);
   }
+}
+
+function getMinimalAction(
+  action: NavigationAction,
+  state: NavigationState
+): NavigationAction {
+  let currentAction = action;
+  let currentState:
+    | NavigationState
+    | PartialState<NavigationState>
+    | undefined = state;
+
+  while (
+    currentAction.payload &&
+    'name' in currentAction.payload &&
+    currentState?.routes[currentState.index ?? -1]?.name ===
+      currentAction.payload.name
+  ) {
+    const payload = currentAction.payload as ActionPayload;
+
+    // Creating new smaller action
+    currentAction = {
+      // we can still keep the `NAVIGATE` type here, but then we need to use `key` prop later
+      type: 'PUSH',
+      payload: {
+        name: payload?.params?.screen,
+        params: payload?.params?.params,
+        path: payload?.params?.path,
+      },
+    };
+    currentState = currentState?.routes[currentState.index ?? -1]?.state;
+  }
+  return currentAction;
 }
 
 /*
@@ -121,8 +179,23 @@ export function useWebviewNavigate<
         const action = getActionFromState(actionState, options?.config);
 
         if (isNavigateAction(action)) {
-          const actionToDispatch = getAction(action, actionType, route.name);
-          console.log(JSON.stringify(actionToDispatch, null, 2));
+          let root = navigation;
+          let current:
+            | NavigationProp<ReactNavigation.RootParamList>
+            | undefined;
+
+          while ((current = root.getParent())) {
+            root = current;
+          }
+
+          const rootState = root.getState();
+          const minimalAction = getMinimalAction(action, rootState);
+          const actionToDispatch = getAction(
+            // @ts-expect-error
+            minimalAction,
+            actionType,
+            route.name
+          );
           navigation.dispatch(actionToDispatch);
         } else if (action === undefined) {
           // @ts-expect-error
