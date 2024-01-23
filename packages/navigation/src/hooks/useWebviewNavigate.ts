@@ -116,7 +116,7 @@ function getMinimalAction(
     // Creating new smaller action
     currentAction = {
       // we can still keep the `NAVIGATE` type here, but then we need to use `key` prop later
-      type: 'PUSH',
+      type: 'NAVIGATE',
       payload: {
         name: payload?.params?.screen,
         params: payload?.params?.params,
