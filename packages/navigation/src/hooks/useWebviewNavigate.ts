@@ -105,6 +105,7 @@ function getMinimalAction(
   while (
     currentAction.payload &&
     'name' in currentAction.payload &&
+    currentAction.payload.name &&
     currentState?.routes[currentState.index ?? -1]?.name ===
       currentAction.payload.name
   ) {
