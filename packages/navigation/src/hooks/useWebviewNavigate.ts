@@ -94,10 +94,10 @@ function getAction(
   } else {
     const { name, params } = action.payload;
     if (action.type === 'NAVIGATE') {
-      const key = getKeyFromParams(params);
+      // const key = getKeyFromParams(params);
       return CommonActions.navigate({
         name,
-        key,
+        // key,
         params,
       });
     }
@@ -189,13 +189,19 @@ export function useWebviewNavigate<
           }
 
           const rootState = root.getState();
-          const minimalAction = getMinimalAction(action, rootState);
+          // console.log("action: ");
+          // console.log(JSON.stringify(action, null, 2));
+          // const minimalAction = getMinimalAction(action, rootState);
+          // console.log("minimal action: ");
+          // console.log(JSON.stringify(minimalAction, null, 2));
           const actionToDispatch = getAction(
             // @ts-expect-error
             minimalAction,
             actionType,
             route.name
           );
+          // console.log("action to dispatch: ");
+          // console.log(JSON.stringify(actionToDispatch, null, 2));
           navigation.dispatch(actionToDispatch);
         } else if (action === undefined) {
           // @ts-expect-error
