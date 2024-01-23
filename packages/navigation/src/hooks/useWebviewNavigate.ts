@@ -163,10 +163,7 @@ export function useWebviewNavigate<
         : getStateFromPath(path, options?.config);
 
       if (state) {
-        // for REPLACE action we need to pass only top of navigation state.
-        const actionState =
-          actionType === 'replace' ? unpackState(state) : state;
-        const action = getActionFromState(actionState, options?.config);
+        const action = getActionFromState(state, options?.config);
 
         if (isNavigateAction(action)) {
           let root = navigation;
