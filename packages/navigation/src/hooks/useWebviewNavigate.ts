@@ -68,17 +68,6 @@ function isNavigateAction(
   return !!action && action.type === 'NAVIGATE';
 }
 
-function getKeyFromParams(params: unknown) {
-  if (params && typeof params === 'object') {
-    if ('fullPath' in params && params.fullPath) {
-      return params.fullPath as string;
-    } else if ('params' in params) {
-      return getKeyFromParams(params.params);
-    }
-  }
-  return undefined;
-}
-
 function getAction(
   action: NavigateAction<NavigationState> | PushAction<NavigationState>,
   actionType: Action | undefined,
@@ -94,10 +83,8 @@ function getAction(
   } else {
     const { name, params } = action.payload;
     if (action.type === 'NAVIGATE') {
-      // const key = getKeyFromParams(params);
       return CommonActions.navigate({
         name,
-        // key,
         params,
       });
     }
@@ -189,19 +176,13 @@ export function useWebviewNavigate<
           }
 
           const rootState = root.getState();
-          // console.log("action: ");
-          // console.log(JSON.stringify(action, null, 2));
-          // const minimalAction = getMinimalAction(action, rootState);
-          // console.log("minimal action: ");
-          // console.log(JSON.stringify(minimalAction, null, 2));
+          const minimalAction = getMinimalAction(action, rootState);
           const actionToDispatch = getAction(
             // @ts-expect-error
             minimalAction,
             actionType,
             route.name
           );
-          // console.log("action to dispatch: ");
-          // console.log(JSON.stringify(actionToDispatch, null, 2));
           navigation.dispatch(actionToDispatch);
         } else if (action === undefined) {
           // @ts-expect-error
