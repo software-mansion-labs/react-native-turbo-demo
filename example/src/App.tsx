@@ -16,6 +16,7 @@ import WebView from './WebView';
 const Tab = createBottomTabNavigator();
 
 const Stack = createNativeStackNavigator();
+const getId = (params: any) => JSON.stringify(params);
 
 const BottomTabs = () => {
   return (
@@ -55,10 +56,18 @@ function Account() {
 function FocusedFlow() {
   return (
     <Stack.Navigator screenOptions={{ title: '' }}>
-      <Stack.Screen name={Routes.PhoneActivation} component={WebView} />
-      <Stack.Screen name={Routes.New} component={WebView} />
-      <Stack.Screen name={Routes.SuccessScreen} component={WebView} />
-      <Stack.Screen name={Routes.Fallback} component={WebView} />
+      <Stack.Screen
+        name={Routes.PhoneActivation}
+        getId={getId}
+        component={WebView}
+      />
+      <Stack.Screen name={Routes.New} getId={getId} component={WebView} />
+      <Stack.Screen
+        name={Routes.SuccessScreen}
+        getId={getId}
+        component={WebView}
+      />
+      <Stack.Screen name={Routes.Fallback} getId={getId} component={WebView} />
     </Stack.Navigator>
   );
 }
@@ -87,6 +96,7 @@ const App: React.FC = () => {
         <Stack.Screen
           name={Routes.One}
           component={WebView}
+          getId={getId}
           options={{
             title: "How'd You Get Here?",
           }}
@@ -95,6 +105,7 @@ const App: React.FC = () => {
         <Stack.Screen
           name={Routes.SignIn}
           component={WebView}
+          getId={getId}
           options={{
             presentation: 'formSheet',
             gestureEnabled: false,
@@ -115,7 +126,11 @@ const App: React.FC = () => {
           component={FocusedFlow}
           options={{ title: '', presentation: 'modal', headerShown: false }}
         />
-        <Stack.Screen name={Routes.Fallback} component={WebView} />
+        <Stack.Screen
+          name={Routes.Fallback}
+          getId={getId}
+          component={WebView}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
