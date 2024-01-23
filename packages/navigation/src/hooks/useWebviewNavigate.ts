@@ -106,6 +106,8 @@ function getMinimalAction(
     currentAction.payload &&
     'name' in currentAction.payload &&
     currentAction.payload.name &&
+    'params' in currentAction.payload &&
+    currentAction.payload.params.screen &&
     currentState?.routes[currentState.index ?? -1]?.name ===
       currentAction.payload.name
   ) {
