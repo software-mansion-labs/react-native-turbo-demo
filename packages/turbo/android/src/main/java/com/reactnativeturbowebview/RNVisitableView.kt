@@ -15,6 +15,7 @@ import com.facebook.react.uimanager.events.RCTEventEmitter
 import dev.hotwire.turbo.views.TurboView
 import dev.hotwire.turbo.views.TurboWebView
 import dev.hotwire.turbo.visit.TurboVisitOptions
+import dev.hotwire.turbo.R
 
 class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscriber {
 
