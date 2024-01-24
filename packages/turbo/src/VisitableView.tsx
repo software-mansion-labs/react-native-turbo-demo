@@ -191,7 +191,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
         {webViewStateComponent}
         {stradaComponents?.map((StradaComponent, i) => (
           <StradaComponent
-            key={i}
+            key={`${url}-${i}`}
             url={url}
             sessionHandle={sessionHandle}
             name={StradaComponent.componentName}
