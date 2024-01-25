@@ -14,8 +14,8 @@ import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.events.RCTEventEmitter
 import dev.hotwire.turbo.views.TurboView
 import dev.hotwire.turbo.views.TurboWebView
-import dev.hotwire.turbo.visit.TurboVisitAction
 import dev.hotwire.turbo.visit.TurboVisitOptions
+import dev.hotwire.turbo.R
 
 class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscriber {
 
@@ -277,9 +277,10 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   }
 
   override fun onReceivedError(errorCode: Int) {
-    sendEvent(RNVisitableViewEvent.VISIT_ERROR, Arguments.createMap().apply {
-      putInt("statusCode", errorCode)
+    sendEvent(RNVisitableViewEvent.ERROR, Arguments.createMap().apply {
+      putInt("statusCode", RNTurboError.transformCode(errorCode))
       putString("url", webView.url)
+      putString("description", RNTurboError.errorDescription(errorCode))
     })
   }
 
@@ -357,9 +358,10 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   }
 
   override fun requestFailedWithStatusCode(visitHasCachedSnapshot: Boolean, statusCode: Int) {
-    sendEvent(RNVisitableViewEvent.VISIT_ERROR, Arguments.createMap().apply {
+    sendEvent(RNVisitableViewEvent.ERROR, Arguments.createMap().apply {
       putInt("statusCode", statusCode)
-      putString("url", webView.url)
+      putString("url", url)
+      putString("description", "There was an HTTP Error ($statusCode).")
     })
   }
 

@@ -14,21 +14,21 @@ import type {
   LoadEvent,
   MessageEvent,
   VisitProposal,
-  VisitProposalError,
+  ErrorEvent,
   OpenExternalUrlEvent,
   FormSubmissionEvent,
   ContentProcessDidTerminateEvent,
 } from './types';
 
 // interface should match RNVisitableView exported properties in native code
-interface RNVisitableViewProps {
+export interface RNVisitableViewProps {
   url: string;
   sessionHandle?: string;
   applicationNameForUserAgent?: string;
   pullToRefreshEnabled: boolean;
   onLoad?: (e: NativeSyntheticEvent<LoadEvent>) => void;
   onMessage?: (e: NativeSyntheticEvent<MessageEvent>) => void;
-  onVisitError?: (e: NativeSyntheticEvent<VisitProposalError>) => void;
+  onError?: (e: NativeSyntheticEvent<ErrorEvent>) => void;
   onVisitProposal?: (e: NativeSyntheticEvent<VisitProposal>) => void;
   onWebAlert?: (e: NativeSyntheticEvent<AlertHandler>) => void;
   onWebConfirm?: (e: NativeSyntheticEvent<AlertHandler>) => void;
