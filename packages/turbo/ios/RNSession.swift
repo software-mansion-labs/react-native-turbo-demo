@@ -41,7 +41,7 @@ class RNSession: NSObject {
     self.sessionHandle = sessionHandle
     self.webViewConfiguration = webViewConfiguration
   }
-
+  
   public lazy var turboSession: Session = {
     webViewConfiguration.userContentController.add(self, name: "nativeApp")
     self.wkUiDelegate = TurboUIDelegate(uiHandler: self)
@@ -70,34 +70,45 @@ class RNSession: NSObject {
   }
   
   func unregisterVisitableView(view: RNSessionSubscriber) {
-    let wasTopMostView = visitableViews.last?.id == view.id
-    
-    let viewIdx = visitableViews.lastIndex(where: {
+    guard let viewIdx = visitableViews.lastIndex(where: {
       view.id == $0.id
-    })
-    visitableViews.remove(at: viewIdx!)
+    }) else { return }
 
-    // The new top-most view is not registered when the previous top-most view is a modal
-    if (wasTopMostView) {
-      guard let newView = visitableViews.last else {
+    visitableViews.remove(at: viewIdx)
+  }
+  
+  func visitableViewWillDisappear(view: RNSessionSubscriber) {
+    let willTopMostViewDisappear = visitableViews.last?.id == view.id
+    
+    if (willTopMostViewDisappear) {
+      guard let nextView = visitableViews.dropLast().last else {
         return
       }
-      visitableViewWillAppear(view: newView)
+      visitableViewWillAppear(view: nextView)
     }
   }
-    
+  
+  func visitableViewDidDisappear(view: RNSessionSubscriber) {
+    unregisterVisitableView(view: view)
+  }
+  
   func visitableViewWillAppear(view: RNSessionSubscriber) {
     turboSession.visitableViewWillAppear(view.controller)
   }
-    
+  
+  func visitableViewDidAppear(view: RNSessionSubscriber) {
+    registerVisitableView(newView: view)
+    turboSession.visitableViewDidAppear(view.controller)
+  }
+  
   func visit(_ visitable: Visitable) {
     turboSession.visit(visitable)
   }
-    
+  
   func reload() {
     turboSession.reload()
   }
-    
+  
   func clearSnapshotCache() {
     turboSession.clearSnapshotCache()
   }
