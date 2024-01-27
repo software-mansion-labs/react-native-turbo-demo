@@ -179,17 +179,9 @@ class RNVisitableView: UIView, RNSessionSubscriber {
 }
 
 extension RNVisitableView: RNVisitableViewControllerDelegate {
-
-  func visitableWillAppear(visitable: Visitable) {
-    session.visitableViewWillAppear(view: self)
-  }
   
   func visitableDidAppear(visitable: Visitable) {
     session.visitableViewDidAppear(view: self)
-  }
-  
-  func visitableWillDisappear(visitable: Visitable) {
-    session.visitableViewWillDisappear(view: self)
   }
   
   func visitableDidDisappear(visitable: Visitable) {

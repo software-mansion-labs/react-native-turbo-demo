@@ -32,7 +32,7 @@ class TurboUIDelegate: NSObject, WKUIDelegate {
 
 class RNSession: NSObject {
   
-  private var visitableViews: [RNSessionSubscriber] = []
+  private var visitableView: RNVisitableView?
   private var sessionHandle: NSString
   private var webViewConfiguration: WKWebViewConfiguration
   private var wkUiDelegate: WKUIDelegate?
@@ -61,43 +61,14 @@ class RNSession: NSObject {
   }()
   public lazy var webView: WKWebView = turboSession.webView
   
-  func registerVisitableView(newView: RNSessionSubscriber) {
-    if (!visitableViews.contains {
-      $0.id == newView.id
-    }) {
-      visitableViews.append(newView)
+  func visitableViewDidDisappear(view: RNVisitableView) {
+    if (view === visitableView) {
+      self.visitableView = nil
     }
   }
   
-  func unregisterVisitableView(view: RNSessionSubscriber) {
-    guard let viewIdx = visitableViews.lastIndex(where: {
-      view.id == $0.id
-    }) else { return }
-
-    visitableViews.remove(at: viewIdx)
-  }
-  
-  func visitableViewWillDisappear(view: RNSessionSubscriber) {
-    let willTopMostViewDisappear = visitableViews.last?.id == view.id
-    
-    if (willTopMostViewDisappear) {
-      guard let nextView = visitableViews.dropLast().last else {
-        return
-      }
-      visitableViewWillAppear(view: nextView)
-    }
-  }
-  
-  func visitableViewDidDisappear(view: RNSessionSubscriber) {
-    unregisterVisitableView(view: view)
-  }
-  
-  func visitableViewWillAppear(view: RNSessionSubscriber) {
-    // No-op
-  }
-  
-  func visitableViewDidAppear(view: RNSessionSubscriber) {
-    registerVisitableView(newView: view)
+  func visitableViewDidAppear(view: RNVisitableView) {
+    self.visitableView = view
   }
   
   func visit(_ visitable: Visitable) {
@@ -117,36 +88,34 @@ class RNSession: NSObject {
 extension RNSession: SessionDelegate {
   
   func sessionWebViewProcessDidTerminate(_ session: Session) {
-    visitableViews.last?.processDidTerminate()
+    visitableView?.processDidTerminate()
   }
 
   func session(_ session: Session, didProposeVisit proposal: VisitProposal) {
-    visitableViews.last?.didProposeVisit(proposal: proposal)
+    visitableView?.didProposeVisit(proposal: proposal)
   }
 
   func session(_ session: Session, didFailRequestForVisitable visitable: Visitable, error: Error) {
-    visitableViews.last?.didFailRequestForVisitable(visitable: visitable, error: error)
+    visitableView?.didFailRequestForVisitable(visitable: visitable, error: error)
   }
 
   func session(_ session: Session, openExternalURL url: URL) {
-    visitableViews.last?.didOpenExternalUrl(url: url)
+    visitableView?.didOpenExternalUrl(url: url)
   }
     
   func sessionDidStartFormSubmission(_ session: Session) {
-    visitableViews.last?.didStartFormSubmission()
+    visitableView?.didStartFormSubmission()
   }
     
   func sessionDidFinishFormSubmission(_ session: Session) {
-    visitableViews.last?.didFinishFormSubmission()
+    visitableView?.didFinishFormSubmission()
   }
 }
 
 extension RNSession: WKScriptMessageHandler {
   
   func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-    for view in visitableViews {
-      view.handleMessage(message: message)
-    }
+    visitableView?.handleMessage(message: message)
   }
   
 }
@@ -154,18 +123,20 @@ extension RNSession: WKScriptMessageHandler {
 extension RNSession : WKUIDelegateHandler{
 
   func alertHandler(message: String, completionHandler: @escaping () -> Void) {
-    guard let visitableView = visitableViews.last else {
+    if (visitableView == nil) {
       completionHandler()
       return
     }
-    visitableView.handleAlert(message: message, completionHandler: completionHandler)
+    
+    visitableView?.handleAlert(message: message, completionHandler: completionHandler)
   }
 
   func confirmHandler(message: String, completionHandler: @escaping (Bool) -> Void) {
-    guard let visitableView = visitableViews.last else {
+    if (visitableView == nil) {
       completionHandler(false)
       return
     }
-    visitableView.handleConfirm(message: message, completionHandler: completionHandler)
+    
+    visitableView?.handleConfirm(message: message, completionHandler: completionHandler)
   }
 }
