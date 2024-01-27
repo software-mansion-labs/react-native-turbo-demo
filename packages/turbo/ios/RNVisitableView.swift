@@ -57,6 +57,10 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   private var isRefreshing: Bool {
     controller.visitableView.isRefreshing
   }
+  
+  // var isModal: Bool {
+  //   return controller.reactViewController()?.isModal()
+  // }
     
   override func didMoveToWindow() {
     reactViewController()?.addChild(controller)
