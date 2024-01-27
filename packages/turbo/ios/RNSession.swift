@@ -93,12 +93,11 @@ class RNSession: NSObject {
   }
   
   func visitableViewWillAppear(view: RNSessionSubscriber) {
-    turboSession.visitableViewWillAppear(view.controller)
+    // No-op
   }
   
   func visitableViewDidAppear(view: RNSessionSubscriber) {
     registerVisitableView(newView: view)
-    turboSession.visitableViewDidAppear(view.controller)
   }
   
   func visit(_ visitable: Visitable) {
@@ -114,7 +113,6 @@ class RNSession: NSObject {
   }
   
 }
-
 
 extension RNSession: SessionDelegate {
   
