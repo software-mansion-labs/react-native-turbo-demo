@@ -1,9 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import WebView, { type Props } from './WebView';
 import type { OnErrorCallback, RenderError } from 'react-native-turbo';
-import { Routes } from './webScreenRoutes';
+import { useLinkTo } from '@react-navigation/native';
 
 const MainScreen: React.FC<Props> = (props) => {
+  const linkTo = useLinkTo();
   const [renderError, setRenderError] = useState<RenderError | undefined>(
     () => () => null
   );
@@ -12,12 +13,12 @@ const MainScreen: React.FC<Props> = (props) => {
     (error) => {
       const notLoggedIn = error.statusCode === 401;
       if (notLoggedIn) {
-        props.navigation.navigate(Routes.SignIn, { path: 'signin' });
+        linkTo('/signin');
       } else {
         setRenderError(undefined);
       }
     },
-    [props.navigation]
+    [linkTo]
   );
 
   return <WebView {...props} onError={onError} renderError={renderError} />;
