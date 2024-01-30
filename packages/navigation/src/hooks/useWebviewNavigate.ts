@@ -17,6 +17,7 @@ import type {
   NavigatorScreenParams,
 } from '@react-navigation/core';
 import type { Action } from 'react-native-turbo';
+import { isDeepEqual } from '../utils/isEqual';
 
 type ActionPayloadParams = {
   screen?: string;
@@ -26,6 +27,7 @@ type ActionPayloadParams = {
 
 type ActionPayload = {
   params?: ActionPayloadParams;
+  name?: string;
 };
 
 type NavigateAction<State extends NavigationState> = {
@@ -100,18 +102,18 @@ function getMinimalAction(
     | NavigationState
     | PartialState<NavigationState>
     | undefined = state;
+  let payload = currentAction.payload as ActionPayload | undefined;
 
   while (
-    currentAction.payload &&
-    'name' in currentAction.payload &&
-    currentAction.payload.name &&
-    'params' in currentAction.payload &&
-    currentAction.payload.params.screen &&
-    currentState?.routes[currentState.index ?? -1]?.name ===
-      currentAction.payload.name
+    payload &&
+    payload?.name &&
+    payload?.params?.screen &&
+    currentState?.routes[currentState.index ?? -1]?.name === payload.name &&
+    isDeepEqual(
+      currentState?.routes[currentState.index ?? -1]?.params,
+      payload.params
+    )
   ) {
-    const payload = currentAction.payload as ActionPayload;
-
     // Creating new smaller action
     currentAction = {
       // We can still keep the `NAVIGATE` type here, but then we need to use `key` prop later
@@ -123,6 +125,7 @@ function getMinimalAction(
       },
     };
     currentState = currentState?.routes[currentState.index ?? -1]?.state;
+    payload = currentAction.payload;
   }
   return currentAction;
 }
