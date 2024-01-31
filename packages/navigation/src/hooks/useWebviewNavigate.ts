@@ -1,6 +1,9 @@
 import {
   getActionFromState,
   getStateFromPath,
+  NavigationAction,
+  NavigationProp,
+  PartialState,
   StackActions,
   useNavigation,
   useRoute,
@@ -14,10 +17,30 @@ import type {
   NavigatorScreenParams,
 } from '@react-navigation/core';
 import type { Action } from 'react-native-turbo';
-import { unpackState } from '../utils/unpackState';
+import { isDeepEqual } from '../utils/isEqual';
+
+type ActionPayloadParams = {
+  screen?: string;
+  params?: unknown;
+  path?: string;
+};
+
+type ActionPayload = {
+  params?: ActionPayloadParams;
+  name?: string;
+};
 
 type NavigateAction<State extends NavigationState> = {
   type: 'NAVIGATE';
+  payload: {
+    name: string;
+    params?: NavigatorScreenParams<State>;
+    path?: string;
+  };
+};
+
+type PushAction<State extends NavigationState> = {
+  type: 'PUSH';
   payload: {
     name: string;
     params?: NavigatorScreenParams<State>;
@@ -46,19 +69,8 @@ function isNavigateAction(
   return !!action && action.type === 'NAVIGATE';
 }
 
-function getKeyFromParams(params: unknown) {
-  if (params && typeof params === 'object') {
-    if ('fullPath' in params && params.fullPath) {
-      return params.fullPath as string;
-    } else if ('params' in params) {
-      return getKeyFromParams(params.params);
-    }
-  }
-  return undefined;
-}
-
 function getAction(
-  action: NavigateAction<NavigationState>,
+  action: NavigateAction<NavigationState> | PushAction<NavigationState>,
   actionType: Action | undefined,
   routeName: string
 ) {
@@ -71,13 +83,51 @@ function getAction(
     return StackActions.replace(action.payload.name, action.payload.params);
   } else {
     const { name, params } = action.payload;
-    const key = getKeyFromParams(params);
-    return CommonActions.navigate({
-      name,
-      key,
-      params,
-    });
+    if (action.type === 'NAVIGATE') {
+      return CommonActions.navigate({
+        name,
+        params,
+      });
+    }
+    return StackActions.push(name, params);
   }
+}
+
+function getMinimalAction(
+  action: NavigationAction,
+  state: NavigationState
+): NavigationAction {
+  let currentAction = action;
+  let currentState:
+    | NavigationState
+    | PartialState<NavigationState>
+    | undefined = state;
+  let payload = currentAction.payload as ActionPayload | undefined;
+
+  while (
+    payload &&
+    payload?.name &&
+    payload?.params?.screen &&
+    currentState?.routes[currentState.index ?? -1]?.name === payload.name &&
+    isDeepEqual(
+      currentState?.routes[currentState.index ?? -1]?.params,
+      payload.params
+    )
+  ) {
+    // Creating new smaller action
+    currentAction = {
+      // We can still keep the `NAVIGATE` type here, but then we need to use `key` prop later
+      type: 'NAVIGATE',
+      payload: {
+        name: payload?.params?.screen,
+        params: payload?.params?.params,
+        path: payload?.params?.path,
+      },
+    };
+    currentState = currentState?.routes[currentState.index ?? -1]?.state;
+    payload = currentAction.payload;
+  }
+  return currentAction;
 }
 
 /*
@@ -115,14 +165,26 @@ export function useWebviewNavigate<
         : getStateFromPath(path, options?.config);
 
       if (state) {
-        // for REPLACE action we need to pass only top of navigation state.
-        const actionState =
-          actionType === 'replace' ? unpackState(state) : state;
-        const action = getActionFromState(actionState, options?.config);
+        const action = getActionFromState(state, options?.config);
 
         if (isNavigateAction(action)) {
-          const actionToDispatch = getAction(action, actionType, route.name);
+          let root = navigation;
+          let current:
+            | NavigationProp<ReactNavigation.RootParamList>
+            | undefined;
 
+          while ((current = root.getParent())) {
+            root = current;
+          }
+
+          const rootState = root.getState();
+          const minimalAction = getMinimalAction(action, rootState);
+          const actionToDispatch = getAction(
+            // @ts-expect-error
+            minimalAction,
+            actionType,
+            route.name
+          );
           navigation.dispatch(actionToDispatch);
         } else if (action === undefined) {
           // @ts-expect-error
