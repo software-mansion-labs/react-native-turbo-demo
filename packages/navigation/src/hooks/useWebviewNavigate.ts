@@ -130,6 +130,10 @@ function getMinimalAction(
   return currentAction;
 }
 
+let modalCounter = 0;
+
+let modalNamesSet = new Set<string>();
+
 /*
  * Its like useLinkTo with some custom tweaks
  */
@@ -189,13 +193,38 @@ export function useWebviewNavigate<
           // Check if parent navigator has changed
           // If it has, close all modals
           const parentState = navigation.getParent()?.getState();
+          // console.log('parentState', parentState);
+          // console.log('action', action);
+
+          if (navigationRef.getCurrentOptions()?.presentation === 'modal') {
+            modalNamesSet.add(navigationRef.getCurrentRoute()?.name);
+            modalCounter++;
+          }
+
+          // TODO: Add support for nested navigators
+
+          // Navigator with modal
+          //    -> Stack v1
+          //      -> -> Stack v2
+
+          // Example: navigate from v2 to v1
+          // Code below will probably fail
           if (
             parentState?.routes[parentState.index ?? -1].name !==
             action.payload.name
           ) {
-            while (
-              navigationRef.getCurrentOptions()?.presentation === 'modal'
-            ) {
+            // console.log(navigationRef.getCurrentRoute());
+            // console.log(navigationRef.getCurrentOptions());
+            // console.log(rootState);
+            while (modalNamesSet.size > 0) {
+              const name = navigationRef.getCurrentRoute()?.name;
+              if (
+                navigationRef.getCurrentOptions()?.presentation === 'modal' &&
+                modalNamesSet.has(name)
+              ) {
+                modalCounter--;
+                modalNamesSet.delete(name);
+              }
               navigationRef.goBack();
             }
           }

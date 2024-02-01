@@ -14,4 +14,5 @@ export enum Routes {
   NestedTab = 'NestedTab',
   One = 'One',
   FocusedFlow = 'FocusedFlow',
+  ModalStack = 'ModalStack',
 }

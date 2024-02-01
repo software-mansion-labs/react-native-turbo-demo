@@ -12,16 +12,16 @@ export const linkingConfig: LinkingConfig = {
         [Routes.WebviewInitial]: '',
       },
     },
-    [Routes.FocusedFlow]: {
+    [Routes.ModalStack]: {
       screens: {
         [Routes.New]: 'new',
+        [Routes.Share]: 'share',
         [Routes.SuccessScreen]: 'success',
       },
     },
     [Routes.One]: 'one',
     [Routes.NumbersScreen]: 'numbers',
     [Routes.SignIn]: 'signin',
-    [Routes.Share]: 'share',
     [Routes.NestedTab]: {
       screens: {
         [Routes.NestedTabWeb]: 'nested',
