@@ -40,6 +40,32 @@ const BottomTabs = () => {
   );
 };
 
+const FocusedFlow = () => (
+  <Stack.Navigator
+    screenOptions={{
+      headerTintColor: '#00094a',
+      tabBarActiveTintColor: '#00094a',
+    }}
+  >
+    <Stack.Screen
+      name={Routes.SuccessScreen}
+      component={WebView}
+      options={{
+        title: 'It Worked!',
+        presentation: 'modal',
+      }}
+    />
+    <Stack.Screen
+      name={Routes.New}
+      component={WebView}
+      options={{
+        title: 'A Modal Webpage',
+        presentation: 'modal',
+      }}
+    />
+  </Stack.Navigator>
+);
+
 export const navigationRef = createNavigationContainerRef();
 
 const App: React.FC = () => {
@@ -62,18 +88,10 @@ const App: React.FC = () => {
           options={{ title: 'A List of Numbers' }}
         />
         <Stack.Screen
-          name={Routes.New}
-          component={WebView}
+          name={Routes.FocusedFlow}
+          component={FocusedFlow}
           options={{
             title: 'A Modal Webpage',
-            presentation: 'modal',
-          }}
-        />
-        <Stack.Screen
-          name={Routes.SuccessScreen}
-          component={WebView}
-          options={{
-            title: 'It Worked!',
             presentation: 'modal',
           }}
         />

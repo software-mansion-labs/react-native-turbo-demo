@@ -12,8 +12,12 @@ export const linkingConfig: LinkingConfig = {
         [Routes.WebviewInitial]: '',
       },
     },
-    [Routes.New]: 'new',
-    [Routes.SuccessScreen]: 'success',
+    [Routes.FocusedFlow]: {
+      screens: {
+        [Routes.New]: 'new',
+        [Routes.SuccessScreen]: 'success',
+      },
+    },
     [Routes.One]: 'one',
     [Routes.NumbersScreen]: 'numbers',
     [Routes.SignIn]: 'signin',

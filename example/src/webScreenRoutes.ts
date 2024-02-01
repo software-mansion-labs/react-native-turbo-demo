@@ -13,4 +13,5 @@ export enum Routes {
   NestedTabWeb = 'NestedTabWeb',
   NestedTab = 'NestedTab',
   One = 'One',
+  FocusedFlow = 'FocusedFlow',
 }
