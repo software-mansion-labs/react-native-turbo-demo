@@ -135,7 +135,7 @@ function getMinimalAction(
  */
 export function useWebviewNavigate<
   ParamList extends ReactNavigation.RootParamList
->() {
+>(navigationRef) {
   const navigation = useNavigation();
   const linking = React.useContext(LinkingContext);
   const route = useRoute();
@@ -185,6 +185,21 @@ export function useWebviewNavigate<
             actionType,
             route.name
           );
+
+          // Check if parent navigator has changed
+          // If it has, close all modals
+          const parentState = navigation.getParent()?.getState();
+          if (
+            parentState?.routes[parentState.index ?? -1].name !==
+            action.payload.name
+          ) {
+            while (
+              navigationRef.getCurrentOptions()?.presentation === 'modal'
+            ) {
+              navigationRef.goBack();
+            }
+          }
+
           navigation.dispatch(actionToDispatch);
         } else if (action === undefined) {
           // @ts-expect-error
@@ -194,7 +209,7 @@ export function useWebviewNavigate<
         throw new Error('Failed to parse the path to a navigation state.');
       }
     },
-    [linking, navigation, route.name]
+    [linking, navigation, navigationRef, route.name]
   );
 
   return linkTo;

@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   NavigationContainer,
-  useNavigationContainerRef,
+  createNavigationContainerRef,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { default as NativeScreen } from './NumbersScreen';
@@ -40,11 +40,11 @@ const BottomTabs = () => {
   );
 };
 
-const App: React.FC = () => {
-  const navigation = useNavigationContainerRef();
+export const navigationRef = createNavigationContainerRef();
 
+const App: React.FC = () => {
   return (
-    <NavigationContainer linking={linking} ref={navigation}>
+    <NavigationContainer linking={linking} ref={navigationRef}>
       <Stack.Navigator
         screenOptions={{
           headerBackTitle: 'Back',

@@ -9,6 +9,7 @@ import { useCurrentUrl, useWebviewNavigate } from 'react-native-web-screen';
 import Form from './Strada/Form';
 import { RootStackParamList, baseURL, linkingConfig } from './webScreen';
 import { NavigationProp } from '@react-navigation/native';
+import { navigationRef } from './App';
 
 export type Props = {
   navigation: NavigationProp<RootStackParamList>;
@@ -18,7 +19,7 @@ const sessionHandle = 'TurboWebviewExample';
 const stradaComponents = [Form];
 
 const WebView: React.FC<Props> = ({ navigation, ...props }) => {
-  const navigateTo = useWebviewNavigate();
+  const navigateTo = useWebviewNavigate(navigationRef);
 
   const currentUrl = useCurrentUrl(baseURL, linkingConfig);
 
