@@ -23,7 +23,6 @@ const FirstTabFlow = () => (
   <Stack.Navigator
     screenOptions={{
       headerTintColor: '#00094a',
-      tabBarActiveTintColor: '#00094a',
     }}
   >
     <Stack.Screen

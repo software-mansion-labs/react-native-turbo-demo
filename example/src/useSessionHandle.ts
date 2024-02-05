@@ -16,6 +16,8 @@ function unpackState(state: NavigationState | PartialState<NavigationState>) {
 export function useSessionHandle() {
   const navigation = useNavigation();
   const state = unpackState(navigation.getState());
-  const routeName = state.routeNames[state.index];
-  return routeName;
+  if (!state.routeNames || !state.index) {
+    return 'Default';
+  }
+  return state.routeNames[state.index];
 }
