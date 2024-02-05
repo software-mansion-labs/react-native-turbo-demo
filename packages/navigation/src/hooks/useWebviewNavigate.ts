@@ -130,10 +130,6 @@ function getMinimalAction(
   return currentAction;
 }
 
-let modalCounter = 0;
-
-let modalNamesSet = new Set<string>();
-
 /*
  * Its like useLinkTo with some custom tweaks
  */
@@ -190,46 +186,34 @@ export function useWebviewNavigate<
             route.name
           );
 
-          // Check if parent navigator has changed
-          // If it has, close all modals
-          const parentState = navigation.getParent()?.getState();
-          // console.log('parentState', parentState);
-          // console.log('action', action);
+          console.log(
+            action.payload.name,
+            rootState.routes[rootState.index ?? -1].name
+          );
 
-          if (navigationRef.getCurrentOptions()?.presentation === 'modal') {
-            modalNamesSet.add(navigationRef.getCurrentRoute()?.name);
-            modalCounter++;
-          }
+          console.log('before', JSON.stringify(root.getState(), null, 2));
 
-          // TODO: Add support for nested navigators
+          /*
+            This if clauses causes root navigator to contain only two routes in its state.
+            Every time we navigate to another "direct root child" we pop the old child and push the new one (it is done automatically).
 
-          // Navigator with modal
-          //    -> Stack v1
-          //      -> -> Stack v2
+            Do we need this route in routes array? If we navigate to another "direct root child" then if we would like to go back to the previous child we still need to modify the old "direct root child", it will be handled by actionToDispatch.
+            Then we don't need the old child.
+            The only exception is the Fallback route, it is a route that is used when we don't have any other route to navigate to. It is a route that is always present in the routes array.
+            Otherwise we end up removing previous "stack of screens" and the go back button no longer works properly.
 
-          // Example: navigate from v2 to v1
-          // Code below will probably fail
+            This approach should work if we define separate stacks for each "direct root child" in the root navigator.
+          */
           if (
-            parentState?.routes[parentState.index ?? -1].name !==
-            action.payload.name
+            action.payload.name !== 'Fallback' &&
+            action.payload.name !== rootState.routes[rootState.index ?? -1].name
           ) {
-            // console.log(navigationRef.getCurrentRoute());
-            // console.log(navigationRef.getCurrentOptions());
-            // console.log(rootState);
-            while (modalNamesSet.size > 0) {
-              const name = navigationRef.getCurrentRoute()?.name;
-              if (
-                navigationRef.getCurrentOptions()?.presentation === 'modal' &&
-                modalNamesSet.has(name)
-              ) {
-                modalCounter--;
-                modalNamesSet.delete(name);
-              }
-              navigationRef.goBack();
-            }
+            root.popToTop();
           }
 
           navigation.dispatch(actionToDispatch);
+
+          console.log('after', JSON.stringify(root.getState(), null, 2));
         } else if (action === undefined) {
           // @ts-expect-error
           navigation.reset(state);
@@ -238,7 +222,7 @@ export function useWebviewNavigate<
         throw new Error('Failed to parse the path to a navigation state.');
       }
     },
-    [linking, navigation, navigationRef, route.name]
+    [linking, navigation, route.name]
   );
 
   return linkTo;

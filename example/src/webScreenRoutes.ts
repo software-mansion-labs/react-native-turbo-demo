@@ -15,4 +15,6 @@ export enum Routes {
   One = 'One',
   FocusedFlow = 'FocusedFlow',
   ModalStack = 'ModalStack',
+  ShareStack = 'ShareStack',
+  Reference = 'Reference',
 }

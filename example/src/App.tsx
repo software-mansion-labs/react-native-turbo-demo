@@ -40,6 +40,31 @@ const BottomTabs = () => {
   );
 };
 
+const ShareStack = () => (
+  <Stack.Navigator
+    screenOptions={{
+      headerTintColor: '#00094a',
+      tabBarActiveTintColor: '#00094a',
+    }}
+  >
+    <Stack.Screen
+      name={Routes.Share}
+      component={ShareScreen}
+      options={{
+        title: 'Share 2',
+        presentation: 'modal',
+      }}
+    />
+    <Stack.Screen
+      name={Routes.Reference}
+      component={WebView}
+      options={{
+        title: 'Share 3',
+      }}
+    />
+  </Stack.Navigator>
+);
+
 const ModalStack = () => (
   <Stack.Navigator
     screenOptions={{
@@ -56,12 +81,9 @@ const ModalStack = () => (
       }}
     />
     <Stack.Screen
-      name={Routes.Share}
-      component={ShareScreen}
-      options={{
-        title: 'Share',
-        presentation: 'modal',
-      }}
+      name={Routes.ShareStack}
+      component={ShareStack}
+      options={{ presentation: 'modal' }}
     />
     <Stack.Screen
       name={Routes.SuccessScreen}

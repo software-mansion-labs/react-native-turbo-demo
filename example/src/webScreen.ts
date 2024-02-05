@@ -15,8 +15,13 @@ export const linkingConfig: LinkingConfig = {
     [Routes.ModalStack]: {
       screens: {
         [Routes.New]: 'new',
-        [Routes.Share]: 'share',
         [Routes.SuccessScreen]: 'success',
+        [Routes.ShareStack]: {
+          screens: {
+            [Routes.Share]: 'share',
+            [Routes.Reference]: 'reference/turbo-native',
+          },
+        },
       },
     },
     [Routes.One]: 'one',
