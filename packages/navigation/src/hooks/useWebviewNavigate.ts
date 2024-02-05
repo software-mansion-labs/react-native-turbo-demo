@@ -130,6 +130,9 @@ function getMinimalAction(
   return currentAction;
 }
 
+// This object is dynamically filled while navigating
+const modalScreens = new Set<string>();
+
 /*
  * Its like useLinkTo with some custom tweaks
  */
@@ -204,9 +207,26 @@ export function useWebviewNavigate<
 
             This approach should work if we define separate stacks for each "direct root child" in the root navigator.
           */
+          // if (
+          //   action.payload.name !== 'Fallback' &&
+          //   action.payload.name !== rootState.routes[rootState.index ?? -1].name
+          // ) {
+          //   root.popToTop();
+          // }
+
+          const currentScreenName =
+            rootState.routes[rootState.index ?? -1].name;
+
+          // This approach is a little bit different than the one above, but it feels more generic and only executes when the user is in a stack where a modal screen has occured.
+          // This check might be removed if we introduce custom Navigator components
+          // We would need to add a custom property to navigation object (it is possible, but from typescript side it might be not)
+          if (navigationRef?.getCurrentOptions()?.presentation === 'modal') {
+            modalScreens.add(currentScreenName);
+          }
+
           if (
-            action.payload.name !== 'Fallback' &&
-            action.payload.name !== rootState.routes[rootState.index ?? -1].name
+            action.payload.name !== currentScreenName &&
+            modalScreens.has(currentScreenName)
           ) {
             root.popToTop();
           }
@@ -222,7 +242,7 @@ export function useWebviewNavigate<
         throw new Error('Failed to parse the path to a navigation state.');
       }
     },
-    [linking, navigation, route.name]
+    [linking, navigation, navigationRef, route.name]
   );
 
   return linkTo;
