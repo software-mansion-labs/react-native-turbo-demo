@@ -42,7 +42,6 @@ export function useWebViewDialogs(
           { text: 'OK', onPress: () => dispatch(true) },
           { text: 'Cancel', onPress: () => dispatch(false) },
         ]);
-        dispatch(true);
       }
     },
     [onConfirm, visitableViewRef]
