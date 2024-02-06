@@ -226,7 +226,8 @@ export function useWebviewNavigate<
 
           if (
             action.payload.name !== currentScreenName &&
-            modalScreens.has(currentScreenName)
+            modalScreens.has(currentScreenName) &&
+            navigation.canGoBack()
           ) {
             root.popToTop();
           }
