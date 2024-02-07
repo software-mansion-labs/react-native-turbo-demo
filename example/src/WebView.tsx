@@ -18,7 +18,7 @@ export type Props = {
 const stradaComponents = [Form];
 
 const WebView: React.FC<Props> = ({ navigation, ...props }) => {
-  const navigateTo = useWebviewNavigate();
+  const { navigateTo } = useWebviewNavigate();
 
   const currentUrl = useCurrentUrl(baseURL, linkingConfig);
 
