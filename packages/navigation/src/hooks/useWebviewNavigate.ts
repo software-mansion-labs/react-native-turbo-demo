@@ -140,7 +140,7 @@ export function useWebviewNavigate<
   const linking = React.useContext(LinkingContext);
   const route = useRoute();
 
-  const linkTo = React.useCallback(
+  const getDispatchUtilities = React.useCallback(
     (to: To<ParamList>, actionType?: Action) => {
       if (navigation === undefined) {
         throw new Error(
@@ -164,11 +164,14 @@ export function useWebviewNavigate<
         ? options.getStateFromPath(path, options.config)
         : getStateFromPath(path, options?.config);
 
+      let actionToDispatch;
+      let willChangeTopmostNavigator = false;
+      let root = navigation;
+
       if (state) {
         const action = getActionFromState(state, options?.config);
 
         if (isNavigateAction(action)) {
-          let root = navigation;
           let current:
             | NavigationProp<ReactNavigation.RootParamList>
             | undefined;
@@ -179,23 +182,53 @@ export function useWebviewNavigate<
 
           const rootState = root.getState();
           const minimalAction = getMinimalAction(action, rootState);
-          const actionToDispatch = getAction(
+          const currentScreenName =
+            rootState?.routes[rootState.index ?? -1]?.name;
+
+          if (
+            currentScreenName &&
+            action.payload.name !== currentScreenName &&
+            navigation.canGoBack()
+          ) {
+            willChangeTopmostNavigator = true;
+          }
+
+          actionToDispatch = getAction(
             // @ts-expect-error
             minimalAction,
             actionType,
             route.name
           );
-          navigation.dispatch(actionToDispatch);
-        } else if (action === undefined) {
-          // @ts-expect-error
-          navigation.reset(state);
         }
-      } else {
-        throw new Error('Failed to parse the path to a navigation state.');
+
+        return {
+          actionToDispatch,
+          rootNavigator: root,
+          state,
+          willChangeTopmostNavigator,
+        };
       }
     },
     [linking, navigation, route.name]
   );
 
-  return linkTo;
+  const navigateTo = React.useCallback(
+    (to: To<ParamList>, actionType?: Action) => {
+      const { actionToDispatch, state } = getDispatchUtilities(to, actionType);
+
+      if (!state) {
+        throw new Error('Failed to parse the path to a navigation state.');
+      }
+
+      if (actionToDispatch) {
+        navigation.dispatch(actionToDispatch);
+      } else {
+        // @ts-expect-error
+        navigation.reset(state);
+      }
+    },
+    [getDispatchUtilities, navigation]
+  );
+
+  return { navigateTo, getDispatchUtilities };
 }

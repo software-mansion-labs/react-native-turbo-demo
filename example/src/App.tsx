@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  NavigationContainer,
-  useNavigationContainerRef,
-} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { default as NativeScreen } from './NumbersScreen';
 import { linking } from 'example/src/webScreen';
@@ -12,6 +9,7 @@ import { Routes } from 'example/src/webScreenRoutes';
 import ShareScreen from 'example/src/ShareScreen';
 import WebView from './WebView';
 import MainScreen from './MainScreen';
+import { navigationRef } from 'example/src/navigationRef';
 
 const Tab = createBottomTabNavigator();
 
@@ -74,10 +72,8 @@ const BottomTabs = () => {
 };
 
 const App: React.FC = () => {
-  const navigation = useNavigationContainerRef();
-
   return (
-    <NavigationContainer linking={linking} ref={navigation}>
+    <NavigationContainer linking={linking} ref={navigationRef}>
       <Stack.Navigator
         screenOptions={{
           headerBackTitle: 'Back',
