@@ -75,9 +75,9 @@
   if (!window.setListener) {
     document.addEventListener('nativeVisibilityChange', function (e) {
       const { isVisible, url } = e.detail;
-      // Current time
-      const timeString = new Date().toISOString().substring(11, 19);
-      const message = `${timeString} ${url}: ${isVisible}`;
+      const timeString = new Date().toISOString().slice(11, 19);
+      const path = new URL(url).pathname;
+      const message = `${timeString} ${path}: ${isVisible}`;
       fetch('/store-log', {
         method: 'POST',
         headers: {
