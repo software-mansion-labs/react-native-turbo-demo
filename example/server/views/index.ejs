@@ -61,8 +61,33 @@
     <div class="actions__icon --files" aria-hidden="true"></div>
     See how files work
   </a>
+  <a class="actions__item" href="/visibility-log">
+    <div class="actions__icon --turbo-native" aria-hidden="true"></div>
+    Check visibility log
+  </a>
   <a class="actions__item" href="/reference">
     <div class="actions__icon --reference" aria-hidden="true"></div>
     Reference
   </a>
 </div>
+
+<script>
+  if (!window.setListener) {
+    document.addEventListener('nativeVisibilityChange', function (e) {
+      const { isVisible, url } = e.detail;
+      // Current time
+      const timeString = new Date().toISOString().substring(11, 19);
+      const message = `${timeString} ${url}: ${isVisible}`;
+      fetch('/store-log', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          log: message,
+        }),
+      });
+    });
+    window.setListener = true;
+  }
+</script>

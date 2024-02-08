@@ -12,12 +12,15 @@ const PORT = process.env.PORT || 45678;
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.static('json'));
+app.use(express.json());
 app.use(
   '/dist',
   express.static(__dirname + '/node_modules/@hotwired/turbo/dist/')
 );
 app.use(cookieParser());
 app.use(layouts);
+
+const logs = [];
 
 // Turbo version
 app.use((request, response, next) => {
@@ -142,6 +145,13 @@ app.get('/nested', (request, response) => {
   response.render('nested', { title: 'Nested Navigator' });
 });
 
+app.get('/visibility-log', (request, response) => {
+  response.render('visibility-log', {
+    title: 'App visibility logs',
+    logs: logs.join('\n'),
+  });
+});
+
 app.get('/reference/turbo-drive', (request, response) => {
   response.render('turbo-drive', { title: 'Turbo Drive' });
 });
@@ -184,6 +194,11 @@ app.post('/signin', upload.none(), (request, response) => {
 app.post('/signout', (request, response) => {
   response.clearCookie('authenticated');
   response.redirect('/');
+});
+
+app.post('/store-log', (request, response) => {
+  logs.push(request.body.log);
+  response.sendStatus(200);
 });
 
 app.get('/slow', (request, response) => {
