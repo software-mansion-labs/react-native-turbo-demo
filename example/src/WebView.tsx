@@ -30,6 +30,8 @@ const WebView: React.FC<Props> = ({ navigation, ...props }) => {
 
   const onVisitProposal = useCallback(
     ({ action: actionType, url }: VisitProposal) => {
+      // Before navigating, if we are changing the topmost navigator
+      // and the current navigator has modals, make sure to close them
       const {
         state,
         actionToDispatch,

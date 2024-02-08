@@ -20,7 +20,7 @@ The library should be used alongside React Navigation library, follow [these ste
 
 ## Basic example
 
-The library provides you with simple API to define the relationship between the web and native screens. The `react-native-web-screen` uses React Navigation [configurable links](https://reactnavigation.org/docs/configuring-links/) to handle navigation within the app. 
+The library provides you with simple API to define the relationship between the web and native screens. The `react-native-web-screen` uses React Navigation [configurable links](https://reactnavigation.org/docs/configuring-links/) to handle navigation within the app.
 You can follow react-navigation documentation to create your navigation stack and provide mapping between URLs in app and screens. You must define only those paths that are important for your app and use matchers for fallback.
 
 You should also define your custom WebView component that will be using `VisitableView` hood, to be able to customize its behavior.
@@ -48,7 +48,7 @@ const linkingConfig: LinkingConfig = {
   screens: {
     Initial: '',
     Welcome: 'welcome',
-    Fallback: '*'
+    Fallback: '*',
   },
 };
 
@@ -58,7 +58,7 @@ const sessionHandle = 'app-dynamic-session-handle';
 
 const WebView: React.FC = () => {
   const currentUrl = useCurrentUrl(baseURL, linkingConfig);
-  const navigateTo = useWebviewNavigate();
+  const { navigateTo } = useWebviewNavigate();
 
   const onVisitProposal = useCallback(
     ({ action: actionType, url }: VisitProposal) => {
@@ -82,7 +82,11 @@ const App: React.FC = () => {
     <NavigationContainer linking={linking}>
       <Stack.Navigator>
         <Stack.Screen name="Initial" component={YourNativeComponent} />
-        <Stack.Screen name="Welcome" component={WebView} options={{ title: 'Welcome' }} />
+        <Stack.Screen
+          name="Welcome"
+          component={WebView}
+          options={{ title: 'Welcome' }}
+        />
         <Stack.Screen name="Fallback" component={WebView} />
       </Stack.Navigator>
     </NavigationContainer>
@@ -90,7 +94,6 @@ const App: React.FC = () => {
 };
 
 export default App;
-
 ```
 
 Now you can easily navigate to the `Welcome` web screen using react navigation API. Navigating `http://your-web-app-base-url` in the webview will result in opening react native screen `Initial`.
@@ -98,7 +101,6 @@ Now you can easily navigate to the `Welcome` web screen using react navigation A
 ## Nested navigators
 
 You are also able to use [complex navigator](https://reactnavigation.org/docs/configuring-links#handling-nested-navigators) structures inside your app. Just make sure that your navigation definition and linking object match.
-
 
 ## Example app
 
@@ -133,6 +135,19 @@ const webScreens = buildWebScreen(webScreenConfig, {
 
 To obtain `url` for current screen, use `useCurrentUrl` hook function.
 
+### Defining custom behavior for `navigateTo` function
+
+`useWebviewNavigate` hook returns two utilities:
+
+- `navigateTo` - function that allows you to navigate to a given URL and action
+- `getDispatchAction` - function which might be useful when you want to add more functionalities to behavior of `navigateTo` function. This function returns:
+  - `actionToDispatch` - action which can be dispatched via `navigator.dispatch`
+  - `rootNavigator` - root navigator
+  - `willChangeTopmostNavigator` - function that returns `true` if the navigator will change the topmost navigator
+  - `state` - navigation state
+
+You can see an example of using `getDispatchAction` in the [example app](../../example/src/screens/WebView.tsx).
+
 ## Contributing
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
@@ -144,3 +159,7 @@ MIT
 ---
 
 Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
+
+```
+
+```

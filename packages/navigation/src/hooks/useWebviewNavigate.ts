@@ -130,6 +130,13 @@ function getMinimalAction(
   return currentAction;
 }
 
+type DispatchUtilities = {
+  state: NavigationState | PartialState<NavigationState> | undefined;
+  actionToDispatch: ReturnType<typeof getAction> | undefined;
+  willChangeTopmostNavigator: boolean | undefined;
+  rootNavigator: NavigationProp<ReactNavigation.RootParamList>;
+};
+
 /*
  * Its like useLinkTo with some custom tweaks
  */
@@ -141,17 +148,31 @@ export function useWebviewNavigate<
   const route = useRoute();
 
   const getDispatchUtilities = React.useCallback(
-    (to: To<ParamList>, actionType?: Action) => {
+    (to: To<ParamList>, actionType?: Action): DispatchUtilities => {
       if (navigation === undefined) {
         throw new Error(
           "Couldn't find a navigation object. Is your component inside NavigationContainer?"
         );
       }
 
+      let actionToDispatch;
+      let willChangeTopmostNavigator = false;
+      let root = navigation;
+      while (root.getParent()) {
+        root = root.getParent();
+      }
+
       if (to && typeof to !== 'string') {
-        // @ts-expect-error
-        navigation.navigate(to.screen, to.params);
-        return;
+        return {
+          // @ts-expect-error
+          actionToDispatch: CommonActions.navigate({
+            name: to.screen,
+            params: to.params,
+          }),
+          rootNavigator: root,
+          state: undefined,
+          willChangeTopmostNavigator,
+        };
       }
 
       const { options } = linking;
@@ -164,22 +185,10 @@ export function useWebviewNavigate<
         ? options.getStateFromPath(path, options.config)
         : getStateFromPath(path, options?.config);
 
-      let actionToDispatch;
-      let willChangeTopmostNavigator = false;
-      let root = navigation;
-
       if (state) {
         const action = getActionFromState(state, options?.config);
 
         if (isNavigateAction(action)) {
-          let current:
-            | NavigationProp<ReactNavigation.RootParamList>
-            | undefined;
-
-          while ((current = root.getParent())) {
-            root = current;
-          }
-
           const rootState = root.getState();
           const minimalAction = getMinimalAction(action, rootState);
           const currentScreenName =
@@ -200,14 +209,14 @@ export function useWebviewNavigate<
             route.name
           );
         }
-
-        return {
-          actionToDispatch,
-          rootNavigator: root,
-          state,
-          willChangeTopmostNavigator,
-        };
       }
+
+      return {
+        actionToDispatch,
+        rootNavigator: root,
+        state,
+        willChangeTopmostNavigator,
+      };
     },
     [linking, navigation, route.name]
   );
@@ -216,16 +225,17 @@ export function useWebviewNavigate<
     (to: To<ParamList>, actionType?: Action) => {
       const { actionToDispatch, state } = getDispatchUtilities(to, actionType);
 
+      if (actionToDispatch) {
+        navigation.dispatch(actionToDispatch);
+        return;
+      }
+
       if (!state) {
         throw new Error('Failed to parse the path to a navigation state.');
       }
 
-      if (actionToDispatch) {
-        navigation.dispatch(actionToDispatch);
-      } else {
-        // @ts-expect-error
-        navigation.reset(state);
-      }
+      // @ts-expect-error
+      navigation.reset(state);
     },
     [getDispatchUtilities, navigation]
   );
