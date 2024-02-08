@@ -27,6 +27,9 @@
   RCT_EXPORT_VIEW_PROPERTY(onShowLoading, RCTDirectEventBlock)
   RCT_EXPORT_VIEW_PROPERTY(onHideLoading, RCTDirectEventBlock)
   RCT_EXPORT_VIEW_PROPERTY(onContentProcessDidTerminate, RCTDirectEventBlock)
+  RCT_EXPORT_VIEW_PROPERTY(onWebViewMount, RCTDirectEventBlock)
+  RCT_EXPORT_VIEW_PROPERTY(onWebViewUnmount, RCTDirectEventBlock)
+
 
   RCT_EXTERN_METHOD(injectJavaScript: (nonnull NSNumber) node
                     code: (nonnull NSString) code)

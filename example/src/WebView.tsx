@@ -8,7 +8,7 @@ import {
 import { useCurrentUrl, useWebviewNavigate } from 'react-native-web-screen';
 import Form from './Strada/Form';
 import { RootStackParamList, baseURL, linkingConfig } from './webScreen';
-import { NavigationProp, useFocusEffect } from '@react-navigation/native';
+import { NavigationProp } from '@react-navigation/native';
 
 export type Props = {
   navigation: NavigationProp<RootStackParamList>;
@@ -24,30 +24,18 @@ const WebView: React.FC<Props> = ({ navigation, ...props }) => {
   const currentUrl = useCurrentUrl(baseURL, linkingConfig);
 
   const setWebViewVisibilityState = useCallback(
-    (isFocused) => {
-      // TODO: injectJavaScript called to early
-      setTimeout(() => {
-        // @ts-ignore
-        ref.current?.injectJavaScript(`
+    (isScreenFocused) => {
+      // @ts-ignore
+      ref.current?.injectJavaScript(`
         document.dispatchEvent(new CustomEvent('nativeVisibilityChange', {
-          'detail': {
-            isVisible: ${isFocused},
+          detail: {
+            isVisible: ${isScreenFocused},
             url: '${currentUrl}'
           }
         }));
-      `);
-      }, 300);
+    `);
     },
     [currentUrl]
-  );
-
-  useFocusEffect(
-    useCallback(() => {
-      setWebViewVisibilityState(true);
-      return () => {
-        setWebViewVisibilityState(false);
-      };
-    }, [setWebViewVisibilityState])
   );
 
   const onVisitProposal = useCallback(
@@ -64,6 +52,14 @@ const WebView: React.FC<Props> = ({ navigation, ...props }) => {
     [navigation]
   );
 
+  const onWebViewMount = useCallback(() => {
+    setWebViewVisibilityState(true);
+  }, [setWebViewVisibilityState]);
+
+  const onWebViewUnmount = useCallback(() => {
+    setWebViewVisibilityState(false);
+  }, [setWebViewVisibilityState]);
+
   return (
     <VisitableView
       {...props}
@@ -74,6 +70,8 @@ const WebView: React.FC<Props> = ({ navigation, ...props }) => {
       stradaComponents={stradaComponents}
       onVisitProposal={onVisitProposal}
       onLoad={onLoad}
+      onWebViewMount={onWebViewMount}
+      onWebViewUnmount={onWebViewUnmount}
     />
   );
 };

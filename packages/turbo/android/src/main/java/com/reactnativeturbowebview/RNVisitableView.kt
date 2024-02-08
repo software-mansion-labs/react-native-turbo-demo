@@ -172,13 +172,16 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
 
     turboView.attachWebView(webView) { attachedToNewDestination ->
       onReady(attachedToNewDestination)
+      sendEvent(RNVisitableViewEvent.WEB_VIEW_MOUNTED, Arguments.createMap())
     }
   }
 
   override fun detachWebView() {
+    sendEvent(RNVisitableViewEvent.WEB_VIEW_UNMOUNTED, Arguments.createMap())
     screenshotView()
 
     (webView.parent as ViewGroup?)?.endViewTransition(webView)
+
 
     turboView.detachWebView(webView) {
       // Force layout to fix improper layout of the TurboWebView.

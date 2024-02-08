@@ -53,6 +53,8 @@ export interface Props {
   onMessage?: SessionMessageCallback;
   onAlert?: OnAlert;
   onConfirm?: OnConfirm;
+  onWebViewMount?: () => void;
+  onWebViewUnmount?: () => void;
 }
 
 export interface RefObject {
@@ -80,6 +82,8 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       onFormSubmissionStarted,
       onFormSubmissionFinished,
       onContentProcessDidTerminate,
+      onWebViewMount,
+      onWebViewUnmount,
     } = props;
     const visitableViewRef = useRef<
       Component<RNVisitableViewProps> & NativeMethods
@@ -218,6 +222,8 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           onShowLoading={handleShowLoading}
           onHideLoading={handleHideLoading}
           onContentProcessDidTerminate={handleOnContentProcessDidTerminate}
+          onWebViewMount={onWebViewMount}
+          onWebViewUnmount={onWebViewUnmount}
         />
       </>
     );

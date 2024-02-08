@@ -37,7 +37,9 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var onShowLoading: RCTDirectEventBlock?
   @objc var onHideLoading: RCTDirectEventBlock?
   @objc var onContentProcessDidTerminate: RCTDirectEventBlock?
-  
+  @objc var onWebViewMount: RCTDirectEventBlock?
+  @objc var onWebViewUnmount: RCTDirectEventBlock?
+
   private var onConfirmHandler: ((Bool) -> Void)?
   private var onAlertHandler: (() -> Void)?
 
@@ -202,10 +204,12 @@ class RNVisitableView: UIView, RNSessionSubscriber {
 extension RNVisitableView: RNVisitableViewControllerDelegate {
   
   func visitableWillAppear(visitable: Visitable) {
+    onWebViewMount?([:])
     handleVisitableWillAppear()
   }
     
   func visitableDidDisappear(visitable: Visitable) {
+    onWebViewUnmount?([:])
     session.unregisterVisitableView(view: self)
     viewIsRegistered = false
   }

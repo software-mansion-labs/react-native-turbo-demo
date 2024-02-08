@@ -44,6 +44,8 @@ export interface RNVisitableViewProps {
   onContentProcessDidTerminate?: (
     e: NativeSyntheticEvent<ContentProcessDidTerminateEvent>
   ) => void;
+  onWebViewMount?: (e: NativeSyntheticEvent<undefined>) => void;
+  onWebViewUnmount?: (e: NativeSyntheticEvent<undefined>) => void;
   style?: StyleProp<ViewStyle>;
 }
 

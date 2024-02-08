@@ -18,7 +18,9 @@ enum class RNVisitableViewEvent(val jsCallbackName: String) {
   FORM_SUBMISSION_FINISHED("onFormSubmissionFinished"),
   SHOW_LOADING("onShowLoading"),
   HIDE_LOADING("onHideLoading"),
-  CONTENT_PROCESS_DID_TERMINATE("onContentProcessDidTerminate")
+  CONTENT_PROCESS_DID_TERMINATE("onContentProcessDidTerminate"),
+  WEB_VIEW_MOUNTED("onWebViewMount"),
+  WEB_VIEW_UNMOUNTED("onWebViewUnmount")
 }
 
 enum class RNVisitableViewCommand(val jsCallbackName: String) {
@@ -95,8 +97,8 @@ class RNVisitableViewManager(
     )
 
   override fun onDropViewInstance(view: RNVisitableView) {
-    super.onDropViewInstance(view)
     view.detachWebView()
+    super.onDropViewInstance(view)
   }
 
 }
