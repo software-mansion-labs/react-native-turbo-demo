@@ -30,3 +30,7 @@ input[type='text']:focus {
   border: 0;
   border-radius: 0.5em;
 }
+
+.log-block {
+  font-size: 10px;
+}

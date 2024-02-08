@@ -148,7 +148,7 @@ app.get('/nested', (request, response) => {
 app.get('/visibility-log', (request, response) => {
   response.render('visibility-log', {
     title: 'App visibility logs',
-    logs: logs.join('\n'),
+    logs,
   });
 });
 

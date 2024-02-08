@@ -1,2 +1,8 @@
 <h1 class="page-title">App visibility logs</h1>
-<p><%- logs %></p>
+<code class="log-block">
+  <% for (var i = 0; i < logs.length; i++) { %>
+  <div class="log-item">
+    <div class="log-item__time"><%= logs[i] %></div>
+  </div>
+  <% } %>
+</code>
