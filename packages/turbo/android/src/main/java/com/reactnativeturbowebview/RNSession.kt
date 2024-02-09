@@ -26,8 +26,7 @@ class RNSession(
   private val applicationNameForUserAgent: String?,
 ) : SessionCallbackAdapter {
 
-  private val visitableViews: LinkedHashSet<SessionSubscriber> = linkedSetOf()
-  private val topmostView: SessionSubscriber? get() = visitableViews.lastOrNull()
+  private var visitableView: SessionSubscriber? = null
 
   private val turboSession: TurboSession = run {
     val activity = reactContext.currentActivity as AppCompatActivity
@@ -38,7 +37,7 @@ class RNSession(
     webView.settings.setJavaScriptEnabled(true)
     webView.addJavascriptInterface(JavaScriptInterface(), "AndroidInterface")
     setUserAgentString(webView, applicationNameForUserAgent)
-    webView.webChromeClient = RNWebChromeClient(reactContext, visitableViews)
+    webView.webChromeClient = RNWebChromeClient(reactContext, visitableView)
     session.isRunningInAndroidNavigation = false
     session
   }
@@ -46,14 +45,8 @@ class RNSession(
   val currentVisit: TurboVisit? get() = turboSession.currentVisit
 
   internal fun registerVisitableView(newView: SessionSubscriber) {
-    for (view in visitableViews) {
-      view.detachWebView()
-    }
-    visitableViews.add(newView)
-  }
-
-  internal fun removeVisitableView(view: SessionSubscriber) {
-    visitableViews.remove(view)
+    visitableView?.detachWebView()
+    visitableView = newView
   }
 
   private fun setUserAgentString(webView: TurboWebView, applicationNameForUserAgent: String?) {
@@ -114,9 +107,7 @@ class RNSession(
       // Android interface works only with primitive types, that's why we need to use JSON
       val messageObj =
         Arguments.fromBundle(Utils.convertJsonToBundle(JSONObject(messageStr)))
-      for (view in visitableViews) {
-        view.handleMessage(messageObj)
-      }
+      visitableView?.handleMessage(messageObj)
     }
   }
 
@@ -130,47 +121,47 @@ class RNSession(
   // region SessionCallbackAdapter
 
   override fun onReceivedError(errorCode: Int) {
-    topmostView?.onReceivedError(errorCode)
+    visitableView?.onReceivedError(errorCode)
   }
 
   override fun onRenderProcessGone() {
-    topmostView?.onRenderProcessGone()
+    visitableView?.onRenderProcessGone()
   }
 
   override fun onZoomReset(newScale: Float) {
-    topmostView?.onZoomReset(newScale)
+    visitableView?.onZoomReset(newScale)
   }
 
   override fun onZoomed(newScale: Float) {
-    topmostView?.onZoomed(newScale)
+    visitableView?.onZoomed(newScale)
   }
 
   override fun visitCompleted(completedOffline: Boolean) {
-    topmostView?.visitCompleted(completedOffline)
+    visitableView?.visitCompleted(completedOffline)
   }
 
   override fun visitLocationStarted(location: String) {
-    topmostView?.visitLocationStarted(location)
+    visitableView?.visitLocationStarted(location)
   }
 
   override fun visitProposedToLocation(location: String, options: TurboVisitOptions) {
-    topmostView?.visitProposedToLocation(location, options)
+    visitableView?.visitProposedToLocation(location, options)
   }
 
   override fun visitRendered() {
-    topmostView?.visitRendered()
+    visitableView?.visitRendered()
   }
 
   override fun formSubmissionStarted(location: String) {
-    topmostView?.didStartFormSubmission(location)
+    visitableView?.didStartFormSubmission(location)
   }
 
   override fun formSubmissionFinished(location: String) {
-    topmostView?.didFinishFormSubmission(location)
+    visitableView?.didFinishFormSubmission(location)
   }
 
   override fun requestFailedWithStatusCode(visitHasCachedSnapshot: Boolean, statusCode: Int) {
-    topmostView?.requestFailedWithStatusCode(visitHasCachedSnapshot, statusCode)
+    visitableView?.requestFailedWithStatusCode(visitHasCachedSnapshot, statusCode)
   }
 
   // end region

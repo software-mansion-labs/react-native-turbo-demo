@@ -19,7 +19,7 @@ import com.facebook.react.uimanager.events.RCTEventEmitter
 
 class RNWebChromeClient(
   private val reactContext: ReactApplicationContext,
-  private val visitableViews: LinkedHashSet<SessionSubscriber>
+  private val visitableView: SessionSubscriber?
 ) : ActivityEventListener, WebChromeClient() {
 
   private val fileChooserDelegate = RNFileChooserDelegate(reactContext)
@@ -34,7 +34,7 @@ class RNWebChromeClient(
     val result = view!!.hitTestResult
     val data = result.extra
     val uri = Uri.parse(data)
-    visitableViews.lastOrNull()?.didOpenExternalUrl(uri.toString())
+    visitableView?.didOpenExternalUrl(uri.toString())
     return false
   }
 
@@ -58,7 +58,7 @@ class RNWebChromeClient(
   override fun onJsAlert(
     view: WebView?, url: String?, message: String?, result: JsResult?
   ): Boolean {
-    visitableViews.lastOrNull()?.let {
+    visitableView?.let {
       it.handleAlert(message ?: "") { result?.confirm() }
     } ?: run {
       result?.confirm()
@@ -69,7 +69,7 @@ class RNWebChromeClient(
   override fun onJsConfirm(
     view: WebView?, url: String?, message: String?, result: JsResult?
   ): Boolean {
-    visitableViews.lastOrNull()?.let {
+    visitableView?.let {
       it.handleConfirm(
         message ?: ""
       ) { confirmed -> if (confirmed) result?.confirm() else result?.cancel() }

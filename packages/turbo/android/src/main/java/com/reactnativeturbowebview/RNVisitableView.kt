@@ -153,11 +153,6 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     visit()
   }
 
-  override fun onDetachedFromWindow() {
-    super.onDetachedFromWindow()
-    session.removeVisitableView(this)
-  }
-
   private fun attachWebView(onReady: (Boolean) -> Unit) {
     // Sometimes detachWebView is not called before attachWebView.
     // This can happen when the user uses one session for different
