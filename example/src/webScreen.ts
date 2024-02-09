@@ -9,18 +9,25 @@ export const linkingConfig: LinkingConfig = {
   screens: {
     [Routes.BottomTabs]: {
       screens: {
-        [Routes.WebviewInitial]: '',
+        [Routes.FirstTabFlow]: {
+          screens: {
+            [Routes.WebviewInitial]: '',
+            [Routes.Share]: 'share',
+          },
+        },
       },
     },
-    [Routes.New]: 'new',
-    [Routes.SuccessScreen]: 'success',
-    [Routes.One]: 'one',
-    [Routes.NumbersScreen]: 'numbers',
-    [Routes.SignIn]: 'signin',
-    [Routes.Share]: 'share',
     [Routes.NestedTab]: {
       screens: {
         [Routes.NestedTabWeb]: 'nested',
+      },
+    },
+
+    [Routes.ModalFlow]: {
+      screens: {
+        [Routes.SignIn]: 'signin',
+        [Routes.New]: 'new',
+        [Routes.SuccessScreen]: 'success',
       },
     },
     [Routes.Fallback]: '*',
