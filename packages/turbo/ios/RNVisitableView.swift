@@ -14,8 +14,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var applicationNameForUserAgent: NSString? = nil
   @objc var url: NSString = "" {
     didSet {
-      let didSetAfterFirstVisit = oldValue != "" && url != oldValue
-      if(didSetAfterFirstVisit){
+      if(url != oldValue) {
         visit()
       }
     }
@@ -41,7 +40,6 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   private var onConfirmHandler: ((Bool) -> Void)?
   private var onAlertHandler: (() -> Void)?
 
-
   private lazy var session: RNSession = RNSessionManager.shared.findOrCreateSession(sessionHandle: sessionHandle!, webViewConfiguration: webViewConfiguration)
   private lazy var webView: WKWebView = session.webView
   private lazy var webViewConfiguration: WKWebViewConfiguration = {
@@ -56,10 +54,13 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     return controller
   }()
     
-  private var viewIsRegistered = false
   private var isRefreshing: Bool {
     controller.visitableView.isRefreshing
   }
+  
+  // var isModal: Bool {
+  //   return controller.reactViewController()?.isModal()
+  // }
     
   override func didMoveToWindow() {
     reactViewController()?.addChild(controller)
@@ -68,15 +69,6 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     addSubview(controller.view)
   }
   
-  override func willMove(toWindow newWindow: UIWindow?) {
-    super.willMove(toWindow: newWindow)
-    // visitableWillAppear is not called automatically sometimes. So it has to be called
-    // manually to make sure that visitableViews list is not empty
-    // see https://github.com/software-mansion-labs/react-native-turbo-demo/pull/81
-    // and https://github.com/software-mansion-labs/react-native-turbo-demo/pull/86
-    handleVisitableWillAppear()
-  }
-    
   public func handleMessage(message: WKScriptMessage) {
     if let messageBody = message.body as? [AnyHashable : Any] {
       onMessage?(messageBody)
@@ -97,23 +89,23 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     self.onConfirmHandler?(confirmResult)
     self.onConfirmHandler = nil
   }
-    
+  
   public func reload(){
     session.reload()
   }
-    
+  
   private func visit() {
-    if(controller.visitableURL?.absoluteString == url as String) {
+    if (controller.visitableURL?.absoluteString == url as String) {
       return
     }
     performVisit()
   }
-    
+  
   private func performVisit() {
     controller.visitableURL = URL(string: String(url))
     session.visit(controller)
   }
-    
+  
   public func didProposeVisit(proposal: VisitProposal){
     if (webView.url == proposal.url) {
       // When reopening same URL we want to reload webview
@@ -126,7 +118,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
       onVisitProposal!(event)
     }
   }
-    
+  
   func getStatusCodeFromError(error: TurboError?) -> Int {
     switch error {
       case .networkFailure:
@@ -143,7 +135,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
         return -4
     }
   }
-
+  
   public func didFailRequestForVisitable(visitable: Visitable, error: Error){
     var event: [AnyHashable: Any] = [
       "url": visitable.visitableURL.absoluteString,
@@ -152,27 +144,27 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     ]
     onError?(event)
   }
-    
+  
   public func didOpenExternalUrl(url: URL) {
     onOpenExternalUrl?(["url": url.absoluteString])
   }
-    
+  
   public func didStartFormSubmission() {
     onFormSubmissionStarted?(["url": url])
   }
-    
+  
   public func didFinishFormSubmission() {
     onFormSubmissionFinished?(["url": url])
   }
-    
+  
   public func processDidTerminate() {
     onContentProcessDidTerminate?(["url": url])
   }
-
+  
   func clearSessionSnapshotCache(){
     session.clearSnapshotCache()
   }
-
+  
   func handleAlert(message: String, completionHandler: @escaping () -> Void) {
     let event: [AnyHashable: Any] = [
       "message": message,
@@ -188,28 +180,18 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     self.onWebConfirm?(event)
     self.onConfirmHandler = completionHandler
   }
-    
-  func handleVisitableWillAppear(){
-    if(viewIsRegistered){
-      return
-    }
-    session.registerVisitableView(newView: self)
-    viewIsRegistered = true
-    visit()
-  }
 }
 
 extension RNVisitableView: RNVisitableViewControllerDelegate {
   
-  func visitableWillAppear(visitable: Visitable) {
-    handleVisitableWillAppear()
+  func visitableDidAppear(visitable: Visitable) {
+    session.visitableViewDidAppear(view: self)
   }
-    
+  
   func visitableDidDisappear(visitable: Visitable) {
-    session.unregisterVisitableView(view: self)
-    viewIsRegistered = false
+    session.visitableViewDidDisappear(view: self)
   }
-
+  
   func visitableDidRender(visitable: Visitable) {
     let event: [AnyHashable: Any] = [
       "title": webView.title!,
@@ -217,12 +199,12 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
     ]
     onLoad?(event)
   }
-    
+  
   func showVisitableActivityIndicator() {
     guard !isRefreshing else { return }
     onShowLoading?([:])
   }
-      
+  
   func hideVisitableActivityIndicator() {
     onHideLoading?([:])
   }
