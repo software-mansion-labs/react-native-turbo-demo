@@ -1,4 +1,4 @@
-import { LinkingOptions, useNavigation } from '@react-navigation/native';
+import { LinkingOptions, useRoute } from '@react-navigation/native';
 
 export type LinkingConfig = LinkingOptions<{}>['config'];
 
@@ -33,10 +33,7 @@ function getPath(params: unknown): string | undefined {
 }
 
 export function useCurrentUrl(baseUrl: string, config: LinkingConfig) {
-  const navigation = useNavigation();
-  const state = navigation.getState();
-
-  const currentRoute = state.routes[state.index];
+  const currentRoute = useRoute();
   const path =
     getPath(currentRoute?.params) ?? findPath(currentRoute?.name, config) ?? '';
 
