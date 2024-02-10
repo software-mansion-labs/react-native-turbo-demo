@@ -67,12 +67,14 @@ class RNSession: NSObject {
     }
   }
   
+  func visitableViewWillAppear(view: RNVisitableView) {
+    self.visitableView = view
+  }
+  
   func visitableViewDidAppear(view: RNVisitableView) {
     // if (visitableView !== nil && visitableView.isModal !== view.isModal) {
     //   print("You're not able to share session between modal and non-modals.")
     // }
-    
-    self.visitableView = view
   }
   
   func visit(_ visitable: Visitable) {

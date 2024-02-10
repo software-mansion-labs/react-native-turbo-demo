@@ -10,6 +10,8 @@ import ReactNativeHotwiredTurboiOS
 
 public protocol RNVisitableViewControllerDelegate {
   
+  func viewWillAppear(visitable: Visitable)
+  
   func visitableDidAppear(visitable: Visitable)
   
   func visitableDidRender(visitable: Visitable)
@@ -25,6 +27,11 @@ public protocol RNVisitableViewControllerDelegate {
 class RNVisitableViewController: VisitableViewController {
   
   public var delegate: RNVisitableViewControllerDelegate?
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    delegate?.visitableWillAppear(visitable: self)
+  }
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
