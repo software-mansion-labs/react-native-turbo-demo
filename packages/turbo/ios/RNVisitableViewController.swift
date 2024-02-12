@@ -10,7 +10,7 @@ import ReactNativeHotwiredTurboiOS
 
 public protocol RNVisitableViewControllerDelegate {
   
-  func viewWillAppear(visitable: Visitable)
+  func visitableWillAppear(visitable: Visitable)
   
   func visitableDidAppear(visitable: Visitable)
   
