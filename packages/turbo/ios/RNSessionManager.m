@@ -9,12 +9,12 @@
 
 @interface RCT_EXTERN_MODULE(RNSessionManager, NSObject)
 
-  RCT_EXTERN_METHOD(getRegisteredSessionHandles: (RCTPromiseResolveBlock) resolve
+  RCT_EXTERN_METHOD(getSessionHandles: (RCTPromiseResolveBlock) resolve
                     rejecter: (RCTPromiseRejectBlock) reject)
-  RCT_EXTERN_METHOD(reloadSessionByName: (nonnull NSString) sessionHandle
+  RCT_EXTERN_METHOD(reloadSession: (nonnull NSString) sessionHandle
                     resolver: (RCTPromiseResolveBlock) resolve
                     rejecter: (RCTPromiseRejectBlock) reject)
-  RCT_EXTERN_METHOD(clearSessionSnapshotCacheByName: (nonnull NSString) sessionHandle
+  RCT_EXTERN_METHOD(clearSessionSnapshotCache: (nonnull NSString) sessionHandle
                     resolver: (RCTPromiseResolveBlock) resolve
                     rejecter: (RCTPromiseRejectBlock) reject)
 

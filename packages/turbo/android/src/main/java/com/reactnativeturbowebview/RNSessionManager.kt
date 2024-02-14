@@ -31,7 +31,7 @@ class RNSessionManager(reactContext: ReactApplicationContext) :
   override fun getName() = NAME
 
   @ReactMethod
-  fun getRegisteredSessionHandles(promise: Promise) {
+  fun getSessionHandles(promise: Promise) {
     if(sessions.keys.isNotEmpty()) {
       val sessionHandles = Arguments.createArray()
       sessions.keys.forEach {
@@ -42,7 +42,7 @@ class RNSessionManager(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun reloadSessionByName(sessionHandle: String, promise: Promise) {
+  fun reloadSession(sessionHandle: String, promise: Promise) {
     sessions[sessionHandle]?.let {
       it.reload()
       promise.resolve(null)
@@ -52,7 +52,7 @@ class RNSessionManager(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun clearSessionSnapshotCacheByName(sessionHandle: String, promise: Promise) {
+  fun clearSessionSnapshotCache(sessionHandle: String, promise: Promise) {
     sessions[sessionHandle]?.let {
       it.clearSnapshotCache()
       promise.resolve(null)
