@@ -252,6 +252,14 @@ Session component has been deprecated. To use multiple [sessions](https://github
 
 ## Other utilities
 
-### `clearSnapshotCacheForAllSessions`
+### `getRegisteredSessionHandles`
 
-Clears the snapshot cache for all sessions. This might be useful in a scenario where different session handles are used for modals. When a form submission is completed in the modal session, we need to manually clear the snapshot cache in the default session to avoid the use of potentially outdated cached snapshots.
+Returns an array of all registered session handles.
+
+### `reloadSessionByName`
+
+Reloads the webview for given `sessionHandle`.
+
+### `clearSessionSnapshotCacheByName`
+
+Clears the snapshot cache for given `sessionHandle`. This might be useful in a scenario where different session handles are used for modals. When a form submission is completed in the modal session, we need to manually clear the snapshot cache in the default session to avoid the use of potentially outdated cached snapshots.
