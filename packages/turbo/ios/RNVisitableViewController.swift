@@ -24,36 +24,82 @@ public protocol RNVisitableViewControllerDelegate {
   
 }
 
-class RNVisitableViewController: VisitableViewController {
-  
-  public var delegate: RNVisitableViewControllerDelegate?
-  
+class RNVisitableViewController: UIViewController, Visitable {
+  public var visitableViewControllerDelegate: RNVisitableViewControllerDelegate?
+
+  open weak var visitableDelegate: VisitableDelegate?
+  open var visitableURL: URL!
+
+  private var reactViewController: UIViewController? = nil
+
+  public convenience init(url: URL) {
+    self.init()
+    self.visitableURL = url
+  }
+    
+  public convenience init(reactViewController: UIViewController?, visitableViewControllerDelegate: RNVisitableViewControllerDelegate?) {
+    self.init()
+    self.reactViewController = reactViewController
+    self.visitableViewControllerDelegate = visitableViewControllerDelegate
+  }
+
+  // MARK: View Lifecycle
+
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    view.backgroundColor = UIColor.white
+    installVisitableView()
+  }
+
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    delegate?.visitableWillAppear(visitable: self)
+    visitableViewControllerDelegate?.visitableWillAppear(visitable: self)
   }
-  
+
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-    delegate?.visitableDidAppear(visitable: self)
+    visitableViewControllerDelegate?.visitableDidAppear(visitable: self)
   }
-  
-  override func visitableDidRender() {
-    super.visitableDidRender()
-    delegate?.visitableDidRender(visitable: self)
-  }
-  
+    
   override func viewDidDisappear(_ animated: Bool) {
-    super.viewDidDisappear(animated)
-    delegate?.visitableDidDisappear(visitable: self)
+    visitableViewControllerDelegate?.visitableDidDisappear(visitable: self)
   }
-  
-  override func showVisitableActivityIndicator(){
-    delegate?.showVisitableActivityIndicator()
+
+  // MARK: Visitable
+
+  func visitableDidRender() {
+    title = visitableView.webView?.title
+    visitableViewControllerDelegate?.visitableDidRender(visitable: self)
   }
-  
-  override func hideVisitableActivityIndicator(){
-    delegate?.hideVisitableActivityIndicator()
+    
+  func showVisitableActivityIndicator() {
+    visitableViewControllerDelegate?.showVisitableActivityIndicator()
+  }
+    
+  func hideVisitableActivityIndicator() {
+    visitableViewControllerDelegate?.hideVisitableActivityIndicator()
+  }
+    
+  // MARK: Visitable View
+
+  open private(set) lazy var visitableView: VisitableView! = {
+    let view = VisitableView(frame: CGRect.zero)
+    view.translatesAutoresizingMaskIntoConstraints = false
+    return view
+  }()
+
+  private func installVisitableView() {
+    view.addSubview(visitableView)
+    NSLayoutConstraint.activate([
+       visitableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+       visitableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+       visitableView.topAnchor.constraint(equalTo: view.topAnchor),
+       visitableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+    ])
+  }
+    
+  public var visitableViewController: UIViewController {
+    self.reactViewController?.parent ?? self
   }
   
 }
