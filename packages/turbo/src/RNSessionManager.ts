@@ -1,11 +1,17 @@
 import { NativeModules } from 'react-native';
 
 interface RNSessionManager {
-  clearSnapshotCacheForAllSessions(): void;
+  getRegisteredSessionHandles(): Promise<string[]>;
+  reloadSessionByName: (name: string) => Promise<void>;
+  clearSessionSnapshotCacheByName: (name: string) => Promise<void>;
 }
 
 const { RNSessionManager } = NativeModules as {
   RNSessionManager: RNSessionManager;
 };
 
-export const { clearSnapshotCacheForAllSessions } = RNSessionManager;
+export const {
+  getRegisteredSessionHandles,
+  reloadSessionByName,
+  clearSessionSnapshotCacheByName,
+} = RNSessionManager;

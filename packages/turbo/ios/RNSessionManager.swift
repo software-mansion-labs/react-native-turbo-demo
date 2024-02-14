@@ -22,15 +22,33 @@ class RNSessionManager: NSObject {
     return sessions[sessionHandle]!
   }
     
-  func clearSnapshotCaches() {
-    for (sessionHandle, session) in sessions {
-      session.clearSnapshotCache()
-    }
+  @objc
+  func getRegisteredSessionHandles(_ resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock){
+    resolve(Array(RNSessionManager.shared.sessions.keys))
   }
     
   @objc
-  func clearSnapshotCacheForAllSessions() {
-    RNSessionManager.shared.clearSnapshotCaches()
+  func reloadSessionByName(_ sessionHandle: NSString, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    guard let session = RNSessionManager.shared.sessions[sessionHandle] else {
+      reject("sessionHandle", "Session with this handle does not exist", nil)
+      return
+    }
+    DispatchQueue.main.async {
+      session.reload()
+      resolve(nil)
+    }
+  }
+   
+  @objc
+  func clearSessionSnapshotCacheByName(_ sessionHandle: NSString, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    guard let session = RNSessionManager.shared.sessions[sessionHandle] else {
+      reject("sessionHandle", "Session with this handle does not exist", nil)
+      return
+    }
+    DispatchQueue.main.async {
+      session.clearSnapshotCache()
+      resolve(nil)
+    }
   }
     
   @objc
