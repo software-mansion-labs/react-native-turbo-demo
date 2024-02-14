@@ -30,7 +30,7 @@ class RNSessionManager: NSObject {
   @objc
   func reloadSessionByName(_ sessionHandle: NSString, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
     guard let session = RNSessionManager.shared.sessions[sessionHandle] else {
-      reject("sessionHandle", "Session with this handle does not exist", nil)
+      reject("sessionHandle", "No session found with handle \(sessionHandle)", nil)
       return
     }
     DispatchQueue.main.async {
@@ -42,7 +42,7 @@ class RNSessionManager: NSObject {
   @objc
   func clearSessionSnapshotCacheByName(_ sessionHandle: NSString, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
     guard let session = RNSessionManager.shared.sessions[sessionHandle] else {
-      reject("sessionHandle", "Session with this handle does not exist", nil)
+      reject("sessionHandle", "No session found with handle \(sessionHandle)", nil)
       return
     }
     DispatchQueue.main.async {

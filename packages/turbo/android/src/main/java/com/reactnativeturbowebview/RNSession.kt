@@ -111,6 +111,12 @@ class RNSession(
     }
   }
 
+  fun reload() {
+    webView.post {
+      visitableView?.refresh(true)
+    }
+  }
+
   fun clearSnapshotCache() {
     // turbo-android doesn't expose a way to clear the snapshot cache, so we have to do it manually
     webView.post {

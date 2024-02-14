@@ -109,7 +109,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     }
   }
 
-  internal fun refresh(displayProgress: Boolean) {
+  override fun refresh(displayProgress: Boolean) {
     if (webView.url == null) return
 
     turboView.webViewRefresh?.apply {
