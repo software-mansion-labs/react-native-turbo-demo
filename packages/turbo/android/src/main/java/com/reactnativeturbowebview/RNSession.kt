@@ -119,7 +119,7 @@ class RNSession(
 
   fun refresh() {
     webView.post {
-      visitableView?.refresh(true)
+      visitableView?.refresh(false)
     }
   }
 

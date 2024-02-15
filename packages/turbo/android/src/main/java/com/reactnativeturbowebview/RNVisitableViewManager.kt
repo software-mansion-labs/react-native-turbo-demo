@@ -72,7 +72,7 @@ class RNVisitableViewManager(
         }
       }
       RNVisitableViewCommand.RELOAD_PAGE -> root.reload()
-      RNVisitableViewCommand.REFRESH_PAGE -> root.refresh(true)
+      RNVisitableViewCommand.REFRESH_PAGE -> root.refresh(false)
       RNVisitableViewCommand.SEND_ALERT_RESULT -> root.sendAlertResult()
       RNVisitableViewCommand.SEND_CONFIRM_RESULT -> {
         args?.getString(0)?.let {

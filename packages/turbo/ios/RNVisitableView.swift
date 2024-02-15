@@ -90,12 +90,12 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     self.onConfirmHandler = nil
   }
 
-  public func reload(){
+  public func reload() {
     session.reload()
   }
 
-  public func refresh(){
-    session.refresh()
+  public func refresh() {
+    session.visit(controller, action: .replace)
   }
 
   private func visit() {
