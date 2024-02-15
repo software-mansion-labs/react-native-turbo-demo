@@ -17,7 +17,7 @@ import type {
   NavigatorScreenParams,
 } from '@react-navigation/core';
 import type { Action } from 'react-native-turbo';
-import { isDeepEqual } from '../utils/isEqual';
+import { isDeepEqual, type ComparableObject } from '../utils/isEqual';
 
 type ActionPayloadParams = {
   screen?: string;
@@ -93,6 +93,21 @@ function getAction(
   }
 }
 
+function areParamsSimilar(
+  existingParams: ComparableObject,
+  newParams: ComparableObject
+) {
+  const ignoredParams = {
+    path: undefined,
+    params: undefined,
+  };
+
+  const existingSignificantParams = { ...existingParams, ...ignoredParams };
+  const newSignificantParams = { ...newParams, ...ignoredParams };
+
+  return isDeepEqual(existingSignificantParams, newSignificantParams);
+}
+
 function getMinimalAction(
   action: NavigationAction,
   state: NavigationState
@@ -109,7 +124,7 @@ function getMinimalAction(
     payload?.name &&
     payload?.params?.screen &&
     currentState?.routes[currentState.index ?? -1]?.name === payload.name &&
-    isDeepEqual(
+    areParamsSimilar(
       currentState?.routes[currentState.index ?? -1]?.params,
       payload.params
     )

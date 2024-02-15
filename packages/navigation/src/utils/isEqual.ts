@@ -1,4 +1,4 @@
-type ComparableObject = Readonly<
+export type ComparableObject = Readonly<
   | {
       [key: string]: any;
     }
