@@ -244,7 +244,11 @@ injectJavaScript(jsCode);
 
 ### `reload()`
 
-Reloads the webview.
+Reloads the webview. This method is equivalent to the WKWebView's `reload` method.
+
+### `refresh()`
+
+Refreshes the webview. This method is equivalent to making a turbo replace visit to the current URL.
 
 ## Session Component
 
@@ -252,14 +256,20 @@ Session component has been deprecated. To use multiple [sessions](https://github
 
 ## Other utilities
 
+Functions below might be useful in a scenario when a form submission is completed in the modal session - we need to manually clear the snapshot cache in the default session to avoid the use of potentially outdated cached snapshots.
+
 ### `getSessionHandles()`
 
 Returns an array of all registered session handles.
 
 ### `reloadSession(sessionHandle)`
 
-Reloads the webview for given `sessionHandle`.
+Reloads the webview for given `sessionHandle`. This method is equivalent to the WKWebView's `reload` method.
+
+### `refreshSession(sessionHandle)`
+
+Refreshes the webview for given `sessionHandle`. This method is equivalent to making a turbo replace visit to the current URL.
 
 ### `clearSessionSnapshotCache(sessionHandle)`
 
-Clears the snapshot cache for given `sessionHandle`. This might be useful in a scenario where different session handles are used for modals. When a form submission is completed in the modal session, we need to manually clear the snapshot cache in the default session to avoid the use of potentially outdated cached snapshots.
+Clears the snapshot cache for given `sessionHandle`.

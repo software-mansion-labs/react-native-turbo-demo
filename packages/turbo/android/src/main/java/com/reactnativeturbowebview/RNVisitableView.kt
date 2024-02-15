@@ -109,6 +109,10 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     }
   }
 
+  fun reload() {
+    session.reload()
+  }
+
   override fun refresh(displayProgress: Boolean) {
     if (webView.url == null) return
 

@@ -80,8 +80,12 @@ class RNSession: NSObject {
   func visit(_ visitable: Visitable) {
     turboSession.visit(visitable)
   }
-  
+    
   func reload() {
+    webView.reload()
+  }
+  
+  func refresh() {
     turboSession.reload()
   }
   

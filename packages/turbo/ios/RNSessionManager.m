@@ -14,6 +14,9 @@
   RCT_EXTERN_METHOD(reloadSession: (nonnull NSString) sessionHandle
                     resolver: (RCTPromiseResolveBlock) resolve
                     rejecter: (RCTPromiseRejectBlock) reject)
+  RCT_EXTERN_METHOD(refreshSession: (nonnull NSString) sessionHandle
+                    resolver: (RCTPromiseResolveBlock) resolve
+                    rejecter: (RCTPromiseRejectBlock) reject)
   RCT_EXTERN_METHOD(clearSessionSnapshotCache: (nonnull NSString) sessionHandle
                     resolver: (RCTPromiseResolveBlock) resolve
                     rejecter: (RCTPromiseRejectBlock) reject)

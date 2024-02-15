@@ -113,6 +113,12 @@ class RNSession(
 
   fun reload() {
     webView.post {
+      webView.reload()
+    }
+  }
+
+  fun refresh() {
+    webView.post {
       visitableView?.refresh(true)
     }
   }

@@ -1,9 +1,10 @@
 import { NativeModules } from 'react-native';
 
 interface RNSessionManager {
-  getRegisteredSessionHandles(): Promise<string[]>;
-  reloadSessionByName: (name: string) => Promise<void>;
-  clearSessionSnapshotCacheByName: (name: string) => Promise<void>;
+  getSessionHandles(): Promise<string[]>;
+  reloadSession: (name: string) => Promise<void>;
+  refreshSession: (name: string) => Promise<void>;
+  clearSessionSnapshotCache: (name: string) => Promise<void>;
 }
 
 const { RNSessionManager } = NativeModules as {
@@ -11,7 +12,8 @@ const { RNSessionManager } = NativeModules as {
 };
 
 export const {
-  getRegisteredSessionHandles,
-  reloadSessionByName,
-  clearSessionSnapshotCacheByName,
+  getSessionHandles,
+  reloadSession,
+  refreshSession,
+  clearSessionSnapshotCache,
 } = RNSessionManager;

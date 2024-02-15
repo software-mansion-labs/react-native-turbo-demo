@@ -52,6 +52,16 @@ class RNSessionManager(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
+  fun refreshSession(sessionHandle: String, promise: Promise) {
+    sessions[sessionHandle]?.let {
+      it.refresh()
+      promise.resolve(null)
+    }  ?: run {
+      promise.reject("sessionHandle", "No session found with handle $sessionHandle")
+    }
+  }
+
+  @ReactMethod
   fun clearSessionSnapshotCache(sessionHandle: String, promise: Promise) {
     sessions[sessionHandle]?.let {
       it.clearSnapshotCache()
