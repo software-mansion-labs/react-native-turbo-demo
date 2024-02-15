@@ -244,11 +244,11 @@ injectJavaScript(jsCode);
 
 ### `reload()`
 
-Reloads the webview. This method is equivalent to the WKWebView's `reload` method.
+Reloads the webview.
 
 ### `refresh()`
 
-Refreshes the webview. This method is equivalent to making a turbo replace visit to the current URL.
+Refreshes the page. This method is equivalent to making a Turbo `replace` visit to the current URL.
 
 ## Session Component
 
@@ -264,12 +264,12 @@ Returns an array of all registered session handles.
 
 ### `reloadSession(sessionHandle)`
 
-Reloads the webview for given `sessionHandle`. This method is equivalent to the WKWebView's `reload` method.
+Reloads the page for the given `sessionHandle`.
 
 ### `refreshSession(sessionHandle)`
 
-Refreshes the webview for given `sessionHandle`. This method is equivalent to making a turbo replace visit to the current URL.
+Refreshes the page for the given `sessionHandle`. This method is equivalent to making a Turbo `replace` visit to the current URL.
 
 ### `clearSessionSnapshotCache(sessionHandle)`
 
-Clears the snapshot cache for given `sessionHandle`.
+Clears the snapshot cache for the given `sessionHandle`.

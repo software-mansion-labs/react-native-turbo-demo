@@ -11,5 +11,6 @@ interface SessionSubscriber: SessionCallbackAdapter {
   fun didFinishFormSubmission(url: String)
   fun handleAlert(message: String, callback: () -> Unit)
   fun handleConfirm(message: String, callback: (result: Boolean) -> Unit)
-  fun refresh(displayProgress: Boolean)
+  fun reload(displayProgress: Boolean)
+  fun refresh()
 }

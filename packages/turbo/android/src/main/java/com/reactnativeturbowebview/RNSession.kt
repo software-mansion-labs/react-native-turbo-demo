@@ -57,10 +57,10 @@ class RNSession(
     webView.settings.userAgentString = userAgentString
   }
 
-  fun visit(url: String, restoreWithCachedSnapshot: Boolean, reload: Boolean, viewTreeLifecycleOwner: LifecycleOwner?) {
+  fun visit(url: String, restoreWithCachedSnapshot: Boolean, reload: Boolean, viewTreeLifecycleOwner: LifecycleOwner?, visitOptions: TurboVisitOptions?){
     val restore = restoreWithCachedSnapshot && !reload
 
-    val options = when {
+    val options = visitOptions ?: when {
       restore -> TurboVisitOptions(action = TurboVisitAction.RESTORE)
       else -> TurboVisitOptions()
     }
@@ -113,13 +113,13 @@ class RNSession(
 
   fun reload() {
     webView.post {
-      webView.reload()
+      visitableView?.reload(true)
     }
   }
 
   fun refresh() {
     webView.post {
-      visitableView?.refresh(false)
+      visitableView?.refresh()
     }
   }
 
