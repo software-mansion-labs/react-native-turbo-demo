@@ -48,7 +48,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     return configuration
   }()
     
-  lazy var controller: RNVisitableViewController =  RNVisitableViewController(reactViewController: reactViewController(), visitableViewControllerDelegate: self)
+  lazy var controller: RNVisitableViewController =  RNVisitableViewController(reactViewController: reactViewController(), delegate: self)
     
   private var isRefreshing: Bool {
     controller.visitableView.isRefreshing

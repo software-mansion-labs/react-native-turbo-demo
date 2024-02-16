@@ -25,55 +25,54 @@ public protocol RNVisitableViewControllerDelegate {
 }
 
 class RNVisitableViewController: UIViewController, Visitable {
-  public var visitableViewControllerDelegate: RNVisitableViewControllerDelegate?
+  public var delegate: RNVisitableViewControllerDelegate?
 
   open weak var visitableDelegate: VisitableDelegate?
   open var visitableURL: URL!
 
   private var reactViewController: UIViewController? = nil
     
-  public convenience init(reactViewController: UIViewController?, visitableViewControllerDelegate: RNVisitableViewControllerDelegate?) {
+  public convenience init(reactViewController: UIViewController?, delegate: RNVisitableViewControllerDelegate?) {
     self.init()
     self.reactViewController = reactViewController
-    self.visitableViewControllerDelegate = visitableViewControllerDelegate
+    self.delegate = delegate
   }
 
   // MARK: View Lifecycle
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    view.backgroundColor = UIColor.white
     installVisitableView()
   }
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     visitableDelegate?.visitableViewWillAppear(self)
-    visitableViewControllerDelegate?.visitableWillAppear(visitable: self)
+    delegate?.visitableWillAppear(visitable: self)
   }
 
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     visitableDelegate?.visitableViewDidAppear(self)
-    visitableViewControllerDelegate?.visitableDidAppear(visitable: self)
+    delegate?.visitableDidAppear(visitable: self)
   }
     
   override func viewDidDisappear(_ animated: Bool) {
-    visitableViewControllerDelegate?.visitableDidDisappear(visitable: self)
+    delegate?.visitableDidDisappear(visitable: self)
   }
 
   // MARK: Visitable
 
   func visitableDidRender() {
-    visitableViewControllerDelegate?.visitableDidRender(visitable: self)
+    delegate?.visitableDidRender(visitable: self)
   }
     
   func showVisitableActivityIndicator() {
-    visitableViewControllerDelegate?.showVisitableActivityIndicator()
+    delegate?.showVisitableActivityIndicator()
   }
     
   func hideVisitableActivityIndicator() {
-    visitableViewControllerDelegate?.hideVisitableActivityIndicator()
+    delegate?.hideVisitableActivityIndicator()
   }
     
   // MARK: Visitable View
