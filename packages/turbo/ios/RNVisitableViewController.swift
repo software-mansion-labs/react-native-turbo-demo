@@ -48,11 +48,13 @@ class RNVisitableViewController: UIViewController, Visitable {
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    visitableDelegate?.visitableViewWillAppear(self)
     visitableViewControllerDelegate?.visitableWillAppear(visitable: self)
   }
 
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
+    visitableDelegate?.visitableViewDidAppear(self)
     visitableViewControllerDelegate?.visitableDidAppear(visitable: self)
   }
     
@@ -63,7 +65,6 @@ class RNVisitableViewController: UIViewController, Visitable {
   // MARK: Visitable
 
   func visitableDidRender() {
-    title = visitableView.webView?.title
     visitableViewControllerDelegate?.visitableDidRender(visitable: self)
   }
     
@@ -80,6 +81,7 @@ class RNVisitableViewController: UIViewController, Visitable {
   open private(set) lazy var visitableView: VisitableView! = {
     let view = VisitableView(frame: CGRect.zero)
     view.translatesAutoresizingMaskIntoConstraints = false
+      
     return view
   }()
 
