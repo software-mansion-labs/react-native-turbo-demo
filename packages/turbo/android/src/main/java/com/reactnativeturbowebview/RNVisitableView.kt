@@ -63,7 +63,6 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   private var screenshotOrientation = 0
   private var screenshotZoomed = false
   private var screenshot: Bitmap? = null
-  private var hideActivityIndicatorOnNextLoad = false
 
   // Views
   private val visitableView = inflate(context, R.layout.turbo_view, null) as ViewGroup
@@ -113,7 +112,6 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   }
 
   override fun refresh() {
-    hideActivityIndicatorOnNextLoad = true
     session.visit(
       url = url,
       restoreWithCachedSnapshot = false,
@@ -234,10 +232,6 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   private fun showProgressView() {
     // Don't show the progress view if a screenshot is available
     if (screenshotView.isVisible) return
-    if (hideActivityIndicatorOnNextLoad) {
-      hideActivityIndicatorOnNextLoad = false
-      return;
-    }
     sendEvent(RNVisitableViewEvent.SHOW_LOADING, Arguments.createMap())
   }
 
