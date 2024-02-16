@@ -16,6 +16,7 @@ import dev.hotwire.turbo.views.TurboView
 import dev.hotwire.turbo.views.TurboWebView
 import dev.hotwire.turbo.visit.TurboVisitOptions
 import dev.hotwire.turbo.R
+import dev.hotwire.turbo.visit.TurboVisitAction
 
 class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscriber {
 
@@ -88,6 +89,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
       restoreWithCachedSnapshot = restoreWithCachedSnapshot,
       reload = reload,
       viewTreeLifecycleOwner = viewTreeLifecycleOwner,
+      visitOptions = null
     )
   }
 
@@ -109,7 +111,17 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     }
   }
 
-  internal fun refresh(displayProgress: Boolean) {
+  override fun refresh() {
+    session.visit(
+      url = url,
+      restoreWithCachedSnapshot = false,
+      reload = false,
+      viewTreeLifecycleOwner = viewTreeLifecycleOwner,
+      visitOptions = TurboVisitOptions(action = TurboVisitAction.REPLACE)
+    )
+  }
+
+  override fun reload(displayProgress: Boolean) {
     if (webView.url == null) return
 
     turboView.webViewRefresh?.apply {
@@ -125,7 +137,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   private fun initializePullToRefresh(turboView: TurboView) {
     turboView.webViewRefresh?.apply {
       setOnRefreshListener {
-        refresh(displayProgress = true)
+        reload(displayProgress = true)
       }
     }
   }
@@ -133,7 +145,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   private fun initializeErrorPullToRefresh(turboView: TurboView) {
     turboView.errorRefresh?.apply {
       setOnRefreshListener {
-        refresh(displayProgress = true)
+        reload(displayProgress = true)
       }
     }
   }

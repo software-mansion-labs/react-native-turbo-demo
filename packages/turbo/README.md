@@ -246,12 +246,30 @@ injectJavaScript(jsCode);
 
 Reloads the webview.
 
+### `refresh()`
+
+Refreshes the page. This method is equivalent to making a Turbo `replace` visit to the current URL.
+
 ## Session Component
 
 Session component has been deprecated. To use multiple [sessions](https://github.com/hotwired/turbo-ios/blob/main/Docs/Overview.md#session), you can use `sessionHandle` prop on `VisitableView` component.
 
 ## Other utilities
 
-### `clearSnapshotCacheForAllSessions`
+Functions below might be useful in a scenario when a form submission is completed in the modal session - we need to manually clear the snapshot cache in the default session to avoid the use of potentially outdated cached snapshots.
 
-Clears the snapshot cache for all sessions. This might be useful in a scenario where different session handles are used for modals. When a form submission is completed in the modal session, we need to manually clear the snapshot cache in the default session to avoid the use of potentially outdated cached snapshots.
+### `getSessionHandles()`
+
+Returns an array of all registered session handles.
+
+### `reloadSession(sessionHandle)`
+
+Reloads the page for the given `sessionHandle`.
+
+### `refreshSession(sessionHandle)`
+
+Refreshes the page for the given `sessionHandle`. This method is equivalent to making a Turbo `replace` visit to the current URL.
+
+### `clearSessionSnapshotCache(sessionHandle)`
+
+Clears the snapshot cache for the given `sessionHandle`.
