@@ -31,11 +31,6 @@ class RNVisitableViewController: UIViewController, Visitable {
   open var visitableURL: URL!
 
   private var reactViewController: UIViewController? = nil
-
-  public convenience init(url: URL) {
-    self.init()
-    self.visitableURL = url
-  }
     
   public convenience init(reactViewController: UIViewController?, visitableViewControllerDelegate: RNVisitableViewControllerDelegate?) {
     self.init()
