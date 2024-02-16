@@ -36,7 +36,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var onShowLoading: RCTDirectEventBlock?
   @objc var onHideLoading: RCTDirectEventBlock?
   @objc var onContentProcessDidTerminate: RCTDirectEventBlock?
-  
+
   private var onConfirmHandler: ((Bool) -> Void)?
   private var onAlertHandler: (() -> Void)?
 
@@ -53,59 +53,63 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   private var isRefreshing: Bool {
     controller.visitableView.isRefreshing
   }
-  
+
   // var isModal: Bool {
   //   return controller.reactViewController()?.isModal()
   // }
-    
+
   override func didMoveToWindow() {
     reactViewController()?.addChild(controller)
     controller.view.frame = bounds // Fixes incorrect size of the webview
     controller.didMove(toParent: reactViewController())
     addSubview(controller.view)
   }
-  
+
   public func handleMessage(message: WKScriptMessage) {
     if let messageBody = message.body as? [AnyHashable : Any] {
       onMessage?(messageBody)
     }
   }
-  
+
   public func injectJavaScript(code: NSString) -> Void {
     webView.evaluateJavaScript(code as String)
   }
-  
+
   public func sendAlertResult() -> Void {
     self.onAlertHandler?()
     self.onAlertHandler = nil
   }
-  
+
   public func sendConfirmResult(result: NSString) -> Void {
     let confirmResult = result == "true"
     self.onConfirmHandler?(confirmResult)
     self.onConfirmHandler = nil
   }
-  
-  public func reload(){
+
+  public func reload() {
     session.reload()
   }
-  
+
+  public func refresh() {
+    session.visit(controller, action: .replace)
+  }
+
   private func visit() {
     if (controller.visitableURL?.absoluteString == url as String) {
       return
     }
     performVisit()
   }
-  
+
   private func performVisit() {
     controller.visitableURL = URL(string: String(url))
     session.visit(controller)
   }
-  
+
   public func didProposeVisit(proposal: VisitProposal){
-    if (webView.url == proposal.url) {
-      // When reopening same URL we want to reload webview
-      reload()
+    if (webView.url == proposal.url && proposal.options.action == .replace) {
+      // When reopening same URL we want to refresh webview
+      refresh()
     } else {
       let event: [AnyHashable: Any] = [
         "url": proposal.url.absoluteString,
@@ -114,7 +118,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
       onVisitProposal!(event)
     }
   }
-  
+
   func getStatusCodeFromError(error: TurboError?) -> Int {
     switch error {
       case .networkFailure:
@@ -131,7 +135,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
         return -4
     }
   }
-  
+
   public func didFailRequestForVisitable(visitable: Visitable, error: Error){
     var event: [AnyHashable: Any] = [
       "url": visitable.visitableURL.absoluteString,
@@ -140,27 +144,27 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     ]
     onError?(event)
   }
-  
+
   public func didOpenExternalUrl(url: URL) {
     onOpenExternalUrl?(["url": url.absoluteString])
   }
-  
+
   public func didStartFormSubmission() {
     onFormSubmissionStarted?(["url": url])
   }
-  
+
   public func didFinishFormSubmission() {
     onFormSubmissionFinished?(["url": url])
   }
-  
+
   public func processDidTerminate() {
     onContentProcessDidTerminate?(["url": url])
   }
-  
+
   func clearSessionSnapshotCache(){
     session.clearSnapshotCache()
   }
-  
+
   func handleAlert(message: String, completionHandler: @escaping () -> Void) {
     let event: [AnyHashable: Any] = [
       "message": message,
@@ -168,7 +172,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     self.onWebAlert?(event)
     self.onAlertHandler = completionHandler
   }
-  
+
   func handleConfirm(message: String, completionHandler: @escaping (Bool) -> Void) {
     let event: [AnyHashable: Any] = [
       "message": message,
@@ -179,19 +183,19 @@ class RNVisitableView: UIView, RNSessionSubscriber {
 }
 
 extension RNVisitableView: RNVisitableViewControllerDelegate {
-  
+
   func visitableWillAppear(visitable: Visitable) {
     session.visitableViewWillAppear(view: self)
   }
-  
+
   func visitableDidAppear(visitable: Visitable) {
     session.visitableViewDidAppear(view: self)
   }
-  
+
   func visitableDidDisappear(visitable: Visitable) {
     session.visitableViewDidDisappear(view: self)
   }
-  
+
   func visitableDidRender(visitable: Visitable) {
     let event: [AnyHashable: Any] = [
       "title": webView.title!,
@@ -199,14 +203,14 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
     ]
     onLoad?(event)
   }
-  
+
   func showVisitableActivityIndicator() {
     guard !isRefreshing else { return }
     onShowLoading?([:])
   }
-  
+
   func hideVisitableActivityIndicator() {
     onHideLoading?([:])
   }
-  
+
 }

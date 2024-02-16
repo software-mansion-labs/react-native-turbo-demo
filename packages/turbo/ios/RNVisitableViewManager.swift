@@ -34,6 +34,14 @@ class RNVisitableViewManager: RCTViewManager {
       component.reload()
     }
   }
+    
+  @objc
+  func refresh(_ node: NSNumber) {
+    DispatchQueue.main.async {
+      let component = self.bridge.uiManager.view(forReactTag: node) as! RNVisitableView
+      component.refresh()
+    }
+  }
 
   @objc
   func sendAlertResult(_ node: NSNumber) {

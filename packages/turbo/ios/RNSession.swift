@@ -80,9 +80,17 @@ class RNSession: NSObject {
   func visit(_ visitable: Visitable) {
     turboSession.visit(visitable)
   }
-  
+    
+  func visit(_ visitable: Visitable, action: VisitAction) {
+    turboSession.visit(visitable, action: action)
+  }
+    
   func reload() {
     turboSession.reload()
+  }
+  
+  func refresh() {
+    visitableView?.refresh()
   }
   
   func clearSnapshotCache() {

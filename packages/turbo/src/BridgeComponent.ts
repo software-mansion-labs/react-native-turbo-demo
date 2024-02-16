@@ -8,7 +8,10 @@ import type {
 
 const stradaMessageListener = (component: BridgeComponent) => (e: object) => {
   const message = e as StradaMessage;
-  if (message?.data?.metadata?.url !== component.url) {
+  if (
+    message?.component !== component.name ||
+    message?.data?.metadata?.url !== component.url
+  ) {
     return;
   }
   component.previousMessages[message.event] = message;

@@ -24,6 +24,7 @@ enum class RNVisitableViewEvent(val jsCallbackName: String) {
 enum class RNVisitableViewCommand(val jsCallbackName: String) {
   INJECT_JAVASCRIPT("injectJavaScript"),
   RELOAD_PAGE("reload"),
+  REFRESH_PAGE("refresh"),
   SEND_ALERT_RESULT("sendAlertResult"),
   SEND_CONFIRM_RESULT("sendConfirmResult")
 }
@@ -70,7 +71,8 @@ class RNVisitableViewManager(
           root.injectJavaScript(it)
         }
       }
-      RNVisitableViewCommand.RELOAD_PAGE -> root.refresh(true)
+      RNVisitableViewCommand.RELOAD_PAGE -> root.reload(true)
+      RNVisitableViewCommand.REFRESH_PAGE -> root.refresh()
       RNVisitableViewCommand.SEND_ALERT_RESULT -> root.sendAlertResult()
       RNVisitableViewCommand.SEND_CONFIRM_RESULT -> {
         args?.getString(0)?.let {
