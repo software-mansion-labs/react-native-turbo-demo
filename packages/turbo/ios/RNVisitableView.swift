@@ -47,13 +47,9 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     configuration.applicationNameForUserAgent = applicationNameForUserAgent as String?
     return configuration
   }()
-
-  lazy var controller: RNVisitableViewController = {
-    let controller = RNVisitableViewController()
-    controller.delegate = self
-    return controller
-  }()
-
+    
+  lazy var controller: RNVisitableViewController =  RNVisitableViewController(reactViewController: reactViewController(), delegate: self)
+    
   private var isRefreshing: Bool {
     controller.visitableView.isRefreshing
   }

@@ -24,36 +24,78 @@ public protocol RNVisitableViewControllerDelegate {
   
 }
 
-class RNVisitableViewController: VisitableViewController {
-  
+class RNVisitableViewController: UIViewController, Visitable {
   public var delegate: RNVisitableViewControllerDelegate?
-  
+
+  open weak var visitableDelegate: VisitableDelegate?
+  open var visitableURL: URL!
+
+  private var reactViewController: UIViewController? = nil
+    
+  public convenience init(reactViewController: UIViewController?, delegate: RNVisitableViewControllerDelegate?) {
+    self.init()
+    self.reactViewController = reactViewController
+    self.delegate = delegate
+  }
+
+  // MARK: View Lifecycle
+
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    installVisitableView()
+  }
+
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    visitableDelegate?.visitableViewWillAppear(self)
     delegate?.visitableWillAppear(visitable: self)
   }
-  
+
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
+    visitableDelegate?.visitableViewDidAppear(self)
     delegate?.visitableDidAppear(visitable: self)
   }
-  
-  override func visitableDidRender() {
-    super.visitableDidRender()
-    delegate?.visitableDidRender(visitable: self)
-  }
-  
+    
   override func viewDidDisappear(_ animated: Bool) {
-    super.viewDidDisappear(animated)
     delegate?.visitableDidDisappear(visitable: self)
   }
-  
-  override func showVisitableActivityIndicator(){
+
+  // MARK: Visitable
+
+  func visitableDidRender() {
+    delegate?.visitableDidRender(visitable: self)
+  }
+    
+  func showVisitableActivityIndicator() {
     delegate?.showVisitableActivityIndicator()
   }
-  
-  override func hideVisitableActivityIndicator(){
+    
+  func hideVisitableActivityIndicator() {
     delegate?.hideVisitableActivityIndicator()
+  }
+    
+  // MARK: Visitable View
+
+  open private(set) lazy var visitableView: VisitableView! = {
+    let view = VisitableView(frame: CGRect.zero)
+    view.translatesAutoresizingMaskIntoConstraints = false
+      
+    return view
+  }()
+
+  private func installVisitableView() {
+    view.addSubview(visitableView)
+    NSLayoutConstraint.activate([
+       visitableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+       visitableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+       visitableView.topAnchor.constraint(equalTo: view.topAnchor),
+       visitableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+    ])
+  }
+    
+  public var visitableViewController: UIViewController {
+    self.reactViewController?.parent ?? self
   }
   
 }
