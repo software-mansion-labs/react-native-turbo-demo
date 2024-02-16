@@ -40,7 +40,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   var pullToRefreshEnabled: Boolean = true
     set(value) {
       field = value
-      setPullToReload(value)
+      setPullToRefresh(value)
     }
 
   // Session
@@ -74,8 +74,8 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     addView(visitableView)
 
     turboView.apply {
-      initializePullToReload(this)
-      initializeErrorPullToReload(this)
+      initializePullToRefresh(this)
+      initializeErrorPullToRefresh(this)
       showScreenshotIfAvailable(this)
       screenshot = null
       screenshotOrientation = 0
@@ -134,7 +134,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     performVisit(restoreWithCachedSnapshot = false, reload = true)
   }
 
-  private fun initializePullToReload(turboView: TurboView) {
+  private fun initializePullToRefresh(turboView: TurboView) {
     turboView.webViewRefresh?.apply {
       setOnRefreshListener {
         reload(displayProgress = true)
@@ -142,7 +142,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     }
   }
 
-  private fun initializeErrorPullToReload(turboView: TurboView) {
+  private fun initializeErrorPullToRefresh(turboView: TurboView) {
     turboView.errorRefresh?.apply {
       setOnRefreshListener {
         reload(displayProgress = true)
@@ -247,7 +247,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     turboView.removeErrorView()
   }
 
-  private fun setPullToReload(enabled: Boolean) {
+  private fun setPullToRefresh(enabled: Boolean) {
     turboView.webViewRefresh?.isEnabled = enabled
   }
 
@@ -306,12 +306,12 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
 
   override fun onZoomed(newScale: Float) {
     currentlyZoomed = true
-    setPullToReload(false)
+    setPullToRefresh(false)
   }
 
   override fun onZoomReset(newScale: Float) {
     currentlyZoomed = false
-    setPullToReload(pullToRefreshEnabled)
+    setPullToRefresh(pullToRefreshEnabled)
   }
 
   override fun visitRendered() {
