@@ -57,6 +57,8 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   private var isRefreshing: Bool {
     controller.visitableView.isRefreshing
   }
+    
+  private var hideActivityIndicatorOnNextLoad = false
 
   // var isModal: Bool {
   //   return controller.reactViewController()?.isModal()
@@ -95,6 +97,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   }
 
   public func refresh() {
+    hideActivityIndicatorOnNextLoad = true
     session.visit(controller, action: .replace)
   }
 
@@ -210,6 +213,10 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
 
   func showVisitableActivityIndicator() {
     guard !isRefreshing else { return }
+    guard !hideActivityIndicatorOnNextLoad else {
+      hideActivityIndicatorOnNextLoad = true
+      return
+    }
     onShowLoading?([:])
   }
 
