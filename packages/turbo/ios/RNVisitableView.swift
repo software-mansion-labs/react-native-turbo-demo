@@ -193,7 +193,7 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
   }
 
   func visitableDidDisappear(visitable: Visitable) {
-    session.visitableViewDidDisappear(view: self)
+    // No-op
   }
 
   func visitableDidRender(visitable: Visitable) {

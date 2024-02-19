@@ -61,12 +61,6 @@ class RNSession: NSObject {
   }()
   public lazy var webView: WKWebView = turboSession.webView
   
-  func visitableViewDidDisappear(view: RNVisitableView) {
-    if (view === visitableView) {
-      self.visitableView = nil
-    }
-  }
-  
   func visitableViewWillAppear(view: RNVisitableView) {
     self.visitableView = view
   }
