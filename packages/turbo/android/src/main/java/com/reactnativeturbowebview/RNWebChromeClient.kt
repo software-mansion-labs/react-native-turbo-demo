@@ -19,10 +19,11 @@ import com.facebook.react.uimanager.events.RCTEventEmitter
 
 class RNWebChromeClient(
   private val reactContext: ReactApplicationContext,
-  private val visitableView: SessionSubscriber?
+  private val session: RNSession
 ) : ActivityEventListener, WebChromeClient() {
 
   private val fileChooserDelegate = RNFileChooserDelegate(reactContext)
+  private val visitableView: SessionSubscriber? get() = session.visitableView
 
   init {
     reactContext.addActivityEventListener(this)
