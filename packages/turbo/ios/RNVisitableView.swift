@@ -48,7 +48,8 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     return configuration
   }()
     
-  lazy var controller: RNVisitableViewController =  RNVisitableViewController(reactViewController: reactViewController(), delegate: self)
+  lazy var _controller: RNVisitableViewController? =  RNVisitableViewController(reactViewController: reactViewController(), delegate: self)
+  var controller: RNVisitableViewController { _controller! }
     
   private var isRefreshing: Bool {
     controller.visitableView.isRefreshing
@@ -65,6 +66,11 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     addSubview(controller.view)
   }
 
+  override func removeFromSuperview() {
+    super.removeFromSuperview()
+    _controller = nil
+  }
+    
   public func handleMessage(message: WKScriptMessage) {
     if let messageBody = message.body as? [AnyHashable : Any] {
       onMessage?(messageBody)
