@@ -26,7 +26,7 @@ class RNSession(
   private val applicationNameForUserAgent: String?,
 ) : SessionCallbackAdapter {
 
-  private var visitableView: SessionSubscriber? = null
+  var visitableView: SessionSubscriber? = null
 
   private val turboSession: TurboSession = run {
     val activity = reactContext.currentActivity as AppCompatActivity
@@ -37,7 +37,7 @@ class RNSession(
     webView.settings.setJavaScriptEnabled(true)
     webView.addJavascriptInterface(JavaScriptInterface(), "AndroidInterface")
     setUserAgentString(webView, applicationNameForUserAgent)
-    webView.webChromeClient = RNWebChromeClient(reactContext, visitableView)
+    webView.webChromeClient = RNWebChromeClient(reactContext, this@RNSession)
     session.isRunningInAndroidNavigation = false
     session
   }
