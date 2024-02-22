@@ -144,9 +144,9 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
 
     const handleVisitProposal = useCallback(
       ({ nativeEvent }: NativeSyntheticEvent<VisitProposal>) => {
-        // Using requestAnimationFrame helps prevent a potential race condition
-        // that might occur between onFormSubmissionFinished and onVisitProposal.
-        requestAnimationFrame(() => onVisitProposal(nativeEvent));
+        // Using setTimeout helps prevent a potential race condition
+        // that might occur between onFormSubmissionFinished and onVisitProposal
+        setTimeout(() => onVisitProposal(nativeEvent), 1);
       },
       [onVisitProposal]
     );
