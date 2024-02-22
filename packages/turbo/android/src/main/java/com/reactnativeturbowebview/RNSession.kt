@@ -45,7 +45,6 @@ class RNSession(
   val currentVisit: TurboVisit? get() = turboSession.currentVisit
 
   internal fun registerVisitableView(newView: SessionSubscriber) {
-    visitableView?.detachWebView()
     visitableView = newView
   }
 
