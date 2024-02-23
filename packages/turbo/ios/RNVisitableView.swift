@@ -197,6 +197,11 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
   func visitableDidAppear(visitable: Visitable) {
     session.visitableViewDidAppear(view: self)
   }
+    
+  func visitableWillDisappear(visitable: Visitable) {
+    // snapshots are not always taken when VisitableViewController is dismissed
+    webView.evaluateJavaScript("Turbo.session.view.cacheSnapshot()")
+  }
 
   func visitableDidDisappear(visitable: Visitable) {
     // No-op
