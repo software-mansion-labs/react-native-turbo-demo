@@ -58,12 +58,24 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   // var isModal: Bool {
   //   return controller.reactViewController()?.isModal()
   // }
-
+    
+  override func willMove(toWindow newWindow: UIWindow?) {
+    super.willMove(toWindow: newWindow)
+    
+    // Sometimes UIPageViewController does not automatically call viewWillAppear/viewDidAppear
+    // on its child view controllers. We need to manually begin the appearance transition
+    // for the RNVisitableViewController when it's contained within a UIPageViewController.
+    if (newWindow != nil && reactViewController()?.parent is UIPageViewController) {
+      controller.beginAppearanceTransition(true, animated: false)
+    }
+  }
+    
   override func didMoveToWindow() {
+    super.didMoveToWindow()
     reactViewController()?.addChild(controller)
+    addSubview(controller.view)
     controller.view.frame = bounds // Fixes incorrect size of the webview
     controller.didMove(toParent: reactViewController())
-    addSubview(controller.view)
   }
 
   override func removeFromSuperview() {
