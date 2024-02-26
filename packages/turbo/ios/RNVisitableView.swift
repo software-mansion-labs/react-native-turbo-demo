@@ -48,8 +48,13 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     return configuration
   }()
     
-  lazy var _controller: RNVisitableViewController? =  RNVisitableViewController(reactViewController: reactViewController(), delegate: self)
-  var controller: RNVisitableViewController { _controller! }
+  var _controller: RNVisitableViewController? = nil
+  var controller: RNVisitableViewController {
+    if (_controller == nil){
+      _controller = RNVisitableViewController(reactViewController: reactViewController(), delegate: self)
+    }
+    return _controller!
+  }
     
   private var isRefreshing: Bool {
     controller.visitableView.isRefreshing
@@ -119,6 +124,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   }
 
   public func refresh() {
+    controller.visitableURL = URL(string: String(url))
     session.visit(controller, action: .replace)
   }
 
