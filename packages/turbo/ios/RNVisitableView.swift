@@ -65,7 +65,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     // Sometimes UIPageViewController does not automatically call viewWillAppear
     // on its child view controllers. We need to manually begin the appearance transition
     // for the RNVisitableViewController when it's contained within a UIPageViewController.
-    if (newWindow != nil && reactViewController().parent is UIPageViewController) {
+    if (newWindow != nil && reactViewController()?.parent is UIPageViewController) {
       controller.beginAppearanceTransition(true, animated: false)
     }
   }
