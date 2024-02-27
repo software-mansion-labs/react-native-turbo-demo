@@ -93,14 +93,22 @@ function getAction(
   }
 }
 
-function areParamsSimilar(
+function areParamsSimilarForActionType(
+  actionType: Action | undefined,
   existingParams: ComparableObject,
   newParams: ComparableObject
 ) {
-  const ignoredParams = {
+  let ignoredParams = {
     path: undefined,
     params: undefined,
-  };
+  } as Object;
+
+  if (actionType === 'replace') {
+    ignoredParams = {
+      ...ignoredParams,
+      screen: undefined,
+    };
+  }
 
   const existingSignificantParams = { ...existingParams, ...ignoredParams };
   const newSignificantParams = { ...newParams, ...ignoredParams };
@@ -110,7 +118,8 @@ function areParamsSimilar(
 
 function getMinimalAction(
   action: NavigationAction,
-  state: NavigationState
+  state: NavigationState,
+  actionType: Action | undefined
 ): NavigationAction {
   let currentAction = action;
   let currentState:
@@ -124,7 +133,8 @@ function getMinimalAction(
     payload?.name &&
     payload?.params?.screen &&
     currentState?.routes[currentState.index ?? -1]?.name === payload.name &&
-    areParamsSimilar(
+    areParamsSimilarForActionType(
+      actionType,
       currentState?.routes[currentState.index ?? -1]?.params,
       payload.params
     )
@@ -205,7 +215,7 @@ export function useWebviewNavigate<
 
         if (isNavigateAction(action)) {
           const rootState = root.getState();
-          const minimalAction = getMinimalAction(action, rootState);
+          const minimalAction = getMinimalAction(action, rootState, actionType);
           const currentScreenName =
             rootState?.routes[rootState.index ?? -1]?.name;
 
