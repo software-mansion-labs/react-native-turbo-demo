@@ -104,8 +104,7 @@ class RNSession(
     @JavascriptInterface
     fun postMessage(messageStr: String) {
       // Android interface works only with primitive types, that's why we need to use JSON
-      val messageObj =
-        Arguments.fromBundle(Utils.convertJsonToBundle(JSONObject(messageStr)))
+      val messageObj = Utils.convertJsonToMap(JSONObject(messageStr))
       visitableView?.handleMessage(messageObj)
     }
   }
