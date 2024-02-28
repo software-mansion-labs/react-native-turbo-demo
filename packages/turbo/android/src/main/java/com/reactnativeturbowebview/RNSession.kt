@@ -30,7 +30,7 @@ class RNSession(
 
   private val turboSession: TurboSession = run {
     val activity = reactContext.currentActivity as AppCompatActivity
-    val webView = TurboWebView(reactContext, null)
+    val webView = TurboWebView(activity, null)
     val session = TurboSession(sessionHandle, activity, webView)
 
     WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
