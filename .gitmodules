@@ -1,0 +1,3 @@
+[submodule "packages/turbo/ios/turbo-ios"]
+	path = packages/turbo/ios/turbo-ios
+	url = https://github.com/hotwired/turbo-ios.git
