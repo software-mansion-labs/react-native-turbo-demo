@@ -71,7 +71,10 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     
   override func didMoveToWindow() {
     super.didMoveToWindow()
-    guard window != nil else { return }
+    
+    if (window == nil) {
+      return
+    }
     
     let viewController = reactViewController()!
     viewController.addChild(controller!)
@@ -118,7 +121,9 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   }
 
   public func refresh() {
-    guard controller != nil else { return }
+    if (controller == nil) {
+      return
+    }
     session.visit(controller!, action: .replace)
   }
 
@@ -126,10 +131,6 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     if (controller?.visitableURL?.absoluteString == url as String) {
       return
     }
-    performVisit()
-  }
-
-  private func performVisit() {
     controller!.visitableURL = URL(string: String(url))
     session.visit(controller!)
   }
@@ -233,7 +234,9 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
   }
 
   func showVisitableActivityIndicator() {
-    guard !isRefreshing else { return }
+    if (isRefreshing) {
+      return
+    }
     onShowLoading?([:])
   }
 
