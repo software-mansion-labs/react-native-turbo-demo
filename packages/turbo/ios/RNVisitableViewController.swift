@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import ReactNativeHotwiredTurboiOS
 
 public protocol RNVisitableViewControllerDelegate {
   
