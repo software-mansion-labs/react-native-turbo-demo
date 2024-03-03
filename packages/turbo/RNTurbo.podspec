@@ -3,7 +3,9 @@ require "json"
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 folly_compiler_flags = '-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1 -Wno-comma -Wno-shorten-64-to-32'
 
-turbo_ios_source_files = "ios/turbo-ios/Source/**/*.{h,m,mm,swift}"
+turbo_ios_version = "7.0.2"
+turbo_ios_source_files = "ios/vendor/turbo-ios/Source/**/*.{h,m,mm,swift}"
+turbo_ios_resource_files = "ios/vendor/turbo-ios/Source/**/*.{js}"
 
 Pod::Spec.new do |s|
   s.name         = "RNTurbo"
@@ -17,16 +19,11 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/software-mansion-labs/react-native-turbo-demo.git", :tag => "#{s.version}" }
 
   s.prepare_command = <<-CMD
-    cd ios
-    rm -rf turbo-ios
-    git clone https://github.com/hotwired/turbo-ios.git
-    cd turbo-ios
-    git fetch --all --tags --prune
-    git checkout tags/7.0.2 -B 7.0.2
+    sh ios/vendor/scripts/install-turbo-ios.sh #{turbo_ios_version}
   CMD
 
   s.source_files = "ios/*.{h,m,mm,swift}", turbo_ios_source_files
-  s.resource = "ios/**/*.{js}"
+  s.resource = turbo_ios_resource_files
 
   s.dependency "React-Core"
 
