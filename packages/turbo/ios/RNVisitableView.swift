@@ -5,7 +5,6 @@
 //  Created by Bartłomiej Fryz on 24/06/2022.
 //
 
-import ReactNativeHotwiredTurboiOS
 import UIKit
 
 class RNVisitableView: UIView, RNSessionSubscriber {
