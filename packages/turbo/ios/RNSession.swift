@@ -5,6 +5,7 @@
 //  Created by Bartłomiej Fryz on 24/06/2022.
 //
 
+import ReactNativeHotwiredTurboiOS
 import UIKit
 import WebKit
 

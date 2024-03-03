@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ReactNativeHotwiredTurboiOS
 
 @objc(RNVisitableViewManager)
 class RNVisitableViewManager: RCTViewManager {
