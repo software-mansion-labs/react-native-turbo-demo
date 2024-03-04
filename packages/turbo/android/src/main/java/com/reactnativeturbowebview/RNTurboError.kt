@@ -35,7 +35,7 @@ enum class RNTurboError(val code: Int) {
     }
 
     private fun fromCode(code: Int): RNTurboError {
-      return entries.firstOrNull { it.code == code } ?: UNKNOWN
+      return values().firstOrNull { it.code == code } ?: UNKNOWN
     }
 
     fun errorDescription(error: TurboVisitError): String {
