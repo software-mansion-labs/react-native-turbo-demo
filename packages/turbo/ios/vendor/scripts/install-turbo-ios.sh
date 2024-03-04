@@ -7,12 +7,7 @@ if [ -z "$1" ]
     exit 1
 fi
 
-# Clone turbo-ios repository
+# Shallow clone the turbo-ios repo
 cd ./ios/vendor
 rm -rf turbo-ios
-git clone $TURBO_IOS_REPO_PATH
-
-# Use the version tag
-cd turbo-ios
-git fetch --all --tags --prune
-git checkout tags/$1 -B $1
+git clone --branch $1 --depth 1 $TURBO_IOS_REPO_PATH
