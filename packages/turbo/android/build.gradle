@@ -8,7 +8,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.5.3'
+    classpath 'com.android.tools.build:gradle:8.2.2'
     // noinspection DifferentKotlinGradleVersion
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
@@ -135,8 +135,47 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  implementation 'com.github.Fryzu:turbo-android:a4cedae5b39da67b229d84998fb71a3ff13fb55c'
-  // From node_modules
+
+  // turbo-android region
+
+  // Main dependency
+  implementation(files('libs/turbo-android.aar'))
+
+  // turbo-android dependencies
+  //
+  // Important:
+  // Ensure to keep these dependencies in sync with the ones declared in the
+  // turbo-android library's build.gradle.kts file.
+  //
+  // For up-to-date dependencies, refer to this link:
+  // https://github.com/hotwired/turbo-android/blob/main/turbo/build.gradle.kts#L80-L121
+
+  // AndroidX
+  implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+  implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
+  implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+  // JSON
+  implementation("com.google.code.gson:gson:2.10.1")
+
+  // Networking/API
+  implementation("com.squareup.okhttp3:okhttp:4.11.0")
+  implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+
+  // Coroutines
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+
+  // Exported AndroidX dependencies
+  api("androidx.appcompat:appcompat:1.6.1")
+  api("androidx.core:core-ktx:1.12.0")
+  api("androidx.webkit:webkit:1.8.0")
+  api("androidx.activity:activity-ktx:1.8.1")
+  api("androidx.fragment:fragment-ktx:1.6.2")
+  api("androidx.navigation:navigation-fragment-ktx:2.7.5")
+  api("androidx.navigation:navigation-ui-ktx:2.7.5")
+
+  // endregion
 }
 
 if (isNewArchitectureEnabled()) {

@@ -17,9 +17,9 @@ git clone --branch $1 --depth 1 $TURBO_ANDROID_REPO_PATH
 cd turbo-android
 git apply ../patches/react-native-support.patch
 
-# Move files to src/main
-rsync -av --ignore-existing --remove-source-files $TURBO_ANDROID_MAIN_SOURCE_DIR  ../../src/main
+# Build .aar file
+./gradlew clean assemble -p turbo
 
-# Clean up
-cd ..
-rm -rf turbo-android
+# Copy .aar file to lib directory
+LIB_DIR=$(realpath ../../libs)
+cp ./turbo/build/outputs/aar/turbo-release.aar $LIB_DIR/turbo-android.aar

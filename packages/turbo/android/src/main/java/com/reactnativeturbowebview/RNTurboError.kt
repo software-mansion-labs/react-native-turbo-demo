@@ -1,6 +1,11 @@
 package com.reactnativeturbowebview
 
 import android.webkit.WebViewClient
+import dev.hotwire.turbo.errors.HttpError
+import dev.hotwire.turbo.errors.LoadError
+import dev.hotwire.turbo.errors.TurboVisitError
+import dev.hotwire.turbo.errors.WebError
+import dev.hotwire.turbo.errors.WebSslError
 
 enum class RNTurboError(val code: Int) {
   HTTP(1),
@@ -11,31 +16,30 @@ enum class RNTurboError(val code: Int) {
   UNKNOWN(-4);
 
   companion object {
-    fun transformCode(code: Int): Int {
-      return when (code) {
+    fun getErrorCode(error: TurboVisitError): Int {
+      val errorCode = when (error) {
+        is HttpError -> error.statusCode
+        is WebError -> error.errorCode
+        is WebSslError -> error.errorCode
+        is LoadError -> -2
+        else -> 0
+      }
+
+      return when (errorCode) {
         WebViewClient.ERROR_CONNECT -> 0
         WebViewClient.ERROR_TIMEOUT -> -1
         // turbo-android returns ERROR_UNKNOWN on SSL error and on turboFailedToLoad
         WebViewClient.ERROR_UNKNOWN -> -3
-        else -> if (code > 0) code else -4
+        else -> if (errorCode > 0) errorCode else -4
       }
     }
 
     private fun fromCode(code: Int): RNTurboError {
-      RNTurboError.values().forEach {
-        if (it.code == transformCode(code)) {
-          return it
-        }
-      }
-
-      if (code > 0) {
-        return HTTP
-      }
-
-      return UNKNOWN
+      return entries.firstOrNull { it.code == code } ?: UNKNOWN
     }
 
-    fun errorDescription(errorCode: Int): String {
+    fun errorDescription(error: TurboVisitError): String {
+      val errorCode = getErrorCode(error)
       return when (fromCode(errorCode)) {
         NETWORK_FAILURE -> "A network error occurred."
         TIMEOUT_FAILURE -> "A network timeout occurred."
