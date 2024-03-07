@@ -8,6 +8,8 @@ if [ -z "$1" ]
 fi
 
 # Shallow clone the turbo-ios repo
-cd ./ios/vendor
-rm -rf turbo-ios
+cd ../packages/turbo/ios
+rm -rf vendor
+mkdir vendor
+cd vendor
 git clone --branch $1 --depth 1 $TURBO_IOS_REPO_PATH
