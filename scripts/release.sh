@@ -32,15 +32,15 @@ if [[ "$*" == *"--turbo-android-version"* ]]; then
 fi
 
 if [[ -z "$GH_TOKEN" && "$*" != *"--no-github-release"* ]]; then
-    echo "You must provide a Github token in the GH_TOKEN environment variable to do the release. You can also pass the --no-github-release flag to skip creating a Github release after publishing the new version."
+    echo "You must provide a GitHub authentication token in the GH_TOKEN environment variable to perform the release. Alternatively, you can pass the --no-github-release flag to skip creating a GitHub release after publishing the new version."
     exit 1
 fi
 
 echo "Using turbo-ios version $TURBO_IOS_VERSION"
-sh install-turbo-ios.sh $TURBO_IOS_VERSION
+sh build-turbo-ios.sh $TURBO_IOS_VERSION
 
 echo "Using turbo-android version $TURBO_ANDROID_VERSION"
-sh install-turbo-android.sh $TURBO_ANDROID_VERSION
+sh build-turbo-android.sh $TURBO_ANDROID_VERSION
 
 LERNA_COMMAND="npx lerna publish $INCREMENT_TYPE --no-private --conventional-commits --preid rc --yes --force-publish"
 
