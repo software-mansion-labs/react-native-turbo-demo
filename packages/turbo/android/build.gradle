@@ -1,4 +1,4 @@
-apply from: './dependencies.gradle'
+apply from: './turbo-android-dependencies.gradle'
 
 buildscript {
   // Buildscript is evaluated before everything else so we can't use getExtOrDefault
@@ -131,7 +131,7 @@ repositories {
   }
 }
 
-def addTurboLibraries(Map<String, String> libraries) {
+def addTurboDependencies(Map<String, String> libraries) {
   libraries.each { type, lib ->
     if (type.startsWith("dep")) {
       dependencies {
@@ -152,10 +152,11 @@ dependencies {
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   implementation(files('vendor/turbo-android.aar'))
+  // From node_modules
 }
 
-addTurboLibraries(deps)
-addTurboLibraries(apis)
+addTurboDependencies(deps)
+addTurboDependencies(apis)
 
 if (isNewArchitectureEnabled()) {
   react {

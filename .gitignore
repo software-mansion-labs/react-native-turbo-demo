@@ -72,4 +72,4 @@ tsconfig.tsbuildinfo
 
 # vendor files
 vendor/
-dependencies.gradle
+turbo-android-dependencies.gradle

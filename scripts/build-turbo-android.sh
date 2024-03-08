@@ -10,7 +10,7 @@ fi
 
 PATCH_DIR=$(realpath ../patches)
 TURBO_ANDROID_DIR=$(realpath ../packages/turbo/android)
-DEPENDENCIES_GRADLE_FILE="dependencies.gradle"
+DEPENDENCIES_GRADLE_FILE="turbo-android-dependencies.gradle"
 DEPENDENCY_REGEX="[a-zA-Z0-9.\-]+:[a-zA-Z0-9.\-]+:[0-9a-zA-Z.\-]+"
 
 cd $TURBO_ANDROID_DIR
