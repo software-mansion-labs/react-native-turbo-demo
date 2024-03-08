@@ -8,12 +8,13 @@ if [ -z "$1" ]
     exit 1
 fi
 
-PATCH_DIR=$(realpath ../patches)
-TURBO_ANDROID_DIR=$(realpath ../packages/turbo/android)
+PATCH_DIR=$(realpath ./patches)
+TURBO_ANDROID_DIR=$(realpath ./packages/turbo/android)
 DEPENDENCIES_GRADLE_FILE="turbo-android-dependencies.gradle"
 DEPENDENCY_REGEX="[a-zA-Z0-9.\-]+:[a-zA-Z0-9.\-]+:[0-9a-zA-Z.\-]+"
 
 cd $TURBO_ANDROID_DIR
+rm -rf vendor
 mkdir vendor
 
 # Shallow clone the turbo-ios repo
@@ -36,6 +37,7 @@ cp ./turbo/build/outputs/aar/turbo-release.aar $TURBO_ANDROID_DIR/vendor/turbo-a
 
 # Get turbo-android dependencies and create DEPENDENCIES_GRADLE_FILE
 cd ..
+rm -rf $DEPENDENCIES_GRADLE_FILE
 touch $DEPENDENCIES_GRADLE_FILE
 echo "ext {\n\tdeps = [  " > $DEPENDENCIES_GRADLE_FILE
 grep -oE $DEPENDENCY_REGEX ./turbo-android/deps.txt | awk '{print "\t\tdep" NR ": " "\""$1"\"" ","}' >> $DEPENDENCIES_GRADLE_FILE
