@@ -79,11 +79,13 @@ export function dispatchCommand(
     return;
   }
 
-  UIManager.dispatchViewManagerCommand(
-    findNodeHandle(ref.current),
-    transformedCommand,
-    args
-  );
+  const reactTag = findNodeHandle(ref.current);
+
+  if (!reactTag) {
+    return;
+  }
+
+  UIManager.dispatchViewManagerCommand(reactTag, transformedCommand, args);
 }
 
 export async function openExternalURL({
