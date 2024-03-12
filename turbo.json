@@ -9,6 +9,9 @@
     "lint": {
       "dependsOn": ["^lint"]
     },
+    "prepare": {
+      "dependsOn": ["^prepare"]
+    },
     "typescript": {
       "dependsOn": ["^typescript"]
     },
@@ -17,10 +20,10 @@
       "persistent": true
     },
     "dev:ios": {
-      "cache": false
+      "dependsOn": ["^dev"]
     },
     "dev:android": {
-      "cache": false
+      "dependsOn": ["^dev"]
     }
   }
 }

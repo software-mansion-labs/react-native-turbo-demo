@@ -2,6 +2,10 @@
   "name": "react-native-web-screen",
   "version": "0.1.4",
   "description": "Native like web screen in React Native",
+  "homepage": "https://github.com/software-mansion-labs/react-native-turbo-demo",
+  "repository": "https://github.com/software-mansion-labs/react-native-turbo-demo",
+  "author": "Bartek Fryz <bartlomiej.fryz@swmansion.com> (https://github.com/Fryzu)",
+  "license": "MIT",
   "keywords": [
     "react-native",
     "ios",
@@ -11,24 +15,19 @@
     "navigation"
   ],
   "source": "src/index",
-  "homepage": "https://github.com/software-mansion-labs/react-native-turbo-demo",
-  "repository": "https://github.com/software-mansion-labs/react-native-turbo-demo",
-  "author": "Bartek Fryz <bartlomiej.fryz@swmansion.com> (https://github.com/Fryzu)",
-  "license": "MIT",
-  "devDependencies": {
-    "@react-navigation/core": "^6.0.0",
-    "@types/lodash": "^4.14.191",
-    "react-native-builder-bob": "^0.23.2"
-  },
   "main": "lib/commonjs/index.js",
-  "react-native": "src/index.tsx",
   "module": "lib/module/index.js",
   "types": "lib/typescript/src/index.d.ts",
+  "react-native": "src/index.tsx",
   "scripts": {
     "prepare": "bob build",
     "release": "yarn release",
     "typescript": "tsc",
     "lint": "eslint \"src/**/*.{js,ts,tsx}\""
+  },
+  "devDependencies": {
+    "@react-navigation/core": "^6.0.0",
+    "react-native-turbo": "*"
   },
   "peerDependencies": {
     "@react-navigation/core": ">=6.0.0",
@@ -52,9 +51,5 @@
       "module",
       "typescript"
     ]
-  },
-  "eslintIgnore": [
-    "node_modules/",
-    "lib/"
-  ]
+  }
 }

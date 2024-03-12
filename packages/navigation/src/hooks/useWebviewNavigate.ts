@@ -66,7 +66,7 @@ type To<
         });
 
 function isNavigateAction(
-  action: ReturnType<typeof getActionFromState>
+  action: ReturnType<typeof getActionFromState>,
 ): action is NavigateAction<NavigationState> {
   return !!action && action.type === "NAVIGATE";
 }
@@ -74,7 +74,7 @@ function isNavigateAction(
 function getAction(
   action: NavigateAction<NavigationState> | PushAction<NavigationState>,
   actionType: Action | undefined,
-  routeName: string
+  routeName: string,
 ) {
   if (actionType === "replace") {
     if (action.payload.name === routeName && action.payload.params) {
@@ -98,7 +98,7 @@ function getAction(
 function areParamsSimilarForActionType(
   actionType: Action | undefined,
   existingParams: ComparableObject,
-  newParams: ComparableObject
+  newParams: ComparableObject,
 ) {
   let ignoredParams = {
     path: undefined,
@@ -121,7 +121,7 @@ function areParamsSimilarForActionType(
 function getMinimalAction(
   action: NavigationAction,
   state: NavigationState,
-  actionType: Action | undefined
+  actionType: Action | undefined,
 ): NavigationAction {
   let currentAction = action;
   let currentState:
@@ -138,7 +138,7 @@ function getMinimalAction(
     areParamsSimilarForActionType(
       actionType,
       currentState?.routes[currentState.index ?? -1]?.params,
-      payload.params
+      payload.params,
     )
   ) {
     // Creating new smaller action
@@ -178,7 +178,7 @@ export function useWebviewNavigate<
     (to: To<ParamList>, actionType?: Action): DispatchUtilities => {
       if (navigation === undefined) {
         throw new Error(
-          "Couldn't find a navigation object. Is your component inside NavigationContainer?"
+          "Couldn't find a navigation object. Is your component inside NavigationContainer?",
         );
       }
 
@@ -235,7 +235,7 @@ export function useWebviewNavigate<
             // @ts-expect-error
             minimalAction,
             actionType,
-            route.name
+            route.name,
           );
         }
       }
@@ -248,7 +248,7 @@ export function useWebviewNavigate<
         willChangeTopmostNavigator,
       };
     },
-    [linking, navigation, route.name]
+    [linking, navigation, route.name],
   );
 
   const navigateTo = React.useCallback(
@@ -267,7 +267,7 @@ export function useWebviewNavigate<
       // @ts-expect-error
       navigation.reset(state);
     },
-    [getDispatchUtilities, navigation]
+    [getDispatchUtilities, navigation],
   );
 
   return { navigateTo, getDispatchUtilities };

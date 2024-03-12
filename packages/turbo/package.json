@@ -1,9 +1,14 @@
 {
   "name": "react-native-turbo",
   "version": "0.2.4",
+  "description": "Support for @hotwired/turbo in React Native apps",
+  "homepage": "https://github.com/software-mansion-labs/react-native-turbo-demo/tree/main/packages/turbo",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/software-mansion-labs/react-native-turbo-demo/tree/main/packages/turbo"
+  },
   "author": "Bartek Fryz <bartlomiej.fryz@swmansion.com> (https://github.com/Fryzu)",
   "license": "MIT",
-  "description": "Support for @hotwired/turbo in React Native apps",
   "keywords": [
     "react-native",
     "ios",
@@ -11,16 +16,11 @@
     "turbo",
     "hotwired"
   ],
-  "homepage": "https://github.com/software-mansion-labs/react-native-turbo-demo/tree/main/packages/turbo",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/software-mansion-labs/react-native-turbo-demo/tree/main/packages/turbo"
-  },
+  "source": "src/index",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
   "types": "lib/typescript/src/index.d.ts",
   "react-native": "src/index.tsx",
-  "source": "src/index",
   "scripts": {
     "prepare": "bob build",
     "release": "yarn release",
@@ -30,7 +30,6 @@
   "devDependencies": {
     "@react-navigation/core": "^6.0.0",
     "@react-navigation/native": "^6.0.0",
-    "react-native-builder-bob": "^0.23.2",
     "react-native-safe-area-context": "^4.3.0",
     "react-native-screens": "^3.13.0"
   },

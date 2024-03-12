@@ -1,81 +1,46 @@
-# Turborepo starter
+<div align="center">
 
-This is an official starter Turborepo.
+# React Native Web Screen
 
-## Using this example
+React Native Web Screen is an open source library that can bring your web application into the [React Native](https://reactnative.dev/) world. It allows you to render web pages as if they were native iOS or Android screens. It supports caching and provides native navigation animations resulting in mobile-like user experience. You can easily move your entire web app, or embed a few screens that pretend to be native, without reimplementing them in React Native.
 
-Run the following command:
+<p align="center">
+  <a aria-label="NPM version" href="https://www.npmjs.com/package/react-native-web-screen" target="_blank">
+    <img alt="NPM version" src="https://img.shields.io/npm/v/react-native-web-screen?color=red&label=npm%20version" />
+  </a>
+  <a aria-label="Licence MIT" href="https://www.npmjs.com/package/react-native-web-screen" target="_blank">
+    <img alt="Licence MIT" src="https://img.shields.io/github/license/software-mansion-labs/react-native-turbo-demo" />
+  </a>
+  <a aria-label="Github issues" href="https://github.com/software-mansion-labs/react-native-turbo-demo/issues" target="_blank">
+    <img alt="Github issues" src="https://img.shields.io/github/issues/software-mansion-labs/react-native-turbo-demo" />
+  </a>
+  <a aria-label="Github activity" href="https://github.com/software-mansion-labs/react-native-turbo-demo" target="_blank">
+    <img alt="Github activity" src="https://img.shields.io/github/last-commit/software-mansion-labs/react-native-turbo-demo" />
+  </a>
+</p>
 
-```sh
-npx create-turbo@latest
-```
+https://user-images.githubusercontent.com/25584895/225870138-b034f335-a30f-4e25-92fd-06c19cdf6e04.mov
 
-## What's inside?
+_An example app adapted from [turbo-native-demo](https://github.com/hotwired/turbo-native-demo) using react-native-web-screen_
 
-This Turborepo includes the following packages/apps:
+</div>
 
-### Apps and Packages
+---
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+## Documentation 📖
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+Check out the full [documentation](packages/navigation/README.md) page.
 
-### Utilities
+_This an early stage version of the library, so issues may appear. You can help us by reporting them in the [issues](https://github.com/software-mansion-labs/react-native-turbo-demo/issues) section._
 
-This Turborepo has some additional tools already setup for you:
+## Contributing 💪
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
 
-### Build
+## License
 
-To build all apps and packages, run the following command:
+MIT
 
-```
-cd my-turborepo
-pnpm build
-```
+---
 
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm dev
-```
-
-### Remote Caching
-
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)

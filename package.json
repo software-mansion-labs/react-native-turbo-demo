@@ -7,6 +7,7 @@
     "dev:ios": "turbo dev:ios",
     "dev:android": "turbo dev:android",
     "typescript": "turbo typescript",
+    "prepare": "turbo prepare",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
@@ -24,8 +25,9 @@
     "eslint-plugin-only-error": "^1.0.2",
     "eslint-plugin-prettier": "^5.1.3",
     "prettier": "^3.2.5",
-    "turbo": "latest",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "react-native-builder-bob": "^0.23.2",
+    "turbo": "latest"
   },
   "engines": {
     "node": ">=18"
