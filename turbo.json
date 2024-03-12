@@ -14,12 +14,10 @@
       "persistent": true
     },
     "dev:ios": {
-      "cache": false,
-      "persistent": true
+      "cache": false
     },
     "dev:android": {
-      "cache": false,
-      "persistent": true
+      "cache": false
     }
   }
 }

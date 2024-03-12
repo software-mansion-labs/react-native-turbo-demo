@@ -1,0 +1,68 @@
+{
+  "name": "react-native-web-screen",
+  "version": "0.1.4",
+  "description": "Native like web screen in React Native",
+  "keywords": [
+    "react-native",
+    "ios",
+    "android",
+    "web",
+    "webview",
+    "navigation"
+  ],
+  "source": "src/index",
+  "homepage": "https://github.com/software-mansion-labs/react-native-turbo-demo",
+  "repository": "https://github.com/software-mansion-labs/react-native-turbo-demo",
+  "author": "Bartek Fryz <bartlomiej.fryz@swmansion.com> (https://github.com/Fryzu)",
+  "license": "MIT",
+  "devDependencies": {
+    "@react-navigation/core": "^6.0.0",
+    "@types/lodash": "^4.14.191",
+    "react-native-builder-bob": "^0.23.2"
+  },
+  "main": "lib/commonjs/index.js",
+  "react-native": "src/index.tsx",
+  "module": "lib/module/index.js",
+  "types": "lib/typescript/src/index.d.ts",
+  "scripts": {
+    "prepare": "bob build",
+    "clean": "del lib",
+    "release": "release-it",
+    "pods": "pod-install --quiet"
+  },
+  "peerDependencies": {
+    "@react-navigation/core": ">=6.0.0",
+    "@react-navigation/native": ">=6.0.0",
+    "react": "*",
+    "react-native": "*",
+    "react-native-turbo": "*"
+  },
+  "files": [
+    "src",
+    "lib",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__"
+  ],
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      "typescript"
+    ]
+  },
+  "eslintIgnore": [
+    "node_modules/",
+    "lib/"
+  ],
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: react-native-web-screen release v${version}"
+    }
+  }
+}

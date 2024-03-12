@@ -1,0 +1,15 @@
+name: TypeScript
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install modules
+      run: yarn install
+    - name: Run TypeScript
+      run: yarn typescript
+    - name: Run eslint
+      run: yarn lint
