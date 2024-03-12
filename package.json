@@ -1,7 +1,6 @@
 {
   "name": "react-native-turbo-demo",
   "private": true,
-  "type": "module",
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
