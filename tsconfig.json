@@ -1,32 +1,3 @@
 {
-  "compilerOptions": {
-    "composite": true,
-    "baseUrl": ".",
-    "paths": {
-      "react-native-turbo": ["./packages/turbo/src"],
-      "react-native-web-screen": ["./packages/navigation/src"]
-    },
-    "allowUnreachableCode": false,
-    "allowUnusedLabels": false,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "jsx": "react",
-    "lib": ["esnext"],
-    "module": "esnext",
-    "moduleResolution": "node",
-    "noEmit": false,
-    "noImplicitAny": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    "noImplicitUseStrict": false,
-    "noStrictGenericChecks": false,
-    "noUncheckedIndexedAccess": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "target": "esnext"
-  },
-  "exclude": ["packages/*/lib"]
+  "extends": "@repo/typescript-config/base.json"
 }

@@ -1,7 +1,0 @@
-{
-  "extends": "../../tsconfig.json",
-  "references": [{ "path": "../turbo" }],
-  "compilerOptions": {
-    "outDir": "./lib/typescript"
-  }
-}
