@@ -1,11 +1,12 @@
 {
-  "name": "rn-turbo-new-turborepo",
+  "name": "react-native-turbo-demo",
   "private": true,
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
     "dev:ios": "turbo dev:ios",
     "dev:android": "turbo dev:android",
+    "typescript": "turbo typescript",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
@@ -13,11 +14,15 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.65",
     "@types/react-native": "^0.73.0",
-    "@typescript-eslint/eslint-plugin": "^7.1.0",
-    "@typescript-eslint/parser": "^7.1.0",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
+    "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-turbo": "^1.12.4",
-    "eslint-plugin-only-warn": "^1.1.0",
+    "eslint-config-universe": "^12.0.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-only-error": "^1.0.2",
+    "eslint-plugin-prettier": "^5.1.3",
     "prettier": "^3.2.5",
     "turbo": "latest",
     "typescript": "^5.3.3"

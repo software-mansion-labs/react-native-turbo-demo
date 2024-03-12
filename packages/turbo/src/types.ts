@@ -1,4 +1,4 @@
-export type Action = 'advance' | 'replace' | 'restore';
+export type Action = "advance" | "replace" | "restore";
 
 export interface VisitProposal {
   url: string;
@@ -77,11 +77,11 @@ export type StradaMessages = {
 
 // list of methods available for RNVisitableView module
 export type DispatchCommandTypes =
-  | 'injectJavaScript'
-  | 'reload'
-  | 'refresh'
-  | 'sendAlertResult'
-  | 'sendConfirmResult';
+  | "injectJavaScript"
+  | "reload"
+  | "refresh"
+  | "sendAlertResult"
+  | "sendConfirmResult";
 
 export type DispatchCommand = (
   ref: React.RefObject<any>,

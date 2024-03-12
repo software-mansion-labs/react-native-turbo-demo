@@ -23,7 +23,9 @@
   "source": "src/index",
   "scripts": {
     "prepare": "bob build",
-    "release": "yarn release"
+    "release": "yarn release",
+    "typescript": "tsc",
+    "lint": "eslint \"src/**/*.{js,ts,tsx}\""
   },
   "devDependencies": {
     "@react-navigation/core": "^6.0.0",

@@ -1,10 +1,11 @@
-import { Component } from 'react';
-import type { EmitterSubscription } from 'react-native';
+import { Component } from "react";
+import type { EmitterSubscription } from "react-native";
+
 import type {
   StradaMessage,
   StradaMessages,
   StradaComponentProps,
-} from './types';
+} from "./types";
 
 const stradaMessageListener = (component: BridgeComponent) => (e: object) => {
   const message = e as StradaMessage;

@@ -1,4 +1,5 @@
 import React from "react";
+
 import type { OnErrorCallback, SessionMessageCallback } from "./types";
 
 const deprecationMessage =

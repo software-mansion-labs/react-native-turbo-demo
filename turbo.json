@@ -9,6 +9,9 @@
     "lint": {
       "dependsOn": ["^lint"]
     },
+    "typescript": {
+      "dependsOn": ["^typescript"]
+    },
     "dev": {
       "cache": false,
       "persistent": true

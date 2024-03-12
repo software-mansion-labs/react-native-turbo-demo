@@ -1,6 +1,6 @@
-import { NativeModules } from 'react-native';
+import { NativeModules } from "react-native";
 
-interface RNSessionManager {
+interface IRNSessionManager {
   getSessionHandles(): Promise<string[]>;
   reloadSession: (name: string) => Promise<void>;
   refreshSession: (name: string) => Promise<void>;
@@ -8,7 +8,7 @@ interface RNSessionManager {
 }
 
 const { RNSessionManager } = NativeModules as {
-  RNSessionManager: RNSessionManager;
+  RNSessionManager: IRNSessionManager;
 };
 
 export const {

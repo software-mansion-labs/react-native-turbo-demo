@@ -26,9 +26,9 @@
   "types": "lib/typescript/src/index.d.ts",
   "scripts": {
     "prepare": "bob build",
-    "clean": "del lib",
-    "release": "release-it",
-    "pods": "pod-install --quiet"
+    "release": "yarn release",
+    "typescript": "tsc",
+    "lint": "eslint \"src/**/*.{js,ts,tsx}\""
   },
   "peerDependencies": {
     "@react-navigation/core": ">=6.0.0",
@@ -56,13 +56,5 @@
   "eslintIgnore": [
     "node_modules/",
     "lib/"
-  ],
-  "dependencies": {
-    "lodash": "^4.17.21"
-  },
-  "release-it": {
-    "git": {
-      "commitMessage": "chore: react-native-web-screen release v${version}"
-    }
-  }
+  ]
 }

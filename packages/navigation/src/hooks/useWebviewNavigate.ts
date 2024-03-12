@@ -1,3 +1,7 @@
+import type {
+  NavigationState,
+  NavigatorScreenParams,
+} from "@react-navigation/core";
 import {
   getActionFromState,
   getStateFromPath,
@@ -7,16 +11,13 @@ import {
   StackActions,
   useNavigation,
   useRoute,
+  CommonActions,
 } from "@react-navigation/native";
-import * as React from "react";
 import LinkingContext from "@react-navigation/native/src/LinkingContext";
 import extractPathFromURL from "@react-navigation/native/src/extractPathFromURL";
-import { CommonActions } from "@react-navigation/native";
-import type {
-  NavigationState,
-  NavigatorScreenParams,
-} from "@react-navigation/core";
+import * as React from "react";
 import type { Action } from "react-native-turbo";
+
 import { isDeepEqual, type ComparableObject } from "../utils/isEqual";
 
 type ActionPayloadParams = {
@@ -102,7 +103,7 @@ function areParamsSimilarForActionType(
   let ignoredParams = {
     path: undefined,
     params: undefined,
-  } as Object;
+  } as object;
 
   if (actionType === "replace") {
     ignoredParams = {

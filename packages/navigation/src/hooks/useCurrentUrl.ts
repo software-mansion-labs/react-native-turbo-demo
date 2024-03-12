@@ -1,10 +1,10 @@
 import { LinkingOptions, useRoute } from "@react-navigation/native";
 
-export type LinkingConfig = LinkingOptions<{}>["config"];
+export type LinkingConfig = LinkingOptions<object>["config"];
 
 function findPath(
   name: string | undefined,
-  config: LinkingConfig
+  config: LinkingConfig,
 ): string | undefined {
   if (!config || !name) return undefined;
   const screens = config.screens;

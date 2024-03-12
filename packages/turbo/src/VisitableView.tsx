@@ -4,13 +4,26 @@ import React, {
   useRef,
   useMemo,
   Component,
-} from 'react';
-import { NativeMethods, NativeSyntheticEvent, StyleSheet } from 'react-native';
+} from "react";
+import { NativeMethods, NativeSyntheticEvent, StyleSheet } from "react-native";
+
 import RNVisitableView, {
   RNVisitableViewProps,
   dispatchCommand,
   openExternalURL,
-} from './RNVisitableView';
+} from "./RNVisitableView";
+import { useMessageQueue } from "./hooks/useMessageQueue";
+import { useStradaBridge } from "./hooks/useStradaBridge";
+import {
+  type OnAlert,
+  type OnConfirm,
+  useWebViewDialogs,
+} from "./hooks/useWebViewDialogs";
+import {
+  type RenderLoading,
+  type RenderError,
+  useWebViewState,
+} from "./hooks/useWebViewState";
 import type {
   OnErrorCallback,
   LoadEvent,
@@ -21,19 +34,7 @@ import type {
   StradaComponent,
   FormSubmissionEvent,
   ContentProcessDidTerminateEvent,
-} from './types';
-import { useStradaBridge } from './hooks/useStradaBridge';
-import { useMessageQueue } from './hooks/useMessageQueue';
-import {
-  type OnAlert,
-  type OnConfirm,
-  useWebViewDialogs,
-} from './hooks/useWebViewDialogs';
-import {
-  type RenderLoading,
-  type RenderError,
-  useWebViewState,
-} from './hooks/useWebViewState';
+} from "./types";
 
 export interface Props {
   url: string;
@@ -65,7 +66,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
   (props, ref) => {
     const {
       url,
-      sessionHandle = 'Default',
+      sessionHandle = "Default",
       applicationNameForUserAgent,
       stradaComponents,
       pullToRefreshEnabled = true,
@@ -93,7 +94,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       useStradaBridge(visitableViewRef, dispatchCommand, stradaComponents);
 
     const reloadVisitableView = useCallback(() => {
-      dispatchCommand(visitableViewRef, 'reload');
+      dispatchCommand(visitableViewRef, "reload");
     }, []);
 
     const {
@@ -107,8 +108,8 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       () =>
         [applicationNameForUserAgent, stradaUserAgent]
           .filter(Boolean)
-          .join(' '),
-      [applicationNameForUserAgent, stradaUserAgent]
+          .join(" "),
+      [applicationNameForUserAgent, stradaUserAgent],
     );
 
     useImperativeHandle(
@@ -117,13 +118,13 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
         injectJavaScript: (callbackStringified) =>
           dispatchCommand(
             visitableViewRef,
-            'injectJavaScript',
-            callbackStringified
+            "injectJavaScript",
+            callbackStringified,
           ),
         reload: reloadVisitableView,
-        refresh: () => dispatchCommand(visitableViewRef, 'refresh'),
+        refresh: () => dispatchCommand(visitableViewRef, "refresh"),
       }),
-      [reloadVisitableView]
+      [reloadVisitableView],
     );
 
     const onErrorCombinedHandlers = useCallback(
@@ -131,7 +132,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
         onErrorCustomHandler?.(nativeEvent);
         handleRenderError(nativeEvent);
       },
-      [handleRenderError, onErrorCustomHandler]
+      [handleRenderError, onErrorCustomHandler],
     );
 
     const handleOnLoad = useCallback(
@@ -139,7 +140,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
         initializeStradaBridge();
         onLoad?.(nativeEvent);
       },
-      [initializeStradaBridge, onLoad]
+      [initializeStradaBridge, onLoad],
     );
 
     const handleVisitProposal = useCallback(
@@ -148,33 +149,33 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
         // that might occur between onFormSubmissionFinished and onVisitProposal
         setTimeout(() => onVisitProposal(nativeEvent), 1);
       },
-      [onVisitProposal]
+      [onVisitProposal],
     );
 
     const handleOnOpenExternalUrl = useCallback(
       ({ nativeEvent }: NativeSyntheticEvent<OpenExternalUrlEvent>) =>
         onOpenExternalUrlCallback(nativeEvent),
-      [onOpenExternalUrlCallback]
+      [onOpenExternalUrlCallback],
     );
 
     const handleOnFormSubmissionStarted = useCallback(
       ({ nativeEvent }: NativeSyntheticEvent<FormSubmissionEvent>) => {
         onFormSubmissionStarted?.(nativeEvent);
       },
-      [onFormSubmissionStarted]
+      [onFormSubmissionStarted],
     );
 
     const handleOnFormSubmissionFinished = useCallback(
       ({ nativeEvent }: NativeSyntheticEvent<FormSubmissionEvent>) => {
         onFormSubmissionFinished?.(nativeEvent);
       },
-      [onFormSubmissionFinished]
+      [onFormSubmissionFinished],
     );
 
     const { handleAlert, handleConfirm } = useWebViewDialogs(
       visitableViewRef,
       onAlert,
-      onConfirm
+      onConfirm,
     );
 
     const handleOnContentProcessDidTerminate = useCallback(
@@ -182,12 +183,12 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
         nativeEvent,
       }: NativeSyntheticEvent<ContentProcessDidTerminateEvent>) => {
         if (!onContentProcessDidTerminate) {
-          dispatchCommand(visitableViewRef, 'reload');
+          dispatchCommand(visitableViewRef, "reload");
           return;
         }
         onContentProcessDidTerminate(nativeEvent);
       },
-      [onContentProcessDidTerminate]
+      [onContentProcessDidTerminate],
     );
 
     return (
@@ -225,7 +226,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
         />
       </>
     );
-  }
+  },
 );
 
 const styles = StyleSheet.create({

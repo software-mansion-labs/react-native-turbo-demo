@@ -6,12 +6,12 @@ export type ComparableObject = Readonly<
 >;
 
 const isObject = (object: ComparableObject) => {
-  return object != null && typeof object === 'object';
+  return object != null && typeof object === "object";
 };
 
 export const isDeepEqual = (
   object1: ComparableObject,
-  object2: ComparableObject
+  object2: ComparableObject,
 ) => {
   if (!object1 || !object2) return false;
 
@@ -20,7 +20,7 @@ export const isDeepEqual = (
 
   if (objKeys1.length !== objKeys2.length) return false;
 
-  for (var key of objKeys1) {
+  for (const key of objKeys1) {
     const value1 = object1[key];
     const value2 = object2[key];
 

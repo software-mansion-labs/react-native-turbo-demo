@@ -1,11 +1,12 @@
-import { useCallback, useRef } from 'react';
-import type { NativeSyntheticEvent } from 'react-native';
-import type { SessionMessageCallback, MessageEvent } from '../types';
+import { useCallback, useRef } from "react";
+import type { NativeSyntheticEvent } from "react-native";
+
+import type { SessionMessageCallback, MessageEvent } from "../types";
 
 type SessionMessageCallbackArrayElement = SessionMessageCallback | undefined;
 
 export function useMessageQueue(
-  onMessageCallback: SessionMessageCallback | undefined
+  onMessageCallback: SessionMessageCallback | undefined,
 ) {
   const onMessageCallbacks = useRef<SessionMessageCallbackArrayElement[]>([
     onMessageCallback,
@@ -15,7 +16,7 @@ export function useMessageQueue(
     (listener: SessionMessageCallback) => {
       onMessageCallbacks.current.push(listener);
     },
-    []
+    [],
   );
 
   const handleOnMessage = useCallback(
@@ -24,7 +25,7 @@ export function useMessageQueue(
         listener?.(e.nativeEvent);
       });
     },
-    []
+    [],
   );
 
   return { registerMessageListener, handleOnMessage };
