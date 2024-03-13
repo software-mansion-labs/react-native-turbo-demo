@@ -8,6 +8,8 @@ if [ -z "$1" ]
     exit 1
 fi
 
+echo "Using turbo-android version $1"
+
 PATCH_DIR=$(realpath ./patches)
 TURBO_ANDROID_DIR=$(realpath ./android)
 DEPENDENCIES_GRADLE_FILE="turbo-android-dependencies.gradle"

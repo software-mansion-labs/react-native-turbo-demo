@@ -10,10 +10,6 @@ You can use `sh` command to run the scripts. Make sure that you have the necessa
 
 Run the `./release.sh [version]` script to release a new version. The script will update the libraries to the specified version, build them, and publish them to the npm registry. You can run this command with the `--help` flag to see all available options.
 
-## How to build the `turbo-android` library
+## How to bump turbo-ios and turbo-android versions
 
-Run the `./build-turbo-android.sh [version]` script to update the library to the given version. The script will download the given version of the library, apply the necessary patches, and copy dependencies to the `turbo-android-dependencies.gradle` file.
-
-## How to build the `turbo-ios` library
-
-Run the `./build-turbo-ios.sh [version]` script to update the library to the given version. The script will download the given version of the library and include it in the `react-native-turbo` package.
+You can bump versions in package.json located in packages/turbo directory (look for `hotwiredTurbo` option).

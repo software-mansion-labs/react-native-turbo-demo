@@ -8,6 +8,8 @@ if [ -z "$1" ]
     exit 1
 fi
 
+echo "Using turbo-ios version $1"
+
 shopt -s extglob
 
 # Shallow clone the turbo-ios repo

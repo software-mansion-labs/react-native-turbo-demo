@@ -15,9 +15,4 @@ fi
 TURBO_IOS_VERSION=$1
 TURBO_ANDROID_VERSION=$2
 
-echo "Using turbo-ios version $TURBO_IOS_VERSION"
-sh ./scripts/build-turbo-ios.sh $TURBO_IOS_VERSION
-
-echo "Using turbo-android version $TURBO_ANDROID_VERSION"
-sh ./scripts/build-turbo-android.sh $TURBO_ANDROID_VERSION
-
+sh ./scripts/build-turbo-ios.sh $TURBO_IOS_VERSION & sh ./scripts/build-turbo-android.sh $TURBO_ANDROID_VERSION
