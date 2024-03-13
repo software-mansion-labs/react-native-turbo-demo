@@ -84,7 +84,7 @@ Our pre-commit hooks verify that the linter and tests pass when committing.
 
 ### Publishing to npm
 
-To publish new versions, run the following in the root directory:
+To publish new versions, run the following command in the root directory:
 
 ```sh
 yarn release
