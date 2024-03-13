@@ -11,7 +11,7 @@ fi
 shopt -s extglob
 
 # Shallow clone the turbo-ios repo
-cd ./packages/turbo/ios
+cd ./ios
 rm -rf vendor
 mkdir vendor
 cd vendor

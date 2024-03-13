@@ -21,8 +21,13 @@
   "types": "lib/typescript/src/index.d.ts",
   "react-native": "src/index.tsx",
   "source": "src/index",
+  "hotwiredTurbo": {
+    "ios": "7.0.2",
+    "android": "7.1.0"
+  },
   "scripts": {
-    "prepare": "bob build",
+    "prepare": "bob build && yarn build-local-libraries",
+    "build-local-libraries": "sh ./scripts/build.sh $npm_package_hotwiredTurbo_ios $npm_package_hotwiredTurbo_android",
     "clean": "del lib",
     "release": "release-it",
     "pods": "pod-install --quiet"
