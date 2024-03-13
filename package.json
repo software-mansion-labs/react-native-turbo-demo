@@ -2,12 +2,13 @@
   "name": "react-native-turbo-demo",
   "private": true,
   "scripts": {
+    "prepare": "turbo prepare",
     "build": "turbo build",
     "dev": "turbo dev",
     "dev:ios": "turbo dev:ios",
     "dev:android": "turbo dev:android",
+    "clean": "turbo clean",
     "typescript": "turbo typescript",
-    "prepare": "turbo prepare",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
