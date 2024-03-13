@@ -1,6 +1,6 @@
 # Scripts
 
-This folder contains the necessary tools and scripts for using the `turbo-android` and `turbo-ios` libraries in `react-native-turbo` and for releasing new versions of the library.
+This folder contains the necessary scripts for releasing new versions of the library.
 
 ## How to run scripts
 
@@ -12,4 +12,4 @@ Run the `./release.sh [version]` script to release a new version. The script wil
 
 ## How to bump turbo-ios and turbo-android versions
 
-You can bump versions in package.json located in packages/turbo directory (look for `hotwiredTurbo` option).
+You can bump versions in package.json located in packages/turbo directory (look for `hotwiredTurbo` setting).

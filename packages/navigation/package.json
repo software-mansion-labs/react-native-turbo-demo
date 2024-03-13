@@ -27,7 +27,6 @@
   "scripts": {
     "prepare": "bob build",
     "clean": "del lib",
-    "release": "release-it",
     "pods": "pod-install --quiet"
   },
   "peerDependencies": {
@@ -59,10 +58,5 @@
   ],
   "dependencies": {
     "lodash": "^4.17.21"
-  },
-  "release-it": {
-    "git": {
-      "commitMessage": "chore: react-native-web-screen release v${version}"
-    }
   }
 }

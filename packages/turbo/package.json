@@ -29,7 +29,6 @@
     "prepare": "bob build & yarn build-local-libraries",
     "build-local-libraries": "sh ./scripts/build.sh $npm_package_hotwiredTurbo_ios $npm_package_hotwiredTurbo_android",
     "clean": "del lib",
-    "release": "release-it",
     "pods": "pod-install --quiet"
   },
   "devDependencies": {
@@ -65,11 +64,5 @@
       "module",
       "typescript"
     ]
-  },
-  "release-it": {
-    "git": {
-      "commitMessage": "chore: react-native-turbo release v${version}",
-      "tag": false
-    }
   }
 }
