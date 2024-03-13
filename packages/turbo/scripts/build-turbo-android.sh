@@ -1,19 +1,19 @@
 TURBO_ANDROID_REPO_PATH="https://github.com/hotwired/turbo-android.git"
 TURBO_ANDROID_MAIN_SOURCE_DIR="./turbo/src/main/*"
+TURBO_ANDROID_VERSION=$1
+PATCH_DIR=$(realpath ./patches)
+TURBO_ANDROID_DIR=$(realpath ./android)
+DEPENDENCIES_GRADLE_FILE="turbo-android-dependencies.gradle"
+DEPENDENCY_REGEX="[a-zA-Z0-9.\-]+:[a-zA-Z0-9.\-]+:[0-9a-zA-Z.\-]+"
 
 # First argument is the version tag
-if [ -z "$1" ]
+if [ -z "$TURBO_ANDROID_VERSION" ]
   then
     echo "No version tag supplied"
     exit 1
 fi
 
-echo "Using turbo-android version $1"
-
-PATCH_DIR=$(realpath ./patches)
-TURBO_ANDROID_DIR=$(realpath ./android)
-DEPENDENCIES_GRADLE_FILE="turbo-android-dependencies.gradle"
-DEPENDENCY_REGEX="[a-zA-Z0-9.\-]+:[a-zA-Z0-9.\-]+:[0-9a-zA-Z.\-]+"
+echo "turbo-android version: $TURBO_ANDROID_VERSION"
 
 cd $TURBO_ANDROID_DIR
 rm -rf vendor
@@ -21,7 +21,7 @@ mkdir vendor
 
 # Shallow clone the turbo-ios repo
 rm -rf turbo-android
-git clone --branch $1 --depth 1 $TURBO_ANDROID_REPO_PATH
+git clone --branch $TURBO_ANDROID_VERSION --depth 1 $TURBO_ANDROID_REPO_PATH
 
 # Apply patch
 cd turbo-android

@@ -1,23 +1,23 @@
 TURBO_IOS_REPO_PATH="https://github.com/hotwired/turbo-ios.git"
+TURBO_IOS_VERSION=$1
 
+shopt -s extglob
 
 # First argument is the version tag
-if [ -z "$1" ]
+if [ -z "$TURBO_IOS_VERSION" ]
   then
     echo "No version tag supplied"
     exit 1
 fi
 
-echo "Using turbo-ios version $1"
-
-shopt -s extglob
+echo "turbo-ios version: $TURBO_IOS_VERSION"
 
 # Shallow clone the turbo-ios repo
 cd ./ios
 rm -rf vendor
 mkdir vendor
 cd vendor
-git clone --branch $1 --depth 1 $TURBO_IOS_REPO_PATH
+git clone --branch $TURBO_IOS_VERSION --depth 1 $TURBO_IOS_REPO_PATH
 
 # Remove all files except Source directory
 cd turbo-ios
