@@ -26,7 +26,7 @@ coverage
 out/
 build
 dist
-
+lib
 
 # Debug
 npm-debug.log*
@@ -36,5 +36,3 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
-
-lib
