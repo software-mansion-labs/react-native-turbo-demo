@@ -21,8 +21,13 @@
   "module": "lib/module/index.js",
   "types": "lib/typescript/src/index.d.ts",
   "react-native": "src/index.tsx",
+  "hotwiredTurbo": {
+    "ios": "7.0.2",
+    "android": "7.1.0"
+  },
   "scripts": {
-    "prepare": "bob build",
+    "prepare": "bob build & yarn build-turbo-libraries",
+    "build-turbo-libraries": "sh ./scripts/build.sh $npm_package_hotwiredTurbo_ios $npm_package_hotwiredTurbo_android",
     "release": "yarn release",
     "typescript": "tsc",
     "lint": "eslint \"src/**/*.{js,ts,tsx}\""

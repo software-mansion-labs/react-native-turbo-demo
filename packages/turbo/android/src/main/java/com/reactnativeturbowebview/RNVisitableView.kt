@@ -16,6 +16,11 @@ import dev.hotwire.turbo.views.TurboView
 import dev.hotwire.turbo.views.TurboWebView
 import dev.hotwire.turbo.visit.TurboVisitOptions
 import dev.hotwire.turbo.R
+import dev.hotwire.turbo.errors.HttpError
+import dev.hotwire.turbo.errors.LoadError
+import dev.hotwire.turbo.errors.TurboVisitError
+import dev.hotwire.turbo.errors.WebError
+import dev.hotwire.turbo.errors.WebSslError
 import dev.hotwire.turbo.visit.TurboVisitAction
 
 class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscriber {
@@ -283,14 +288,6 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     })
   }
 
-  override fun onReceivedError(errorCode: Int) {
-    sendEvent(RNVisitableViewEvent.ERROR, Arguments.createMap().apply {
-      putInt("statusCode", RNTurboError.transformCode(errorCode))
-      putString("url", webView.url)
-      putString("description", RNTurboError.errorDescription(errorCode))
-    })
-  }
-
   override fun visitProposedToLocation(location: String, options: TurboVisitOptions) {
     sendEvent(RNVisitableViewEvent.VISIT_PROPOSAL, Arguments.createMap().apply {
       putString("url", location)
@@ -364,11 +361,19 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     onConfirmHandler = null
   }
 
-  override fun requestFailedWithStatusCode(visitHasCachedSnapshot: Boolean, statusCode: Int) {
+  override fun onReceivedError(error: TurboVisitError) {
     sendEvent(RNVisitableViewEvent.ERROR, Arguments.createMap().apply {
-      putInt("statusCode", statusCode)
+      putInt("statusCode", RNTurboError.getErrorCode(error))
       putString("url", url)
-      putString("description", "There was an HTTP Error ($statusCode).")
+      putString("description", RNTurboError.errorDescription(error))
+    })
+  }
+
+  override fun requestFailedWithError(visitHasCachedSnapshot: Boolean, error: TurboVisitError) {
+    sendEvent(RNVisitableViewEvent.ERROR, Arguments.createMap().apply {
+      putInt("statusCode", RNTurboError.getErrorCode(error))
+      putString("url", url)
+      putString("description", RNTurboError.errorDescription(error))
     })
   }
 
