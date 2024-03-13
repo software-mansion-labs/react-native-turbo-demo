@@ -26,7 +26,7 @@
     "android": "7.1.0"
   },
   "scripts": {
-    "prepare": "bob build && yarn build-local-libraries",
+    "prepare": "bob build & yarn build-local-libraries",
     "build-local-libraries": "sh ./scripts/build.sh $npm_package_hotwiredTurbo_ios $npm_package_hotwiredTurbo_android",
     "clean": "del lib",
     "release": "release-it",
