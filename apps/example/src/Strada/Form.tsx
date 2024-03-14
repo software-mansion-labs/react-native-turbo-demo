@@ -1,18 +1,18 @@
-import { NavigationContext } from "@react-navigation/native";
-import React from "react";
-import { Button } from "react-native";
-import { BridgeComponent, StradaMessage } from "react-native-turbo";
+import { NavigationContext } from '@react-navigation/native';
+import React from 'react';
+import { Button } from 'react-native';
+import { BridgeComponent, StradaMessage } from 'react-native-turbo';
 
 export default class Form extends BridgeComponent {
-  static componentName = "form";
+  static componentName = 'form';
   static contextType = NavigationContext;
-  private submitTitle: string = "Submit";
+  private submitTitle: string = 'Submit';
 
   setHeaderButton(disabled: boolean) {
     this.context.setOptions({
       headerRight: () => (
         <Button
-          onPress={() => this.replyTo("connect")}
+          onPress={() => this.replyTo('connect')}
           title={this.submitTitle}
           disabled={disabled}
         />
@@ -22,16 +22,16 @@ export default class Form extends BridgeComponent {
 
   onReceive(message: StradaMessage) {
     switch (message.event) {
-      case "connect":
+      case 'connect':
         this.submitTitle = message.data.submitTitle;
         this.setHeaderButton(false);
         break;
 
-      case "submitDisabled":
+      case 'submitDisabled':
         this.setHeaderButton(true);
         break;
 
-      case "submitEnabled":
+      case 'submitEnabled':
         this.setHeaderButton(false);
         break;
     }

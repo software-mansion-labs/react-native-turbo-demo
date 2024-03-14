@@ -39,15 +39,15 @@ import {
   OnLoadEvent,
   VisitProposal,
   Session,
-} from "react-native-turbo";
-import { useNavigation } from "@react-navigation/native";
+} from 'react-native-turbo';
+import { useNavigation } from '@react-navigation/native';
 
 const TurboScreen = () => {
   const navigation = useNavigation();
 
   const onVisitProposal = ({ action: actionType, url }) => {
     // Handle opening new screen e.g. using react-navigation
-    navigation.push("TurboScreen", { url });
+    navigation.push('TurboScreen', { url });
   };
 
   return (

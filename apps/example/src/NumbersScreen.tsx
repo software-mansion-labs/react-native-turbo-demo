@@ -1,23 +1,23 @@
-import React from "react";
-import { View, StyleSheet, FlatList, Text } from "react-native";
+import React from 'react';
+import { View, StyleSheet, FlatList, Text } from 'react-native';
 
 const styles = StyleSheet.create({
   row: {
-    justifyContent: "center",
+    justifyContent: 'center',
     padding: 16,
   },
   separator: {
     height: 2,
     marginHorizontal: 16,
-    backgroundColor: "lightgray",
+    backgroundColor: 'lightgray',
   },
   text: {
-    color: "#00094a",
+    color: '#00094a',
   },
   header: {
     padding: 16,
-    color: "#00094a",
-    fontWeight: "500",
+    color: '#00094a',
+    fontWeight: '500',
   },
 });
 

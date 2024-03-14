@@ -2,17 +2,17 @@ import {
   PartialRoute,
   Route,
   getStateFromPath,
-} from "@react-navigation/native";
+} from '@react-navigation/native';
 
-import { LinkingConfig } from "./hooks/useCurrentUrl";
-import { unpackState } from "./utils/unpackState";
+import { LinkingConfig } from './hooks/useCurrentUrl';
+import { unpackState } from './utils/unpackState';
 
 type Options = Parameters<typeof getStateFromPath>[1];
 type LinkedParams = { baseURL?: string; fullPath?: string };
 type PartialRoutes = readonly PartialRoute<Route<string, object | undefined>>[];
 
 function getParams(
-  routes: PartialRoutes | undefined,
+  routes: PartialRoutes | undefined
 ): LinkedParams | undefined {
   const firstRoute = routes?.[0];
   if (firstRoute) {

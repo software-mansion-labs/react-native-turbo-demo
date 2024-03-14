@@ -1,21 +1,21 @@
-import { NavigationProp } from "@react-navigation/native";
-import React, { useCallback } from "react";
+import { NavigationProp } from '@react-navigation/native';
+import React, { useCallback } from 'react';
 import {
   LoadEvent,
   VisitableView,
   VisitProposal,
   VisitableViewProps,
-} from "react-native-turbo";
-import { useCurrentUrl, useWebviewNavigate } from "react-native-web-screen";
+} from 'react-native-turbo';
+import { useCurrentUrl, useWebviewNavigate } from 'react-native-web-screen';
 
-import Form from "./Strada/Form";
-import { navigationRef } from "./navigationRef";
-import { useSessionHandle } from "./useSessionHandle";
-import { RootStackParamList, baseURL, linkingConfig } from "./webScreen";
+import Form from './Strada/Form';
+import { navigationRef } from './navigationRef';
+import { useSessionHandle } from './useSessionHandle';
+import { RootStackParamList, baseURL, linkingConfig } from './webScreen';
 
 export type Props = {
   navigation: NavigationProp<RootStackParamList>;
-} & Pick<VisitableViewProps, "onMessage" | "renderError" | "onError">;
+} & Pick<VisitableViewProps, 'onMessage' | 'renderError' | 'onError'>;
 
 const stradaComponents = [Form];
 
@@ -46,8 +46,8 @@ const WebView: React.FC<Props> = ({ navigation, ...props }) => {
       if (
         currentOptions &&
         currentScreenName &&
-        "presentation" in currentOptions &&
-        currentOptions.presentation !== "card"
+        'presentation' in currentOptions &&
+        currentOptions.presentation !== 'card'
       ) {
         modalNavigators.add(currentScreenName);
       }
@@ -63,7 +63,7 @@ const WebView: React.FC<Props> = ({ navigation, ...props }) => {
       }
 
       if (!state) {
-        throw new Error("Failed to parse the path to a navigation state.");
+        throw new Error('Failed to parse the path to a navigation state.');
       }
 
       if (actionToDispatch) {
@@ -73,14 +73,14 @@ const WebView: React.FC<Props> = ({ navigation, ...props }) => {
         navigation.reset(state);
       }
     },
-    [getDispatchUtilities, navigation],
+    [getDispatchUtilities, navigation]
   );
 
   const onLoad = useCallback(
     ({ title }: LoadEvent) => {
       navigation.setOptions({ title });
     },
-    [navigation],
+    [navigation]
   );
 
   return (

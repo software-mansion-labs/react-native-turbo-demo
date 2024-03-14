@@ -1,7 +1,7 @@
 import type {
   NavigationState,
   NavigatorScreenParams,
-} from "@react-navigation/core";
+} from '@react-navigation/core';
 import {
   getActionFromState,
   getStateFromPath,
@@ -12,13 +12,13 @@ import {
   useNavigation,
   useRoute,
   CommonActions,
-} from "@react-navigation/native";
-import LinkingContext from "@react-navigation/native/src/LinkingContext";
-import extractPathFromURL from "@react-navigation/native/src/extractPathFromURL";
-import * as React from "react";
-import type { Action } from "react-native-turbo";
+} from '@react-navigation/native';
+import LinkingContext from '@react-navigation/native/src/LinkingContext';
+import extractPathFromURL from '@react-navigation/native/src/extractPathFromURL';
+import * as React from 'react';
+import type { Action } from 'react-native-turbo';
 
-import { isDeepEqual, type ComparableObject } from "../utils/isEqual";
+import { isDeepEqual, type ComparableObject } from '../utils/isEqual';
 
 type ActionPayloadParams = {
   screen?: string;
@@ -32,7 +32,7 @@ type ActionPayload = {
 };
 
 type NavigateAction<State extends NavigationState> = {
-  type: "NAVIGATE";
+  type: 'NAVIGATE';
   payload: {
     name: string;
     params?: NavigatorScreenParams<State>;
@@ -41,7 +41,7 @@ type NavigateAction<State extends NavigationState> = {
 };
 
 type PushAction<State extends NavigationState> = {
-  type: "PUSH";
+  type: 'PUSH';
   payload: {
     name: string;
     params?: NavigatorScreenParams<State>;
@@ -66,17 +66,17 @@ type To<
         });
 
 function isNavigateAction(
-  action: ReturnType<typeof getActionFromState>,
+  action: ReturnType<typeof getActionFromState>
 ): action is NavigateAction<NavigationState> {
-  return !!action && action.type === "NAVIGATE";
+  return !!action && action.type === 'NAVIGATE';
 }
 
 function getAction(
   action: NavigateAction<NavigationState> | PushAction<NavigationState>,
   actionType: Action | undefined,
-  routeName: string,
+  routeName: string
 ) {
-  if (actionType === "replace") {
+  if (actionType === 'replace') {
     if (action.payload.name === routeName && action.payload.params) {
       // If replacing and the route name is the same as the current route,
       // update the params instead of pushing the route again skipping animations.
@@ -85,7 +85,7 @@ function getAction(
     return StackActions.replace(action.payload.name, action.payload.params);
   } else {
     const { name, params } = action.payload;
-    if (action.type === "NAVIGATE") {
+    if (action.type === 'NAVIGATE') {
       return CommonActions.navigate({
         name,
         params,
@@ -98,14 +98,14 @@ function getAction(
 function areParamsSimilarForActionType(
   actionType: Action | undefined,
   existingParams: ComparableObject,
-  newParams: ComparableObject,
+  newParams: ComparableObject
 ) {
   let ignoredParams = {
     path: undefined,
     params: undefined,
   } as object;
 
-  if (actionType === "replace") {
+  if (actionType === 'replace') {
     ignoredParams = {
       ...ignoredParams,
       screen: undefined,
@@ -121,7 +121,7 @@ function areParamsSimilarForActionType(
 function getMinimalAction(
   action: NavigationAction,
   state: NavigationState,
-  actionType: Action | undefined,
+  actionType: Action | undefined
 ): NavigationAction {
   let currentAction = action;
   let currentState:
@@ -138,13 +138,13 @@ function getMinimalAction(
     areParamsSimilarForActionType(
       actionType,
       currentState?.routes[currentState.index ?? -1]?.params,
-      payload.params,
+      payload.params
     )
   ) {
     // Creating new smaller action
     currentAction = {
       // We can still keep the `NAVIGATE` type here, but then we need to use `key` prop later
-      type: "NAVIGATE",
+      type: 'NAVIGATE',
       payload: {
         name: payload?.params?.screen,
         params: payload?.params?.params,
@@ -178,7 +178,7 @@ export function useWebviewNavigate<
     (to: To<ParamList>, actionType?: Action): DispatchUtilities => {
       if (navigation === undefined) {
         throw new Error(
-          "Couldn't find a navigation object. Is your component inside NavigationContainer?",
+          "Couldn't find a navigation object. Is your component inside NavigationContainer?"
         );
       }
 
@@ -189,7 +189,7 @@ export function useWebviewNavigate<
         root = root.getParent();
       }
 
-      if (to && typeof to !== "string") {
+      if (to && typeof to !== 'string') {
         return {
           // @ts-expect-error
           actionToDispatch: CommonActions.navigate({
@@ -207,7 +207,7 @@ export function useWebviewNavigate<
 
       let path = to;
       if (options?.prefixes && to.match(/^https?:\/\//)) {
-        path = extractPathFromURL(options.prefixes, to) ?? "";
+        path = extractPathFromURL(options.prefixes, to) ?? '';
       }
       const state = options?.getStateFromPath
         ? options.getStateFromPath(path, options.config)
@@ -235,7 +235,7 @@ export function useWebviewNavigate<
             // @ts-expect-error
             minimalAction,
             actionType,
-            route.name,
+            route.name
           );
         }
       }
@@ -248,7 +248,7 @@ export function useWebviewNavigate<
         willChangeTopmostNavigator,
       };
     },
-    [linking, navigation, route.name],
+    [linking, navigation, route.name]
   );
 
   const navigateTo = React.useCallback(
@@ -261,13 +261,13 @@ export function useWebviewNavigate<
       }
 
       if (!state) {
-        throw new Error("Failed to parse the path to a navigation state.");
+        throw new Error('Failed to parse the path to a navigation state.');
       }
 
       // @ts-expect-error
       navigation.reset(state);
     },
-    [getDispatchUtilities, navigation],
+    [getDispatchUtilities, navigation]
   );
 
   return { navigateTo, getDispatchUtilities };

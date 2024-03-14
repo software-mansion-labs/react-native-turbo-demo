@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import type { OnErrorCallback } from "./types";
+import type { OnErrorCallback } from './types';
 
 interface SessionContextValue {
   sessionHandle?: string | null;

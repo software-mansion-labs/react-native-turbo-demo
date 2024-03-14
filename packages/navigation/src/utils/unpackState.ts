@@ -1,4 +1,4 @@
-import { getStateFromPath } from "@react-navigation/core";
+import { getStateFromPath } from '@react-navigation/core';
 
 type ResultState = NonNullable<ReturnType<typeof getStateFromPath>>;
 

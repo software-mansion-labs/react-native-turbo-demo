@@ -28,33 +28,33 @@ You should also define your custom WebView component that will be using `Visitab
 Let's say you want to add a web `Welcome` screen to your React Native app.
 
 ```tsx
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React, { useCallback } from "react";
-import { VisitProposal, VisitableView } from "react-native-turbo";
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { useCallback } from 'react';
+import { VisitProposal, VisitableView } from 'react-native-turbo';
 import {
   LinkingConfig,
   getLinkingObject,
   useCurrentUrl,
   useWebviewNavigate,
-} from "react-native-web-screen";
+} from 'react-native-web-screen';
 
 const Stack = createNativeStackNavigator();
 
-const baseURL = "http://your-web-app-base-url/";
+const baseURL = 'http://your-web-app-base-url/';
 
 // see https://reactnavigation.org/docs/navigation-container/#linking
 const linkingConfig: LinkingConfig = {
   screens: {
-    Initial: "",
-    Welcome: "welcome",
-    Fallback: "*",
+    Initial: '',
+    Welcome: 'welcome',
+    Fallback: '*',
   },
 };
 
 const linking = getLinkingObject(baseURL, linkingConfig);
 // see https://github.com/hotwired/turbo-ios/blob/c476bac66f260adbfe930ed9a151e7637973ff99/Source/Session/Session.swift#L4-L7
-const sessionHandle = "app-dynamic-session-handle";
+const sessionHandle = 'app-dynamic-session-handle';
 
 const WebView: React.FC = () => {
   const currentUrl = useCurrentUrl(baseURL, linkingConfig);
@@ -64,7 +64,7 @@ const WebView: React.FC = () => {
     ({ action: actionType, url }: VisitProposal) => {
       navigateTo(url, actionType);
     },
-    [navigateTo],
+    [navigateTo]
   );
 
   return (
@@ -85,7 +85,7 @@ const App: React.FC = () => {
         <Stack.Screen
           name="Welcome"
           component={WebView}
-          options={{ title: "Welcome" }}
+          options={{ title: 'Welcome' }}
         />
         <Stack.Screen name="Fallback" component={WebView} />
       </Stack.Navigator>
@@ -126,7 +126,7 @@ Check out [react-native-turbo](../turbo/README.md) for more info.
 You can use your custom `WebScreen` component by passing it to the `buildWebScreen` config. This can be useful if you want to define custom logic for each screen.
 
 ```tsx
-import { WebView } from "react-native-webview";
+import { WebView } from 'react-native-webview';
 
 const webScreens = buildWebScreen(webScreenConfig, {
   webScreenComponent: WebScreen,

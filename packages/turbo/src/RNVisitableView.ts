@@ -7,7 +7,7 @@ import {
   ViewStyle,
   Linking,
   findNodeHandle,
-} from "react-native";
+} from 'react-native';
 
 import type {
   AlertHandler,
@@ -19,7 +19,7 @@ import type {
   OpenExternalUrlEvent,
   FormSubmissionEvent,
   ContentProcessDidTerminateEvent,
-} from "./types";
+} from './types';
 
 // interface should match RNVisitableView exported properties in native code
 export interface RNVisitableViewProps {
@@ -35,27 +35,27 @@ export interface RNVisitableViewProps {
   onWebConfirm?: (e: NativeSyntheticEvent<AlertHandler>) => void;
   onOpenExternalUrl?: (e: NativeSyntheticEvent<OpenExternalUrlEvent>) => void;
   onFormSubmissionStarted?: (
-    e: NativeSyntheticEvent<FormSubmissionEvent>,
+    e: NativeSyntheticEvent<FormSubmissionEvent>
   ) => void;
   onFormSubmissionFinished?: (
-    e: NativeSyntheticEvent<FormSubmissionEvent>,
+    e: NativeSyntheticEvent<FormSubmissionEvent>
   ) => void;
   onShowLoading: () => void;
   onHideLoading: () => void;
   onContentProcessDidTerminate?: (
-    e: NativeSyntheticEvent<ContentProcessDidTerminateEvent>,
+    e: NativeSyntheticEvent<ContentProcessDidTerminateEvent>
   ) => void;
   style?: StyleProp<ViewStyle>;
 }
 
 const LINKING_ERROR =
   `The package react-native-turbo doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: "" }) +
-  "- You rebuilt the app after installing the package\n" +
-  "- You are not using Expo Go\n";
+  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
+  '- You rebuilt the app after installing the package\n' +
+  '- You are not using Expo Go\n';
 
 function transformCommandToAcceptableType(command: number): number | string {
-  if (Platform.OS === "ios") {
+  if (Platform.OS === 'ios') {
     return command;
   }
   return command.toString();
@@ -66,14 +66,14 @@ export function dispatchCommand(
   command: DispatchCommandTypes,
   ...args: any[]
 ) {
-  const viewConfig = UIManager.getViewManagerConfig("RNVisitableView");
+  const viewConfig = UIManager.getViewManagerConfig('RNVisitableView');
 
   if (!viewConfig) {
     throw new Error(LINKING_ERROR);
   }
 
   const transformedCommand = transformCommandToAcceptableType(
-    viewConfig.Commands[command]!,
+    viewConfig.Commands[command]!
   );
 
   if (transformedCommand === undefined) {
@@ -83,7 +83,7 @@ export function dispatchCommand(
   UIManager.dispatchViewManagerCommand(
     findNodeHandle(ref.current),
     transformedCommand,
-    args,
+    args
   );
 }
 
@@ -100,6 +100,6 @@ export async function openExternalURL({
 }
 
 const RNVisitableView =
-  requireNativeComponent<RNVisitableViewProps>("RNVisitableView");
+  requireNativeComponent<RNVisitableViewProps>('RNVisitableView');
 
 export default RNVisitableView;

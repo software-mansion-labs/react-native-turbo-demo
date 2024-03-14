@@ -40,10 +40,5 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ],
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  }
+  ]
 }

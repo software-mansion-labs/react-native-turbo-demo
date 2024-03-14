@@ -1,7 +1,7 @@
-import { useCallback, useMemo } from "react";
-import { Platform } from "react-native";
+import { useCallback, useMemo } from 'react';
+import { Platform } from 'react-native';
 
-import type { StradaComponent, DispatchCommand } from "../types";
+import type { StradaComponent, DispatchCommand } from '../types';
 
 const stradaBridgeScript = `
 (() => {
@@ -83,8 +83,8 @@ const stradaBridgeScript = `
 
     postMessage(message) {
       ${Platform.select({
-        android: "AndroidInterface.postMessage(JSON.stringify(message))",
-        ios: "webkit.messageHandlers.nativeApp.postMessage(message)",
+        android: 'AndroidInterface.postMessage(JSON.stringify(message))',
+        ios: 'webkit.messageHandlers.nativeApp.postMessage(message)',
       })}
     }
 
@@ -119,39 +119,39 @@ const stradaBridgeScript = `
 export const useStradaBridge = (
   visitableViewRef: React.RefObject<any>,
   dispatchCommand: DispatchCommand,
-  stradaComponents?: StradaComponent[],
+  stradaComponents?: StradaComponent[]
 ) => {
   const initializeStradaBridge = useCallback(() => {
-    dispatchCommand(visitableViewRef, "injectJavaScript", stradaBridgeScript);
+    dispatchCommand(visitableViewRef, 'injectJavaScript', stradaBridgeScript);
 
     const stradaComponentNames =
       stradaComponents?.map(({ componentName }) => componentName) || [];
 
     dispatchCommand(
       visitableViewRef,
-      "injectJavaScript",
-      `window.nativeBridge.register(${JSON.stringify(stradaComponentNames)})`,
+      'injectJavaScript',
+      `window.nativeBridge.register(${JSON.stringify(stradaComponentNames)})`
     );
   }, [dispatchCommand, stradaComponents, visitableViewRef]);
 
   const stradaUserAgent = useMemo(() => {
-    if (!stradaComponents) return "";
+    if (!stradaComponents) return '';
 
     const componentNames = stradaComponents.map(
-      ({ componentName }) => componentName,
+      ({ componentName }) => componentName
     );
-    return `bridge-components: [${componentNames.join(" ")}]`;
+    return `bridge-components: [${componentNames.join(' ')}]`;
   }, [stradaComponents]);
 
   const sendToBridge = useCallback(
     (message: any) => {
       dispatchCommand(
         visitableViewRef,
-        "injectJavaScript",
-        `window.nativeBridge.replyWith('${JSON.stringify(message)}')`,
+        'injectJavaScript',
+        `window.nativeBridge.replyWith('${JSON.stringify(message)}')`
       );
     },
-    [dispatchCommand, visitableViewRef],
+    [dispatchCommand, visitableViewRef]
   );
 
   return {

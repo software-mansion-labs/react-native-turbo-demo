@@ -10,7 +10,7 @@
     "dev:android": "yarn android",
     "clean": "rm -rf node_modules ios android && yarn cache clean && yarn && watchman watch-del-all && rm -fr $TMPDIR/haste-map-* && rm -rf $TMPDIR/metro-cache && yarn prebuild",
     "ts:check": "tsc",
-    "lint": "eslint ."
+    "lint:check": "eslint ."
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.5.19",

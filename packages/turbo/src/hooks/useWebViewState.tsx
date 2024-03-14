@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   Text,
   Button,
@@ -6,21 +6,21 @@ import {
   View,
   StyleSheet,
   Platform,
-} from "react-native";
+} from 'react-native';
 
-import { ErrorEvent } from "../types";
+import { ErrorEvent } from '../types';
 
 export type RenderLoading = () => React.ReactNode;
 export type RenderError = (
   error: ErrorEvent,
-  reloadHandler: () => void,
+  reloadHandler: () => void
 ) => React.ReactNode;
 
-type ActivityIndicatorSize = "small" | "large";
+type ActivityIndicatorSize = 'small' | 'large';
 
 const SIZE: ActivityIndicatorSize = Platform.select({
-  ios: "small",
-  android: "large",
+  ios: 'small',
+  android: 'large',
 })!;
 
 const defaultRenderLoading = () => (
@@ -30,8 +30,8 @@ const defaultRenderLoading = () => (
 );
 
 const defaultRenderError = (
-  { description = "Something went wrong..." }: ErrorEvent,
-  reloadHandler: () => void,
+  { description = 'Something went wrong...' }: ErrorEvent,
+  reloadHandler: () => void
 ) => (
   <View style={styles.wrapper}>
     <Text style={styles.title}>Error loading page</Text>
@@ -43,7 +43,7 @@ const defaultRenderError = (
 export function useWebViewState(
   reloadHandler: () => void,
   renderLoading?: RenderLoading,
-  renderError?: RenderError,
+  renderError?: RenderError
 ) {
   const [loadingVisible, setLoadingVisible] = useState(false);
   const [errorVisible, setErrorVisible] = useState(false);
@@ -53,7 +53,7 @@ export function useWebViewState(
     const loadingComponent = (renderLoading || defaultRenderLoading)();
     const errorComponent = (renderError || defaultRenderError)(
       error,
-      reloadHandler,
+      reloadHandler
     );
 
     return (
@@ -95,13 +95,13 @@ export function useWebViewState(
 
 const styles = StyleSheet.create({
   wrapper: {
-    position: "absolute",
+    position: 'absolute',
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100%",
-    width: "100%",
-    backgroundColor: "white",
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    width: '100%',
+    backgroundColor: 'white',
     zIndex: 1,
   },
   title: {
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 16,
     marginBottom: 16,
-    maxWidth: "85%",
-    textAlign: "center",
+    maxWidth: '85%',
+    textAlign: 'center',
   },
 });
