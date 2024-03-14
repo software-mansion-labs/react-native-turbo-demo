@@ -26,8 +26,8 @@
     "android": "7.1.0"
   },
   "scripts": {
-    "prepare": "bob build & yarn build-turbo-libraries",
-    "build-turbo-libraries": "sh ./scripts/build.sh $npm_package_hotwiredTurbo_ios $npm_package_hotwiredTurbo_android",
+    "prepare": "bob build & sh ./scripts/build.sh $npm_package_hotwiredTurbo_ios $npm_package_hotwiredTurbo_android",
+    "clean": "rm -rf lib node_modules",
     "release": "yarn release",
     "typescript": "tsc",
     "lint": "eslint \"src/**/*.{js,ts,tsx}\""

@@ -7,7 +7,7 @@
     "dev": "turbo dev",
     "dev:ios": "turbo dev:ios",
     "dev:android": "turbo dev:android",
-    "clean": "turbo clean",
+    "clean": "turbo clean && rm -rf node_modules",
     "typescript": "turbo typescript",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""

@@ -4,11 +4,12 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "start": "expo start --dev-client",
+    "prepare": "yarn prebuild",
     "prebuild": "expo prebuild",
     "dev": "yarn start",
     "dev:ios": "yarn ios",
     "dev:android": "yarn android",
-    "clean": "rm -rf node_modules ios android && yarn cache clean && yarn && watchman watch-del-all && rm -fr $TMPDIR/haste-map-* && rm -rf $TMPDIR/metro-cache && yarn prebuild",
+    "clean": "rm -rf node_modules ios android && yarn cache clean && yarn && watchman watch-del-all && rm -fr $TMPDIR/haste-map-* && rm -rf $TMPDIR/metro-cache",
     "ts:check": "tsc",
     "lint:check": "eslint ."
   },

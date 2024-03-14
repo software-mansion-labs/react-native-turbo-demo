@@ -21,6 +21,7 @@
   "react-native": "src/index.tsx",
   "scripts": {
     "prepare": "bob build",
+    "clean": "rm -rf lib node_modules",
     "release": "yarn release",
     "typescript": "tsc",
     "lint": "eslint \"src/**/*.{js,ts,tsx}\""
