@@ -20,9 +20,9 @@
   "types": "lib/typescript/src/index.d.ts",
   "react-native": "src/index.tsx",
   "scripts": {
-    "prepare": "bob build",
+    "build": "bob build",
     "clean": "rm -rf lib node_modules",
-    "release": "yarn release",
+    "release": "release-it --config ../../.release-it.json",
     "typescript": "tsc",
     "lint": "eslint \"src/**/*.{js,ts,tsx}\""
   },
@@ -44,6 +44,9 @@
     "!**/__fixtures__",
     "!**/__mocks__"
   ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
   "react-native-builder-bob": {
     "source": "src",
     "output": "lib",

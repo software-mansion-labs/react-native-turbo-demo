@@ -96,3 +96,6 @@ buck-out/
 .expo/
 web-build/
 dist/
+
+# release-it
+package-lock.json

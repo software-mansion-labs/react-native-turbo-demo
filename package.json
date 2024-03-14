@@ -2,7 +2,7 @@
   "name": "react-native-turbo-demo",
   "private": true,
   "scripts": {
-    "prepare": "turbo prepare",
+    "postinstall": "yarn build",
     "build": "turbo build",
     "dev": "turbo dev",
     "dev:ios": "turbo dev:ios",
@@ -15,6 +15,8 @@
   "devDependencies": {
     "@commitlint/cli": "^19.1.0",
     "@commitlint/config-conventional": "^19.1.0",
+    "@release-it/bumper": "^6.0.1",
+    "@release-it/conventional-changelog": "^8.0.1",
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.65",
     "@types/react-native": "^0.73.0",
@@ -30,6 +32,7 @@
     "husky": "^9.0.11",
     "prettier": "^3.2.5",
     "react-native-builder-bob": "^0.23.2",
+    "release-it": "^17.1.1",
     "turbo": "latest",
     "typescript": "^5.3.3"
   },

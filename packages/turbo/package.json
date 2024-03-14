@@ -26,9 +26,9 @@
     "android": "7.1.0"
   },
   "scripts": {
-    "prepare": "bob build & sh ./scripts/build.sh $npm_package_hotwiredTurbo_ios $npm_package_hotwiredTurbo_android",
+    "build": "bob build & sh ./scripts/build.sh $npm_package_hotwiredTurbo_ios $npm_package_hotwiredTurbo_android",
     "clean": "rm -rf lib node_modules",
-    "release": "yarn release",
+    "release": "release-it --config ../../.release-it.json",
     "typescript": "tsc",
     "lint": "eslint \"src/**/*.{js,ts,tsx}\""
   },
@@ -56,6 +56,9 @@
     "!**/__fixtures__",
     "!**/__mocks__"
   ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
   "react-native-builder-bob": {
     "source": "src",
     "output": "lib",
