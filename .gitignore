@@ -99,3 +99,6 @@ dist/
 
 # release-it
 package-lock.json
+
+apps/example/ios/
+apps/example/android/
