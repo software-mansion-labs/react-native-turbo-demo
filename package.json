@@ -3,7 +3,6 @@
   "private": true,
   "scripts": {
     "postinstall": "yarn build",
-    "prebuild": "yarn prebuild",
     "build": "turbo build",
     "dev": "turbo dev",
     "dev:ios": "turbo dev:ios",
