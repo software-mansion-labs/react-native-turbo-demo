@@ -25,7 +25,7 @@ For Android you need to adjust your SDK version in your `build.gradle`.
 
 > [_Turbo Documentation:_](https://github.com/hotwired/turbo-android#requirements)
 >
-> Android SDK 24+ is required as the minSdkVersion in your build.gradle.
+> Android SDK 26+ is required as the minSdkVersion in your build.gradle.
 
 For iOS, you need to set the deployment target to 14.0 or higher.
 
@@ -273,3 +273,13 @@ Refreshes the page for the given `sessionHandle`. This method is equivalent to m
 ### `clearSessionSnapshotCache(sessionHandle)`
 
 Clears the snapshot cache for the given `sessionHandle`.
+
+---
+
+## Contributing
+
+See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
+
+## License
+
+MIT
