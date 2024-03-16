@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "example",
-    "slug": "example",
-    "scheme": "example",
+    "name": "TurboWebViewExample",
+    "slug": "turbowebviewexample",
+    "scheme": "turbowebviewexample",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
