@@ -83,13 +83,13 @@ export function dispatchCommand(
 
   // Using nextEventLoopTick helps prevent a potential race condition.
   // It avoids calling the native method before the native sessionHandle prop is set up.
-  nextEventLoopTick(() =>
-    UIManager.dispatchViewManagerCommand(
-      findNodeHandle(ref.current),
-      transformedCommand,
-      args
-    )
-  );
+  nextEventLoopTick(() => {
+    const reactTag = findNodeHandle(ref.current);
+
+    if (reactTag) {
+      UIManager.dispatchViewManagerCommand(reactTag, transformedCommand, args);
+    }
+  });
 }
 
 export async function openExternalURL({
