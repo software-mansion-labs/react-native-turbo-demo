@@ -144,7 +144,7 @@ To obtain `url` for current screen, use `useCurrentUrl` hook function.
   - `willChangeTopmostNavigator` - function that returns `true` if the navigator will change the topmost navigator
   - `state` - navigation state
 
-You can see an example of using `getDispatchAction` in the [example app](../../apps/example/src/screens/WebView.tsx).
+You can see an example of using `getDispatchAction` in the [example app](../../examples/turbo-demo-expo-example/src/WebView.tsx).
 
 ---
 

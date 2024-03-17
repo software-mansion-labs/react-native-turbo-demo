@@ -100,6 +100,6 @@ dist/
 # release-it
 package-lock.json
 
-# example app
-apps/example/ios/
-apps/example/android/
+# example apps
+examples/*/ios/
+examples/*/android/

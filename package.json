@@ -41,7 +41,7 @@
   },
   "packageManager": "yarn@1.22.21",
   "workspaces": [
-    "apps/*",
+    "examples/*",
     "packages/*"
   ]
 }
