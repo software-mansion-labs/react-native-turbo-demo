@@ -2,7 +2,7 @@
 
 ## Summary
 
-<!-- Explain the motivation for this PR. Include "Fixes #<number>" if applicable. -->
+<!-- Explain the motivation for this PR. -->
 
 ## Test plan
 
