@@ -21,7 +21,8 @@ object Utils {
         is Int -> map.putInt(key, value)
         is Double -> map.putDouble(key, value)
         is String -> map.putString(key, value)
-        else -> map.putString(key, value.toString())
+        else -> if (value == JSONObject.NULL) map.putNull(key)
+        else map.putString(key, value.toString())
       }
     }
 
@@ -39,7 +40,8 @@ object Utils {
         is Int -> array.pushInt(value)
         is Double -> array.pushDouble(value)
         is String -> array.pushString(value)
-        else -> array.pushString(value.toString())
+        else -> if (value == JSONObject.NULL) array.pushNull()
+        else array.pushString(value.toString())
       }
     }
 
