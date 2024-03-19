@@ -30,9 +30,9 @@
     "react-native-safe-area-context": "4.8.2",
     "react-native-screens": "~3.29.0",
     "react-native-tab-view": "^3.5.2",
-    "react-native-turbo": "*",
+    "react-native-turbo": "file:../../packages/turbo",
     "react-native-web": "~0.19.6",
-    "react-native-web-screen": "*"
+    "react-native-web-screen": "file:../../packages/navigation"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3"
