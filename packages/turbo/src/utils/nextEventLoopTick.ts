@@ -1,4 +1,3 @@
 export function nextEventLoopTick(callback: () => void) {
-    setTimeout(callback, 1);
-  }
-  
+  setTimeout(callback, 1);
+}
