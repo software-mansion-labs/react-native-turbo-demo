@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Platform,
 } from 'react-native';
+
 import { ErrorEvent } from '../types';
 
 export type RenderLoading = () => React.ReactNode;

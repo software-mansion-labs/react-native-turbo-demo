@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenStateAtLeast
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactApplicationContext
+import dev.hotwire.turbo.errors.TurboVisitError
 import dev.hotwire.turbo.session.TurboSession
 import dev.hotwire.turbo.views.TurboWebView
 import dev.hotwire.turbo.visit.TurboVisit
@@ -130,8 +131,8 @@ class RNSession(
 
   // region SessionCallbackAdapter
 
-  override fun onReceivedError(errorCode: Int) {
-    visitableView?.onReceivedError(errorCode)
+  override fun onReceivedError(error: TurboVisitError) {
+    visitableView?.onReceivedError(error)
   }
 
   override fun onRenderProcessGone() {
@@ -170,8 +171,8 @@ class RNSession(
     visitableView?.didFinishFormSubmission(location)
   }
 
-  override fun requestFailedWithStatusCode(visitHasCachedSnapshot: Boolean, statusCode: Int) {
-    visitableView?.requestFailedWithStatusCode(visitHasCachedSnapshot, statusCode)
+  override fun requestFailedWithError(visitHasCachedSnapshot: Boolean, error: TurboVisitError) {
+    visitableView?.requestFailedWithError(visitHasCachedSnapshot, error)
   }
 
   // end region

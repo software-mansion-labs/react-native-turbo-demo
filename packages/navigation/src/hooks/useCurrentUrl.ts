@@ -1,6 +1,6 @@
 import { LinkingOptions, useRoute } from '@react-navigation/native';
 
-export type LinkingConfig = LinkingOptions<{}>['config'];
+export type LinkingConfig = LinkingOptions<object>['config'];
 
 function findPath(
   name: string | undefined,

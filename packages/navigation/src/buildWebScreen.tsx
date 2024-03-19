@@ -3,14 +3,13 @@ import {
   Route,
   getStateFromPath,
 } from '@react-navigation/native';
-import { unpackState } from './utils/unpackState';
+
 import { LinkingConfig } from './hooks/useCurrentUrl';
+import { unpackState } from './utils/unpackState';
 
 type Options = Parameters<typeof getStateFromPath>[1];
 type LinkedParams = { baseURL?: string; fullPath?: string };
-type PartialRoutes = ReadonlyArray<
-  PartialRoute<Route<string, object | undefined>>
->;
+type PartialRoutes = readonly PartialRoute<Route<string, object | undefined>>[];
 
 function getParams(
   routes: PartialRoutes | undefined

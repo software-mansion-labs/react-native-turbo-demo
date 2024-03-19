@@ -6,11 +6,24 @@ import React, {
   Component,
 } from 'react';
 import { NativeMethods, NativeSyntheticEvent, StyleSheet } from 'react-native';
+
 import RNVisitableView, {
   RNVisitableViewProps,
   dispatchCommand,
   openExternalURL,
 } from './RNVisitableView';
+import { useMessageQueue } from './hooks/useMessageQueue';
+import { useStradaBridge } from './hooks/useStradaBridge';
+import {
+  type OnAlert,
+  type OnConfirm,
+  useWebViewDialogs,
+} from './hooks/useWebViewDialogs';
+import {
+  type RenderLoading,
+  type RenderError,
+  useWebViewState,
+} from './hooks/useWebViewState';
 import type {
   OnErrorCallback,
   LoadEvent,
@@ -22,18 +35,6 @@ import type {
   FormSubmissionEvent,
   ContentProcessDidTerminateEvent,
 } from './types';
-import { useStradaBridge } from './hooks/useStradaBridge';
-import { useMessageQueue } from './hooks/useMessageQueue';
-import {
-  type OnAlert,
-  type OnConfirm,
-  useWebViewDialogs,
-} from './hooks/useWebViewDialogs';
-import {
-  type RenderLoading,
-  type RenderError,
-  useWebViewState,
-} from './hooks/useWebViewState';
 
 export interface Props {
   url: string;

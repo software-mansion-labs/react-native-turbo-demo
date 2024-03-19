@@ -2,6 +2,10 @@
   "name": "react-native-web-screen",
   "version": "0.1.4",
   "description": "Native like web screen in React Native",
+  "homepage": "https://github.com/software-mansion-labs/react-native-turbo-demo",
+  "repository": "https://github.com/software-mansion-labs/react-native-turbo-demo",
+  "author": "Bartek Fryz <bartlomiej.fryz@swmansion.com> (https://github.com/Fryzu)",
+  "license": "MIT",
   "keywords": [
     "react-native",
     "ios",
@@ -11,24 +15,20 @@
     "navigation"
   ],
   "source": "src/index",
-  "homepage": "https://github.com/software-mansion-labs/react-native-turbo-demo",
-  "repository": "https://github.com/software-mansion-labs/react-native-turbo-demo",
-  "author": "Bartek Fryz <bartlomiej.fryz@swmansion.com> (https://github.com/Fryzu)",
-  "license": "MIT",
-  "devDependencies": {
-    "@react-navigation/core": "^6.0.0",
-    "@types/lodash": "^4.14.191",
-    "react-native-builder-bob": "^0.20.0"
-  },
   "main": "lib/commonjs/index.js",
-  "react-native": "src/index.tsx",
   "module": "lib/module/index.js",
   "types": "lib/typescript/src/index.d.ts",
+  "react-native": "src/index.tsx",
   "scripts": {
-    "prepare": "bob build",
-    "clean": "del lib",
-    "release": "release-it",
-    "pods": "pod-install --quiet"
+    "build": "bob build",
+    "clean": "rm -rf lib node_modules",
+    "release": "release-it --config ../../.release-it.js --only-version",
+    "typescript": "tsc",
+    "lint": "eslint \"src/**/*.{js,ts,tsx}\""
+  },
+  "devDependencies": {
+    "@react-navigation/core": "^6.0.0",
+    "react-native-turbo": "*"
   },
   "peerDependencies": {
     "@react-navigation/core": ">=6.0.0",
@@ -44,6 +44,9 @@
     "!**/__fixtures__",
     "!**/__mocks__"
   ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
   "react-native-builder-bob": {
     "source": "src",
     "output": "lib",
@@ -52,17 +55,5 @@
       "module",
       "typescript"
     ]
-  },
-  "eslintIgnore": [
-    "node_modules/",
-    "lib/"
-  ],
-  "dependencies": {
-    "lodash": "^4.17.21"
-  },
-  "release-it": {
-    "git": {
-      "commitMessage": "chore: react-native-web-screen release v${version}"
-    }
   }
 }

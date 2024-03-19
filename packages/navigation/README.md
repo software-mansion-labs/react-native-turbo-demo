@@ -2,6 +2,17 @@
 
 React Native Web Screen is an open source library that will allow you to easily bring your web application into the [React Native](https://reactnative.dev/) mobile world. It allows you to render web views as if they were real native screens, caching the results and providing native animation between screens. You can easily move your entire web app, or embed a few screens that pretend to be native, without having to code them second time in React Native.
 
+<p>
+  <a aria-label="NPM version" href="https://www.npmjs.com/package/react-native-web-screen" target="_blank">
+    <img alt="NPM version" src="https://img.shields.io/npm/v/react-native-web-screen?color=red&label=npm%20version" />
+  </a>
+  <a aria-label="Licence MIT" href="https://www.npmjs.com/package/react-native-web-screen" target="_blank">
+    <img alt="Licence MIT" src="https://img.shields.io/github/license/software-mansion-labs/react-native-turbo-demo" />
+  </a>
+</p>
+
+---
+
 ## Installation
 
 Install the library using:
@@ -102,19 +113,6 @@ Now you can easily navigate to the `Welcome` web screen using react navigation A
 
 You are also able to use [complex navigator](https://reactnavigation.org/docs/configuring-links#handling-nested-navigators) structures inside your app. Just make sure that your navigation definition and linking object match.
 
-## Example app
-
-The repository contains [example app directory](../../example/README.md) and an example [web app](../../example/server/README.md) adapted from [turbo-native-demo](https://github.com/hotwired/turbo-native-demo) using react-native-web-screen.
-
-```sh
-yarn
-yarn example server start
-yarn example start
-yarn example ios
-```
-
-https://user-images.githubusercontent.com/25584895/225870138-b034f335-a30f-4e25-92fd-06c19cdf6e04.mov
-
 ## Advanced usage
 
 This library under the hood uses [react-native-turbo](../turbo/README.md). You can use React Navigation support (described here) or standalone React `VisitableView.tsx` component for more advanced cases. You can also define your own `WebScreen` component.
@@ -146,7 +144,9 @@ To obtain `url` for current screen, use `useCurrentUrl` hook function.
   - `willChangeTopmostNavigator` - function that returns `true` if the navigator will change the topmost navigator
   - `state` - navigation state
 
-You can see an example of using `getDispatchAction` in the [example app](../../example/src/screens/WebView.tsx).
+You can see an example of using `getDispatchAction` in the [example app](../../examples/turbo-demo-expo-example/src/WebView.tsx).
+
+---
 
 ## Contributing
 
@@ -155,7 +155,3 @@ See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the 
 ## License
 
 MIT
-
----
-
-Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)

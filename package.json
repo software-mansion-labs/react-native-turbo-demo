@@ -1,94 +1,47 @@
 {
-  "name": "react-native-web-screen-monorepo",
-  "version": "0.1.0",
+  "name": "react-native-turbo-demo",
   "private": true,
-  "author": "Bartek Fryz <bartlomiej.fryz@swmansion.com> (https://github.com/Fryzu)",
-  "license": "MIT",
-  "repository": "https://github.com/software-mansion-labs/react-native-turbo-demo",
-  "bugs": {
-    "url": "https://github.com/software-mansion-labs/react-native-turbo-demo/issues"
-  },
-  "homepage": "https://github.com/software-mansion-labs/react-native-turbo-demo#readme",
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
   "scripts": {
-    "example": "yarn --cwd example",
-    "bootstrap": "yarn install && yarn example server && lerna run pods",
-    "test": "jest",
-    "prepare": "lerna run prepare",
-    "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "typescript": "tsc --noEmit --composite false",
-    "clean": "lerna run clean"
-  },
-  "workspaces": {
-    "packages": [
-      "packages/*",
-      "example"
-    ]
+    "postinstall": "yarn build",
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "dev:ios": "turbo dev:ios",
+    "dev:android": "turbo dev:android",
+    "clean": "turbo clean && rm -rf node_modules",
+    "typescript": "turbo typescript",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^17.0.2",
-    "@evilmartians/lefthook": "^1.5.5",
-    "@react-native-community/eslint-config": "^3.2.0",
-    "@release-it/conventional-changelog": "^5.0.0",
-    "@types/jest": "^28.1.2",
-    "@types/react": "~17.0.21",
-    "@types/react-native": "0.68.0",
-    "commitlint": "^17.0.2",
-    "del-cli": "^3.0.1",
-    "eslint": "^8.54.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "jest": "^28.1.1",
-    "lerna": "6.0.1",
-    "pod-install": "^0.1.0",
-    "prettier": "^2.0.5",
-    "react": "18.1.0",
-    "react-native-builder-bob": "^0.20.0",
-    "release-it": "^15.0.0",
-    "typescript": "^5.3.2"
+    "@commitlint/cli": "^19.1.0",
+    "@commitlint/config-conventional": "^19.1.0",
+    "@release-it/bumper": "^6.0.1",
+    "@release-it/conventional-changelog": "^8.0.1",
+    "@types/jest": "^29.5.12",
+    "@types/react": "^18.2.65",
+    "@types/react-native": "^0.73.0",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-turbo": "^1.12.4",
+    "eslint-config-universe": "^12.0.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-only-error": "^1.0.2",
+    "eslint-plugin-prettier": "^5.1.3",
+    "husky": "^9.0.11",
+    "prettier": "^3.2.5",
+    "react-native-builder-bob": "^0.23.2",
+    "release-it": "^17.1.1",
+    "turbo": "latest",
+    "typescript": "^5.3.3"
   },
-  "jest": {
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/lib/"
-    ],
-    "preset": "react-native",
-    "testEnvironment": "node"
+  "engines": {
+    "node": ">=18"
   },
-  "resolutions": {
-    "@types/react": "17.0.21"
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "@react-native-community",
-      "prettier"
-    ],
-    "rules": {
-      "prettier/prettier": [
-        "error",
-        {
-          "quoteProps": "consistent",
-          "singleQuote": true,
-          "tabWidth": 2,
-          "trailingComma": "es5",
-          "useTabs": false
-        }
-      ]
-    }
-  },
-  "prettier": {
-    "quoteProps": "consistent",
-    "singleQuote": true,
-    "tabWidth": 2,
-    "trailingComma": "es5",
-    "useTabs": false
-  }
+  "packageManager": "yarn@1.22.21",
+  "workspaces": [
+    "examples/*",
+    "packages/*"
+  ]
 }

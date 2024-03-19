@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { Platform } from 'react-native';
+
 import type { StradaComponent, DispatchCommand } from '../types';
 
 const stradaBridgeScript = `

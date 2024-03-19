@@ -1,3 +1,7 @@
+import type {
+  NavigationState,
+  NavigatorScreenParams,
+} from '@react-navigation/core';
 import {
   getActionFromState,
   getStateFromPath,
@@ -7,16 +11,13 @@ import {
   StackActions,
   useNavigation,
   useRoute,
+  CommonActions,
 } from '@react-navigation/native';
-import * as React from 'react';
 import LinkingContext from '@react-navigation/native/src/LinkingContext';
 import extractPathFromURL from '@react-navigation/native/src/extractPathFromURL';
-import { CommonActions } from '@react-navigation/native';
-import type {
-  NavigationState,
-  NavigatorScreenParams,
-} from '@react-navigation/core';
+import * as React from 'react';
 import type { Action } from 'react-native-turbo';
+
 import { isDeepEqual, type ComparableObject } from '../utils/isEqual';
 
 type ActionPayloadParams = {
@@ -49,8 +50,9 @@ type PushAction<State extends NavigationState> = {
 };
 
 type To<
-  ParamList extends ReactNavigation.RootParamList = ReactNavigation.RootParamList,
-  RouteName extends keyof ParamList = keyof ParamList
+  ParamList extends
+    ReactNavigation.RootParamList = ReactNavigation.RootParamList,
+  RouteName extends keyof ParamList = keyof ParamList,
 > =
   | string
   | (undefined extends ParamList[RouteName]
@@ -101,7 +103,7 @@ function areParamsSimilarForActionType(
   let ignoredParams = {
     path: undefined,
     params: undefined,
-  } as Object;
+  } as object;
 
   if (actionType === 'replace') {
     ignoredParams = {
@@ -166,7 +168,7 @@ type DispatchUtilities = {
  * Its like useLinkTo with some custom tweaks
  */
 export function useWebviewNavigate<
-  ParamList extends ReactNavigation.RootParamList
+  ParamList extends ReactNavigation.RootParamList,
 >() {
   const navigation = useNavigation();
   const linking = React.useContext(LinkingContext);
@@ -194,6 +196,7 @@ export function useWebviewNavigate<
             name: to.screen,
             params: to.params,
           }),
+          // @ts-expect-error
           rootNavigator: root,
           state: undefined,
           willChangeTopmostNavigator,
@@ -215,6 +218,7 @@ export function useWebviewNavigate<
 
         if (isNavigateAction(action)) {
           const rootState = root.getState();
+          // @ts-expect-error
           const minimalAction = getMinimalAction(action, rootState, actionType);
           const currentScreenName =
             rootState?.routes[rootState.index ?? -1]?.name;
@@ -238,6 +242,7 @@ export function useWebviewNavigate<
 
       return {
         actionToDispatch,
+        // @ts-expect-error
         rootNavigator: root,
         state,
         willChangeTopmostNavigator,

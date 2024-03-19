@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import type { EmitterSubscription } from 'react-native';
+
 import type {
   StradaMessage,
   StradaMessages,

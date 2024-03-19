@@ -1,8 +1,8 @@
 <div align="center">
 
-# React Native Web Screen
+# React Native Turbo
 
-React Native Web Screen is an open source library that can bring your web application into the [React Native](https://reactnative.dev/) world. It allows you to render web pages as if they were native iOS or Android screens. It supports caching and provides native navigation animations resulting in mobile-like user experience. You can easily move your entire web app, or embed a few screens that pretend to be native, without reimplementing them in React Native.
+React Native Turbo is an open source library that can bring your [turbo-enabled](https://turbo.hotwired.dev/) web application into the [React Native](https://reactnative.dev/) world. It allows you to render web pages as if they were native iOS or Android screens. It provides native navigation animations resulting in mobile-like user experience. You can easily move your entire web app, or embed a few screens that pretend to be native, without reimplementing them in React Native.
 
 <p align="center">
   <a aria-label="NPM version" href="https://www.npmjs.com/package/react-native-web-screen" target="_blank">
@@ -29,7 +29,7 @@ _An example app adapted from [turbo-native-demo](https://github.com/hotwired/tur
 
 ## Documentation 📖
 
-Check out the full [documentation](packages/navigation/README.md) page.
+Check out the full [documentation](packages/turbo/README.md) page.
 
 _This an early stage version of the library, so issues may appear. You can help us by reporting them in the [issues](https://github.com/software-mansion-labs/react-native-turbo-demo/issues) section._
 
@@ -40,7 +40,3 @@ See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the 
 ## License
 
 MIT
-
----
-
-Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)

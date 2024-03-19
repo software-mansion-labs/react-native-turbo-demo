@@ -1,3 +1,5 @@
+apply from: './turbo-android-dependencies.gradle'
+
 buildscript {
   // Buildscript is evaluated before everything else so we can't use getExtOrDefault
   def kotlin_version = rootProject.ext.has('kotlinVersion') ? rootProject.ext.get('kotlinVersion') : project.properties['TurboWebview_kotlinVersion']
@@ -8,7 +10,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.5.3'
+    classpath 'com.android.tools.build:gradle:8.2.2'
     // noinspection DifferentKotlinGradleVersion
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
@@ -129,15 +131,32 @@ repositories {
   }
 }
 
+def addTurboDependencies(Map<String, String> libraries) {
+  libraries.each { type, lib ->
+    if (type.startsWith("dep")) {
+      dependencies {
+        implementation lib
+      }
+    } else if (type.startsWith("api")) {
+      dependencies {
+        api lib
+      }
+    }
+  }
+}
+
 def kotlin_version = getExtOrDefault('kotlinVersion')
 
 dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  implementation 'com.github.Fryzu:turbo-android:a4cedae5b39da67b229d84998fb71a3ff13fb55c'
+  implementation(files('vendor/turbo-android.aar'))
   // From node_modules
 }
+
+addTurboDependencies(deps)
+addTurboDependencies(apis)
 
 if (isNewArchitectureEnabled()) {
   react {

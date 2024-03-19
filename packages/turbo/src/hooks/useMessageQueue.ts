@@ -1,5 +1,6 @@
 import { useCallback, useRef } from 'react';
 import type { NativeSyntheticEvent } from 'react-native';
+
 import type { SessionMessageCallback, MessageEvent } from '../types';
 
 type SessionMessageCallbackArrayElement = SessionMessageCallback | undefined;

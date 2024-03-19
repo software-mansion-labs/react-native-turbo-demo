@@ -1,9 +1,14 @@
 {
   "name": "react-native-turbo",
   "version": "0.2.4",
+  "description": "Support for @hotwired/turbo in React Native apps",
+  "homepage": "https://github.com/software-mansion-labs/react-native-turbo-demo/tree/main/packages/turbo",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/software-mansion-labs/react-native-turbo-demo/tree/main/packages/turbo"
+  },
   "author": "Bartek Fryz <bartlomiej.fryz@swmansion.com> (https://github.com/Fryzu)",
   "license": "MIT",
-  "description": "Support for @hotwired/turbo in React Native apps",
   "keywords": [
     "react-native",
     "ios",
@@ -11,34 +16,33 @@
     "turbo",
     "hotwired"
   ],
-  "homepage": "https://github.com/software-mansion-labs/react-native-turbo-demo/tree/main/packages/turbo",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/software-mansion-labs/react-native-turbo-demo/tree/main/packages/turbo"
-  },
+  "source": "src/index",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
   "types": "lib/typescript/src/index.d.ts",
   "react-native": "src/index.tsx",
-  "source": "src/index",
+  "hotwiredTurbo": {
+    "ios": "7.0.2",
+    "android": "7.1.0"
+  },
   "scripts": {
-    "prepare": "bob build",
-    "clean": "del lib",
-    "release": "release-it",
-    "pods": "pod-install --quiet"
+    "build": "bob build & sh ./scripts/build.sh $npm_package_hotwiredTurbo_ios $npm_package_hotwiredTurbo_android",
+    "clean": "rm -rf lib node_modules",
+    "release": "release-it --config ../../.release-it.js --only-version",
+    "typescript": "tsc",
+    "lint": "eslint \"src/**/*.{js,ts,tsx}\""
   },
   "devDependencies": {
     "@react-navigation/core": "^6.0.0",
     "@react-navigation/native": "^6.0.0",
-    "react-native-builder-bob": "^0.20.0",
     "react-native-safe-area-context": "^4.3.0",
     "react-native-screens": "^3.13.0"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-native": "*",
     "@react-navigation/core": ">=6.0.0",
     "@react-navigation/native": ">=6.0.0",
+    "react": "*",
+    "react-native": "*",
     "react-native-safe-area-context": "^4.3.0",
     "react-native-screens": "^3.13.0"
   },
@@ -52,6 +56,9 @@
     "!**/__fixtures__",
     "!**/__mocks__"
   ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
   "react-native-builder-bob": {
     "source": "src",
     "output": "lib",
@@ -60,11 +67,5 @@
       "module",
       "typescript"
     ]
-  },
-  "release-it": {
-    "git": {
-      "commitMessage": "chore: react-native-turbo release v${version}",
-      "tag": false
-    }
   }
 }

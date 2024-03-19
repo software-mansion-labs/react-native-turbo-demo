@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { NativeSyntheticEvent, Alert } from 'react-native';
+
 import { dispatchCommand } from '../RNVisitableView';
 import { AlertHandler } from '../types';
 

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import type { OnErrorCallback, SessionMessageCallback } from './types';
 
 const deprecationMessage =
@@ -14,6 +15,7 @@ interface State {
 }
 
 export default class Session extends React.Component<Props, State> {
+  // @ts-ignore
   render() {
     throw new Error(deprecationMessage);
   }

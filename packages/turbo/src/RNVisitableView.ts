@@ -6,8 +6,9 @@ import {
   UIManager,
   ViewStyle,
   Linking,
+  findNodeHandle,
 } from 'react-native';
-import { findNodeHandle } from 'react-native';
+
 import type {
   AlertHandler,
   DispatchCommandTypes,

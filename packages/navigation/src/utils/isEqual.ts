@@ -20,7 +20,7 @@ export const isDeepEqual = (
 
   if (objKeys1.length !== objKeys2.length) return false;
 
-  for (var key of objKeys1) {
+  for (const key of objKeys1) {
     const value1 = object1[key];
     const value2 = object2[key];
 
