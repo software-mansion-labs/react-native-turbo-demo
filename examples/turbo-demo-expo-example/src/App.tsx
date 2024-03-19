@@ -11,8 +11,7 @@ import { Routes } from './webScreenRoutes';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-// Use custom getId function when want to use the same screen with different params,
-// e.g. same url with different query params.
+// Use a custom getId function when using navigation action for the same url with different parameters.
 const getId = (params: any) => JSON.stringify(params);
 
 function ModalFlow() {
