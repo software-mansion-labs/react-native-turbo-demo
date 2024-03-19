@@ -142,8 +142,6 @@ To obtain `url` for current screen, use `useCurrentUrl` hook function.
   - `actionToDispatch` - action which can be dispatched via `navigator.dispatch`
   - `willChangeTopmostNavigator` - function that returns `true` if the navigator will change the topmost navigator
 
-You can see an example of using `getDispatchAction` in the [example app](../../examples/turbo-demo-expo-example/src/WebView.tsx).
-
 ---
 
 ## Contributing
