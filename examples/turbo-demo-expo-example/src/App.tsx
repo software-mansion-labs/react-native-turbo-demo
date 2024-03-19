@@ -11,7 +11,7 @@ import { Routes } from './webScreenRoutes';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-// Use a custom getId function when using navigation action for the same url with different parameters.
+// Use a custom getId function when navigating to the same url with different parameters.
 const getId = (params: any) => JSON.stringify(params);
 
 function ModalFlow() {
