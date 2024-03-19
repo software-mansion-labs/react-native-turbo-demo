@@ -94,9 +94,10 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
     const { initializeStradaBridge, stradaUserAgent, sendToBridge } =
       useStradaBridge(visitableViewRef, dispatchCommand, stradaComponents);
 
-    const reloadVisitableView = useCallback(() => {
-      dispatchCommand(visitableViewRef, 'reload');
-    }, []);
+    const reloadVisitableView = useCallback(
+      () => dispatchCommand(visitableViewRef, 'reload'),
+      []
+    );
 
     const {
       webViewStateComponent,
@@ -160,16 +161,14 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
     );
 
     const handleOnFormSubmissionStarted = useCallback(
-      ({ nativeEvent }: NativeSyntheticEvent<FormSubmissionEvent>) => {
-        onFormSubmissionStarted?.(nativeEvent);
-      },
+      ({ nativeEvent }: NativeSyntheticEvent<FormSubmissionEvent>) =>
+        onFormSubmissionStarted?.(nativeEvent),
       [onFormSubmissionStarted]
     );
 
     const handleOnFormSubmissionFinished = useCallback(
-      ({ nativeEvent }: NativeSyntheticEvent<FormSubmissionEvent>) => {
-        onFormSubmissionFinished?.(nativeEvent);
-      },
+      ({ nativeEvent }: NativeSyntheticEvent<FormSubmissionEvent>) =>
+        onFormSubmissionFinished?.(nativeEvent),
       [onFormSubmissionFinished]
     );
 
@@ -182,13 +181,10 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
     const handleOnContentProcessDidTerminate = useCallback(
       ({
         nativeEvent,
-      }: NativeSyntheticEvent<ContentProcessDidTerminateEvent>) => {
-        if (!onContentProcessDidTerminate) {
-          dispatchCommand(visitableViewRef, 'reload');
-          return;
-        }
-        onContentProcessDidTerminate(nativeEvent);
-      },
+      }: NativeSyntheticEvent<ContentProcessDidTerminateEvent>) =>
+        onContentProcessDidTerminate
+          ? onContentProcessDidTerminate(nativeEvent)
+          : reloadVisitableView(),
       [onContentProcessDidTerminate]
     );
 

@@ -22,7 +22,7 @@ import type {
 } from './types';
 import { nextEventLoopTick } from './utils/nextEventLoopTick';
 
-// interface should match RNVisitableView exported properties in native code
+// Interface should match RNVisitableView exported properties in native code
 export interface RNVisitableViewProps {
   url: string;
   sessionHandle?: string;
@@ -94,11 +94,11 @@ export function dispatchCommand(
 
 export async function openExternalURL({
   url,
-}: OpenExternalUrlEvent): Promise<any> {
+}: OpenExternalUrlEvent): Promise<void> {
   const supported = await Linking.canOpenURL(url);
 
   if (supported) {
-    return await Linking.openURL(url);
+    await Linking.openURL(url);
   } else {
     console.error(`Don't know how to open this URL: ${url}`);
   }
