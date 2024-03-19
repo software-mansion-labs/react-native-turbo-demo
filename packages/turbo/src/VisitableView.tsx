@@ -148,7 +148,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       ({ nativeEvent }: NativeSyntheticEvent<VisitProposal>) => {
         // Using nextEventLoopTick helps prevent a potential race condition
         // that might occur between onFormSubmissionFinished and onVisitProposal
-        nextEventLoopTick(() => onVisitProposal(nativeEvent))
+        nextEventLoopTick(() => onVisitProposal(nativeEvent));
       },
       [onVisitProposal]
     );
