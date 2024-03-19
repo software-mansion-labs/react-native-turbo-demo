@@ -8843,6 +8843,17 @@ react-native-tab-view@^3.5.2:
   dependencies:
     use-latest-callback "^0.1.5"
 
+react-native-turbo@*:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/react-native-turbo/-/react-native-turbo-0.2.4.tgz#92eeae1a8019deaed8557d77a2f25e67d29ccb5e"
+  integrity sha512-l7WcDaVTQD6S611MmFwvdgQawAACs43SVDKUs92pqBCQw3j7xXfW4bc5OoiIG6c/5qSsb3DNQj5XC6MnlkLPqQ==
+
+"react-native-turbo@file:packages/turbo":
+  version "1.0.0-beta"
+
+"react-native-web-screen@file:packages/navigation":
+  version "1.0.0-beta.2"
+
 react-native-web@~0.19.6:
   version "0.19.10"
   resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.19.10.tgz#5f7205f8909c0889bc89c9fde7c6e287defa7c63"
