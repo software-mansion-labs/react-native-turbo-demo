@@ -35,6 +35,7 @@ import type {
   FormSubmissionEvent,
   ContentProcessDidTerminateEvent,
 } from './types';
+import { nextEventLoopTick } from './utils/nextEventLoopTick';
 
 export interface Props {
   url: string;
@@ -145,9 +146,9 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
 
     const handleVisitProposal = useCallback(
       ({ nativeEvent }: NativeSyntheticEvent<VisitProposal>) => {
-        // Using setTimeout helps prevent a potential race condition
+        // Using nextEventLoopTick helps prevent a potential race condition
         // that might occur between onFormSubmissionFinished and onVisitProposal
-        setTimeout(() => onVisitProposal(nativeEvent), 1);
+        nextEventLoopTick(() => onVisitProposal(nativeEvent));
       },
       [onVisitProposal]
     );

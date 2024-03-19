@@ -20,6 +20,7 @@ import type {
   FormSubmissionEvent,
   ContentProcessDidTerminateEvent,
 } from './types';
+import { nextEventLoopTick } from './utils/nextEventLoopTick';
 
 // interface should match RNVisitableView exported properties in native code
 export interface RNVisitableViewProps {
@@ -80,11 +81,15 @@ export function dispatchCommand(
     return;
   }
 
-  UIManager.dispatchViewManagerCommand(
-    findNodeHandle(ref.current),
-    transformedCommand,
-    args
-  );
+  // Using nextEventLoopTick helps prevent a potential race condition.
+  // It avoids calling the native method before the native sessionHandle prop is set up.
+  nextEventLoopTick(() => {
+    const reactTag = findNodeHandle(ref.current);
+
+    if (reactTag) {
+      UIManager.dispatchViewManagerCommand(reactTag, transformedCommand, args);
+    }
+  });
 }
 
 export async function openExternalURL({
