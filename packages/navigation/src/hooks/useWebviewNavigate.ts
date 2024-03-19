@@ -6,7 +6,6 @@ import {
   getActionFromState,
   getStateFromPath,
   NavigationAction,
-  NavigationProp,
   PartialState,
   StackActions,
   useNavigation,
@@ -158,10 +157,8 @@ function getMinimalAction(
 }
 
 type DispatchUtilities = {
-  state: NavigationState | PartialState<NavigationState> | undefined;
-  actionToDispatch: ReturnType<typeof getAction> | undefined;
+  actionToDispatch: ReturnType<typeof getAction>;
   willChangeTopmostNavigator: boolean | undefined;
-  rootNavigator: NavigationProp<ReactNavigation.RootParamList>;
 };
 
 /*
@@ -182,8 +179,6 @@ export function useWebviewNavigate<
         );
       }
 
-      let actionToDispatch;
-      let willChangeTopmostNavigator = false;
       let root = navigation;
       while (root.getParent()) {
         root = root.getParent();
@@ -196,10 +191,7 @@ export function useWebviewNavigate<
             name: to.screen,
             params: to.params,
           }),
-          // @ts-expect-error
-          rootNavigator: root,
-          state: undefined,
-          willChangeTopmostNavigator,
+          willChangeTopmostNavigator: undefined,
         };
       }
 
@@ -213,38 +205,41 @@ export function useWebviewNavigate<
         ? options.getStateFromPath(path, options.config)
         : getStateFromPath(path, options?.config);
 
-      if (state) {
-        const action = getActionFromState(state, options?.config);
+      if (!state) {
+        throw new Error('Failed to parse the path to a navigation state.');
+      }
 
-        if (isNavigateAction(action)) {
-          const rootState = root.getState();
-          // @ts-expect-error
-          const minimalAction = getMinimalAction(action, rootState, actionType);
-          const currentScreenName =
-            rootState?.routes[rootState.index ?? -1]?.name;
+      const action = getActionFromState(state, options?.config);
 
-          if (
-            currentScreenName &&
-            action.payload.name !== currentScreenName &&
-            navigation.canGoBack()
-          ) {
-            willChangeTopmostNavigator = true;
-          }
+      if (!isNavigateAction(action)) {
+        return {
+          actionToDispatch: CommonActions.reset(state),
+          willChangeTopmostNavigator: undefined,
+        };
+      }
 
-          actionToDispatch = getAction(
-            // @ts-expect-error
-            minimalAction,
-            actionType,
-            route.name
-          );
-        }
+      const rootState = root.getState();
+      // @ts-expect-error
+      const minimalAction = getMinimalAction(action, rootState, actionType);
+      const currentScreenName = rootState?.routes[rootState.index ?? -1]?.name;
+
+      let willChangeTopmostNavigator = false;
+
+      if (
+        currentScreenName &&
+        action.payload.name !== currentScreenName &&
+        navigation.canGoBack()
+      ) {
+        willChangeTopmostNavigator = true;
       }
 
       return {
-        actionToDispatch,
-        // @ts-expect-error
-        rootNavigator: root,
-        state,
+        actionToDispatch: getAction(
+          // @ts-expect-error
+          minimalAction,
+          actionType,
+          route.name
+        ),
         willChangeTopmostNavigator,
       };
     },
@@ -253,19 +248,8 @@ export function useWebviewNavigate<
 
   const navigateTo = React.useCallback(
     (to: To<ParamList>, actionType?: Action) => {
-      const { actionToDispatch, state } = getDispatchUtilities(to, actionType);
-
-      if (actionToDispatch) {
-        navigation.dispatch(actionToDispatch);
-        return;
-      }
-
-      if (!state) {
-        throw new Error('Failed to parse the path to a navigation state.');
-      }
-
-      // @ts-expect-error
-      navigation.reset(state);
+      const { actionToDispatch } = getDispatchUtilities(to, actionType);
+      navigation.dispatch(actionToDispatch);
     },
     [getDispatchUtilities, navigation]
   );

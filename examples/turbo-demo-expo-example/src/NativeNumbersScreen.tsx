@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
 
 interface Props {}
 
-const NumbersScreen: React.FC<Props> = () => {
+const NativeNumbersScreen: React.FC<Props> = () => {
   const renderSeparator = () => <View style={styles.separator} />;
 
   const headerComponent = () => (
@@ -32,7 +32,7 @@ const NumbersScreen: React.FC<Props> = () => {
 
   return (
     <FlatList
-      data={new Array(100)}
+      data={new Array(50)}
       ItemSeparatorComponent={renderSeparator}
       ListHeaderComponent={headerComponent}
       renderItem={({ index }) => (
@@ -44,4 +44,4 @@ const NumbersScreen: React.FC<Props> = () => {
   );
 };
 
-export default NumbersScreen;
+export default NativeNumbersScreen;

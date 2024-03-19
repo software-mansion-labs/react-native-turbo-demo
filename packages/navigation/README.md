@@ -140,11 +140,7 @@ To obtain `url` for current screen, use `useCurrentUrl` hook function.
 - `navigateTo` - function that allows you to navigate to a given URL and action
 - `getDispatchAction` - function which might be useful when you want to add more functionalities to behavior of `navigateTo` function. This function returns:
   - `actionToDispatch` - action which can be dispatched via `navigator.dispatch`
-  - `rootNavigator` - root navigator
   - `willChangeTopmostNavigator` - function that returns `true` if the navigator will change the topmost navigator
-  - `state` - navigation state
-
-You can see an example of using `getDispatchAction` in the [example app](../../examples/turbo-demo-expo-example/src/WebView.tsx).
 
 ---
 

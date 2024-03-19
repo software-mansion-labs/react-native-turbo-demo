@@ -9,6 +9,7 @@ export default class Form extends BridgeComponent {
   private submitTitle: string = 'Submit';
 
   setHeaderButton(disabled: boolean) {
+    // @ts-ignore
     this.context.setOptions({
       headerRight: () => (
         <Button

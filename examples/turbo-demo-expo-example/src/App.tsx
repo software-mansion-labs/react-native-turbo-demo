@@ -3,47 +3,20 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
-import MainScreen from './MainScreen';
-import NestedTab from './NestedTab';
-import { default as NativeScreen } from './NumbersScreen';
-import ShareScreen from './ShareScreen';
+import NativeNumbersScreen from './NativeNumbersScreen';
 import WebView from './WebView';
-import { navigationRef } from './navigationRef';
 import { linking } from './webScreen';
 import { Routes } from './webScreenRoutes';
 
 const Tab = createBottomTabNavigator();
-
 const Stack = createNativeStackNavigator();
 
+// Use a custom getId function when navigating to the same url with different parameters.
 const getId = (params: any) => JSON.stringify(params);
-
-const FirstTabFlow = () => (
-  <Stack.Navigator
-    screenOptions={{
-      headerTintColor: '#00094a',
-    }}
-  >
-    <Stack.Screen
-      name={Routes.WebviewInitial}
-      component={MainScreen}
-      options={{ title: 'React Native Web Screen' }}
-    />
-    <Stack.Screen name={Routes.Share} component={ShareScreen} />
-  </Stack.Navigator>
-);
 
 function ModalFlow() {
   return (
     <Stack.Navigator screenOptions={{ title: '' }}>
-      <Stack.Screen
-        name={Routes.SignIn}
-        component={WebView}
-        getId={getId}
-        options={{
-          gestureEnabled: false,
-        }}
-      />
       <Stack.Screen name={Routes.New} getId={getId} component={WebView} />
       <Stack.Screen
         name={Routes.SuccessScreen}
@@ -55,18 +28,33 @@ function ModalFlow() {
   );
 }
 
+const MainTab = () => (
+  <Stack.Navigator
+    screenOptions={{
+      headerTintColor: '#00094a',
+    }}
+  >
+    <Stack.Screen
+      name={Routes.WebviewInitial}
+      component={WebView}
+      getId={getId}
+      options={{ title: 'React Native Web Screen' }}
+    />
+  </Stack.Navigator>
+);
+
 const BottomTabs = () => {
   return (
     <Tab.Navigator>
       <Tab.Screen
-        name={Routes.FirstTabFlow}
-        component={FirstTabFlow}
+        name={Routes.MainTab}
+        component={MainTab}
         options={{ title: 'React Native Web Screen', headerShown: false }}
       />
       <Tab.Screen
-        name={Routes.NestedTabNative}
-        component={NativeScreen}
-        options={{ title: 'Native Tab' }}
+        name={Routes.NativeNumbersScreen}
+        component={NativeNumbersScreen}
+        options={{ title: 'Native Screen' }}
       />
     </Tab.Navigator>
   );
@@ -74,22 +62,18 @@ const BottomTabs = () => {
 
 const App: React.FC = () => {
   return (
-    <NavigationContainer linking={linking} ref={navigationRef}>
+    <NavigationContainer linking={linking}>
       <Stack.Navigator
         screenOptions={{
           headerBackTitle: 'Back',
           headerTintColor: '#00094a',
+          title: '',
         }}
       >
         <Stack.Screen
           options={{ headerShown: false }}
           name={Routes.BottomTabs}
           component={BottomTabs}
-        />
-        <Stack.Screen
-          name={Routes.NestedTab}
-          component={NestedTab}
-          options={{ title: 'Nested Top Tab' }}
         />
         <Stack.Screen
           name={Routes.ModalFlow}

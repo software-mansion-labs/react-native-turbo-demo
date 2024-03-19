@@ -19,6 +19,7 @@ export function useWebViewDialogs(
     ({ nativeEvent: { message } }: NativeSyntheticEvent<AlertHandler>) => {
       const dispatch = () =>
         dispatchCommand(visitableViewRef, 'sendAlertResult');
+
       if (onAlert) {
         onAlert(message, () => dispatch());
       } else {
@@ -36,6 +37,7 @@ export function useWebViewDialogs(
           'sendConfirmResult',
           value.toString()
         );
+
       if (onConfirm) {
         onConfirm(message, (value) => dispatch(value));
       } else {
