@@ -122,15 +122,17 @@ export const useStradaBridge = (
   stradaComponents?: StradaComponent[]
 ) => {
   const initializeStradaBridge = useCallback(() => {
-    dispatchCommand(visitableViewRef, 'injectJavaScript', stradaBridgeScript);
-
     const stradaComponentNames =
       stradaComponents?.map(({ componentName }) => componentName) || [];
+    const stradaInitializationScript = `
+      ${stradaBridgeScript}
+      window.nativeBridge.register(${JSON.stringify(stradaComponentNames)})
+    `;
 
     dispatchCommand(
       visitableViewRef,
       'injectJavaScript',
-      `window.nativeBridge.register(${JSON.stringify(stradaComponentNames)})`
+      stradaInitializationScript
     );
   }, [dispatchCommand, stradaComponents, visitableViewRef]);
 
