@@ -13,6 +13,7 @@ module.exports = {
     requireCommitsFail: false,
     requireUpstream: false,
     commitMessage: 'Release ${name}@${version}',
+    tagName: '${name}@${version}',
     pushArgs: ['--follow-tags', '--force'],
   },
   github: {
