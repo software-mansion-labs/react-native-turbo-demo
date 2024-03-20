@@ -20,7 +20,6 @@ import type {
   FormSubmissionEvent,
   ContentProcessDidTerminateEvent,
 } from './types';
-import { nextEventLoopTick } from './utils/nextEventLoopTick';
 
 // Interface should match RNVisitableView exported properties in native code
 export interface RNVisitableViewProps {
@@ -62,7 +61,14 @@ function transformCommandToAcceptableType(command: number): number | string {
   return command.toString();
 }
 
-export function dispatchCommand(
+const initializeWebView = async (webViewRef: React.RefObject<any>) => {
+  webViewRef.current.initializationPromise ||= new Promise<void>((resolve) =>
+    setTimeout(resolve, 1)
+  );
+  return webViewRef.current.initializationPromise;
+};
+
+export async function dispatchCommand(
   ref: React.RefObject<any>,
   command: DispatchCommandTypes,
   ...args: any[]
@@ -81,15 +87,15 @@ export function dispatchCommand(
     return;
   }
 
-  // Using nextEventLoopTick helps prevent a potential race condition.
-  // It avoids calling the native method before the native sessionHandle prop is set up.
-  nextEventLoopTick(() => {
-    const reactTag = findNodeHandle(ref.current);
+  // Using initializeWebView makes sure that we call the native method
+  // after the native sessionHandle prop is set.
+  await initializeWebView(ref);
 
-    if (reactTag) {
-      UIManager.dispatchViewManagerCommand(reactTag, transformedCommand, args);
-    }
-  });
+  const reactTag = findNodeHandle(ref.current);
+
+  if (reactTag) {
+    UIManager.dispatchViewManagerCommand(reactTag, transformedCommand, args);
+  }
 }
 
 export async function openExternalURL({
