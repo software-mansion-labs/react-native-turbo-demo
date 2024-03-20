@@ -1,8 +1,5 @@
-import {
-  getStateFromPath,
-  PartialState,
-} from '@react-navigation/native';
 import type { NavigationState } from '@react-navigation/core';
+import { getStateFromPath, PartialState } from '@react-navigation/native';
 
 import { LinkingConfig } from './hooks/useCurrentUrl';
 import { unpackState } from './utils/unpackState';
