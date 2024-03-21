@@ -260,6 +260,19 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     reactContext.getJSModule(RCTEventEmitter::class.java).receiveEvent(id, event.name, params)
   }
 
+  private fun getWebViewTitle(): String {
+    // When the <title> tag is empty, the WebView's title is set to the URL.
+    // In this case, we want to return the empty string instead of the URL.
+    var title = webView.title ?: return ""
+    val url = webView.url ?: return title
+    val urlWithoutProtocol = url.replaceFirst("https?://".toRegex(), "")
+    
+    // In case of an empty <title> on the root path, it results in the same string as the host.
+    title += "/"
+    
+    return if (title.startsWith(urlWithoutProtocol)) "" else title
+  }
+
   // region SessionSubscriber
 
   override fun injectJavaScript(script: String) {
@@ -313,7 +326,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
 
   override fun visitRendered() {
     sendEvent(RNVisitableViewEvent.LOAD, Arguments.createMap().apply {
-      putString("title", webView.title)
+      putString("title", getWebViewTitle())
       putString("url", webView.url)
     })
     removeTransitionalViews()
@@ -321,7 +334,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
 
   override fun visitCompleted(completedOffline: Boolean) {
     sendEvent(RNVisitableViewEvent.LOAD, Arguments.createMap().apply {
-      putString("title", webView.title)
+      putString("title", getWebViewTitle())
       putString("url", webView.url)
     })
     CookieManager
