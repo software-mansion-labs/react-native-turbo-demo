@@ -20,7 +20,7 @@
   "types": "lib/typescript/src/index.d.ts",
   "react-native": "src/index.tsx",
   "scripts": {
-    "build": "bob build",
+    "build": "bob build && yarn link",
     "clean": "rm -rf lib node_modules",
     "release": "release-it --config ../../.release-it.js --only-version",
     "typescript": "tsc",
