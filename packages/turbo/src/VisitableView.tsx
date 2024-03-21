@@ -138,9 +138,19 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
     );
 
     const handleOnLoad = useCallback(
-      ({ nativeEvent }: NativeSyntheticEvent<LoadEvent>) => {
+      ({ nativeEvent: { url, title } }: NativeSyntheticEvent<LoadEvent>) => {
         initializeStradaBridge();
-        onLoad?.(nativeEvent);
+
+        // On Android, if the <title> tag is empty, the WebView's title defaults to the URL.
+        // We want to return an empty string in this case, not the URL.
+        const parsedUrl = new URL(url);
+        const path = parsedUrl.pathname === '/' ? '' : parsedUrl.pathname;
+
+        if (title.startsWith(`${parsedUrl.host}${path}`)) {
+          title = '';
+        }
+
+        onLoad?.({ url, title });
       },
       [initializeStradaBridge, onLoad]
     );
