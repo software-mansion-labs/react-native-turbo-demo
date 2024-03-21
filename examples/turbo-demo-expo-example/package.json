@@ -1,8 +1,8 @@
 {
   "scripts": {
-    "postinstall": "yarn link react-native-turbo react-native-web-screen",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
+    "prestart": "yarn link react-native-turbo react-native-web-screen",
+    "android": "yarn prestart && expo run:android",
+    "ios": "yarn prestart && expo run:ios",
     "web": "expo start --web",
     "start": "expo start --dev-client",
     "prebuild": "expo prebuild",
