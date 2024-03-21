@@ -26,7 +26,7 @@
     "android": "7.1.0"
   },
   "scripts": {
-    "build": "bob build & sh ./scripts/build.sh $npm_package_hotwiredTurbo_ios $npm_package_hotwiredTurbo_android",
+    "build": "bob build && sh ./scripts/build.sh $npm_package_hotwiredTurbo_ios $npm_package_hotwiredTurbo_android && yarn link",
     "clean": "rm -rf lib node_modules",
     "release": "release-it --config ../../.release-it.js --only-version",
     "typescript": "tsc",
