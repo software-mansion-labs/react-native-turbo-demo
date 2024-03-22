@@ -5,6 +5,8 @@
 //  Created by Patryk Klatka on 05/01/2024.
 //
 
+#pragma clang diagnostic ignored "-Wstrict-prototypes"
+
 #import <React/RCTBridgeModule.h>
 
 @interface RCT_EXTERN_MODULE(RNSessionManager, NSObject)
