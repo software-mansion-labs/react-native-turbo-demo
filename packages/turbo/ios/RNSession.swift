@@ -48,6 +48,7 @@ class RNSession: NSObject {
     let session = Session(webViewConfiguration: webViewConfiguration)
     session.delegate = self
     session.webView.allowsLinkPreview = false
+    session.webView.scrollView.contentInsetAdjustmentBehavior = .never
     session.webView.uiDelegate = self.wkUiDelegate
 
     #if DEBUG
