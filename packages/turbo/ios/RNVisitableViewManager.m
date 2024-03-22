@@ -5,6 +5,8 @@
 //  Created by Bartłomiej Fryz on 22/06/2022.
 //
 
+#pragma clang diagnostic ignored "-Wstrict-prototypes"
+
 #import <React/RCTViewManager.h>
 #import <React/RCTEventEmitter.h>
 #import <React/RCTBridgeModule.h>

@@ -165,7 +165,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   }
 
   public func didFailRequestForVisitable(visitable: Visitable, error: Error){
-    var event: [AnyHashable: Any] = [
+    let event: [AnyHashable: Any] = [
       "url": visitable.visitableURL.absoluteString,
       "description": error.localizedDescription,
       "statusCode": getStatusCodeFromError(error: error as? TurboError)
