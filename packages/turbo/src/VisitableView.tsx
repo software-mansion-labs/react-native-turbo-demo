@@ -190,7 +190,6 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
 
     return (
       <>
-        {webViewStateComponent}
         {stradaComponents?.map((StradaComponent, i) => (
           <StradaComponent
             key={`${url}-${i}`}
@@ -221,6 +220,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           onHideLoading={handleHideLoading}
           onContentProcessDidTerminate={handleOnContentProcessDidTerminate}
         />
+        {webViewStateComponent}
       </>
     );
   }
