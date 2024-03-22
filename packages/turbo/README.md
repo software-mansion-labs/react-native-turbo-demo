@@ -167,7 +167,9 @@ Callback called when the webview detects non-turbo visit action (e.g. opening ex
 Callback called with screen title and URL when the webview successfully loads.
 
 - url
-- title – web page title
+- title – web page
+
+Note: When the title of a webpage is empty, the native WebView on Android resolves the title to the URL. This is not the case with WKWebView on iOS, which properly sets the title value. To override this behavior, you can set the title to a special whitespace character, for example, to [\&#65279;](https://stackoverflow.com/questions/42365138/empty-html-page-title).
 
 ### `onError`
 
