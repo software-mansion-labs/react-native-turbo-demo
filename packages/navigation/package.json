@@ -22,7 +22,7 @@
   "scripts": {
     "build": "bob build && yarn link",
     "clean": "rm -rf lib node_modules",
-    "release": "release-it --config ../../.release-it.js --only-version",
+    "release": "sh ../../scripts/release.sh",
     "typescript": "tsc",
     "lint": "eslint \"src/**/*.{js,ts,tsx}\""
   },

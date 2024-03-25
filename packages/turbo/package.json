@@ -28,7 +28,7 @@
   "scripts": {
     "build": "bob build && sh ./scripts/build.sh $npm_package_hotwiredTurbo_ios $npm_package_hotwiredTurbo_android && yarn link",
     "clean": "rm -rf lib node_modules",
-    "release": "release-it --config ../../.release-it.js --only-version",
+    "release": "sh ../../scripts/release.sh",
     "typescript": "tsc",
     "lint": "eslint \"src/**/*.{js,ts,tsx}\""
   },
