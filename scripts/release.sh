@@ -24,7 +24,6 @@ gh pr merge $PR_NUMBER --squash --delete-branch
 # Create release
 BASE_COMMAND="gh release create "$PACKAGE_NAME@$VERSION" --title "$PACKAGE_NAME@$VERSION" --generate-notes --notes-start-tag "$PACKAGE_NAME@$OLD_VERSION""
 
-# Ask if it is a pre-release
 read -p "Is it a pre-release? (y/n) " -n 1 -r
 
 if [[ $REPLY =~ ^[Yy]$ ]]
