@@ -22,7 +22,7 @@
   "types": "lib/typescript/src/index.d.ts",
   "react-native": "src/index.tsx",
   "hotwiredTurbo": {
-    "ios": "7.0.2",
+    "ios": "7.1.0",
     "android": "7.1.0"
   },
   "scripts": {
