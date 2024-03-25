@@ -22,8 +22,18 @@ PR_NUMBER=$(gh pr list | grep "$PACKAGE_NAME@$VERSION" | awk '{print $1}')
 gh pr merge $PR_NUMBER --squash --delete-branch
 
 # Create release
-gh release create "$PACKAGE_NAME@$VERSION" --title "$PACKAGE_NAME@$VERSION" --generate-notes --notes-start-tag "$PACKAGE_NAME@$OLD_VERSION"
+BASE_COMMAND="gh release create "$PACKAGE_NAME@$VERSION" --title "$PACKAGE_NAME@$VERSION" --generate-notes --notes-start-tag "$PACKAGE_NAME@$OLD_VERSION""
+
+# Ask if it is a pre-release
+read -p "Is it a pre-release? (y/n) " -n 1 -r
+
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    $BASE_COMMAND --prerelease
+else
+    $BASE_COMMAND
+fi
 
 # Cleanup 
+cd ../..
 git checkout .
-git checkout main
