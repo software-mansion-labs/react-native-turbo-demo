@@ -14,8 +14,6 @@ git checkout next
 
 VERSION=$(grep -m1 version package.json | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]')
 
-echo "New version: $VERSION"
-
 # Create release PR and merge it
 gh pr create --title "Release $PACKAGE_NAME@$VERSION" --body "Release new version of the library." 
 PR_NUMBER=$(gh pr list | grep "$PACKAGE_NAME@$VERSION" | awk '{print $1}')
