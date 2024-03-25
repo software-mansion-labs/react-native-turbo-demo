@@ -1,7 +1,7 @@
 PACKAGE_NAME=$(grep -m1 name package.json | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]')
 OLD_VERSION=$(grep -m1 version package.json | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]')
 
-# Create a new branch
+# Checkout to release branch
 git checkout -B next
 
 # Build the library
