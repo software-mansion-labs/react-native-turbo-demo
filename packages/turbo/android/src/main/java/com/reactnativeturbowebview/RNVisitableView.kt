@@ -23,6 +23,10 @@ import dev.hotwire.turbo.errors.WebError
 import dev.hotwire.turbo.errors.WebSslError
 import dev.hotwire.turbo.visit.TurboVisitAction
 
+const val REFRESH_SCRIPT = "typeof Turbo.session.refresh === 'function' " +
+        "? Turbo.session.refresh(document.baseURI)" +
+        ": Turbo.visit(document.baseURI, {action: 'replace', shouldCacheSnapshot: 'false'})"
+
 class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscriber {
 
   private val reactContext = context as ReactApplicationContext
@@ -117,13 +121,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   }
 
   override fun refresh() {
-    session.visit(
-      url = url,
-      restoreWithCachedSnapshot = false,
-      reload = false,
-      viewTreeLifecycleOwner = viewTreeLifecycleOwner,
-      visitOptions = TurboVisitOptions(action = TurboVisitAction.REPLACE)
-    )
+    webView.evaluateJavascript(REFRESH_SCRIPT, null)
   }
 
   override fun reload(displayProgress: Boolean) {
