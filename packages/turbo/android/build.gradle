@@ -131,6 +131,16 @@ repositories {
   }
 }
 
+parent.allprojects {
+  repositories {
+    mavenLocal()
+
+    maven {
+      url "$rootDir/../node_modules/react-native-turbo/android/vendor"
+    }
+  }
+}
+
 def addTurboDependencies(Map<String, String> libraries) {
   libraries.each { type, lib ->
     if (type.startsWith("dep")) {
@@ -151,7 +161,7 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  implementation(files('vendor/turbo-android.aar'))
+  implementation "dev.hotwire:turbo:local"
   // From node_modules
 }
 

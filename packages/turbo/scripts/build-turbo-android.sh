@@ -1,7 +1,7 @@
 TURBO_ANDROID_REPO_PATH="https://github.com/hotwired/turbo-android.git"
 TURBO_ANDROID_MAIN_SOURCE_DIR="./turbo/src/main/*"
 TURBO_ANDROID_VERSION=$1
-PATCH_DIR=$(realpath ./patches)
+PATCH_FILE=$(realpath ./patches/turbo-android-react-native-support.patch)
 TURBO_ANDROID_DIR=$(realpath ./android)
 DEPENDENCIES_GRADLE_FILE="turbo-android-dependencies.gradle"
 DEPENDENCY_REGEX="[a-zA-Z0-9.\-]+:[a-zA-Z0-9.\-]+:[0-9a-zA-Z.\-]+"
@@ -25,13 +25,13 @@ git clone --branch $TURBO_ANDROID_VERSION --depth 1 $TURBO_ANDROID_REPO_PATH
 
 # Apply patch
 cd turbo-android
-git apply $PATCH_DIR/turbo-android-react-native-support.patch
+git apply $PATCH_FILE
 
-# Build .aar file
-./gradlew clean assemble -p turbo
+# Build turbo-android to local maven repository
+./gradlew -PVersion=local publishToMavenLocal
 
-# Copy .aar file to lib directory
-cp ./turbo/build/outputs/aar/turbo-release.aar $TURBO_ANDROID_DIR/vendor/turbo-android.aar
+# Build turbo-android to vendor directory
+./gradlew -Dmaven.repo.local=$TURBO_ANDROID_DIR/vendor -PVersion=local publishToMavenLocal
 
 # Get necessary dependencies from turbo build.gradle
 ./gradlew turbo:dependencies --configuration implementation > deps.txt
