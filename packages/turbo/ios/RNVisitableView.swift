@@ -7,6 +7,10 @@
 
 import UIKit
 
+let REFRESH_SCRIPT = "typeof Turbo.session.refresh === 'function'" +
+            "? Turbo.session.refresh(document.baseURI)" + // Turbo 8+
+            ": Turbo.visit(document.baseURI, { action: 'replace', shouldCacheSnapshot: 'false' })" // Older Turbo versions
+
 class RNVisitableView: UIView, RNSessionSubscriber {
   var id: UUID = UUID()
   @objc var sessionHandle: NSString? = nil
@@ -120,10 +124,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   }
 
   public func refresh() {
-    if (controller == nil) {
-      return
-    }
-    session.visit(controller!, action: .replace)
+      webView.evaluateJavaScript(REFRESH_SCRIPT)
   }
 
   private func visit() {
