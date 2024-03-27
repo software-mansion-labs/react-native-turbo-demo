@@ -151,7 +151,7 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  implementation(files('vendor/turbo-android.aar'))
+  implementation(compileOnly files('vendor/turbo-android.aar'))
   // From node_modules
 }
 
