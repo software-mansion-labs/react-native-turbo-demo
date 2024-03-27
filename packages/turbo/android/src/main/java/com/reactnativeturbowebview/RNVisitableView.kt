@@ -24,8 +24,8 @@ import dev.hotwire.turbo.errors.WebSslError
 import dev.hotwire.turbo.visit.TurboVisitAction
 
 const val REFRESH_SCRIPT = "typeof Turbo.session.refresh === 'function'" +
-        "? Turbo.session.refresh(document.baseURI)" +
-        ": Turbo.visit(document.baseURI, { action: 'replace', shouldCacheSnapshot: 'false' })"
+        "? Turbo.session.refresh(document.baseURI)" + // Turbo 8+
+        ": Turbo.visit(document.baseURI, { action: 'replace', shouldCacheSnapshot: 'false' })" // Older Turbo versions 
 
 class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscriber {
 
