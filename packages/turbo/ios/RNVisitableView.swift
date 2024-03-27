@@ -7,7 +7,9 @@
 
 import UIKit
 
-let REFRESH_SCRIPT = "typeof Turbo.session.refresh === 'function' ? Turbo.session.refresh(document.baseURI) : Turbo.visit(document.baseURI, {action: 'replace', shouldCacheSnapshot: 'false'})"
+let REFRESH_SCRIPT = "typeof Turbo.session.refresh === 'function'" +
+            "? Turbo.session.refresh(document.baseURI)" +
+            ": Turbo.visit(document.baseURI, { action: 'replace', shouldCacheSnapshot: 'false' })"
 
 class RNVisitableView: UIView, RNSessionSubscriber {
   var id: UUID = UUID()

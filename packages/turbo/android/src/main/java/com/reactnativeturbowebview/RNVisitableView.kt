@@ -23,9 +23,9 @@ import dev.hotwire.turbo.errors.WebError
 import dev.hotwire.turbo.errors.WebSslError
 import dev.hotwire.turbo.visit.TurboVisitAction
 
-const val REFRESH_SCRIPT = "typeof Turbo.session.refresh === 'function' " +
+const val REFRESH_SCRIPT = "typeof Turbo.session.refresh === 'function'" +
         "? Turbo.session.refresh(document.baseURI)" +
-        ": Turbo.visit(document.baseURI, {action: 'replace', shouldCacheSnapshot: 'false'})"
+        ": Turbo.visit(document.baseURI, { action: 'replace', shouldCacheSnapshot: 'false' })"
 
 class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscriber {
 
