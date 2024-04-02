@@ -2,7 +2,7 @@
   "name": "react-native-turbo-demo",
   "private": true,
   "scripts": {
-    "postinstall": "yarn build",
+    "postinstall": "yarn build && turbo postinstall",
     "build": "turbo build",
     "dev": "turbo dev",
     "dev:ios": "turbo dev:ios",
