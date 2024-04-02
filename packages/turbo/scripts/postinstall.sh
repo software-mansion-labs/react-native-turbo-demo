@@ -16,4 +16,4 @@ else
 fi
 
 # Copying the vendor files to the react-native android folder is necessary to run the app with react-native run-android command.
-rsync -av $VENDOR_DIR/* $REACT_NATIVE_DIR
+rsync -av $VENDOR_DIR/ $REACT_NATIVE_DIR
