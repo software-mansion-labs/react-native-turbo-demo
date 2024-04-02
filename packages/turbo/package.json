@@ -27,6 +27,7 @@
   },
   "scripts": {
     "build": "bob build && sh ./scripts/build.sh $npm_package_hotwiredTurbo_ios $npm_package_hotwiredTurbo_android && yarn link",
+    "postinstall": "sh ./scripts/postinstall.sh",
     "clean": "rm -rf lib node_modules",
     "release": "sh ../../scripts/release.sh",
     "typescript": "tsc",

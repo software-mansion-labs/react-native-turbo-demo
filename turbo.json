@@ -12,6 +12,9 @@
     "prepare": {
       "dependsOn": ["^prepare"]
     },
+    "postinstall": {
+      "dependsOn": ["^postinstall"]
+    },
     "typescript": {
       "dependsOn": ["^typescript"]
     },
