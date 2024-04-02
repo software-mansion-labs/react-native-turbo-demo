@@ -52,6 +52,7 @@
     "lib",
     "android",
     "ios",
+    "scripts/postinstall.sh",
     "RNTurbo.podspec",
     "!**/__tests__",
     "!**/__fixtures__",
