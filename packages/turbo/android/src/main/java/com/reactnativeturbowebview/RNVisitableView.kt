@@ -333,6 +333,12 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     }
   }
 
+  override fun visitProposedToCrossOriginRedirect(location: String) {
+    sendEvent(RNVisitableViewEvent.OPEN_EXTERNAL_URL, Arguments.createMap().apply {
+      putString("url", location)
+    })
+  }
+
   override fun handleAlert(message: String, callback: () -> Unit) {
     sendEvent(RNVisitableViewEvent.WEB_ALERT, Arguments.createMap().apply {
       putString("message", message)

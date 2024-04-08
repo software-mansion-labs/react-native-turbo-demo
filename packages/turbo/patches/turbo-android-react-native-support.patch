@@ -1,8 +1,8 @@
 diff --git a/turbo/src/main/kotlin/dev/hotwire/turbo/session/TurboSession.kt b/turbo/src/main/kotlin/dev/hotwire/turbo/session/TurboSession.kt
-index 77a8b3c..c873aef 100644
+index 4214499..188dc49 100644
 --- a/turbo/src/main/kotlin/dev/hotwire/turbo/session/TurboSession.kt
 +++ b/turbo/src/main/kotlin/dev/hotwire/turbo/session/TurboSession.kt
-@@ -39,12 +39,13 @@ import java.util.*
+@@ -42,12 +42,13 @@ import java.util.*
   * @property webView An instance of a [TurboWebView] to be shared/managed.
   */
  @Suppress("unused")
@@ -18,7 +18,7 @@ index 77a8b3c..c873aef 100644
      internal var coldBootVisitIdentifier = ""
      internal var previousOverrideUrlTime = 0L
      internal var isColdBooting = false
-@@ -55,6 +56,7 @@ class TurboSession internal constructor(
+@@ -58,6 +59,7 @@ class TurboSession internal constructor(
      internal val httpRepository = TurboHttpRepository(activity.lifecycleScope)
      internal val requestInterceptor = TurboWebViewRequestInterceptor(this)
      internal val fileChooserDelegate = TurboFileChooserDelegate(this)
@@ -26,7 +26,7 @@ index 77a8b3c..c873aef 100644
  
      // User accessible
  
-@@ -129,7 +131,7 @@ class TurboSession internal constructor(
+@@ -132,7 +134,7 @@ class TurboSession internal constructor(
  
      // Internal
  
@@ -35,7 +35,7 @@ index 77a8b3c..c873aef 100644
          this.currentVisit = visit
          callback { it.visitLocationStarted(visit.location) }
  
-@@ -149,7 +151,7 @@ class TurboSession internal constructor(
+@@ -152,7 +154,7 @@ class TurboSession internal constructor(
       * visit request. This is used when restoring a Fragment destination from the backstack,
       * but the WebView's current location hasn't changed from the destination's location.
       */
@@ -44,7 +44,7 @@ index 77a8b3c..c873aef 100644
          val visit = currentVisit ?: return false
          val restorationIdentifier = restorationIdentifiers[visit.destinationIdentifier]
  
-@@ -627,7 +629,7 @@ class TurboSession internal constructor(
+@@ -656,7 +658,7 @@ class TurboSession internal constructor(
      private fun callback(action: (TurboSessionCallback) -> Unit) {
          context.runOnUiThread {
              currentVisit?.callback?.let { callback ->
@@ -54,11 +54,11 @@ index 77a8b3c..c873aef 100644
                  }
              }
 diff --git a/turbo/src/main/kotlin/dev/hotwire/turbo/session/TurboSessionCallback.kt b/turbo/src/main/kotlin/dev/hotwire/turbo/session/TurboSessionCallback.kt
-index 0bbaa01..7d8cc6c 100644
+index cb8c905..101fad9 100644
 --- a/turbo/src/main/kotlin/dev/hotwire/turbo/session/TurboSessionCallback.kt
 +++ b/turbo/src/main/kotlin/dev/hotwire/turbo/session/TurboSessionCallback.kt
-@@ -5,7 +5,7 @@ import dev.hotwire.turbo.nav.TurboNavDestination
- import dev.hotwire.turbo.errors.TurboVisitError
+@@ -5,7 +5,7 @@ import dev.hotwire.turbo.errors.TurboVisitError
+ import dev.hotwire.turbo.nav.TurboNavDestination
  import dev.hotwire.turbo.visit.TurboVisitOptions
  
 -internal interface TurboSessionCallback {
