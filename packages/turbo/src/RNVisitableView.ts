@@ -62,9 +62,16 @@ function transformCommandToAcceptableType(command: number): number | string {
 }
 
 const initializeWebView = async (webViewRef: React.RefObject<any>) => {
-  webViewRef.current.initializationPromise ||= new Promise<void>((resolve) =>
+  const initializationPromise = new Promise<void>((resolve) =>
     setTimeout(resolve, 1)
   );
+
+  if (!webViewRef?.current) {
+    return initializationPromise;
+  }
+
+  webViewRef.current.initializationPromise ||= initializationPromise;
+
   return webViewRef.current.initializationPromise;
 };
 
@@ -93,9 +100,11 @@ export async function dispatchCommand(
 
   const reactTag = findNodeHandle(ref.current);
 
-  if (reactTag) {
-    UIManager.dispatchViewManagerCommand(reactTag, transformedCommand, args);
+  if (!reactTag) {
+    return;
   }
+
+  UIManager.dispatchViewManagerCommand(reactTag, transformedCommand, args);
 }
 
 export async function openExternalURL({
