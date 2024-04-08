@@ -156,6 +156,10 @@ class RNSession(
     visitableView?.visitLocationStarted(location)
   }
 
+  override fun visitProposedToCrossOriginRedirect(location: String) {
+    visitableView?.visitProposedToCrossOriginRedirect(location)
+  }
+
   override fun visitProposedToLocation(location: String, options: TurboVisitOptions) {
     visitableView?.visitProposedToLocation(location, options)
   }
