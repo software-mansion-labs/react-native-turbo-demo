@@ -8,7 +8,7 @@
 protocol RNSessionSubscriber {
   
   var id: UUID { get set }
-  var controller: RNVisitableViewController? { get }
+  var controller: RNVisitableViewController { get }
   func handleMessage(message: WKScriptMessage)
   func didProposeVisit(proposal: VisitProposal)
   func didFailRequestForVisitable(visitable: Visitable, error: Error)

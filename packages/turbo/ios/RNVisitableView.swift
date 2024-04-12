@@ -24,7 +24,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   }
   @objc var pullToRefreshEnabled: Bool = true {
     didSet {
-      controller!.visitableView.allowsPullToRefresh = pullToRefreshEnabled
+      controller.visitableView.allowsPullToRefresh = pullToRefreshEnabled
     }
   }
   @objc var onMessage: RCTDirectEventBlock?
@@ -51,10 +51,18 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     return configuration
   }()
     
-  lazy var controller: RNVisitableViewController? = RNVisitableViewController(reactViewController: reactViewController(), delegate: self)
+  private var _controller: RNVisitableViewController? = nil
+  var controller: RNVisitableViewController {
+    get {
+      if (_controller == nil) {
+        _controller = RNVisitableViewController(reactViewController: reactViewController(), delegate: self)
+      }
+      return _controller!
+    }
+  }
     
   private var isRefreshing: Bool {
-    controller!.visitableView.isRefreshing
+    controller.visitableView.isRefreshing
   }
 
   // var isModal: Bool {
@@ -68,7 +76,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     // on its child view controllers. We need to manually begin the appearance transition
     // for the RNVisitableViewController when it's contained within a UIPageViewController.
     if (newWindow != nil && reactViewController()?.parent is UIPageViewController) {
-      controller!.beginAppearanceTransition(true, animated: false)
+      controller.beginAppearanceTransition(true, animated: false)
     }
   }
     
@@ -80,22 +88,22 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     }
     
     let viewController = reactViewController()!
-    viewController.addChild(controller!)
-    addSubview(controller!.view)
-    controller!.view.frame = bounds // Fixes incorrect size of the webview
-    controller!.didMove(toParent: viewController)
+    viewController.addChild(controller)
+    addSubview(controller.view)
+    controller.view.frame = bounds // Fixes incorrect size of the webview
+    controller.didMove(toParent: viewController)
 
     // Sometimes UIPageViewController does not automatically call viewDidAppear
     // on its child view controllers. We need to manually end the appearance transition
     // for the RNVisitableViewController when it's contained within a UIPageViewController.
     if (viewController.parent is UIPageViewController) {
-      controller!.endAppearanceTransition()
+      controller.endAppearanceTransition()
     }
   }
 
   override func removeFromSuperview() {
     super.removeFromSuperview()
-    controller = nil
+    _controller = nil
   }
     
   public func handleMessage(message: WKScriptMessage) {
@@ -124,15 +132,15 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   }
 
   public func refresh() {
-      webView.evaluateJavaScript(REFRESH_SCRIPT)
+    webView.evaluateJavaScript(REFRESH_SCRIPT)
   }
 
   private func visit() {
-    if (controller?.visitableURL?.absoluteString == url as String) {
+    if (controller.visitableURL?.absoluteString == url as String) {
       return
     }
-    controller!.visitableURL = URL(string: String(url))
-    session.visit(controller!)
+    controller.visitableURL = URL(string: String(url))
+    session.visit(controller)
   }
 
   public func didProposeVisit(proposal: VisitProposal){
