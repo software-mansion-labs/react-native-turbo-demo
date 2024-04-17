@@ -98,6 +98,15 @@ class RNVisitableViewManager(
 
   override fun onDropViewInstance(view: RNVisitableView) {
     super.onDropViewInstance(view)
+    
+    // If the applicationContext is null, it can indicate that the application
+    // has not been fully created yet or the application process is being terminated.
+    // In such cases, we stop the execution of the method. The similar check is done 
+    // in the `onDropViewInstance` method of the `ViewManager`.
+    if (callerContext.applicationContext == null) {
+      return
+    }
+
     view.detachWebView()
   }
 
