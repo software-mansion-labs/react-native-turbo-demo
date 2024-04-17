@@ -13,8 +13,6 @@ if [ -z "$TURBO_ANDROID_VERSION" ]
     exit 1
 fi
 
-echo "turbo-android version: $TURBO_ANDROID_VERSION"
-
 cd $TURBO_ANDROID_DIR
 rm -rf vendor
 mkdir vendor
@@ -27,13 +25,13 @@ git clone --branch $TURBO_ANDROID_VERSION --depth 1 $TURBO_ANDROID_REPO_PATH
 cd turbo-android
 git apply $PATCH_FILE
 
-# Build turbo-android to local maven repository
+# Publish turbo-android to local maven repository
 ./gradlew -PVersion=local publishToMavenLocal
 
-# Build turbo-android to vendor directory
+# Publish turbo-android to vendor directory
 ./gradlew -Dmaven.repo.local=$TURBO_ANDROID_DIR/vendor -PVersion=local publishToMavenLocal
 
-# Get necessary dependencies from turbo build.gradle
+# Get necessary dependencies from turbo-android build.gradle file
 ./gradlew turbo:dependencies --configuration implementation > deps.txt
 ./gradlew turbo:dependencies --configuration api > apis.txt
 
@@ -41,6 +39,7 @@ git apply $PATCH_FILE
 cd ..
 rm -rf $DEPENDENCIES_GRADLE_FILE
 touch $DEPENDENCIES_GRADLE_FILE
+
 echo "ext {\n\tdeps = [  " > $DEPENDENCIES_GRADLE_FILE
 grep -oE $DEPENDENCY_REGEX ./turbo-android/deps.txt | awk '{print "\t\tdep" NR ": " "\""$1"\"" ","}' >> $DEPENDENCIES_GRADLE_FILE
 echo "\t]\n\tapis = [" >> $DEPENDENCIES_GRADLE_FILE
@@ -49,4 +48,3 @@ echo "\t] \n}" >> $DEPENDENCIES_GRADLE_FILE
 
 # Cleanup
 rm -rf turbo-android
-
