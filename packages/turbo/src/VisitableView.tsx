@@ -5,7 +5,12 @@ import React, {
   useMemo,
   Component,
 } from 'react';
-import { NativeMethods, NativeSyntheticEvent, StyleSheet } from 'react-native';
+import {
+  NativeMethods,
+  NativeSyntheticEvent,
+  StyleSheet,
+  ViewStyle,
+} from 'react-native';
 
 import RNVisitableView, {
   RNVisitableViewProps,
@@ -40,6 +45,7 @@ import { nextEventLoopTick } from './utils/nextEventLoopTick';
 export interface Props {
   url: string;
   sessionHandle?: string;
+  style?: ViewStyle;
   applicationNameForUserAgent?: string;
   stradaComponents?: StradaComponent[];
   pullToRefreshEnabled?: boolean;
@@ -68,6 +74,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
     const {
       url,
       sessionHandle = 'Default',
+      style = styles.container,
       applicationNameForUserAgent,
       stradaComponents,
       pullToRefreshEnabled = true,
@@ -204,6 +211,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           ref={visitableViewRef}
           url={props.url}
           sessionHandle={sessionHandle}
+          style={style}
           applicationNameForUserAgent={resolvedApplicationNameForUserAgent}
           pullToRefreshEnabled={pullToRefreshEnabled}
           onError={onErrorCombinedHandlers}
@@ -211,7 +219,6 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           onMessage={handleOnMessage}
           onOpenExternalUrl={handleOnOpenExternalUrl}
           onLoad={handleOnLoad}
-          style={styles.container}
           onWebAlert={handleAlert}
           onWebConfirm={handleConfirm}
           onFormSubmissionStarted={handleOnFormSubmissionStarted}
