@@ -42,7 +42,7 @@ class RNSession(
     webView.addJavascriptInterface(JavaScriptInterface(), "AndroidInterface")
     setUserAgentString(webView, webViewConfiguration.applicationNameForUserAgent)
     webView.webChromeClient = RNWebChromeClient(reactContext, this@RNSession)
-    setOnTouchListener(webView, webViewConfiguration.scrollEnabled)
+    updateWebViewConfiguration(webView, webViewConfiguration)
     session.isRunningInAndroidNavigation = false
     session
   }
@@ -69,8 +69,12 @@ class RNSession(
     }
   }
 
-  fun updateWebViewConfiguration(configuration: RNWebViewConfiguration) {
+  private fun updateWebViewConfiguration(webView: TurboWebView, configuration: RNWebViewConfiguration) {
     setOnTouchListener(webView, configuration.scrollEnabled)
+  }
+
+  fun updateWebViewConfiguration(configuration: RNWebViewConfiguration) {
+    updateWebViewConfiguration(webView, configuration)
   }
 
   fun visit(url: String, restoreWithCachedSnapshot: Boolean, reload: Boolean, viewTreeLifecycleOwner: LifecycleOwner?, visitOptions: TurboVisitOptions?){
