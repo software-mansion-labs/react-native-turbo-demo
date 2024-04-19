@@ -14,7 +14,11 @@ let REFRESH_SCRIPT = "typeof Turbo.session.refresh === 'function'" +
 class RNVisitableView: UIView, RNSessionSubscriber {
   var id: UUID = UUID()
   @objc var sessionHandle: NSString? = nil
-  @objc var applicationNameForUserAgent: NSString? = nil
+  @objc var applicationNameForUserAgent: NSString? = nil {
+    didSet {
+      webViewConfiguration.applicationNameForUserAgent = applicationNameForUserAgent as String?
+    }
+  }
   @objc var url: NSString = "" {
     didSet {
       if(url != oldValue) {
@@ -25,6 +29,18 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var pullToRefreshEnabled: Bool = true {
     didSet {
       controller!.visitableView.allowsPullToRefresh = pullToRefreshEnabled
+    }
+  }
+  @objc var scrollEnabled: Bool = true {
+    didSet {
+        // If the RNSession isn't yet initialized, the scrollEnabled value is temporarily stored in
+        // webViewConfiguration. This stored value is applied to the webView once the RNSession is ready.
+        if (!canAccessSession) {
+        webViewConfiguration.isScrollEnabled = scrollEnabled
+        return
+      }
+    
+      webView.scrollView.isScrollEnabled = scrollEnabled
     }
   }
   @objc var onMessage: RCTDirectEventBlock?
@@ -45,21 +61,19 @@ class RNVisitableView: UIView, RNSessionSubscriber {
 
   private lazy var session: RNSession = RNSessionManager.shared.findOrCreateSession(sessionHandle: sessionHandle!, webViewConfiguration: webViewConfiguration)
   private lazy var webView: WKWebView = session.webView
-  private lazy var webViewConfiguration: WKWebViewConfiguration = {
-    let configuration = WKWebViewConfiguration()
-    configuration.applicationNameForUserAgent = applicationNameForUserAgent as String?
-    return configuration
-  }()
+  private var webViewConfiguration: RNWKWebViewConfiguration = RNWKWebViewConfiguration()
     
   lazy var controller: RNVisitableViewController? = RNVisitableViewController(reactViewController: reactViewController(), delegate: self)
     
   private var isRefreshing: Bool {
     controller!.visitableView.isRefreshing
   }
-
-  // var isModal: Bool {
-  //   return controller.reactViewController()?.isModal()
-  // }
+    
+  private var canAccessSession: Bool {
+    get {
+      sessionHandle != nil
+    }
+  }
     
   override func willMove(toWindow newWindow: UIWindow?) {
     super.willMove(toWindow: newWindow)

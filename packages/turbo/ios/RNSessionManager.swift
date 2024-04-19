@@ -14,7 +14,7 @@ class RNSessionManager: NSObject {
   private var processPool = WKProcessPool()
   static var shared: RNSessionManager = RNSessionManager()
 
-  func findOrCreateSession(sessionHandle: NSString, webViewConfiguration: WKWebViewConfiguration) -> RNSession {
+  func findOrCreateSession(sessionHandle: NSString, webViewConfiguration: RNWKWebViewConfiguration) -> RNSession {
     if(sessions[sessionHandle] == nil) {
       webViewConfiguration.processPool = processPool
       sessions[sessionHandle] = RNSession(sessionHandle: sessionHandle, webViewConfiguration: webViewConfiguration)

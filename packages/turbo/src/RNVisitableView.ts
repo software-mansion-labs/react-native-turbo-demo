@@ -27,6 +27,7 @@ export interface RNVisitableViewProps {
   sessionHandle?: string;
   applicationNameForUserAgent?: string;
   pullToRefreshEnabled: boolean;
+  scrollEnabled: boolean;
   onLoad?: (e: NativeSyntheticEvent<LoadEvent>) => void;
   onMessage?: (e: NativeSyntheticEvent<MessageEvent>) => void;
   onError?: (e: NativeSyntheticEvent<ErrorEvent>) => void;
