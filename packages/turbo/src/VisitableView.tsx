@@ -8,6 +8,7 @@ import React, {
 import {
   NativeMethods,
   NativeSyntheticEvent,
+  StyleProp,
   StyleSheet,
   ViewStyle,
 } from 'react-native';
@@ -45,7 +46,6 @@ import { nextEventLoopTick } from './utils/nextEventLoopTick';
 export interface Props {
   url: string;
   sessionHandle?: string;
-  style?: ViewStyle;
   applicationNameForUserAgent?: string;
   stradaComponents?: StradaComponent[];
   pullToRefreshEnabled?: boolean;
@@ -61,6 +61,7 @@ export interface Props {
   onMessage?: SessionMessageCallback;
   onAlert?: OnAlert;
   onConfirm?: OnConfirm;
+  style?: StyleProp<ViewStyle>;
 }
 
 export interface RefObject {
@@ -74,7 +75,6 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
     const {
       url,
       sessionHandle = 'Default',
-      style = styles.container,
       applicationNameForUserAgent,
       stradaComponents,
       pullToRefreshEnabled = true,
@@ -90,6 +90,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       onFormSubmissionStarted,
       onFormSubmissionFinished,
       onContentProcessDidTerminate,
+      style = styles.container,
     } = props;
     const visitableViewRef = useRef<
       Component<RNVisitableViewProps> & NativeMethods
@@ -211,7 +212,6 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           ref={visitableViewRef}
           url={props.url}
           sessionHandle={sessionHandle}
-          style={style}
           applicationNameForUserAgent={resolvedApplicationNameForUserAgent}
           pullToRefreshEnabled={pullToRefreshEnabled}
           onError={onErrorCombinedHandlers}
@@ -226,6 +226,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           onShowLoading={handleShowLoading}
           onHideLoading={handleHideLoading}
           onContentProcessDidTerminate={handleOnContentProcessDidTerminate}
+          style={style}
         />
         {webViewStateComponent}
       </>
