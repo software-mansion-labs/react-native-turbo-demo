@@ -50,7 +50,7 @@ class RNSession: NSObject {
     session.webView.allowsLinkPreview = false
     session.webView.scrollView.contentInsetAdjustmentBehavior = .never
     session.webView.uiDelegate = self.wkUiDelegate
-    session.webView.scrollView.isScrollEnabled = webViewConfiguration.isScrollEnabled
+    updateWebViewConfiguration(webView: session.webView, webViewConfiguration: webViewConfiguration)
 
     #if DEBUG
     if #available(iOS 16.4, *) {
@@ -61,6 +61,14 @@ class RNSession: NSObject {
     return session
   }()
   public lazy var webView: WKWebView = turboSession.webView
+    
+  func updateWebViewConfiguration(webView: WKWebView, webViewConfiguration: RNWKWebViewConfiguration){
+    webView.scrollView.isScrollEnabled = webViewConfiguration.isScrollEnabled
+  }
+    
+  func updateWebViewConfiguration(webViewConfiguration: RNWKWebViewConfiguration) {
+    updateWebViewConfiguration(webView: webView, webViewConfiguration: webViewConfiguration)
+  }
   
   func visitableViewWillAppear(view: RNVisitableView) {
     self.visitableView = view

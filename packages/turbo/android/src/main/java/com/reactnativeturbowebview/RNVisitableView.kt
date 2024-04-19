@@ -46,7 +46,16 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
 
   lateinit var sessionHandle: String
   var applicationNameForUserAgent: String? = null
+    set(value) {
+      field = value
+      webViewConfiguration.applicationNameForUserAgent = value
+    }
   var scrollEnabled: Boolean = true
+    set(value) {
+      field = value
+      webViewConfiguration.scrollEnabled = value
+      updateWebViewConfiguration()
+    }
   var pullToRefreshEnabled: Boolean = true
     set(value) {
       field = value
@@ -54,6 +63,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     }
 
   // Session
+  private val canInitializeSession: Boolean get() = ::sessionHandle.isInitialized
   private val session: RNSession by lazy {
     RNSessionManager.findOrCreateSession(
       reactContext,
@@ -62,12 +72,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     )
   }
   private val webView: TurboWebView get() = session.webView
-  private val webViewConfiguration: RNWebViewConfiguration by lazy {
-    RNWebViewConfiguration().apply {
-      applicationNameForUserAgent = this@RNVisitableView.applicationNameForUserAgent
-      scrollEnabled = this@RNVisitableView.scrollEnabled
-    }
-  }
+  private val webViewConfiguration: RNWebViewConfiguration = RNWebViewConfiguration()
 
   private var onConfirmHandler: ((result: Boolean) -> Unit)? = null
   private var onAlertHandler: (() -> Unit)? = null
@@ -96,6 +101,12 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
       screenshot = null
       screenshotOrientation = 0
       screenshotZoomed = false
+    }
+  }
+
+  private fun updateWebViewConfiguration() {
+    if (canInitializeSession) {
+      session.updateWebViewConfiguration(webViewConfiguration)
     }
   }
 
@@ -188,6 +199,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     requestLayout()
 
     turboView.attachWebView(webView) { attachedToNewDestination ->
+      updateWebViewConfiguration()
       onReady(attachedToNewDestination)
     }
   }

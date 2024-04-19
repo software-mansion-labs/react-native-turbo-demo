@@ -69,6 +69,10 @@ class RNSession(
     }
   }
 
+  fun updateWebViewConfiguration(configuration: RNWebViewConfiguration) {
+    setOnTouchListener(webView, configuration.scrollEnabled)
+  }
+
   fun visit(url: String, restoreWithCachedSnapshot: Boolean, reload: Boolean, viewTreeLifecycleOwner: LifecycleOwner?, visitOptions: TurboVisitOptions?){
     val restore = restoreWithCachedSnapshot && !reload
 

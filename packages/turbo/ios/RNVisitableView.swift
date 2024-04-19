@@ -14,7 +14,6 @@ let REFRESH_SCRIPT = "typeof Turbo.session.refresh === 'function'" +
 class RNVisitableView: UIView, RNSessionSubscriber {
   var id: UUID = UUID()
   @objc var sessionHandle: NSString? = nil
-  @objc var applicationNameForUserAgent: NSString? = nil
   @objc var url: NSString = "" {
     didSet {
       if(url != oldValue) {
@@ -22,12 +21,22 @@ class RNVisitableView: UIView, RNSessionSubscriber {
       }
     }
   }
+  @objc var applicationNameForUserAgent: NSString? = nil {
+    didSet {
+      webViewConfiguration.applicationNameForUserAgent = applicationNameForUserAgent as? String
+    }
+  }
   @objc var pullToRefreshEnabled: Bool = true {
     didSet {
       controller!.visitableView.allowsPullToRefresh = pullToRefreshEnabled
     }
   }
-  @objc var scrollEnabled: Bool = true
+  @objc var scrollEnabled: Bool = true {
+    didSet {
+      webViewConfiguration.isScrollEnabled = scrollEnabled
+      updateWebViewConfiguration()
+    }
+  }
   @objc var onMessage: RCTDirectEventBlock?
   @objc var onVisitProposal: RCTDirectEventBlock?
   @objc var onOpenExternalUrl: RCTDirectEventBlock?
@@ -46,17 +55,22 @@ class RNVisitableView: UIView, RNSessionSubscriber {
 
   private lazy var session: RNSession = RNSessionManager.shared.findOrCreateSession(sessionHandle: sessionHandle!, webViewConfiguration: webViewConfiguration)
   private lazy var webView: WKWebView = session.webView
-  private lazy var webViewConfiguration: RNWKWebViewConfiguration = {
-    let configuration = RNWKWebViewConfiguration()
-    configuration.applicationNameForUserAgent = applicationNameForUserAgent as? String
-    configuration.isScrollEnabled = scrollEnabled
-    return configuration
-  }()
+  private var webViewConfiguration: RNWKWebViewConfiguration = RNWKWebViewConfiguration()
     
   lazy var controller: RNVisitableViewController? = RNVisitableViewController(reactViewController: reactViewController(), delegate: self)
     
   private var isRefreshing: Bool {
     controller!.visitableView.isRefreshing
+  }
+    
+  private var canInitializeSession: Bool {
+    sessionHandle != nil
+  }
+    
+  private func updateWebViewConfiguration() {
+    if (canInitializeSession) {
+      session.updateWebViewConfiguration(webViewConfiguration: webViewConfiguration)
+    }
   }
     
   override func willMove(toWindow newWindow: UIWindow?) {
@@ -89,6 +103,8 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     if (viewController.parent is UIPageViewController) {
       controller!.endAppearanceTransition()
     }
+      
+    updateWebViewConfiguration()
   }
 
   override func removeFromSuperview() {
