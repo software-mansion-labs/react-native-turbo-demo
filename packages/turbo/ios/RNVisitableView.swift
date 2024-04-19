@@ -59,12 +59,6 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     controller!.visitableView.isRefreshing
   }
     
-  private var canAccessSession: Bool {
-    get {
-      sessionHandle != nil
-    }
-  }
-    
   override func willMove(toWindow newWindow: UIWindow?) {
     super.willMove(toWindow: newWindow)
     
