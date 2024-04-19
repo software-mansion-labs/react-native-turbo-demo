@@ -46,6 +46,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
 
   lateinit var sessionHandle: String
   var applicationNameForUserAgent: String? = null
+  var scrollEnabled: Boolean = true
   var pullToRefreshEnabled: Boolean = true
     set(value) {
       field = value
@@ -57,10 +58,16 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     RNSessionManager.findOrCreateSession(
       reactContext,
       sessionHandle,
-      applicationNameForUserAgent
+      webViewConfiguration
     )
   }
   private val webView: TurboWebView get() = session.webView
+  private val webViewConfiguration: RNWebViewConfiguration by lazy {
+    RNWebViewConfiguration().apply {
+      applicationNameForUserAgent = this@RNVisitableView.applicationNameForUserAgent
+      scrollEnabled = this@RNVisitableView.scrollEnabled
+    }
+  }
 
   private var onConfirmHandler: ((result: Boolean) -> Unit)? = null
   private var onAlertHandler: (() -> Unit)? = null

@@ -1,5 +1,7 @@
 package com.reactnativeturbowebview
 
+import android.view.MotionEvent
+import android.view.View.OnTouchListener
 import android.webkit.JavascriptInterface
 import android.webkit.WebSettings
 import android.webkit.WebView
@@ -9,7 +11,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenStateAtLeast
 import com.facebook.react.BuildConfig
-import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactApplicationContext
 import dev.hotwire.turbo.errors.TurboVisitError
 import dev.hotwire.turbo.session.TurboSession
@@ -22,10 +23,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
+
 class RNSession(
   private val reactContext: ReactApplicationContext,
   private val sessionHandle: String,
-  private val applicationNameForUserAgent: String?,
+  private val webViewConfiguration: RNWebViewConfiguration
 ) : SessionCallbackAdapter {
 
   var visitableView: SessionSubscriber? = null
@@ -38,8 +40,9 @@ class RNSession(
     WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
     webView.settings.setJavaScriptEnabled(true)
     webView.addJavascriptInterface(JavaScriptInterface(), "AndroidInterface")
-    setUserAgentString(webView, applicationNameForUserAgent)
+    setUserAgentString(webView, webViewConfiguration.applicationNameForUserAgent)
     webView.webChromeClient = RNWebChromeClient(reactContext, this@RNSession)
+    setOnTouchListener(webView, webViewConfiguration.scrollEnabled)
     session.isRunningInAndroidNavigation = false
     session
   }
@@ -56,6 +59,14 @@ class RNSession(
       userAgentString = "$userAgentString $applicationNameForUserAgent"
     }
     webView.settings.userAgentString = userAgentString
+  }
+
+  private fun setOnTouchListener(webView: TurboWebView, scrollEnabled: Boolean) {
+    if (!scrollEnabled) {
+      webView.setOnTouchListener(OnTouchListener { _, event -> event.action == MotionEvent.ACTION_MOVE })
+    } else {
+      webView.setOnTouchListener(null)
+    }
   }
 
   fun visit(url: String, restoreWithCachedSnapshot: Boolean, reload: Boolean, viewTreeLifecycleOwner: LifecycleOwner?, visitOptions: TurboVisitOptions?){
