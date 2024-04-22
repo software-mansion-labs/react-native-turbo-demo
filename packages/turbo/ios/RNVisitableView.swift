@@ -220,6 +220,13 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
   func visitableDidAppear(visitable: Visitable) {
     session.visitableViewDidAppear(view: self)
   }
+    
+  func visitableWillDisappear(visitable: Visitable) {
+    // Make sure that all completion handlers have been called.
+    // Otherwise we might end up with a NSInternalInconsistencyException.
+    sendAlertResult()
+    sendConfirmResult(result: "")
+  }
 
   func visitableDidDisappear(visitable: Visitable) {
     // No-op
