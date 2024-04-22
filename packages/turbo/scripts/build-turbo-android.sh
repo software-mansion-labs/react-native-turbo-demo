@@ -1,7 +1,7 @@
 TURBO_ANDROID_REPO_PATH="https://github.com/hotwired/turbo-android.git"
 TURBO_ANDROID_MAIN_SOURCE_DIR="./turbo/src/main/*"
 TURBO_ANDROID_VERSION=$1
-PATCH_FILE=$(realpath ./patches/turbo-android-react-native-support.patch)
+PATCH_FILE=$(realpath ./patches/turbo-android.patch)
 TURBO_ANDROID_DIR=$(realpath ./android)
 DEPENDENCIES_GRADLE_FILE="turbo-android-dependencies.gradle"
 DEPENDENCY_REGEX="[a-zA-Z0-9.\-]+:[a-zA-Z0-9.\-]+:[0-9a-zA-Z.\-]+"
