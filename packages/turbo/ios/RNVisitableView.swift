@@ -222,8 +222,8 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
   }
     
   func visitableWillDisappear(visitable: Visitable) {
-    // Make sure that all completion handlers have been called.
-    // Otherwise we might end up with a NSInternalInconsistencyException.
+    // Ensure that all completion handlers have been called.
+    // Otherwise, an NSInternalInconsistencyException might occur.
     sendAlertResult()
     sendConfirmResult(result: "")
   }
