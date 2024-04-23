@@ -18,9 +18,8 @@ class RNSessionManager(reactContext: ReactApplicationContext) :
     fun findOrCreateSession(
       reactContext: ReactApplicationContext,
       sessionHandle: String,
-      webViewConfiguration: RNWebViewConfiguration
     ): RNSession = sessions.getOrPut(sessionHandle) {
-      RNSession(reactContext, sessionHandle, webViewConfiguration)
+      RNSession(reactContext, sessionHandle)
     }
 
     fun clearSnapshotCaches() {

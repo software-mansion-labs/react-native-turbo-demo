@@ -1,9 +1,6 @@
 package com.reactnativeturbowebview
 
-import android.view.MotionEvent
-import android.view.View.OnTouchListener
 import android.webkit.JavascriptInterface
-import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -27,7 +24,6 @@ import org.json.JSONObject
 class RNSession(
   private val reactContext: ReactApplicationContext,
   private val sessionHandle: String,
-  private val webViewConfiguration: RNWebViewConfiguration
 ) : SessionCallbackAdapter {
 
   var visitableView: SessionSubscriber? = null
@@ -40,9 +36,7 @@ class RNSession(
     WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
     webView.settings.setJavaScriptEnabled(true)
     webView.addJavascriptInterface(JavaScriptInterface(), "AndroidInterface")
-    setUserAgentString(webView, webViewConfiguration.applicationNameForUserAgent)
     webView.webChromeClient = RNWebChromeClient(reactContext, this@RNSession)
-    updateWebViewConfiguration(webView, webViewConfiguration)
     session.isRunningInAndroidNavigation = false
     session
   }
@@ -51,30 +45,6 @@ class RNSession(
 
   internal fun registerVisitableView(newView: SessionSubscriber) {
     visitableView = newView
-  }
-
-  private fun setUserAgentString(webView: TurboWebView, applicationNameForUserAgent: String?) {
-    var userAgentString = WebSettings.getDefaultUserAgent(webView.context)
-    if (applicationNameForUserAgent != null) {
-      userAgentString = "$userAgentString $applicationNameForUserAgent"
-    }
-    webView.settings.userAgentString = userAgentString
-  }
-
-  private fun setOnTouchListener(webView: TurboWebView, scrollEnabled: Boolean) {
-    if (!scrollEnabled) {
-      webView.setOnTouchListener(OnTouchListener { _, event -> event.action == MotionEvent.ACTION_MOVE })
-    } else {
-      webView.setOnTouchListener(null)
-    }
-  }
-
-  private fun updateWebViewConfiguration(webView: TurboWebView, configuration: RNWebViewConfiguration) {
-    setOnTouchListener(webView, configuration.scrollEnabled)
-  }
-
-  fun updateWebViewConfiguration(configuration: RNWebViewConfiguration) {
-    updateWebViewConfiguration(webView, configuration)
   }
 
   fun visit(url: String, restoreWithCachedSnapshot: Boolean, reload: Boolean, viewTreeLifecycleOwner: LifecycleOwner?, visitOptions: TurboVisitOptions?){

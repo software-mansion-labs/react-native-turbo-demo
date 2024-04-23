@@ -62,7 +62,8 @@ class RNVisitableView: UIView, RNSessionSubscriber {
       return nil
     }
       
-    return RNSessionManager.shared.findOrCreateSession(sessionHandle: sessionHandle!, webViewConfiguration: webViewConfiguration)
+    _session = RNSessionManager.shared.findOrCreateSession(sessionHandle: sessionHandle!, webViewConfiguration: webViewConfiguration)
+    return _session
   }
   private var webView: WKWebView? { session?.webView }
   private var webViewConfiguration: WKWebViewConfiguration = WKWebViewConfiguration()
