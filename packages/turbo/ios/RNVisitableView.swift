@@ -33,8 +33,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   }
   @objc var scrollEnabled: Bool = true {
     didSet {
-      webViewConfiguration.isScrollEnabled = scrollEnabled
-      updateWebViewConfiguration()
+      configureWebView()
     }
   }
   @objc var onMessage: RCTDirectEventBlock?
@@ -53,9 +52,14 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   private var onConfirmHandler: ((Bool) -> Void)?
   private var onAlertHandler: (() -> Void)?
 
-  private lazy var session: RNSession = RNSessionManager.shared.findOrCreateSession(sessionHandle: sessionHandle!, webViewConfiguration: webViewConfiguration)
+  private var sessionInitialized: Bool = false
+  private lazy var session: RNSession = {
+    let session = RNSessionManager.shared.findOrCreateSession(sessionHandle: sessionHandle!, webViewConfiguration: webViewConfiguration)
+    sessionInitialized = true
+    return session
+  }()
   private lazy var webView: WKWebView = session.webView
-  private var webViewConfiguration: RNWKWebViewConfiguration = RNWKWebViewConfiguration()
+  private var webViewConfiguration: WKWebViewConfiguration = WKWebViewConfiguration()
     
   lazy var controller: RNVisitableViewController? = RNVisitableViewController(reactViewController: reactViewController(), delegate: self)
     
@@ -63,14 +67,12 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     controller!.visitableView.isRefreshing
   }
     
-  private var canInitializeSession: Bool {
-    sessionHandle != nil
-  }
-    
-  private func updateWebViewConfiguration() {
-    if (canInitializeSession) {
-      session.updateWebViewConfiguration(webViewConfiguration: webViewConfiguration)
+  private func configureWebView() {
+    if (!sessionInitialized) {
+      return
     }
+    
+    webView.scrollView.isScrollEnabled = scrollEnabled
   }
     
   override func willMove(toWindow newWindow: UIWindow?) {
@@ -103,8 +105,6 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     if (viewController.parent is UIPageViewController) {
       controller!.endAppearanceTransition()
     }
-      
-    updateWebViewConfiguration()
   }
 
   override func removeFromSuperview() {
@@ -232,6 +232,7 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
   }
 
   func visitableDidAppear(visitable: Visitable) {
+    configureWebView()
     session.visitableViewDidAppear(view: self)
   }
 
