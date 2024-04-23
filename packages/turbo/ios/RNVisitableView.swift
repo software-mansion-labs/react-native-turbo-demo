@@ -52,13 +52,19 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   private var onConfirmHandler: ((Bool) -> Void)?
   private var onAlertHandler: (() -> Void)?
 
-  private var sessionInitialized: Bool = false
-  private lazy var session: RNSession = {
-    let session = RNSessionManager.shared.findOrCreateSession(sessionHandle: sessionHandle!, webViewConfiguration: webViewConfiguration)
-    sessionInitialized = true
-    return session
-  }()
-  private lazy var webView: WKWebView = session.webView
+  private var _session: RNSession? = nil
+  private var session: RNSession? {
+    if (_session != nil) {
+      return _session
+    }
+      
+    if (sessionHandle == nil){
+      return nil
+    }
+      
+    return RNSessionManager.shared.findOrCreateSession(sessionHandle: sessionHandle!, webViewConfiguration: webViewConfiguration)
+  }
+  private var webView: WKWebView? { session?.webView }
   private var webViewConfiguration: WKWebViewConfiguration = WKWebViewConfiguration()
     
   lazy var controller: RNVisitableViewController? = RNVisitableViewController(reactViewController: reactViewController(), delegate: self)
@@ -68,11 +74,11 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   }
     
   private func configureWebView() {
-    if (!sessionInitialized) {
+    if (webView == nil) {
       return
     }
     
-    webView.scrollView.isScrollEnabled = scrollEnabled
+    webView!.scrollView.isScrollEnabled = scrollEnabled
   }
     
   override func willMove(toWindow newWindow: UIWindow?) {
@@ -119,7 +125,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   }
 
   public func injectJavaScript(code: NSString) -> Void {
-    webView.evaluateJavaScript(code as String)
+    webView?.evaluateJavaScript(code as String)
   }
 
   public func sendAlertResult() -> Void {
@@ -134,11 +140,11 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   }
 
   public func reload() {
-    session.reload()
+    session?.reload()
   }
 
   public func refresh() {
-      webView.evaluateJavaScript(REFRESH_SCRIPT)
+    webView?.evaluateJavaScript(REFRESH_SCRIPT)
   }
 
   private func visit() {
@@ -146,11 +152,11 @@ class RNVisitableView: UIView, RNSessionSubscriber {
       return
     }
     controller!.visitableURL = URL(string: String(url))
-    session.visit(controller!)
+    session?.visit(controller!)
   }
 
   public func didProposeVisit(proposal: VisitProposal){
-    if (webView.url == proposal.url && proposal.options.action == .replace) {
+    if (webView?.url == proposal.url && proposal.options.action == .replace) {
       // When reopening same URL we want to refresh webview
       refresh()
     } else {
@@ -205,7 +211,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   }
 
   func clearSessionSnapshotCache(){
-    session.clearSnapshotCache()
+    session?.clearSnapshotCache()
   }
 
   func handleAlert(message: String, completionHandler: @escaping () -> Void) {
@@ -228,12 +234,12 @@ class RNVisitableView: UIView, RNSessionSubscriber {
 extension RNVisitableView: RNVisitableViewControllerDelegate {
 
   func visitableWillAppear(visitable: Visitable) {
-    session.visitableViewWillAppear(view: self)
+    session?.visitableViewWillAppear(view: self)
   }
 
   func visitableDidAppear(visitable: Visitable) {
     configureWebView()
-    session.visitableViewDidAppear(view: self)
+    session?.visitableViewDidAppear(view: self)
   }
 
   func visitableDidDisappear(visitable: Visitable) {
@@ -242,8 +248,8 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
 
   func visitableDidRender(visitable: Visitable) {
     let event: [AnyHashable: Any] = [
-      "title": webView.title!,
-      "url": webView.url!
+      "title": webView!.title!,
+      "url": webView!.url!
     ]
     onLoad?(event)
   }
