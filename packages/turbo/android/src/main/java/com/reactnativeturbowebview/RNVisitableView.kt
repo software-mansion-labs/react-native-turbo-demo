@@ -351,6 +351,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
       putString("title", webView!!.title)
       putString("url", webView!!.url)
     })
+    updateWebViewConfiguration()
     removeTransitionalViews()
   }
 
