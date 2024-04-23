@@ -58,7 +58,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
       return _session
     }
       
-    if (sessionHandle == nil){
+    if (sessionHandle == nil) {
       return nil
     }
       
