@@ -91,6 +91,12 @@ Enables pull to refresh functionality. Default value is `true`.
 
 Enables scrolling in the webview. Default value is `true`.
 
+### `contentInset`
+
+The amount by which the web view content is inset from the edges of the scroll view.
+
+Note: available only on iOS.
+
 ### `stradaComponents`
 
 `VisitableView` supports defining [Strada components](https://strada.hotwired.dev/) that receive and reply to messages from web components that are present on the page within one session. This prop accepts an array of Strada components that will be registered in the webview.

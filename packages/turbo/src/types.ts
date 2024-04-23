@@ -44,6 +44,13 @@ export enum SystemStatusCode {
   UNKNOWN = -4,
 }
 
+export type ContentInsetObject = {
+  bottom?: number;
+  left?: number;
+  right?: number;
+  top?: number;
+};
+
 export type StradaMessage = {
   component: string;
   event: string;
