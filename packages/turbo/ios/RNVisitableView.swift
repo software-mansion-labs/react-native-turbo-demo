@@ -116,6 +116,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
 
   override func removeFromSuperview() {
     super.removeFromSuperview()
+    _session = nil
     controller = nil
   }
     
