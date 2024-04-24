@@ -25,7 +25,7 @@ import org.json.JSONObject
 class RNSession(
   private val reactContext: ReactApplicationContext,
   private val sessionHandle: String,
-  private val applicationNameForUserAgent: String?
+  private val applicationNameForUserAgent: String?,
 ) : SessionCallbackAdapter {
 
   var visitableView: SessionSubscriber? = null
@@ -46,16 +46,16 @@ class RNSession(
   val webView: TurboWebView get() = turboSession.webView
   val currentVisit: TurboVisit? get() = turboSession.currentVisit
 
+  internal fun registerVisitableView(newView: SessionSubscriber) {
+    visitableView = newView
+  }
+
   private fun setUserAgentString(webView: TurboWebView, applicationNameForUserAgent: String?) {
     var userAgentString = WebSettings.getDefaultUserAgent(webView.context)
     if (applicationNameForUserAgent != null) {
       userAgentString = "$userAgentString $applicationNameForUserAgent"
     }
     webView.settings.userAgentString = userAgentString
-  }
-
-  internal fun registerVisitableView(newView: SessionSubscriber) {
-    visitableView = newView
   }
 
   fun visit(url: String, restoreWithCachedSnapshot: Boolean, reload: Boolean, viewTreeLifecycleOwner: LifecycleOwner?, visitOptions: TurboVisitOptions?){
