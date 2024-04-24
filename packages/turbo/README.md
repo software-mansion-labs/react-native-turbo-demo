@@ -87,6 +87,10 @@ The name of the application as used in the user agent string. Please note that c
 
 Enables pull to refresh functionality. Default value is `true`.
 
+### `scrollEnabled`
+
+Enables scrolling in the webview. Default value is `true`.
+
 ### `stradaComponents`
 
 `VisitableView` supports defining [Strada components](https://strada.hotwired.dev/) that receive and reply to messages from web components that are present on the page within one session. This prop accepts an array of Strada components that will be registered in the webview.

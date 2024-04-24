@@ -57,6 +57,10 @@ class RNVisitableViewManager(
     view.pullToRefreshEnabled = pullToRefreshEnabled
   }
 
+  @ReactProp(name = "scrollEnabled")
+  fun setScrollEnabled(view: RNVisitableView, scrollEnabled: Boolean) {
+    view.scrollEnabled = scrollEnabled
+  }
 
   override fun getCommandsMap(): MutableMap<String, Int> = RNVisitableViewCommand.values()
     .associate {

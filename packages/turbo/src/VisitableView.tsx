@@ -49,6 +49,7 @@ export interface Props {
   applicationNameForUserAgent?: string;
   stradaComponents?: StradaComponent[];
   pullToRefreshEnabled?: boolean;
+  scrollEnabled?: boolean;
   renderLoading?: RenderLoading;
   renderError?: RenderError;
   onVisitProposal: (proposal: VisitProposal) => void;
@@ -78,6 +79,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       applicationNameForUserAgent,
       stradaComponents,
       pullToRefreshEnabled = true,
+      scrollEnabled = true,
       renderLoading,
       renderError,
       onLoad,
@@ -214,6 +216,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           sessionHandle={sessionHandle}
           applicationNameForUserAgent={resolvedApplicationNameForUserAgent}
           pullToRefreshEnabled={pullToRefreshEnabled}
+          scrollEnabled={scrollEnabled}
           onError={onErrorCombinedHandlers}
           onVisitProposal={handleVisitProposal}
           onMessage={handleOnMessage}
