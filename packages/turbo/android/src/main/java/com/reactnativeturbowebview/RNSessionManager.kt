@@ -18,8 +18,9 @@ class RNSessionManager(reactContext: ReactApplicationContext) :
     fun findOrCreateSession(
       reactContext: ReactApplicationContext,
       sessionHandle: String,
+      applicationNameForUserAgent: String? = null
     ): RNSession = sessions.getOrPut(sessionHandle) {
-      RNSession(reactContext, sessionHandle)
+      RNSession(reactContext, sessionHandle, applicationNameForUserAgent)
     }
 
     fun clearSnapshotCaches() {

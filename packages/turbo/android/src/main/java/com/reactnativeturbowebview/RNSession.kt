@@ -1,6 +1,7 @@
 package com.reactnativeturbowebview
 
 import android.webkit.JavascriptInterface
+import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -20,10 +21,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
-
 class RNSession(
   private val reactContext: ReactApplicationContext,
   private val sessionHandle: String,
+  private val applicationNameForUserAgent: String?,
 ) : SessionCallbackAdapter {
 
   var visitableView: SessionSubscriber? = null
@@ -36,6 +37,7 @@ class RNSession(
     WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
     webView.settings.setJavaScriptEnabled(true)
     webView.addJavascriptInterface(JavaScriptInterface(), "AndroidInterface")
+    setUserAgentString(webView, applicationNameForUserAgent)
     webView.webChromeClient = RNWebChromeClient(reactContext, this@RNSession)
     session.isRunningInAndroidNavigation = false
     session
@@ -45,6 +47,14 @@ class RNSession(
 
   internal fun registerVisitableView(newView: SessionSubscriber) {
     visitableView = newView
+  }
+
+  private fun setUserAgentString(webView: TurboWebView, applicationNameForUserAgent: String?) {
+    var userAgentString = WebSettings.getDefaultUserAgent(webView.context)
+    if (applicationNameForUserAgent != null) {
+      userAgentString = "$userAgentString $applicationNameForUserAgent"
+    }
+    webView.settings.userAgentString = userAgentString
   }
 
   fun visit(url: String, restoreWithCachedSnapshot: Boolean, reload: Boolean, viewTreeLifecycleOwner: LifecycleOwner?, visitOptions: TurboVisitOptions?){
