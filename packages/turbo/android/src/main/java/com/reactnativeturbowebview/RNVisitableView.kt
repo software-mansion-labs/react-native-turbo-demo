@@ -43,10 +43,6 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
 
   lateinit var sessionHandle: String
   var applicationNameForUserAgent: String? = null
-    set(value) {
-      field = value
-      updateWebViewConfiguration()
-    }
   var scrollEnabled: Boolean = true
     set(value) {
       field = value
@@ -70,7 +66,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
             return null
         }
 
-        _session = RNSessionManager.findOrCreateSession(reactContext, sessionHandle)
+        _session = RNSessionManager.findOrCreateSession(reactContext, sessionHandle, applicationNameForUserAgent)
         return _session
     }
 
@@ -108,16 +104,8 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
 
   private fun updateWebViewConfiguration() {
     if (webView == null) return
-    setUserAgentString(webView!!, applicationNameForUserAgent)
-    setOnTouchListener(webView!!, scrollEnabled)
-  }
 
-  private fun setUserAgentString(webView: TurboWebView, applicationNameForUserAgent: String?) {
-    var userAgentString = WebSettings.getDefaultUserAgent(webView.context)
-    if (applicationNameForUserAgent != null) {
-      userAgentString = "$userAgentString $applicationNameForUserAgent"
-    }
-    webView.settings.userAgentString = userAgentString
+    setOnTouchListener(webView!!, scrollEnabled)
   }
 
   private fun setOnTouchListener(webView: TurboWebView, scrollEnabled: Boolean) {
@@ -217,7 +205,6 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     requestLayout()
 
     turboView.attachWebView(webView!!) { attachedToNewDestination ->
-      updateWebViewConfiguration()
       onReady(attachedToNewDestination)
     }
   }
@@ -351,6 +338,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
       putString("title", webView!!.title)
       putString("url", webView!!.url)
     })
+    updateWebViewConfiguration()
     removeTransitionalViews()
   }
 
