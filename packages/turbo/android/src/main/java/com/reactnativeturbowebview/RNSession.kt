@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
-
 class RNSession(
   private val reactContext: ReactApplicationContext,
   private val sessionHandle: String,
