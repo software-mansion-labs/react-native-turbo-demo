@@ -41,6 +41,7 @@ import type {
   FormSubmissionEvent,
   ContentProcessDidTerminateEvent,
   ContentInsetObject,
+  ProgressViewOffsetObject,
 } from './types';
 import { nextEventLoopTick } from './utils/nextEventLoopTick';
 
@@ -52,6 +53,7 @@ export interface Props {
   pullToRefreshEnabled?: boolean;
   scrollEnabled?: boolean;
   contentInset?: ContentInsetObject;
+  progressViewOffset?: ProgressViewOffsetObject;
   renderLoading?: RenderLoading;
   renderError?: RenderError;
   onVisitProposal: (proposal: VisitProposal) => void;
@@ -83,6 +85,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       pullToRefreshEnabled = true,
       scrollEnabled = true,
       contentInset = { top: 0, left: 0, right: 0, bottom: 0 },
+      progressViewOffset,
       renderLoading,
       renderError,
       onLoad,
@@ -221,6 +224,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           pullToRefreshEnabled={pullToRefreshEnabled}
           scrollEnabled={scrollEnabled}
           contentInset={contentInset}
+          progressViewOffset={progressViewOffset}
           onError={onErrorCombinedHandlers}
           onVisitProposal={handleVisitProposal}
           onMessage={handleOnMessage}

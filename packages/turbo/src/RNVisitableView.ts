@@ -20,6 +20,7 @@ import type {
   FormSubmissionEvent,
   ContentProcessDidTerminateEvent,
   ContentInsetObject,
+  ProgressViewOffsetObject,
 } from './types';
 
 // Interface should match RNVisitableView exported properties in native code
@@ -30,6 +31,7 @@ export interface RNVisitableViewProps {
   pullToRefreshEnabled: boolean;
   scrollEnabled: boolean;
   contentInset: ContentInsetObject;
+  progressViewOffset?: ProgressViewOffsetObject;
   onLoad?: (e: NativeSyntheticEvent<LoadEvent>) => void;
   onMessage?: (e: NativeSyntheticEvent<MessageEvent>) => void;
   onError?: (e: NativeSyntheticEvent<ErrorEvent>) => void;
