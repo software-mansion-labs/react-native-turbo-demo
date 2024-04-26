@@ -50,12 +50,6 @@ class RNSession: NSObject {
     session.webView.allowsLinkPreview = false
     session.webView.scrollView.contentInsetAdjustmentBehavior = .never
     session.webView.uiDelegate = self.wkUiDelegate
-
-    #if DEBUG
-    if #available(iOS 16.4, *) {
-      session.webView.isInspectable = true
-    }
-    #endif
     
     return session
   }()

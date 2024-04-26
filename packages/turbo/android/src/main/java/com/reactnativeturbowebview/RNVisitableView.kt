@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.view.MotionEvent
 import android.view.ViewGroup
 import android.webkit.CookieManager
-import android.webkit.WebSettings
+import android.webkit.WebView
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.isVisible
@@ -64,6 +64,11 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
           it.getInt("end")
         )
       }
+    }
+  var webViewDebuggingEnabled: Boolean = false
+    set(value) {
+      field = value
+      WebView.setWebContentsDebuggingEnabled(value)
     }
 
   // Session
