@@ -169,11 +169,11 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   }
 
   private func visit() {
-    if (controller?.visitableURL?.absoluteString == url as String || session == nil) {
+    if (controller?.visitableURL?.absoluteString == url as String) {
       return
     }
     controller!.visitableURL = URL(string: String(url))
-    session!.visit(controller!)
+    session?.visit(controller!)
   }
 
   public func didProposeVisit(proposal: VisitProposal){
