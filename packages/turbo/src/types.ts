@@ -51,6 +51,12 @@ export type ContentInsetObject = {
   top?: number;
 };
 
+export type ProgressViewOffsetObject = {
+  scale: boolean;
+  start: number;
+  end: number;
+};
+
 export type StradaMessage = {
   component: string;
   event: string;

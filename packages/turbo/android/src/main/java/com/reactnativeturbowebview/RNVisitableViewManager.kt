@@ -2,6 +2,7 @@ package com.reactnativeturbowebview
 
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReadableArray
+import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
@@ -60,6 +61,11 @@ class RNVisitableViewManager(
   @ReactProp(name = "scrollEnabled")
   fun setScrollEnabled(view: RNVisitableView, scrollEnabled: Boolean) {
     view.scrollEnabled = scrollEnabled
+  }
+
+  @ReactProp(name = "progressViewOffset")
+  fun setProgressViewOffset(view: RNVisitableView, progressViewOffset: ReadableMap?) {
+    view.progressViewOffset = progressViewOffset
   }
 
   override fun getCommandsMap(): MutableMap<String, Int> = RNVisitableViewCommand.values()

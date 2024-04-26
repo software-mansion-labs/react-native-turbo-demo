@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.events.RCTEventEmitter
 import dev.hotwire.turbo.views.TurboView
@@ -52,6 +53,17 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     set(value) {
       field = value
       setPullToRefresh(value)
+    }
+  var progressViewOffset: ReadableMap? = null
+    set(value) {
+      field = value
+      progressViewOffset?.let {
+        turboView.webViewRefresh?.setProgressViewOffset(
+          it.getBoolean("scale"),
+          it.getInt("start"),
+          it.getInt("end")
+        )
+      }
     }
 
   // Session
