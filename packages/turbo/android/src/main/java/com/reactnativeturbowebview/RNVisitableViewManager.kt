@@ -68,6 +68,11 @@ class RNVisitableViewManager(
     view.progressViewOffset = progressViewOffset
   }
 
+  @ReactProp(name = "webViewDebuggingEnabled")
+  fun setWebViewDebuggingEnabled(view: RNVisitableView, webViewDebuggingEnabled: Boolean) {
+    view.webViewDebuggingEnabled = webViewDebuggingEnabled
+  }
+
   override fun getCommandsMap(): MutableMap<String, Int> = RNVisitableViewCommand.values()
     .associate {
       it.jsCallbackName to it.ordinal

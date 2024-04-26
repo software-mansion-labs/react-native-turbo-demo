@@ -14,13 +14,7 @@ let REFRESH_SCRIPT = "typeof Turbo.session.refresh === 'function'" +
 class RNVisitableView: UIView, RNSessionSubscriber {
   var id: UUID = UUID()
   @objc var sessionHandle: NSString? = nil
-  @objc var url: NSString = "" {
-    didSet {
-      if(url != oldValue) {
-        visit()
-      }
-    }
-  }
+  @objc var url: NSString = ""
   @objc var applicationNameForUserAgent: NSString? = nil {
     didSet {
       webViewConfiguration.applicationNameForUserAgent = applicationNameForUserAgent as? String
@@ -37,6 +31,11 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     }
   }
   @objc var contentInset: [String: CGFloat] = [:] {
+    didSet {
+      configureWebView()
+    }
+  }
+  @objc var webViewDebuggingEnabled: Bool = false {
     didSet {
       configureWebView()
     }
@@ -83,7 +82,11 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     if (webView == nil) {
       return
     }
-    
+      
+    if #available(iOS 16.4, *) {
+      webView!.isInspectable = webViewDebuggingEnabled
+    }
+
     webView!.scrollView.isScrollEnabled = scrollEnabled
     webView!.scrollView.contentInset = UIEdgeInsets(top: contentInset["top"] ?? 0,
                                                     left: contentInset["left"] ?? 0,
@@ -121,6 +124,13 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     if (viewController.parent is UIPageViewController) {
       controller!.endAppearanceTransition()
     }
+  }
+    
+  override func didSetProps(_ changedProps: [String]!) {
+    super.didSetProps(changedProps)
+
+    // When all properties of RNVisitableView are initialized, the visit function can be safely called.
+    visit()
   }
 
   override func removeFromSuperview() {

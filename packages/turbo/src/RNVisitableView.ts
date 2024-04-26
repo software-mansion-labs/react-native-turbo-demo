@@ -32,6 +32,7 @@ export interface RNVisitableViewProps {
   scrollEnabled: boolean;
   contentInset: ContentInsetObject;
   progressViewOffset?: ProgressViewOffsetObject;
+  webViewDebuggingEnabled: boolean;
   onLoad?: (e: NativeSyntheticEvent<LoadEvent>) => void;
   onMessage?: (e: NativeSyntheticEvent<MessageEvent>) => void;
   onError?: (e: NativeSyntheticEvent<ErrorEvent>) => void;
