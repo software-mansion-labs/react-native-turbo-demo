@@ -36,6 +36,11 @@ class RNVisitableView: UIView, RNSessionSubscriber {
       configureWebView()
     }
   }
+  @objc var contentInset: [String: CGFloat] = [:] {
+    didSet {
+      configureWebView()
+    }
+  }
   @objc var onMessage: RCTDirectEventBlock?
   @objc var onVisitProposal: RCTDirectEventBlock?
   @objc var onOpenExternalUrl: RCTDirectEventBlock?
@@ -80,6 +85,10 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     }
     
     webView!.scrollView.isScrollEnabled = scrollEnabled
+    webView!.scrollView.contentInset = UIEdgeInsets(top: contentInset["top"] ?? 0,
+                                                    left: contentInset["left"] ?? 0,
+                                                    bottom: contentInset["bottom"] ?? 0,
+                                                    right: contentInset["right"] ?? 0)
   }
     
   override func willMove(toWindow newWindow: UIWindow?) {

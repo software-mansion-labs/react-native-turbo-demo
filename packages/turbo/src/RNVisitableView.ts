@@ -19,6 +19,7 @@ import type {
   OpenExternalUrlEvent,
   FormSubmissionEvent,
   ContentProcessDidTerminateEvent,
+  ContentInsetObject,
 } from './types';
 
 // Interface should match RNVisitableView exported properties in native code
@@ -28,6 +29,7 @@ export interface RNVisitableViewProps {
   applicationNameForUserAgent?: string;
   pullToRefreshEnabled: boolean;
   scrollEnabled: boolean;
+  contentInset: ContentInsetObject;
   onLoad?: (e: NativeSyntheticEvent<LoadEvent>) => void;
   onMessage?: (e: NativeSyntheticEvent<MessageEvent>) => void;
   onError?: (e: NativeSyntheticEvent<ErrorEvent>) => void;

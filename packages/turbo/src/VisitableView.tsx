@@ -40,6 +40,7 @@ import type {
   StradaComponent,
   FormSubmissionEvent,
   ContentProcessDidTerminateEvent,
+  ContentInsetObject,
 } from './types';
 import { nextEventLoopTick } from './utils/nextEventLoopTick';
 
@@ -50,6 +51,7 @@ export interface Props {
   stradaComponents?: StradaComponent[];
   pullToRefreshEnabled?: boolean;
   scrollEnabled?: boolean;
+  contentInset?: ContentInsetObject;
   renderLoading?: RenderLoading;
   renderError?: RenderError;
   onVisitProposal: (proposal: VisitProposal) => void;
@@ -80,6 +82,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       stradaComponents,
       pullToRefreshEnabled = true,
       scrollEnabled = true,
+      contentInset = { top: 0, left: 0, right: 0, bottom: 0 },
       renderLoading,
       renderError,
       onLoad,
@@ -217,6 +220,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           applicationNameForUserAgent={resolvedApplicationNameForUserAgent}
           pullToRefreshEnabled={pullToRefreshEnabled}
           scrollEnabled={scrollEnabled}
+          contentInset={contentInset}
           onError={onErrorCombinedHandlers}
           onVisitProposal={handleVisitProposal}
           onMessage={handleOnMessage}

@@ -18,6 +18,7 @@
   RCT_EXPORT_VIEW_PROPERTY(applicationNameForUserAgent, NSString)
   RCT_EXPORT_VIEW_PROPERTY(pullToRefreshEnabled, BOOL)
   RCT_EXPORT_VIEW_PROPERTY(scrollEnabled, BOOL)
+  RCT_EXPORT_VIEW_PROPERTY(contentInset, NSDictionary)
   RCT_EXPORT_VIEW_PROPERTY(onVisitProposal, RCTDirectEventBlock)
   RCT_EXPORT_VIEW_PROPERTY(onOpenExternalUrl, RCTDirectEventBlock)
   RCT_EXPORT_VIEW_PROPERTY(onMessage, RCTDirectEventBlock)
