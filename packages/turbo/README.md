@@ -103,6 +103,10 @@ The refresh indicator starting and resting position is always positioned near th
 
 Note: available only on Android.
 
+### `webViewDebuggingEnabled`
+
+Enables debugging in the webview. Default value is `false`.
+
 ### `stradaComponents`
 
 `VisitableView` supports defining [Strada components](https://strada.hotwired.dev/) that receive and reply to messages from web components that are present on the page within one session. This prop accepts an array of Strada components that will be registered in the webview.
@@ -210,7 +214,7 @@ webkit.messageHandlers.nativeApp.postMessage(message);
 
 ```
 
-### `onWebAlert`
+### `onAlert`
 
 Function called when website inside WebView is calling `alert` function. By default React Native's `Alert` is displayed.
 
@@ -219,7 +223,7 @@ Note that after handling alert display, `callback` function must be called.
 - message
 - callback
 
-### `onWebConfirm`
+### `onConfirm`
 
 Function called when website inside WebView is calling `confirm` function. By default React Native's `Alert` is displayed (with two buttons).
 
