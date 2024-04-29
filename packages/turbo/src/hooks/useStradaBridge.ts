@@ -38,7 +38,7 @@ export const useStradaBridge = (
       dispatchCommand(
         visitableViewRef,
         'injectJavaScript',
-        `window.nativeBridge.replyWith('${JSON.stringify(message)}')`
+        `window.nativeBridge.replyWith(${JSON.stringify(message)})`
       ),
     [dispatchCommand, visitableViewRef]
   );
