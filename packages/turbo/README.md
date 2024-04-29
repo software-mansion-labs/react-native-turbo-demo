@@ -97,6 +97,12 @@ The amount by which the web view content is inset from the edges of the scroll v
 
 Note: available only on iOS.
 
+### `refreshControlTopAnchor`
+
+This property enables setting custom `topAnchor` for the native refresh control. If the value is set, the refresh control will be anchored to the top of the web view with the specified offset. By default, this value is set to the safe area top anchor.
+
+Note: available only on iOS.
+
 ### `progressViewOffset`
 
 The refresh indicator starting and resting position is always positioned near the top of the refreshing content. This position is a consistent location, but can be adjusted in either direction based on whether or not there is a header or other content that should be visible when the refresh indicator is shown.

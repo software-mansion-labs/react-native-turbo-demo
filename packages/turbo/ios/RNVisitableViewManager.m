@@ -19,6 +19,7 @@
   RCT_EXPORT_VIEW_PROPERTY(pullToRefreshEnabled, BOOL)
   RCT_EXPORT_VIEW_PROPERTY(scrollEnabled, BOOL)
   RCT_EXPORT_VIEW_PROPERTY(contentInset, NSDictionary)
+  RCT_EXPORT_VIEW_PROPERTY(refreshControlTopAnchor, NSNumber)
   RCT_EXPORT_VIEW_PROPERTY(webViewDebuggingEnabled, BOOL)
   RCT_EXPORT_VIEW_PROPERTY(onVisitProposal, RCTDirectEventBlock)
   RCT_EXPORT_VIEW_PROPERTY(onOpenExternalUrl, RCTDirectEventBlock)

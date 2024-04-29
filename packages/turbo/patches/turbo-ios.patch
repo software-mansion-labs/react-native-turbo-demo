@@ -1,21 +1,32 @@
 diff --git a/Source/Visitable/VisitableView.swift b/Source/Visitable/VisitableView.swift
-index 12452b5..e9c37b8 100644
+index 12452b5..49b932c 100644
 --- a/Source/Visitable/VisitableView.swift
 +++ b/Source/Visitable/VisitableView.swift
-@@ -69,16 +69,6 @@ open class VisitableView: UIView {
-         
-         #if !targetEnvironment(macCatalyst)
-         scrollView.addSubview(refreshControl)
--
--        /// Infer refresh control's default height from its frame, if given.
--        /// Otherwise fallback to 60 (the default height).
--        let refreshControlHeight = refreshControl.frame.height > 0 ? refreshControl.frame.height : 60
--        
--        NSLayoutConstraint.activate([
--            refreshControl.centerXAnchor.constraint(equalTo: centerXAnchor),
--            refreshControl.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
--            refreshControl.heightAnchor.constraint(equalToConstant: refreshControlHeight)
--        ])
-         #endif
+@@ -16,6 +16,8 @@ open class VisitableView: UIView {
+         installActivityIndicatorView()
      }
  
++    public var refreshControlTopAnchor: CGFloat = 0
++
+     // MARK: Web View
+ 
+     open var webView: WKWebView?
+@@ -74,9 +76,17 @@ open class VisitableView: UIView {
+         /// Otherwise fallback to 60 (the default height).
+         let refreshControlHeight = refreshControl.frame.height > 0 ? refreshControl.frame.height : 60
+         
++        let topAnchorConstraint: NSLayoutConstraint
++
++        if (refreshControlTopAnchor > 0) {
++          topAnchorConstraint = refreshControl.topAnchor.constraint(equalTo: webView!.topAnchor, constant: refreshControlTopAnchor)
++        } else {
++          topAnchorConstraint = refreshControl.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
++        }
++
+         NSLayoutConstraint.activate([
++            topAnchorConstraint,
+             refreshControl.centerXAnchor.constraint(equalTo: centerXAnchor),
+-            refreshControl.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+             refreshControl.heightAnchor.constraint(equalToConstant: refreshControlHeight)
+         ])
+         #endif
