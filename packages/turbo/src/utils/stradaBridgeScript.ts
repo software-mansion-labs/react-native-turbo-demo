@@ -63,7 +63,7 @@ export const stradaBridgeScript = `
     // Reply to web with message
     replyWith(message) {
       if (this.isStradaAvailable) {
-        this.webBridge.receive(JSON.parse(message));
+        this.webBridge.receive(message);
       }
     }
 
