@@ -97,9 +97,9 @@ The amount by which the web view content is inset from the edges of the scroll v
 
 Note: available only on iOS.
 
-### `refreshControlTopAnchor`
+### `refreshControlTopAnchorConstant`
 
-This property enables setting custom `topAnchor` for the native refresh control. If the value is set, the refresh control will be anchored to the top of the web view with the specified offset. By default, this value is set to the safe area top anchor.
+This property enables setting custom `topAnchor` constant for the native refresh control. If the value is set, the `refreshControlTopAnchorConstant` value will be added to the safe area top anchor.
 
 Note: available only on iOS.
 

@@ -54,7 +54,7 @@ export interface Props {
   scrollEnabled?: boolean;
   contentInset?: ContentInsetObject;
   progressViewOffset?: ProgressViewOffsetObject;
-  refreshControlTopAnchor?: number;
+  refreshControlTopAnchorConstant?: number;
   webViewDebuggingEnabled?: boolean;
   renderLoading?: RenderLoading;
   renderError?: RenderError;
@@ -88,7 +88,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       scrollEnabled = true,
       contentInset = { top: 0, left: 0, right: 0, bottom: 0 },
       progressViewOffset,
-      refreshControlTopAnchor = 0,
+      refreshControlTopAnchorConstant = 0,
       webViewDebuggingEnabled = false,
       renderLoading,
       renderError,
@@ -229,7 +229,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           scrollEnabled={scrollEnabled}
           contentInset={contentInset}
           progressViewOffset={progressViewOffset}
-          refreshControlTopAnchor={refreshControlTopAnchor}
+          refreshControlTopAnchorConstant={refreshControlTopAnchorConstant}
           webViewDebuggingEnabled={webViewDebuggingEnabled}
           onError={onErrorCombinedHandlers}
           onVisitProposal={handleVisitProposal}

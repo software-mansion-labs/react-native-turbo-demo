@@ -6,7 +6,7 @@ index 12452b5..c008c6f 100644
      open var webView: WKWebView?
      private weak var visitable: Visitable?
  
-+    public var refreshControlTopAnchor: CGFloat = 0
++    public var refreshControlTopAnchorConstant: CGFloat = 0
 +
      open func activateWebView(_ webView: WKWebView, forVisitable visitable: Visitable) {
          self.webView = webView
@@ -16,7 +16,7 @@ index 12452b5..c008c6f 100644
          NSLayoutConstraint.activate([
              refreshControl.centerXAnchor.constraint(equalTo: centerXAnchor),
 -            refreshControl.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-+            refreshControl.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: refreshControlTopAnchor),
++            refreshControl.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: refreshControlTopAnchorConstant),
              refreshControl.heightAnchor.constraint(equalToConstant: refreshControlHeight)
          ])
          #endif

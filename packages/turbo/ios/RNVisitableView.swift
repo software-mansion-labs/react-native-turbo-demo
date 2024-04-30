@@ -25,9 +25,9 @@ class RNVisitableView: UIView, RNSessionSubscriber {
       controller!.visitableView.allowsPullToRefresh = pullToRefreshEnabled
     }
   }
-  @objc var refreshControlTopAnchor: NSNumber = 0 {
+  @objc var refreshControlTopAnchorConstant: NSNumber = 0 {
     didSet {
-      controller!.visitableView.refreshControlTopAnchor = refreshControlTopAnchor as! CGFloat
+      controller!.visitableView.refreshControlTopAnchorConstant = refreshControlTopAnchorConstant as! CGFloat
     }
   }
   @objc var scrollEnabled: Bool = true {
