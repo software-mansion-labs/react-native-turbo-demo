@@ -1,32 +1,22 @@
 diff --git a/Source/Visitable/VisitableView.swift b/Source/Visitable/VisitableView.swift
-index 12452b5..49b932c 100644
+index 12452b5..c008c6f 100644
 --- a/Source/Visitable/VisitableView.swift
 +++ b/Source/Visitable/VisitableView.swift
-@@ -16,6 +16,8 @@ open class VisitableView: UIView {
-         installActivityIndicatorView()
-     }
+@@ -21,6 +21,8 @@ open class VisitableView: UIView {
+     open var webView: WKWebView?
+     private weak var visitable: Visitable?
  
 +    public var refreshControlTopAnchor: CGFloat = 0
 +
-     // MARK: Web View
- 
-     open var webView: WKWebView?
-@@ -74,9 +76,17 @@ open class VisitableView: UIView {
-         /// Otherwise fallback to 60 (the default height).
-         let refreshControlHeight = refreshControl.frame.height > 0 ? refreshControl.frame.height : 60
+     open func activateWebView(_ webView: WKWebView, forVisitable visitable: Visitable) {
+         self.webView = webView
+         self.visitable = visitable
+@@ -76,7 +78,7 @@ open class VisitableView: UIView {
          
-+        let topAnchorConstraint: NSLayoutConstraint
-+
-+        if (refreshControlTopAnchor > 0) {
-+          topAnchorConstraint = refreshControl.topAnchor.constraint(equalTo: webView!.topAnchor, constant: refreshControlTopAnchor)
-+        } else {
-+          topAnchorConstraint = refreshControl.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
-+        }
-+
          NSLayoutConstraint.activate([
-+            topAnchorConstraint,
              refreshControl.centerXAnchor.constraint(equalTo: centerXAnchor),
 -            refreshControl.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
++            refreshControl.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: refreshControlTopAnchor),
              refreshControl.heightAnchor.constraint(equalToConstant: refreshControlHeight)
          ])
          #endif
