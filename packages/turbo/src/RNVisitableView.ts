@@ -77,7 +77,8 @@ const initializeWebView = async (webViewRef: React.RefObject<any>) => {
     return initializationPromise;
   }
 
-  webViewRef.current.initializationPromise = webViewRef.current.initializationPromise || initializationPromise;
+  webViewRef.current.initializationPromise =
+    webViewRef.current.initializationPromise || initializationPromise;
 
   return webViewRef.current.initializationPromise;
 };
