@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import WebKit
 
 @objc(RNSessionManager)
 class RNSessionManager: NSObject {

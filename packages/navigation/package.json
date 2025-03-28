@@ -27,12 +27,13 @@
     "lint": "eslint \"src/**/*.{js,ts,tsx}\""
   },
   "devDependencies": {
-    "@react-navigation/core": "^6.0.0",
+    "@react-navigation/core": "^7.7.0",
+    "@react-navigation/native": "^7.0.19",
     "react-native-turbo": "*"
   },
   "peerDependencies": {
-    "@react-navigation/core": ">=6.0.0",
-    "@react-navigation/native": ">=6.0.0",
+    "@react-navigation/core": ">=7.7.0",
+    "@react-navigation/native": ">=7.0.19",
     "react": "*",
     "react-native": "*",
     "react-native-turbo": "*"

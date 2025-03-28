@@ -11,9 +11,9 @@ import {
   useNavigation,
   useRoute,
   CommonActions,
+  LinkingContext,
 } from '@react-navigation/native';
-import LinkingContext from '@react-navigation/native/src/LinkingContext';
-import extractPathFromURL from '@react-navigation/native/src/extractPathFromURL';
+import { extractPathFromURL } from '@react-navigation/native/src/extractPathFromURL';
 import * as React from 'react';
 import type { Action } from 'react-native-turbo';
 
