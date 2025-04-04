@@ -28,7 +28,7 @@ enum class RNTurboError(val code: Int) {
       return when (errorCode) {
         WebViewClient.ERROR_CONNECT -> 0
         WebViewClient.ERROR_TIMEOUT -> -1
-        // turbo-android returns ERROR_UNKNOWN on SSL error and on turboFailedToLoad
+        // hotwire-native-android returns ERROR_UNKNOWN on SSL error and on turboFailedToLoad
         WebViewClient.ERROR_UNKNOWN -> -3
         else -> if (errorCode > 0) errorCode else -4
       }

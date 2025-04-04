@@ -194,6 +194,10 @@ class RNVisitableView: UIView, RNSessionSubscriber {
     }
   }
 
+  public func didProposeVisitToCrossOriginRedirect(location: URL){
+    onOpenExternalUrl?(["url": location.absoluteString])
+  }
+
   func getStatusCodeFromError(error: TurboError?) -> Int {
     switch error {
       case .networkFailure:
