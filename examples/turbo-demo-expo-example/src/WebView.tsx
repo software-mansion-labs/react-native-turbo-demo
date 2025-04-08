@@ -25,7 +25,7 @@ const WebView: React.FC<Props> = ({ navigation, ...props }) => {
 
   const onVisitProposal = useCallback(
     ({ action: actionType, url }: VisitProposal) => navigateTo(url, actionType),
-    [navigation]
+    [navigateTo]
   );
 
   const onLoad = useCallback(

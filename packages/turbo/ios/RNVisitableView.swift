@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import WebKit
 
 let REFRESH_SCRIPT = "typeof Turbo.session.refresh === 'function'" +
             "? Turbo.session.refresh(document.baseURI)" + // Turbo 8+

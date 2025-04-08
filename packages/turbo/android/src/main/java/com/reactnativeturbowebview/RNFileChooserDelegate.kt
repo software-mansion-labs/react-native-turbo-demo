@@ -39,7 +39,7 @@ class RNFileChooserDelegate(private val reactContext: ReactApplicationContext) {
     val packageManager: PackageManager = reactContext.packageManager
     val packageName: String = reactContext.packageName
     try {
-      val requestedPermissions: Array<String> =
+      val requestedPermissions: Array<String>? =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
           packageManager.getPackageInfo(
             packageName, PackageManager.PackageInfoFlags.of(PackageManager.GET_PERMISSIONS.toLong())
@@ -50,7 +50,10 @@ class RNFileChooserDelegate(private val reactContext: ReactApplicationContext) {
           ).requestedPermissions
         }
 
-      if (listOf(*requestedPermissions).contains(Manifest.permission.CAMERA) && reactContext.currentActivity != null && ContextCompat.checkSelfPermission(
+      if (requestedPermissions!= null
+          && listOf(*requestedPermissions).contains(Manifest.permission.CAMERA)
+          && reactContext.currentActivity != null
+          && ContextCompat.checkSelfPermission(
           reactContext.currentActivity!!, Manifest.permission.CAMERA
         ) != PackageManager.PERMISSION_GRANTED
       ) {

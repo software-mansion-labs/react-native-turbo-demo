@@ -2,6 +2,11 @@
   "extends": "../../tsconfig.json",
   "references": [{ "path": "../turbo" }],
   "compilerOptions": {
-    "outDir": "./lib/typescript"
+    "outDir": "./lib/typescript",
+    "paths": {
+      "@react-navigation/native/*": [
+        "../../node_modules/@react-navigation/native/*"
+      ]
+    }
   }
 }
