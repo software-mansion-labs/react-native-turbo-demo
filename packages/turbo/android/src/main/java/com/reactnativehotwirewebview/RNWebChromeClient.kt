@@ -1,4 +1,4 @@
-package com.reactnativeturbowebview
+package com.reactnativehotwirewebview
 
 import android.app.Activity
 import android.content.Intent
@@ -15,6 +15,7 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.events.RCTEventEmitter
+import com.reactnativehotwirewebview.RNSession
 
 
 class RNWebChromeClient(

@@ -1,11 +1,11 @@
-package com.reactnativeturbowebview
+package com.reactnativehotwirewebview
 
 import android.webkit.WebViewClient
-import dev.hotwire.turbo.errors.HttpError
-import dev.hotwire.turbo.errors.LoadError
-import dev.hotwire.turbo.errors.TurboVisitError
-import dev.hotwire.turbo.errors.WebError
-import dev.hotwire.turbo.errors.WebSslError
+import dev.hotwire.core.turbo.errors.HttpError
+import dev.hotwire.core.turbo.errors.LoadError
+import dev.hotwire.core.turbo.errors.VisitError
+import dev.hotwire.core.turbo.errors.WebError
+import dev.hotwire.core.turbo.errors.WebSslError
 
 enum class RNTurboError(val code: Int) {
   HTTP(1),
@@ -16,7 +16,7 @@ enum class RNTurboError(val code: Int) {
   UNKNOWN(-4);
 
   companion object {
-    fun getErrorCode(error: TurboVisitError): Int {
+    fun getErrorCode(error: VisitError): Int {
       val errorCode = when (error) {
         is HttpError -> error.statusCode
         is WebError -> error.errorCode
@@ -28,7 +28,7 @@ enum class RNTurboError(val code: Int) {
       return when (errorCode) {
         WebViewClient.ERROR_CONNECT -> 0
         WebViewClient.ERROR_TIMEOUT -> -1
-        // turbo-android returns ERROR_UNKNOWN on SSL error and on turboFailedToLoad
+        // hotwire-native-android returns ERROR_UNKNOWN on SSL error and on turboFailedToLoad
         WebViewClient.ERROR_UNKNOWN -> -3
         else -> if (errorCode > 0) errorCode else -4
       }
@@ -38,7 +38,7 @@ enum class RNTurboError(val code: Int) {
       return values().firstOrNull { it.code == code } ?: UNKNOWN
     }
 
-    fun errorDescription(error: TurboVisitError): String {
+    fun errorDescription(error: VisitError): String {
       val errorCode = getErrorCode(error)
       return when (fromCode(errorCode)) {
         NETWORK_FAILURE -> "A network error occurred."
