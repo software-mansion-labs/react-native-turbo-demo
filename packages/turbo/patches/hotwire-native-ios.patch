@@ -1,0 +1,77 @@
+diff --git a/Source/Bridge/Bridge.swift b/Source/Bridge/Bridge.swift
+index b454c43..1f2f616 100644
+--- a/Source/Bridge/Bridge.swift
++++ b/Source/Bridge/Bridge.swift
+@@ -135,9 +135,17 @@ public final class Bridge: Bridgable {
+         configuration.userContentController.add(scriptMessageHandler, name: scriptHandlerName)
+     }
+ 
++    private static var bundle: Bundle {
++        #if SWIFT_PACKAGE
++        return Bundle.module
++        #else
++        return Bundle(for: Bridge.self)
++        #endif
++    }
++
+     private func makeUserScript() -> WKUserScript? {
+         guard
+-            let path = Bundle.module.path(forResource: "bridge", ofType: "js")
++            let path = Self.bundle.path(forResource: "bridge", ofType: "js")
+         else {
+             return nil
+         }
+diff --git a/Source/Turbo/Visitable/VisitableView.swift b/Source/Turbo/Visitable/VisitableView.swift
+index f0adc36..c1fd844 100644
+--- a/Source/Turbo/Visitable/VisitableView.swift
++++ b/Source/Turbo/Visitable/VisitableView.swift
+@@ -16,6 +16,8 @@ open class VisitableView: UIView {
+         installActivityIndicatorView()
+     }
+ 
++    public var refreshControlTopAnchor: CGFloat = 0
++
+     // MARK: Web View
+ 
+     open var webView: WKWebView?
+@@ -73,10 +75,17 @@ open class VisitableView: UIView {
+         /// Infer refresh control's default height from its frame, if given.
+         /// Otherwise fallback to 60 (the default height).
+         let refreshControlHeight = refreshControl.frame.height > 0 ? refreshControl.frame.height : 60
++        let topAnchorConstraint: NSLayoutConstraint
++
++        if (refreshControlTopAnchor > 0) {
++          topAnchorConstraint = refreshControl.topAnchor.constraint(equalTo: webView!.topAnchor, constant: refreshControlTopAnchor)
++        } else {
++          topAnchorConstraint = refreshControl.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
++        }
+ 
+         NSLayoutConstraint.activate([
++            topAnchorConstraint,
+             refreshControl.centerXAnchor.constraint(equalTo: centerXAnchor),
+-            refreshControl.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+             refreshControl.heightAnchor.constraint(equalToConstant: refreshControlHeight)
+         ])
+         #endif
+diff --git a/Source/Turbo/WebView/WebViewBridge.swift b/Source/Turbo/WebView/WebViewBridge.swift
+index 215a997..311b4be 100644
+--- a/Source/Turbo/WebView/WebViewBridge.swift
++++ b/Source/Turbo/WebView/WebViewBridge.swift
+@@ -49,8 +49,16 @@ final class WebViewBridge {
+         webView.configuration.userContentController.add(ScriptMessageHandler(delegate: self), name: messageHandlerName)
+     }
+
++    private static var bundle: Bundle {
++        #if SWIFT_PACKAGE
++        return Bundle.module
++        #else
++        return Bundle(for: WebViewBridge.self)
++        #endif
++    }
++
+     private var userScript: WKUserScript {
+-        let url = Bundle.module.url(forResource: "turbo", withExtension: "js")!
++        let url = Self.bundle.url(forResource: "turbo", withExtension: "js")!
+         let source = try! String(contentsOf: url, encoding: .utf8)
+         return WKUserScript(source: source, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+     }
