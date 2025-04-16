@@ -1,4 +1,4 @@
-package com.reactnativeturbowebview
+package com.reactnativehotwirewebview
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -10,16 +10,24 @@ import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.isVisible
 import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.events.RCTEventEmitter
-import dev.hotwire.turbo.views.TurboView
-import dev.hotwire.turbo.views.TurboWebView
-import dev.hotwire.turbo.visit.TurboVisitOptions
-import dev.hotwire.turbo.R
-import dev.hotwire.turbo.errors.TurboVisitError
+import com.reactnativehotwirewebview.RNSessionManager
+import com.reactnativehotwirewebview.RNTurboError
+import com.reactnativehotwirewebview.RNVisitableViewEvent
+import com.reactnativehotwirewebview.SessionSubscriber
+import dev.hotwire.navigation.views.HotwireView
+import dev.hotwire.core.turbo.webview.HotwireWebView
+import dev.hotwire.core.turbo.visit.VisitOptions
+import dev.hotwire.navigation.R
+import dev.hotwire.core.turbo.errors.VisitError
+import dev.hotwire.navigation.util.HotwireViewScreenshotHolder
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 const val REFRESH_SCRIPT = "typeof Turbo.session.refresh === 'function'" +
         "? Turbo.session.refresh(document.baseURI)" + // Turbo 8+
@@ -58,7 +66,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     set(value) {
       field = value
       progressViewOffset?.let {
-        turboView.webViewRefresh?.setProgressViewOffset(
+        hotwireView.webViewRefresh?.setProgressViewOffset(
           it.getBoolean("scale"),
           it.getInt("start"),
           it.getInt("end")
@@ -87,7 +95,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
         return _session
     }
 
-  private val webView: TurboWebView? get() = session?.webView
+  private val webView: HotwireWebView? get() = session?.webView
 
   private var onConfirmHandler: ((result: Boolean) -> Unit)? = null
   private var onAlertHandler: (() -> Unit)? = null
@@ -96,26 +104,22 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   private var isInitialVisit = true
   private var currentlyZoomed = false
   private var isWebViewAttachedToNewDestination = false
-  private var screenshotOrientation = 0
-  private var screenshotZoomed = false
-  private var screenshot: Bitmap? = null
+  private val screenshotHolder = HotwireViewScreenshotHolder()
 
   // Views
-  private val visitableView = inflate(context, R.layout.turbo_view, null) as ViewGroup
-  private val turboView: TurboView by lazy { visitableView.findViewById(R.id.turbo_view) }
-  private val screenshotView: AppCompatImageView by lazy { visitableView.findViewById(R.id.turbo_screenshot) }
-  private val viewTreeLifecycleOwner get() = turboView.findViewTreeLifecycleOwner()
+  private val visitableView = inflate(context, R.layout.hotwire_view, null) as ViewGroup
+  private val hotwireView: HotwireView by lazy { visitableView.findViewById(R.id.hotwire_view) }
+  private val screenshotView: AppCompatImageView by lazy { visitableView.findViewById(R.id.hotwire_screenshot) }
+  private val viewTreeLifecycleOwner get() = hotwireView.findViewTreeLifecycleOwner()
 
   init {
     addView(visitableView)
 
-    turboView.apply {
+    hotwireView.apply {
       initializePullToRefresh(this)
       initializeErrorPullToRefresh(this)
       showScreenshotIfAvailable(this)
-      screenshot = null
-      screenshotOrientation = 0
-      screenshotZoomed = false
+      screenshotHolder.reset()
     }
   }
 
@@ -125,7 +129,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     setOnTouchListener(webView!!, scrollEnabled)
   }
 
-  private fun setOnTouchListener(webView: TurboWebView, scrollEnabled: Boolean) {
+  private fun setOnTouchListener(webView: HotwireWebView, scrollEnabled: Boolean) {
     if (!scrollEnabled) {
       webView.setOnTouchListener(OnTouchListener { _, event -> event.action == MotionEvent.ACTION_MOVE })
     } else {
@@ -168,7 +172,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   override fun reload(displayProgress: Boolean) {
     if (webView?.url == null) return
 
-    turboView.webViewRefresh?.apply {
+    hotwireView.webViewRefresh?.apply {
       if (displayProgress && !isRefreshing) {
         isRefreshing = true
       }
@@ -178,26 +182,24 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     performVisit(restoreWithCachedSnapshot = false, reload = true)
   }
 
-  private fun initializePullToRefresh(turboView: TurboView) {
-    turboView.webViewRefresh?.apply {
+  private fun initializePullToRefresh(hotwireView: HotwireView) {
+    hotwireView.webViewRefresh?.apply {
       setOnRefreshListener {
         reload(displayProgress = true)
       }
     }
   }
 
-  private fun initializeErrorPullToRefresh(turboView: TurboView) {
-    turboView.errorRefresh?.apply {
+  private fun initializeErrorPullToRefresh(hotwireView: HotwireView) {
+    hotwireView.errorRefresh?.apply {
       setOnRefreshListener {
         reload(displayProgress = true)
       }
     }
   }
 
-  private fun showScreenshotIfAvailable(turboView: TurboView) {
-    if (screenshotOrientation == turboView.screenshotOrientation() && screenshotZoomed == currentlyZoomed) {
-      screenshot?.let { turboView.addScreenshot(it) }
-    }
+  private fun showScreenshotIfAvailable(hotwireView: HotwireView) {
+    screenshotHolder.showScreenshotIfAvailable(hotwireView)
   }
 
   // region view lifecycle
@@ -218,10 +220,10 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
       (webView!!.parent as ViewGroup).removeView(webView)
     }
 
-    // Re-layout the TurboView before attaching to make page restorations work correctly.
+    // Re-layout the HotwireView before attaching to make page restorations work correctly.
     requestLayout()
 
-    turboView.attachWebView(webView!!) { attachedToNewDestination ->
+    hotwireView.attachWebView(webView!!) { attachedToNewDestination ->
       onReady(attachedToNewDestination)
     }
   }
@@ -231,14 +233,14 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
 
     (webView!!.parent as ViewGroup?)?.endViewTransition(webView)
 
-    turboView.detachWebView(webView!!) {
-      // Force layout to fix improper layout of the TurboWebView.
+    hotwireView.detachWebView(webView!!) {
+      // Force layout to fix improper layout of the HotwireWebView.
       forceLayout()
     }
   }
 
   /*
-   * Fixes a bug in React Native, causing improper layout of the TurboView and its children.
+   * Fixes a bug in React Native, causing improper layout of the HotwireView and its children.
    * Refer to https://github.com/facebook/react-native/issues/17968 for the detailed issue discussion and context.
    */
   override fun requestLayout() {
@@ -265,11 +267,9 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   }
 
   private fun screenshotView() {
-    turboView.let {
-      screenshot = it.createScreenshot()
-      screenshotOrientation = it.screenshotOrientation()
-      screenshotZoomed = currentlyZoomed
-      showScreenshotIfAvailable(it)
+    viewTreeLifecycleOwner?.lifecycleScope?.launch {
+      screenshotHolder.captureScreenshot(hotwireView)
+      screenshotHolder.showScreenshotIfAvailable(hotwireView)
     }
   }
 
@@ -284,15 +284,15 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
   }
 
   private fun removeTransitionalViews() {
-    turboView.webViewRefresh?.isRefreshing = false
-    turboView.errorRefresh?.isRefreshing = false
+    hotwireView.webViewRefresh?.isRefreshing = false
+    hotwireView.errorRefresh?.isRefreshing = false
     hideProgressView()
-    turboView.removeScreenshot()
-    turboView.removeErrorView()
+    hotwireView.removeScreenshot()
+    hotwireView.removeErrorView()
   }
 
   private fun setPullToRefresh(enabled: Boolean) {
-    turboView.webViewRefresh?.isEnabled = enabled
+    hotwireView.webViewRefresh?.isEnabled = enabled
   }
 
   private fun sendEvent(event: RNVisitableViewEvent, params: WritableMap) {
@@ -327,7 +327,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     })
   }
 
-  override fun visitProposedToLocation(location: String, options: TurboVisitOptions) {
+  override fun visitProposedToLocation(location: String, options: VisitOptions) {
     sendEvent(RNVisitableViewEvent.VISIT_PROPOSAL, Arguments.createMap().apply {
       putString("url", location)
       putString("action", options.action.name.lowercase())
@@ -375,6 +375,12 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     }
   }
 
+  override fun visitProposedToCrossOriginRedirect(location: String) {
+    sendEvent(RNVisitableViewEvent.OPEN_EXTERNAL_URL, Arguments.createMap().apply {
+      putString("url", location)
+    })
+  }
+
   override fun handleAlert(message: String, callback: () -> Unit) {
     sendEvent(RNVisitableViewEvent.WEB_ALERT, Arguments.createMap().apply {
       putString("message", message)
@@ -401,7 +407,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     onConfirmHandler = null
   }
 
-  override fun onReceivedError(error: TurboVisitError) {
+  override fun onReceivedError(error: VisitError) {
     sendEvent(RNVisitableViewEvent.ERROR, Arguments.createMap().apply {
       putInt("statusCode", RNTurboError.getErrorCode(error))
       putString("url", url)
@@ -409,7 +415,7 @@ class RNVisitableView(context: Context) : LinearLayout(context), SessionSubscrib
     })
   }
 
-  override fun requestFailedWithError(visitHasCachedSnapshot: Boolean, error: TurboVisitError) {
+  override fun requestFailedWithError(visitHasCachedSnapshot: Boolean, error: VisitError) {
     sendEvent(RNVisitableViewEvent.ERROR, Arguments.createMap().apply {
       putInt("statusCode", RNTurboError.getErrorCode(error))
       putString("url", url)

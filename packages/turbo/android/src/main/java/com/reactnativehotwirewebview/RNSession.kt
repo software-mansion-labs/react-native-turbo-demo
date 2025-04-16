@@ -1,4 +1,4 @@
-package com.reactnativeturbowebview
+package com.reactnativehotwirewebview
 
 import android.webkit.JavascriptInterface
 import android.webkit.WebSettings
@@ -8,12 +8,17 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenStateAtLeast
 import com.facebook.react.bridge.ReactApplicationContext
-import dev.hotwire.turbo.errors.TurboVisitError
-import dev.hotwire.turbo.session.TurboSession
-import dev.hotwire.turbo.views.TurboWebView
-import dev.hotwire.turbo.visit.TurboVisit
-import dev.hotwire.turbo.visit.TurboVisitAction
-import dev.hotwire.turbo.visit.TurboVisitOptions
+import com.reactnativehotwirewebview.RNWebChromeClient
+import com.reactnativehotwirewebview.SessionCallbackAdapter
+import com.reactnativehotwirewebview.SessionSubscriber
+import com.reactnativehotwirewebview.Utils
+import dev.hotwire.core.config.Hotwire
+import dev.hotwire.core.turbo.errors.VisitError
+import dev.hotwire.core.turbo.session.Session
+import dev.hotwire.core.turbo.webview.HotwireWebView
+import dev.hotwire.core.turbo.visit.Visit
+import dev.hotwire.core.turbo.visit.VisitAction
+import dev.hotwire.core.turbo.visit.VisitOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -27,10 +32,10 @@ class RNSession(
 
   var visitableView: SessionSubscriber? = null
 
-  private val turboSession: TurboSession = run {
+  private val turboSession: Session = run {
     val activity = reactContext.currentActivity as AppCompatActivity
-    val webView = TurboWebView(activity, null)
-    val session = TurboSession(sessionHandle, activity, webView)
+    val webView = HotwireWebView(activity, null)
+    val session = Session(sessionHandle, activity, webView)
 
     webView.settings.setJavaScriptEnabled(true)
     webView.addJavascriptInterface(JavaScriptInterface(), "AndroidInterface")
@@ -39,14 +44,14 @@ class RNSession(
     session.isRunningInAndroidNavigation = false
     session
   }
-  val webView: TurboWebView get() = turboSession.webView
-  val currentVisit: TurboVisit? get() = turboSession.currentVisit
+  val webView: HotwireWebView get() = turboSession.webView
+  val currentVisit: Visit? get() = turboSession.currentVisit
 
   internal fun registerVisitableView(newView: SessionSubscriber) {
     visitableView = newView
   }
 
-  private fun setUserAgentString(webView: TurboWebView, applicationNameForUserAgent: String?) {
+  private fun setUserAgentString(webView: HotwireWebView, applicationNameForUserAgent: String?) {
     var userAgentString = WebSettings.getDefaultUserAgent(webView.context)
     if (applicationNameForUserAgent != null) {
       userAgentString = "$userAgentString $applicationNameForUserAgent"
@@ -54,23 +59,23 @@ class RNSession(
     webView.settings.userAgentString = userAgentString
   }
 
-  fun visit(url: String, restoreWithCachedSnapshot: Boolean, reload: Boolean, viewTreeLifecycleOwner: LifecycleOwner?, visitOptions: TurboVisitOptions?){
+  fun visit(url: String, restoreWithCachedSnapshot: Boolean, reload: Boolean, viewTreeLifecycleOwner: LifecycleOwner?, visitOptions: VisitOptions?){
     val restore = restoreWithCachedSnapshot && !reload
 
     val options = visitOptions ?: when {
-      restore -> TurboVisitOptions(action = TurboVisitAction.RESTORE)
-      else -> TurboVisitOptions()
+      restore -> VisitOptions(action = VisitAction.RESTORE)
+      else -> VisitOptions()
     }
 
     viewTreeLifecycleOwner?.lifecycleScope?.launch {
       val snapshot = when (options.action) {
-        TurboVisitAction.ADVANCE -> fetchCachedSnapshot(url)
+        VisitAction.ADVANCE -> fetchCachedSnapshot(url)
         else -> null
       }
 
       viewTreeLifecycleOwner.lifecycle.whenStateAtLeast(Lifecycle.State.STARTED) {
         turboSession.visit(
-          TurboVisit(
+          Visit(
             location = url,
             destinationIdentifier = url.hashCode(),
             restoreWithCachedSnapshot = restoreWithCachedSnapshot,
@@ -85,7 +90,7 @@ class RNSession(
 
   private suspend fun fetchCachedSnapshot(url: String): String? {
     return withContext(Dispatchers.IO) {
-      val response = turboSession.offlineRequestHandler?.getCachedSnapshot(
+      val response = Hotwire.config.offlineRequestHandler?.getCachedSnapshot(
         url = url
       )
       response?.data?.use {
@@ -120,7 +125,7 @@ class RNSession(
   }
 
   fun clearSnapshotCache() {
-    // turbo-android doesn't expose a way to clear the snapshot cache, so we have to do it manually
+    // hotwire-native-android doesn't expose a way to clear the snapshot cache, so we have to do it manually
     webView.post {
       webView.evaluateJavascript("window.Turbo.session.clearCache();", null)
     }
@@ -128,7 +133,7 @@ class RNSession(
 
   // region SessionCallbackAdapter
 
-  override fun onReceivedError(error: TurboVisitError) {
+  override fun onReceivedError(error: VisitError) {
     visitableView?.onReceivedError(error)
   }
 
@@ -152,7 +157,11 @@ class RNSession(
     visitableView?.visitLocationStarted(location)
   }
 
-  override fun visitProposedToLocation(location: String, options: TurboVisitOptions) {
+  override fun visitProposedToCrossOriginRedirect(location: String) {
+    visitableView?.visitProposedToCrossOriginRedirect(location)
+  }
+
+  override fun visitProposedToLocation(location: String, options: VisitOptions) {
     visitableView?.visitProposedToLocation(location, options)
   }
 
@@ -168,7 +177,7 @@ class RNSession(
     visitableView?.didFinishFormSubmission(location)
   }
 
-  override fun requestFailedWithError(visitHasCachedSnapshot: Boolean, error: TurboVisitError) {
+  override fun requestFailedWithError(visitHasCachedSnapshot: Boolean, error: VisitError) {
     visitableView?.requestFailedWithError(visitHasCachedSnapshot, error)
   }
 

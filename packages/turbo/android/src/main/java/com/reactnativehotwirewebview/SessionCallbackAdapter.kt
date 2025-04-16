@@ -1,13 +1,13 @@
-package com.reactnativeturbowebview
+package com.reactnativehotwirewebview
 
 import android.webkit.HttpAuthHandler
-import dev.hotwire.turbo.nav.TurboNavDestination
-import dev.hotwire.turbo.session.TurboSessionCallback
+import dev.hotwire.core.turbo.session.SessionCallback
+import dev.hotwire.core.turbo.visit.VisitDestination
 
-interface SessionCallbackAdapter : TurboSessionCallback {
+interface SessionCallbackAdapter : SessionCallback {
 
-  override fun visitNavDestination(): TurboNavDestination {
-    throw Exception("Calling TurboNavDestination getter in ReactNative app")
+  override fun visitDestination(): VisitDestination {
+    throw Exception("Calling VisitDestination getter in ReactNative app")
   }
 
   override fun onPageFinished(location: String) {}

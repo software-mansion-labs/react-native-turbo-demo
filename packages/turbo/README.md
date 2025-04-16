@@ -25,9 +25,9 @@ For Android you need to adjust your SDK version in your `build.gradle`.
 
 > [_Turbo Documentation:_](https://github.com/hotwired/turbo-android#requirements)
 >
-> Android SDK 26+ is required as the minSdkVersion in your build.gradle.
+> Android SDK 28+ is required as the minSdkVersion in your build.gradle.
 
-For iOS, you need to set the deployment target to 14.0 or higher.
+For iOS, you need to set the deployment target to 15.6 or higher.
 
 ## Example
 

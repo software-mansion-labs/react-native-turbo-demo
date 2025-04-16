@@ -1,4 +1,4 @@
-package com.reactnativeturbowebview
+package com.reactnativehotwirewebview
 
 import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap

@@ -97,6 +97,10 @@ extension RNSession: SessionDelegate {
     visitableView?.didProposeVisit(proposal: proposal)
   }
 
+  func session(_ session: Session, didProposeVisitToCrossOriginRedirect location: URL) {
+    visitableView?.didProposeVisitToCrossOriginRedirect(location: location)
+  }
+
   func session(_ session: Session, didFailRequestForVisitable visitable: Visitable, error: Error) {
     visitableView?.didFailRequestForVisitable(visitable: visitable, error: error)
   }

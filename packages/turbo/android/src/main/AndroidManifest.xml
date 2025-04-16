@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.reactnativeturbowebview">
+  package="com.reactnativehotwirewebview">
   <queries>
     <intent>
       <action android:name="android.intent.action.VIEW" />

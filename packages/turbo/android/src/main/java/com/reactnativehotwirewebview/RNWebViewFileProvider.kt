@@ -1,4 +1,4 @@
-package com.reactnativeturbowebview
+package com.reactnativehotwirewebview
 
 import androidx.core.content.FileProvider
 

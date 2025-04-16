@@ -1,8 +1,8 @@
-apply from: './turbo-android-dependencies.gradle'
+apply from: './hotwire-native-android-dependencies.gradle'
 
 buildscript {
   // Buildscript is evaluated before everything else so we can't use getExtOrDefault
-  def kotlin_version = rootProject.ext.has("kotlinVersion") ? rootProject.ext.get("kotlinVersion") : project.properties["TurboWebview_kotlinVersion"]
+  def kotlin_version = rootProject.ext.has("kotlinVersion") ? rootProject.ext.get("kotlinVersion") : project.properties["HotwireWebview_kotlinVersion"]
 
   repositories {
     google()
@@ -28,11 +28,11 @@ if (isNewArchitectureEnabled()) {
 }
 
 def getExtOrDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties["TurboWebview_" + name]
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties["HotwireWebview_" + name]
 }
 
 def getExtOrIntegerDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["TurboWebview_" + name]).toInteger()
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["HotwireWebview_" + name]).toInteger()
 }
 
 def supportsNamespace() {
@@ -44,7 +44,7 @@ def supportsNamespace() {
   return (major == 7 && minor >= 3) || major >= 8
 }
 
-def addTurboDependencies(Map<String, String> libraries) {
+def addHotwireDependencies(Map<String, String> libraries) {
   libraries.each { type, lib ->
     if (type.startsWith("dep")) {
       dependencies {
@@ -68,9 +68,10 @@ allprojects {
   }
 }
 
+
 android {
   if (supportsNamespace()) {
-    namespace "com.reactnativeturbowebview"
+    namespace "com.reactnativehotwirewebview"
 
     sourceSets {
       main {
@@ -113,6 +114,7 @@ repositories {
   }
 }
 
+
 def kotlin_version = getExtOrDefault("kotlinVersion")
 
 dependencies {
@@ -121,8 +123,9 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  implementation "dev.hotwire:turbo:local"
+  implementation "dev.hotwire:core:local"
+  implementation "dev.hotwire:navigation-fragments:local"
 }
 
-addTurboDependencies(deps)
-addTurboDependencies(apis)
+addHotwireDependencies(deps)
+addHotwireDependencies(apis)
