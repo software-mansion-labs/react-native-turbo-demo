@@ -48,7 +48,7 @@ yarn-error.log*
 npm-debug.log
 yarn-error.log
 vendor/
-turbo-android-dependencies.gradle
+hotwire-native-android-dependencies.gradle
 
 # macOS
 .DS_Store

@@ -3,11 +3,11 @@ require "json"
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 folly_compiler_flags = '-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1 -Wno-comma -Wno-shorten-64-to-32'
 
-turbo_ios_source_files = "ios/vendor/turbo-ios/Source/**/*.{h,m,mm,swift}"
-turbo_ios_resource_files = "ios/vendor/turbo-ios/Source/**/*.{js}"
+hotwire_native_ios_source_files = "ios/vendor/hotwire-native-ios/Source/**/*.{h,m,mm,swift}"
+hotwire_native_ios_resource_files = "ios/vendor/hotwire-native-ios/Source/**/*.{js}"
 
 Pod::Spec.new do |s|
-  s.name         = "RNTurbo"
+  s.name         = "RNHotwireNative"
   s.version      = package["version"]
   s.summary      = package["description"]
   s.homepage     = package["homepage"]
@@ -17,8 +17,8 @@ Pod::Spec.new do |s|
   s.platforms    = { :ios => "14.0" }
   s.source       = { :git => "https://github.com/software-mansion-labs/react-native-turbo-demo.git", :tag => "#{s.version}" }
 
-  s.source_files = "ios/*.{h,m,mm,swift}", turbo_ios_source_files
-  s.resource = turbo_ios_resource_files
+  s.source_files = "ios/*.{h,m,mm,swift}", hotwire_native_ios_source_files
+  s.resource = hotwire_native_ios_resource_files
 
   s.dependency "React-Core"
 

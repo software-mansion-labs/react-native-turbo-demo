@@ -1,0 +1,79 @@
+diff --git a/core/src/main/kotlin/dev/hotwire/core/turbo/session/Session.kt b/core/src/main/kotlin/dev/hotwire/core/turbo/session/Session.kt
+index 6cf8bd1..255bd35 100644
+--- a/core/src/main/kotlin/dev/hotwire/core/turbo/session/Session.kt
++++ b/core/src/main/kotlin/dev/hotwire/core/turbo/session/Session.kt
+@@ -57,6 +57,7 @@ class Session(
+     internal val httpRepository = HttpRepository()
+     internal val offlineHttpRepository = OfflineHttpRepository(activity.lifecycleScope)
+     internal val offlineRequestInterceptor = OfflineWebViewRequestInterceptor(this)
++    var isRunningInAndroidNavigation = true
+ 
+     // User accessible
+ 
+@@ -696,7 +697,7 @@ class Session(
+     private fun callback(action: (SessionCallback) -> Unit) {
+         context.runOnUiThread {
+             currentVisit?.callback?.let { callback ->
+-                if (callback.visitDestination().isActive()) {
++                if (!isRunningInAndroidNavigation || callback.visitDestination().isActive()) {
+                     action(callback)
+                 }
+             }
+diff --git a/navigation-fragments/src/main/java/dev/hotwire/navigation/util/HotwireViewScreenshotHolder.kt b/navigation-fragments/src/main/java/dev/hotwire/navigation/util/HotwireViewScreenshotHolder.kt
+index d0beb31..ba36635 100644
+--- a/navigation-fragments/src/main/java/dev/hotwire/navigation/util/HotwireViewScreenshotHolder.kt
++++ b/navigation-fragments/src/main/java/dev/hotwire/navigation/util/HotwireViewScreenshotHolder.kt
+@@ -15,7 +15,7 @@ import dev.hotwire.navigation.views.HotwireView
+ import kotlinx.coroutines.ExperimentalCoroutinesApi
+ import kotlinx.coroutines.suspendCancellableCoroutine
+ 
+-internal class HotwireViewScreenshotHolder {
++class HotwireViewScreenshotHolder {
+     private var bitmap: Bitmap? = null
+     private var screenshotOrientation = 0
+     private var screenshotZoomed = false
+diff --git a/navigation-fragments/src/main/java/dev/hotwire/navigation/views/HotwireView.kt b/navigation-fragments/src/main/java/dev/hotwire/navigation/views/HotwireView.kt
+index f51c0ba..90735d9 100644
+--- a/navigation-fragments/src/main/java/dev/hotwire/navigation/views/HotwireView.kt
++++ b/navigation-fragments/src/main/java/dev/hotwire/navigation/views/HotwireView.kt
+@@ -25,10 +25,10 @@ class HotwireView @JvmOverloads constructor(context: Context, attrs: AttributeSe
+     private val errorContainer: ViewGroup get() = findViewById(R.id.hotwire_error_container)
+     private val screenshotView: ImageView get() = findViewById(R.id.hotwire_screenshot)
+ 
+-    internal val webViewRefresh: SwipeRefreshLayout? get() = webViewContainer as? SwipeRefreshLayout
+-    internal val errorRefresh: SwipeRefreshLayout? get() = findViewById(R.id.hotwire_error_refresh)
++    val webViewRefresh: SwipeRefreshLayout? get() = webViewContainer as? SwipeRefreshLayout
++    val errorRefresh: SwipeRefreshLayout? get() = findViewById(R.id.hotwire_error_refresh)
+ 
+-    internal fun attachWebView(webView: WebView, onAttachedToNewDestination: (Boolean) -> Unit) {
++    fun attachWebView(webView: WebView, onAttachedToNewDestination: (Boolean) -> Unit) {
+         if (webView.parent != null) {
+             onAttachedToNewDestination(false)
+             return
+@@ -58,7 +58,7 @@ class HotwireView @JvmOverloads constructor(context: Context, attrs: AttributeSe
+         }
+     }
+ 
+-    internal fun detachWebView(webView: WebView, onDetached: () -> Unit) {
++    fun detachWebView(webView: WebView, onDetached: () -> Unit) {
+         // If the view is already detached from the window (like
+         // when dismissing a bottom sheet), detach immediately,
+         // since posting to the message queue will be ignored.
+@@ -100,7 +100,7 @@ class HotwireView @JvmOverloads constructor(context: Context, attrs: AttributeSe
+         screenshotView.isVisible = true
+     }
+ 
+-    internal fun removeScreenshot() {
++    fun removeScreenshot() {
+         screenshotView.setImageBitmap(null)
+         screenshotView.isVisible = false
+     }
+@@ -119,7 +119,7 @@ class HotwireView @JvmOverloads constructor(context: Context, attrs: AttributeSe
+         }
+     }
+ 
+-    internal fun removeErrorView() {
++    fun removeErrorView() {
+         errorContainer.removeAllViews()
+         errorContainer.isVisible = false
+ 
