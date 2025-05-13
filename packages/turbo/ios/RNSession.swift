@@ -105,10 +105,6 @@ extension RNSession: SessionDelegate {
     visitableView?.didFailRequestForVisitable(visitable: visitable, error: error)
   }
 
-  func session(_ session: Session, openExternalURL url: URL) {
-    visitableView?.didOpenExternalUrl(url: url)
-  }
-    
   func sessionDidStartFormSubmission(_ session: Session) {
     visitableView?.didStartFormSubmission()
   }
@@ -118,11 +114,20 @@ extension RNSession: SessionDelegate {
   }
 
   func session(_ session: Session, decidePolicyFor navigationAction: WKNavigationAction) -> WebViewPolicyManager.Decision {
-    guard let url = navigationAction.request.url else {
-      return .allow
+    if navigationAction.shouldReloadPage {
+      reload()
+      return .cancel
+    } else if navigationAction.requestsNewWindow && navigationAction.navigationType == .linkActivated,
+              let url = navigationAction.request.url {
+      visitableView?.didOpenExternalUrl(url: url)
+      return .cancel
+    } else if navigationAction.shouldOpenURLExternally, let url = navigationAction.request.url {
+      visitableView?.didOpenExternalUrl(url: url)
+      return .cancel
+    } else if navigationAction.navigationType == .linkActivated && navigationAction.isMainFrameNavigation {
+      return .cancel
     }
-    // regardless of the return value here nothing happens, so we have to manually open external URL
-    visitableView?.didOpenExternalUrl(url: url)
+
     return .allow
   }
 }
