@@ -4,6 +4,7 @@ import React, {
   useRef,
   useMemo,
   Component,
+  useState,
 } from 'react';
 import {
   NativeMethods,
@@ -119,6 +120,8 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       []
     );
 
+    const [currentUrl, setCurrentUrl] = useState(url);
+
     const {
       webViewStateComponent,
       handleShowLoading,
@@ -208,12 +211,18 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
       [onContentProcessDidTerminate]
     );
 
+    const handleOnUrlChange = (event: NativeSyntheticEvent<URLChangeEvent>) => {
+      // A change of URL can happen from the native side if the WebView's url is changed, ie. as part
+      // of a redirect, a history push/pop action.
+      setCurrentUrl(event.nativeEvent.url);
+    };
+
     return (
       <>
         {stradaComponents?.map((StradaComponent, i) => (
           <StradaComponent
             key={`${url}-${i}`}
-            url={url}
+            url={currentUrl}
             sessionHandle={sessionHandle}
             name={StradaComponent.componentName}
             registerMessageListener={registerMessageListener}
@@ -242,6 +251,7 @@ const VisitableView = React.forwardRef<RefObject, React.PropsWithRef<Props>>(
           onFormSubmissionFinished={handleOnFormSubmissionFinished}
           onShowLoading={handleShowLoading}
           onHideLoading={handleHideLoading}
+          onUrlChange={handleOnUrlChange}
           onContentProcessDidTerminate={handleOnContentProcessDidTerminate}
           style={style}
         />

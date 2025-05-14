@@ -21,6 +21,7 @@ import type {
   ContentProcessDidTerminateEvent,
   ContentInsetObject,
   ProgressViewOffsetObject,
+  UrlChangeEvent,
 } from './types';
 
 // Interface should match RNVisitableView exported properties in native code
@@ -41,6 +42,7 @@ export interface RNVisitableViewProps {
   onWebAlert?: (e: NativeSyntheticEvent<AlertHandler>) => void;
   onWebConfirm?: (e: NativeSyntheticEvent<AlertHandler>) => void;
   onOpenExternalUrl?: (e: NativeSyntheticEvent<OpenExternalUrlEvent>) => void;
+  onUrlChange?: (e: NativeSyntheticEvent<UrlChangeEvent>) => void;
   onFormSubmissionStarted?: (
     e: NativeSyntheticEvent<FormSubmissionEvent>
   ) => void;

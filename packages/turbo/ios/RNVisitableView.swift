@@ -58,6 +58,7 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   @objc var onShowLoading: RCTDirectEventBlock?
   @objc var onHideLoading: RCTDirectEventBlock?
   @objc var onContentProcessDidTerminate: RCTDirectEventBlock?
+  @objc var onUrlChange: RCTDirectEventBlock?
 
   private var onConfirmHandler: ((Bool) -> Void)?
   private var onAlertHandler: (() -> Void)?
@@ -77,7 +78,8 @@ class RNVisitableView: UIView, RNSessionSubscriber {
   }
   private var webView: WKWebView? { session?.webView }
   private var webViewConfiguration: WKWebViewConfiguration = WKWebViewConfiguration()
-    
+  private var webViewUrlObservation: NSKeyValueObservation?
+
   lazy var controller: RNVisitableViewController? = RNVisitableViewController(reactViewController: reactViewController(), delegate: self)
     
   private var isRefreshing: Bool {
@@ -100,6 +102,20 @@ class RNVisitableView: UIView, RNSessionSubscriber {
                                                     right: contentInset["right"] ?? 0)
   }
     
+  private func startObservingWebViewUrl() {
+    if (webView == nil) { return }
+
+    webViewUrlObservation = webView?.observe(\.url, options: [.new, .initial]) { [weak self] webView, change in
+      if let url = change.newValue ?? nil {
+        self?.onUrlChange?(["url": url.absoluteString])
+      }
+    }
+  }
+
+  private func stopObservingWebViewUrl() {
+    webViewUrlObservation = nil
+  }
+
   override func willMove(toWindow newWindow: UIWindow?) {
     super.willMove(toWindow: newWindow)
     
@@ -270,6 +286,7 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
 
   func visitableDidAppear(visitable: Visitable) {
     configureWebView()
+    startObservingWebViewUrl()
     session?.visitableViewDidAppear(view: self)
   }
     
@@ -281,7 +298,7 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
   }
 
   func visitableDidDisappear(visitable: Visitable) {
-    // No-op
+    stopObservingWebViewUrl()
   }
 
   func visitableDidRender(visitable: Visitable) {

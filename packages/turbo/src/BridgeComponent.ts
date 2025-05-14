@@ -21,17 +21,19 @@ const stradaMessageListener = (component: BridgeComponent) => (e: object) => {
 
 class BridgeComponent extends Component<StradaComponentProps> {
   name: string;
-  url: string;
   sessionHandle: string;
   messageEventListenerSubscription?: EmitterSubscription;
   previousMessages: StradaMessages = {};
   registerMessageListener: (listener: (e: object) => void) => void;
   sendToBridge: (message: StradaMessage) => void;
 
+  get url(): string {
+    return this.props.url;
+  }
+
   constructor(props: StradaComponentProps) {
     super(props);
 
-    this.url = props.url;
     this.name = props.name;
     this.sessionHandle = props.sessionHandle;
     this.registerMessageListener = props.registerMessageListener;
