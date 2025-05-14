@@ -287,7 +287,7 @@ extension RNVisitableView: RNVisitableViewControllerDelegate {
   func visitableDidRender(visitable: Visitable) {
     let event: [AnyHashable: Any] = [
       "title": webView!.title!,
-      "url": webView!.url!
+      "url": webView!.url!.absoluteString as Any,
     ]
     onLoad?(event)
   }
